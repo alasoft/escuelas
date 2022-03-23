@@ -1,0 +1,48 @@
+const { Pool } = require('pg');
+const { Exceptions } = require('./exceptions');
+
+class Postgres {
+
+    constructor(parameters) {
+        this.parameters = parameters;
+        this.app = parameters.app;
+
+        this.pool = new Pool(parameters);
+
+    }
+
+    query(sql) {
+        console.log(sql);
+        return new Promise((resolve, reject) => {
+            this.pool.query(sql)
+                .then(result =>
+                    resolve(result.rows))
+                .catch(err =>
+                    reject(Exceptions.DataBase(err)))
+        })
+    }
+
+    select(sql) {
+        return this.query(sql);
+    }
+
+    selectOne(sql) {
+        return this.query(sql)
+            .then(rows =>
+                0 < rows.length ? rows[0] : undefined)
+    }
+
+    count(sql) {
+        return this.selectOne(sql)
+            .then(row =>
+                row != undefined ? row.count : 0
+            );
+    }
+
+    execute(sql) {
+        return this.query(sql);
+    }
+
+}
+
+module.exports.Postgres = Postgres;
