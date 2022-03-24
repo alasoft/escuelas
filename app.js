@@ -1,14 +1,17 @@
 const { Http } = require("./http");
-const { Sql } = require("./sql");
 const { UsersCreateTable } = require("./users");
 const { UsersLogged } = require("./userslogged");
 const { UsersRest } = require("./usersrest");
 
 class App {
 
+    static TOKEN_ALIVE_DEFAULT = 30;
+
     constructor(parameters) {
         this.parameters = parameters;
+        this.port = parameters.port;
         this.root = parameters.root;
+        this.tokenAlive = parameters.tokenAlive || App.TOKEN_ALIVE_DEFAULT;
     }
 
     init() {
@@ -64,7 +67,7 @@ class App {
 
     createTables() {
         if (this.parameters.createTables != undefined) {
-            return this.db.execute(Sql.Transact(this.parameters.createTables(this)))
+            new this.parameters.createTables({ app: this }).execute();
         }
     }
 
@@ -95,12 +98,13 @@ class App {
                 message: err.message
             }
         }
+        console.log(err.stack);
         console.log(err);
         res.status(err.status).send(err);
     }
 
     listen() {
-        this.express.listen(this.parameters.port)
+        this.express.listen(this.port)
     }
 
     newToken(user) {

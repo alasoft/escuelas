@@ -38,6 +38,10 @@ class Exceptions {
         return this.Exception("email duplicado", detail);
     }
 
+    static DuplicatedEntity(detail) {
+        return this.Exception("duplicado", detail);
+    }
+
 }
 
 class Exception {

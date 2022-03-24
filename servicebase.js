@@ -60,6 +60,10 @@ class ServiceBase {
         return Sql.Like(value)
     }
 
+    sqlSelect(parameters) {
+        return Sql.Select(Utils.Merge(parameters, { tenant: this.tenant() }))
+    }
+
     sendOkey(data) {
         this.res.json(data);
     }
@@ -82,9 +86,12 @@ class ServiceBase {
 
     validateRequiredValues() {
         return new Promise((resolve, reject) => {
-            for (const name of this.requiredValues().split(",")) {
-                if (this.value(name) == undefined) {
-                    throw Exceptions.RequiredValue(name)
+            const requiredValues = this.requiredValues();
+            if (requiredValues != undefined) {
+                for (const name of requiredValues.split(",")) {
+                    if (this.value(name) == undefined) {
+                        throw Exceptions.RequiredValue(name)
+                    }
                 }
             }
             resolve(true);

@@ -67,8 +67,8 @@ class Utils {
         return (s1.toLowerCase() == s2.toLowerCase());
     }
 
-    static NewToken() {
-        return { value: this.NewGuid(), until: Dates.AddMinutes(Dates.Date(), 1) };
+    static NewToken(minutes) {
+        return { value: this.NewGuid(), until: Dates.AddMinutes(Dates.Date(), minutes) };
     }
 
     static Contains(s1, s2, ignoreCase = true) {
@@ -77,6 +77,15 @@ class Utils {
         } else {
             return s1.includes(s2);
         }
+    }
+
+    static StringIs(string, strings) {
+        for (const s of strings) {
+            if (Utils.EqualsIgnoreCase(string, s)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     static SingleQuotes(s) {

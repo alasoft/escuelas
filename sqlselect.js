@@ -1,13 +1,16 @@
 const { DbStates } = require("./dbstates");
+const { Exceptions } = require("./exceptions");
+const { ObjectBase } = require("./objectbase");
 const { SqlAnd } = require("./sqland");
 const { TextBuilder } = require("./textbuilder");
 const { Utils } = require("./utils");
 
-class SqlSelect {
+class SqlSelect extends ObjectBase {
 
     Sql = require("./sql").Sql;
 
     constructor(parameters = {}) {
+        super(parameters);
         this.filterByTenant = parameters.filterByTenant != false;
         this.filterByStates = parameters.filterByStates || [DbStates.Active];
         this.tenant = parameters.tenant;
@@ -26,7 +29,7 @@ class SqlSelect {
 
     checkTenant() {
         if (this.filterByTenant && Utils.IsNotDefined(this.tenant)) {
-            throw Exception.TenantNotDefined
+            throw Exceptions.TenantNotDefined(this.className() + " " + this.from.tableName)
         }
     }
 

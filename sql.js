@@ -20,7 +20,7 @@ class Sql {
     }
 
     static And(parameters) {
-        new SqlAnd(parameters).text()
+        return new SqlAnd(parameters);
     }
 
     static Text(parameters) {
@@ -49,6 +49,10 @@ class Sql {
             (value, i) => text += (0 < i ? "," : "") + this.Value(value)
         )
         return text;
+    }
+
+    static Like(value) {
+        return "%" + value + "%"
     }
 
     static Create(parameters) {

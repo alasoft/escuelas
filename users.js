@@ -1,5 +1,7 @@
+const { DbStates } = require("./dbstates");
 const { Sql } = require("./sql");
 const { SqlType } = require("./sqltype");
+const { Utils } = require("./utils");
 
 class Users {
 
@@ -7,11 +9,12 @@ class Users {
     static ROL_TEST = "T";
 
     static UserTest = {
+        tenant: "test",
+        id: Utils.NewGuid(),
         apellido: "",
         nombre: "TEST",
         email: "test@test.com",
         password: "test",
-        tenant: "test",
         rol: this.ROL_TEST
     };
 
@@ -31,9 +34,11 @@ class UsersCreateTable {
                 this.userTestExists())
             .then(exists => {
                 if (!exists) {
-                    this.insertUserTest()
+                    return this.insertUserTest()
                 }
             })
+            .catch(err =>
+                this.app.sendError(err))
     }
 
     createTable() {
@@ -57,18 +62,19 @@ class UsersCreateTable {
         return this.db.exists(this.sqlExistUserTest());
     }
 
-    insertUserTest() {
-        return this.db.execute(this.sqlInsertUserTest());
-    }
-
     sqlExistUserTest() {
         return Sql.Select({
             tenant: Users.UserTest.tenant,
+            filterByStates: DbStates.All,
             columns: "id",
             from: "users",
-            where: "email=@email",
-            values: { email: Users.UserTest.email }
+            where: "upper(email)=upper(@email)",
+            parameters: { email: Users.UserTest.email }
         })
+    }
+
+    insertUserTest() {
+        return this.db.execute(this.sqlInsertUserTest());
     }
 
     sqlInsertUserTest() {

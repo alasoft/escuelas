@@ -1,4 +1,5 @@
 const { RestBase } = require("./restbase");
+const { Utils } = require("./utils");
 
 class TableRest extends RestBase {
 

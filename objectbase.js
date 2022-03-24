@@ -1,5 +1,17 @@
 class ObjectBase {
 
+    constructor(parameters) {
+        this.parameters = parameters;
+    }
+
+    class() {
+        return this.constructor;
+    }
+
+    className() {
+        return this.class().name;
+    }
+
     static Class() {
         return this.prototype.constructor;
     }

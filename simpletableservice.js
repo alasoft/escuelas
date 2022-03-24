@@ -6,7 +6,7 @@ class SimpleTableListService extends TableListService {
     sqlParameters() {
         return {
             columns: "id,nombre",
-            tableName: this.tableName,
+            from: this.tableName,
             where: this.sqlAnd()
                 .addIf(
                     this.isDefined("descripcion"), () =>
@@ -23,7 +23,7 @@ class SimpleTableGetService extends TableGetService {
     sqlParameters() {
         return {
             columns: "id,nombre",
-            tableName: this.tableName,
+            from: this.tableName,
             where: "id=@id",
             parameters: { id: this.id() }
         }
@@ -45,6 +45,10 @@ class SimpleTableUpdateService extends TableUpdateService {
         return SimpleTableCommonService.SqlNotDuplicated(this)
     }
 
+    requiredValues() {
+        return "id,nombre"
+    }
+
 }
 
 class SimpleTableDeleteService extends TableDeleteService {
@@ -54,11 +58,11 @@ class SimpleTableDeleteService extends TableDeleteService {
 class SimpleTableCommonService {
 
     static SqlNotDuplicated(service) {
-        return Sql.Select({
+        return service.sqlSelect({
             columns: "id",
             from: service.tableName,
-            where: "uppcase(nombre)=uppercase(@nombre)",
-            parameter: { nombre: service.value("nombre") }
+            where: "upper(nombre)=upper(@nombre)",
+            parameters: { nombre: service.value("nombre") }
         })
     }
 }

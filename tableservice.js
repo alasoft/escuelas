@@ -15,14 +15,16 @@ class TableServiceBase extends ServiceBase {
 class TableListGetService extends TableServiceBase {
 
     sql() {
-        return Sql.Select(this.sqlParameters())
+        return this.sqlSelect(this.sqlParameters())
     }
 
-    transformRow(row) {}
+    transformRow(row) {
+        return row
+    }
 
 }
 
-class TableListService {
+class TableListService extends TableListGetService {
 
     execute() {
         this.db.select(this.sql())
@@ -84,13 +86,9 @@ class TableCrudServiceBase extends TableServiceBase {
             .then(() =>
                 this.db.execute(this.sql()))
             .then(() =>
-                this.sendIdtDto())
+                this.sendIdDto())
             .catch(err =>
                 this.sendError(err))
-    }
-
-    requiredValues() {
-        return "id"
     }
 
     prepare() {
@@ -121,7 +119,7 @@ class TableInsertUpdateServiceBase extends TableCrudServiceBase {
     validateNotDuplicated() {
         return this.db.select(this.sqlNotDuplicated()).then(rows => {
             if (1 < rows.length || (rows.length == 1 && rows[0].id != this.id())) {
-                throw Exceptions.Validate(this.duplicatedMessage())
+                throw Exceptions.DuplicatedEntity(this.duplicatedMessage())
             }
         })
     }
@@ -130,13 +128,20 @@ class TableInsertUpdateServiceBase extends TableCrudServiceBase {
         throw Exceptions.NotImplemented("sqlNotDuplicated")
     }
 
-    duplicateMessage() {
-        return this.tableName + ", registro duplicado"
+    duplicatedMessage() {
+        return this.tableName
     }
 
 }
 
 class TableInsertService extends TableInsertUpdateServiceBase {
+
+    prepare() {
+        super.prepare();
+        if (this.isNotDefined("id")) {
+            this.setValue("id", Utils.NewGuid())
+        }
+    }
 
     prepare() {
         super.prepare();
@@ -157,12 +162,20 @@ class TableUpdateService extends TableInsertUpdateServiceBase {
         return "Update"
     }
 
+    requiredValues() {
+        return "id"
+    }
+
 }
 
 class TableDeleteService extends TableCrudServiceBase {
 
     sqlOperation() {
         return "Update"
+    }
+
+    requiredValues() {
+        return "id"
     }
 
 }

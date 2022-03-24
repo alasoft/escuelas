@@ -39,6 +39,13 @@ class Postgres {
             );
     }
 
+    exists(sql) {
+        return this.query(sql)
+            .then(rows =>
+                0 < rows.length
+            );
+    }
+
     execute(sql) {
         return this.query(sql);
     }

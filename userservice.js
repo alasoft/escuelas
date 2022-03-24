@@ -4,7 +4,20 @@ const { Sql } = require("./sql");
 const { Users } = require("./users");
 const { Utils } = require("./utils");
 
-class UsersRegisterService extends ServiceBase {
+class UsersService extends ServiceBase {
+
+    sqlCheckEmailParameters() {
+        return {
+            filterByTenant: false,
+            from: "users",
+            where: "upper(email)=upper(@email)",
+            parameters: { email: this.value("email") }
+        }
+    }
+
+}
+
+class UsersRegisterService extends UsersService {
 
     execute() {
         this.validate()
@@ -37,12 +50,7 @@ class UsersRegisterService extends ServiceBase {
     }
 
     sqlCheckEmail() {
-        return Sql.Count({
-            filterByTenant: false,
-            from: "users",
-            where: "upper(email)=upper(@email)",
-            parameters: { email: this.value("email") }
-        })
+        return Sql.Count(this.sqlCheckEmailParameters())
     }
 
     prepareValues() {
@@ -60,7 +68,7 @@ class UsersRegisterService extends ServiceBase {
 
 }
 
-class UsersLoginService extends ServiceBase {
+class UsersLoginService extends UsersService {
 
     execute() {
         this.validate()
@@ -86,17 +94,12 @@ class UsersLoginService extends ServiceBase {
     }
 
     sqlFindUser() {
-        return Sql.Select({
-            filterByTenant: false,
-            from: "users",
-            where: "email=@email",
-            parameters: { email: this.value("email") }
-        })
+        return Sql.Select(this.sqlCheckEmailParameters())
     }
 
     validateUser(user) {
         if (Utils.IsNotDefined(user) || user.password != this.value("password")) {
-            throw Exception.InvalidEmailPassword;
+            throw Exceptions.InvalidEmailPassword;
         }
         return user
     }

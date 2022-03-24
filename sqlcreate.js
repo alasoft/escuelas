@@ -1,3 +1,4 @@
+const { ObjectBase } = require("./objectbase");
 const { SqlType } = require("./sqltype");
 const { TextBuilder } = require("./textbuilder");
 
