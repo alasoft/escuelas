@@ -1,8 +1,8 @@
-const { Dates } = require("./dates");
-const { DbStates } = require("./dbstates");
-const { Exceptions } = require("./exceptions");
-const { TextBuilder } = require("./textbuilder");
-const { Utils } = require("./utils");
+const { Dates } = require("../utils/dates");
+const { DbStates } = require("../data/dbstates");
+const { Exceptions } = require("../utils/exceptions");
+const { TextBuilder } = require("../utils/textbuilder");
+const { Utils } = require("../utils/utils");
 
 class SqlOperation {
 

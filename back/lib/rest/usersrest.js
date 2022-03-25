@@ -1,6 +1,6 @@
-const { RestBase } = require("./restbase");
-const { UsersRegisterService, UsersLoginService } = require("./userservice");
-const { Utils } = require("./utils");
+const { RestBase } = require("../rest/restbase");
+const { UsersRegisterService, UsersLoginService } = require("../service/userservice");
+const { Utils } = require("../utils/utils");
 
 class UsersRest extends RestBase {
 

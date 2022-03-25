@@ -1,5 +1,5 @@
-const { ObjectBase } = require("./objectbase");
-const { Utils } = require("./utils");
+const { ObjectBase } = require("../utils/objectbase");
+const { Utils } = require("../utils/utils");
 
 class MemoryTable extends ObjectBase {
 

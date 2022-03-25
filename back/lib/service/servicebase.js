@@ -1,7 +1,6 @@
-const { Exceptions } = require("./exceptions");
-const { Http } = require("./http");
-const { Sql } = require("./sql");
-const { Utils } = require("./utils");
+const { Exceptions } = require("../utils/exceptions");
+const { Sql } = require("../sql/sql");
+const { Utils } = require("../utils/utils");
 
 class ServiceBase {
 

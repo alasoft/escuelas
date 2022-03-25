@@ -1,4 +1,4 @@
-const { TextBuilder } = require("./textbuilder");
+const { TextBuilder } = require("../utils/textbuilder");
 
 class SqlAnd extends TextBuilder {
 

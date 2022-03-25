@@ -1,7 +1,7 @@
-const { Http } = require("./http");
-const { UsersCreateTable } = require("./users");
-const { UsersLogged } = require("./userslogged");
-const { UsersRest } = require("./usersrest");
+const { Http } = require("../utils/http");
+const { UsersCreateTable } = require("../users/users");
+const { UsersLogged } = require("../users/userslogged");
+const { UsersRest } = require("../rest/usersrest");
 
 class App {
 

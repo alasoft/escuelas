@@ -1,7 +1,7 @@
-const { Exceptions } = require("./exceptions");
-const { ServiceBase } = require("./servicebase");
-const { Sql } = require("./sql");
-const { Utils } = require("./utils");
+const { Exceptions } = require("../utils/exceptions");
+const { ServiceBase } = require("../service/servicebase");
+const { Sql } = require("../sql/sql");
+const { Utils } = require("../utils/utils");
 
 class TableServiceBase extends ServiceBase {
 

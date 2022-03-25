@@ -1,4 +1,4 @@
-const { MemoryTable } = require("./memorytable")
+const { MemoryTable } = require("../lib/data/memorytable")
 
 class Años extends MemoryTable {
 

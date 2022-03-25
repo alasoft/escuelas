@@ -1,6 +1,6 @@
-const { CreateTablesBase } = require("./createtablesbase");
-const { Sql } = require("./sql");
-const { SqlType } = require("./sqltype");
+const { CreateTablesBase } = require("../lib/app/createtablesbase");
+const { Sql } = require("../lib/sql/sql");
+const { SqlType } = require("../lib/sql/sqltype");
 
 class CreateTables extends CreateTablesBase {
 

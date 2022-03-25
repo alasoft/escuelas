@@ -1,6 +1,6 @@
-const { Utils } = require("./utils");
-const { MemoryTableListService, MemoryTableGetService } = require("./memorytableservice");
-const { RestBase } = require("./restbase");
+const { Utils } = require("../utils/utils");
+const { MemoryTableListService, MemoryTableGetService } = require("../service/memorytableservice");
+const { RestBase } = require("../rest/restbase");
 
 class MemoryTableRest extends RestBase {
 

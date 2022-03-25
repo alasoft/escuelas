@@ -4,9 +4,9 @@ const {
     SimpleTableInsertService,
     SimpleTableUpdateService,
     SimpleTableDeleteService
-} = require("./simpletableservice");
-const { Utils } = require("./utils");
-const { TableRest } = require("./tablerest");
+} = require("../service/simpletableservice");
+const { Utils } = require("../utils/utils");
+const { TableRest } = require("../rest/tablerest");
 
 class SimpleTableRest extends TableRest {
 

@@ -1,7 +1,7 @@
-const { Exceptions } = require("./exceptions");
-const { TextBuilder } = require("./textbuilder");
-const { TextParameters } = require("./textparameters");
-const { Utils } = require("./utils");
+const { Exceptions } = require("../utils/exceptions");
+const { TextBuilder } = require("../utils/textbuilder");
+const { TextParameters } = require("../utils/textparameters");
+const { Utils } = require("../utils/utils");
 
 class SqlText {
 

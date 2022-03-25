@@ -1,9 +1,9 @@
-const { App } = require("./app");
+const { App } = require("../lib/app/app");
 const { Años } = require("./años");
 const { CreateTables } = require("./createtables");
-const { MemoryTableRest } = require("./memorytablerest");
-const { Postgres } = require("./postgres");
-const { SimpleTableRest } = require("./simpletablerest");
+const { MemoryTableRest } = require("../lib/rest/memorytablerest");
+const { Postgres } = require("../lib/data/postgres");
+const { SimpleTableRest } = require("../lib/rest/simpletablerest");
 const { Turnos } = require("./turnos");
 
 new App({

@@ -1,4 +1,4 @@
-const { Utils } = require("./utils");
+const { Utils } = require("../utils/utils");
 
 class SqlType {
 

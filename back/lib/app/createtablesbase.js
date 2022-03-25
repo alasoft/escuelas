@@ -1,5 +1,5 @@
 const { builtinModules } = require("module");
-const { Sql } = require("./sql");
+const { Sql } = require("../sql/sql");
 
 class CreateTablesBase {
 

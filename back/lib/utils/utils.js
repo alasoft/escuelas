@@ -1,7 +1,6 @@
 const { _ } = require("lodash");
 const cuid = require("cuid");
-const simpleEncryptor = require("simple-encryptor");
-const { Dates } = require("./dates");
+const { Dates } = require("../utils/dates");
 
 class Utils {
 

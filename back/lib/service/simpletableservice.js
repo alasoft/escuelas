@@ -1,5 +1,11 @@
-const { Sql } = require("./sql");
-const { TableListService, TableGetService, TableInsertService, TableUpdateService, TableDeleteService } = require("./tableservice");
+const { Sql } = require("../sql/sql");
+const {
+    TableListService,
+    TableGetService,
+    TableInsertService,
+    TableUpdateService,
+    TableDeleteService
+} = require("../service/tableservice");
 
 class SimpleTableListService extends TableListService {
 

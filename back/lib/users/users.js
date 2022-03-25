@@ -1,7 +1,7 @@
-const { DbStates } = require("./dbstates");
-const { Sql } = require("./sql");
-const { SqlType } = require("./sqltype");
-const { Utils } = require("./utils");
+const { DbStates } = require("../data/dbstates");
+const { Sql } = require("../sql/sql");
+const { SqlType } = require("../sql/sqltype");
+const { Utils } = require("../utils/utils");
 
 class Users {
 

@@ -1,6 +1,7 @@
-const { ObjectBase } = require("./objectbase");
+const { ObjectBase } = require("../utils/objectbase");
 const { SqlType } = require("./sqltype");
-const { TextBuilder } = require("./textbuilder");
+const { TextBuilder } = require("../utils/textbuilder");
+
 
 class SqlCreate {
 

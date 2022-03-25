@@ -1,5 +1,5 @@
 const { Pool } = require('pg');
-const { Exceptions } = require('./exceptions');
+const { Exceptions } = require('../utils/exceptions');
 
 class Postgres {
 

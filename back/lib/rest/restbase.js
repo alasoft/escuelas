@@ -1,5 +1,5 @@
-const { Path } = require("./path");
-const { Utils } = require("./utils");
+const { Path } = require("../utils/path");
+const { Utils } = require("../utils/utils");
 
 class RestBase {
 
