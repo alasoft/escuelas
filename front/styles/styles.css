@@ -1,0 +1,227 @@
+html,
+body {
+    margin: 0;
+    font-family: Roboto, RobotoFallback, "Noto Kufi Arabic", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    height: 100vh;
+}
+
+.-vertical {
+    display: flex;
+    flex-direction: column;
+}
+
+.-vertical-100pct {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.-vertical-0 {
+    display: flex;
+    flex-direction: column;
+    height: 0px;
+}
+
+.-horizontal {
+    display: flex;
+    flex-direction: row;
+}
+
+.-fill {
+    flex: 1;
+}
+
+.-height-0 {
+    height: 0;
+}
+
+.-height-300 {
+    height: 300px;
+}
+
+.-height-100pct {
+    height: 100%;
+}
+
+.-margin-top-0 {
+    margin-top: 0px;
+}
+
+.-margin-top-5 {
+    margin-top: 5px;
+}
+
+.-margin-top-10 {
+    margin-top: 50px;
+}
+
+.-margin-bottom-0 {
+    margin-bottom: 0px;
+}
+
+.-margin-bottom-5 {
+    margin-bottom: 5px;
+}
+
+.-margin-left-10 {
+    margin-left: 10px;
+}
+
+.-padding-5 {
+    padding: 5px;
+}
+
+.-padding-10 {
+    padding: 10px;
+}
+
+.-padding-15 {
+    padding: 15px;
+}
+
+.-padding-left-0 {
+    padding-left: 0px;
+}
+
+.-padding-left-2 {
+    padding-left: 2px;
+}
+
+.-padding-left-10 {
+    padding-left: 10px;
+}
+
+.-padding-left-15 {
+    padding-left: 15px;
+}
+
+.-padding-right-0 {
+    padding-right: 0px;
+}
+
+.-padding-top-0 {
+    padding-top: 0px;
+}
+
+.-padding-top-5 {
+    padding-top: 5px;
+}
+
+.-padding-top-10 {
+    padding-top: 10px;
+}
+
+.-padding-top-15 {
+    padding-top: 15px;
+}
+
+.-margin-bottom--10 {
+    margin-bottom: -10px;
+}
+
+.-margin-bottom--20 {
+    margin-bottom: -20px;
+}
+
+.-height-250 {
+    height: 350px;
+}
+
+.-height-350 {
+    height: 350px;
+}
+
+.-width-250 {
+    width: 250px;
+}
+
+.-width-350 {
+    width: 350px;
+}
+
+.-width-450 {
+    width: 450px;
+}
+
+.-width-550 {
+    width: 550px;
+}
+
+.-width-25pct {
+    width: 25%;
+}
+
+.-width-35pct {
+    width: 35%;
+}
+
+.-width-45pct {
+    width: 45%;
+}
+
+.-height-35pct {
+    height: 35%;
+}
+
+.-height-55pct {
+    height: 55%;
+}
+
+.-height-60pct {
+    height: 60%;
+}
+
+.-height-65pct {
+    height: 65%;
+}
+
+.-height-75pct {
+    height: 75%;
+}
+
+.-height-250 {
+    height: 250px;
+}
+
+.-whitesmoke {
+    background-color: white;
+}
+
+.-lightgray {
+    background-color: lightgray;
+}
+
+.-lightblue {
+    background-color: lightblue;
+}
+
+.-lightsteelblue {
+    background-color: lightsteelblue;
+}
+
+.-invisible {
+    display: none;
+}
+
+.-font-input {
+    font-weight: 500;
+    background-color: white;
+}
+
+.-font-readonly {
+    font-weight: 500;
+    font-style: italic;
+    background-color: lightcyan;
+}
+
+.-font-message {
+    font-weight: 500;
+    font-size: large;
+    font-style: italic;
+}
+
+.dx-datagrid-header-panel {
+    padding: 10px;
+    height: 60px;
+}

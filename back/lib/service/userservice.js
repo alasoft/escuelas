@@ -99,7 +99,7 @@ class UsersLoginService extends UsersService {
 
     validateUser(user) {
         if (Utils.IsNotDefined(user) || user.password != this.value("password")) {
-            throw Exceptions.InvalidEmailPassword;
+            throw Exceptions.InvalidEmailPassword();
         }
         return user
     }

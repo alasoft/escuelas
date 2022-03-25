@@ -42,13 +42,18 @@ class Exceptions {
         return this.Exception("duplicado", detail);
     }
 
+    static InvalidEmailPassword(detail) {
+        return this.Exception("email o password inváldos", detail);
+    }
+
+
 }
 
 class Exception {
 
     constructor(status, message, detail) {
         this.status = status || Http.Internal;
-        this.error = message + (detail != undefined ? ": " + detail : "");
+        this.message = message + (detail != undefined ? ": " + detail : "");
     }
 
 }
