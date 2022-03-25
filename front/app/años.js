@@ -1,0 +1,1 @@
+class Años extends RestMemoryTable {}

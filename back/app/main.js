@@ -29,5 +29,7 @@ function restItems(app) {
         new MemoryTableRest({ app: app, tableClass: Años }),
         new MemoryTableRest({ app: app, tableClass: Turnos }),
         new SimpleTableRest({ app: app, tableName: "escuelas" }),
+        new SimpleTableRest({ app: app, tableName: "modalidades" }),
+        new SimpleTableRest({ app: app, tableName: "materias" }),
     ]
 }
