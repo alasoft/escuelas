@@ -52,8 +52,8 @@ class Login extends EntryView {
         this.validate()
             .then(() =>
                 this.login())
-            .then(userToken =>
-                App.SetUserToken(userToken))
+            .then(user =>
+                App.SetUser(user))
             .then(() =>
                 this.close(true))
             .catch(err =>
@@ -62,7 +62,7 @@ class Login extends EntryView {
     }
 
     login() {
-        return this.rest().promise({ verb: "login", data: this.dataToSend() })
+        return this.rest().do("login", this.dataToSend())
     }
 
     dataToSend() {

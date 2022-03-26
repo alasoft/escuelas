@@ -143,13 +143,6 @@ class TableInsertService extends TableInsertUpdateServiceBase {
         }
     }
 
-    prepare() {
-        super.prepare();
-        if (this.isNotDefined("id")) {
-            this.setValue("id", Utils.NewGuid())
-        }
-    }
-
     sqlOperation() {
         return "Insert"
     }

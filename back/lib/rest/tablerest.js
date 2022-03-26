@@ -5,10 +5,14 @@ class TableRest extends RestBase {
 
     constructor(parameters) {
         super(parameters);
-        this.tableName = parameters.tableName;
+        this.tableName = this.getTableName();
         if (Utils.IsNotDefined(this.path)) {
             this.path = this.tableName;
         }
+    }
+
+    getTableName() {
+        return this.parameters.tableName;
     }
 
     serviceParameters(req, res) {

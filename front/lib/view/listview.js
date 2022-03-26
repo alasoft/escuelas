@@ -20,7 +20,8 @@ class ListView extends View {
                 editable: true,
                 allowInserting: true,
                 allowEditing: true,
-                allowDeleting: true
+                allowDeleting: true,
+                deleteMessage: "Borra este registro ?"
             }
 
         })
@@ -50,14 +51,6 @@ class ListView extends View {
         this.list().setDataSource(dataSource);
     }
 
-    setFilterValue(dataField, value) {
-        this.filter().setEditorValue(dataField, value);
-    }
-
-    getFilterValue(dataField) {
-        return this.filter().getEditorValue(dataField);
-    }
-
     allowInserting() {
         return this.allowOperation("inserting")
     }
@@ -72,8 +65,8 @@ class ListView extends View {
 
     allowOperation(operationName, checkHasRows = false) {
         const operations = this.operations();
-        return (checkHasRows ? this.list().hasRows() : true) &&
-            Utils.Evaluate(operations.editable) &&
+        return Utils.Evaluate(operations.editable) &&
+            (checkHasRows ? this.list().hasRows() : true) &&
             Utils.Evaluate(operations["allow" + Utils.Capitalize(operationName)])
     }
 
@@ -103,20 +96,22 @@ class ListView extends View {
     }
 
     deleteMessage() {
-        return this.operations();
+        return this.operations().deleteMessage;
     }
 
     formView(extraConfiguration, mode) {
-        return new(this.formViewClass())(Utils.Merge({
-                listView: this,
-                components: {
-                    form: {
-                        formData: this.formViewDefaultValues(mode)
+        return new(this.formViewClass())(
+            Utils.Merge({
+                    listView: this,
+                    components: {
+                        form: {
+                            formData: this.formViewDefaultValues(mode)
+                        }
                     }
-                }
-            },
-            extraConfiguration
-        ));
+                },
+                extraConfiguration
+            )
+        );
     }
 
     formViewDefaultValues(mode) {}

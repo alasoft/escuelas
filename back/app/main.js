@@ -5,6 +5,7 @@ const { MemoryTableRest } = require("../lib/rest/memorytablerest");
 const { Postgres } = require("../lib/data/postgres");
 const { SimpleTableRest } = require("../lib/rest/simpletablerest");
 const { Turnos } = require("./turnos");
+const { CursosRest } = require("./cursosrest");
 
 new App({
     port: 9090,
@@ -12,7 +13,7 @@ new App({
     dbConnection: dbConnection,
     createTables: CreateTables,
     restItems: restItems,
-    tokenAlive: 30
+    tokenTime: 30
 }).start()
 
 function dbConnection(app) {
@@ -31,5 +32,6 @@ function restItems(app) {
         new SimpleTableRest({ app: app, tableName: "escuelas" }),
         new SimpleTableRest({ app: app, tableName: "modalidades" }),
         new SimpleTableRest({ app: app, tableName: "materias" }),
+        new CursosRest({ app: app })
     ]
 }

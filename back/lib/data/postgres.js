@@ -12,7 +12,7 @@ class Postgres {
     }
 
     query(sql) {
-        console.log(sql);
+        this.app.log(sql);
         return new Promise((resolve, reject) => {
             this.pool.query(sql)
                 .then(result =>

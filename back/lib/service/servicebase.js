@@ -99,6 +99,15 @@ class ServiceBase {
 
     requiredValues() {}
 
+    jsonValues(names) {
+        const json = {};
+        const properties = names.split(",")
+        properties.forEach(
+            property => json[property] = this.value(property, true)
+        )
+        return json;
+    }
+
 }
 
 module.exports.ServiceBase = ServiceBase;

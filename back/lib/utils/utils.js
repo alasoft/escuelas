@@ -91,6 +91,10 @@ class Utils {
         return "'" + s + "'";
     }
 
+    static LineFeed() {
+        return "\r\n";
+    }
+
 }
 
 module.exports.Utils = Utils;

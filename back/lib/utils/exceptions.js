@@ -1,59 +1,85 @@
-const { Http } = require("./http");
-
 class Exceptions {
 
-    static Exception(message, detail, status) {
-        return new Exception(status, message, detail)
-    }
+    static INVALID_TOKEN = 1000;
 
     static InvalidToken(detail) {
-        return this.Exception("token inválido", detail)
+        return new Exception({
+            code: Exceptions.INVALID_TOKEN,
+            message: "token inválido",
+            detail: detail
+        })
     }
 
     static DataBase(detail) {
-        return this.Exception("error de base de datos", detail)
+        return new Exception({
+            message: "error de base de datos",
+            detail: detail
+        })
     }
 
     static RequiredValue(detail) {
-        return this.Exception("valor requerido", detail, Http.InvalidRequest)
+        return new Exception({
+            message: "valor requerido",
+            detail: detail
+        })
     }
 
     static ParameterValueNotFound(detail) {
-        return this.Exception("valor de parámetro no encontrado", detail)
+        return new Exception({
+            message: "valor de parámetro no encontrado",
+            detail: detail
+        })
     }
 
     static TenantNotDefined(detail) {
-        return this.Exception("tenant no definido", detail)
+        return new Exception({
+            message: "tenant no definido",
+            detail: detail
+        })
     }
 
     static IdNotDefined(detail) {
-        return this.Exception("id no definido", detail);
+        return new Exception({
+            message: "id no definido",
+            detail: detail
+        });
     }
 
     static NotImplemented(detail) {
-        return this.Exception("no implementedo", detail);
+        return new Exception({
+            message: "no implementedo",
+            detail: detail
+        });
     }
 
     static DuplicatedEmail(detail) {
-        return this.Exception("email duplicado", detail);
+        return new Exception({
+            message: "email duplicado",
+            detail: detail
+        });
     }
 
     static DuplicatedEntity(detail) {
-        return this.Exception("duplicado", detail);
+        return new Exception({
+            message: "duplicado",
+            detail: detail
+        });
     }
 
     static InvalidEmailPassword(detail) {
-        return this.Exception("email o password inváldos", detail);
+        return new Exception({
+            message: "email o password inváldos",
+            detail: detail
+        });
     }
-
 
 }
 
 class Exception {
 
-    constructor(status, message, detail) {
-        this.status = status || Http.Internal;
-        this.message = message + (detail != undefined ? ": " + detail : "");
+    constructor(parameters = {}) {
+        this.code = parameters.code;
+        this.message = parameters.message + (parameters.detail != undefined ? ": " + detail : "");
     }
 
 }

@@ -24,6 +24,17 @@ class BaseMemoryTable extends BaseObject {
 
 }
 
+class LocalMemoryTable extends BaseMemoryTable {
+
+    static Data() {
+        if (this._Data == undefined) {
+            this._Data = this.DefineData()
+        }
+        return this._Data;
+    }
+
+}
+
 class RestMemoryTable extends BaseMemoryTable {
 
     static Load() {
@@ -37,17 +48,6 @@ class RestMemoryTable extends BaseMemoryTable {
     }
 
     static Data() {
-        return this._Data;
-    }
-
-}
-
-class LocalMemoryTable extends BaseMemoryTable {
-
-    static Data() {
-        if (this._Data == undefined) {
-            this._Data = this.DefineData()
-        }
         return this._Data;
     }
 

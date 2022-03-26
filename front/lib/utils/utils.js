@@ -12,6 +12,9 @@ class Utils {
         return (typeof x === "string");
     }
 
+    static IsObject(x) {
+        return (x instanceof Object && !(x instanceof Date))
+    }
 
     static IsFunction(x) {
         return (typeof x === "function");
@@ -81,6 +84,18 @@ class Utils {
         return new Promise((resolve, reject) => {
             resolve(true)
         })
+    }
+
+    static ReduceIds(object) {
+        Object.keys(object).forEach(
+            key => {
+                const value = object[key];
+                if (this.IsObject(value)) {
+                    object[key] = value.id;
+                }
+            }
+        )
+        return object;
     }
 
 }

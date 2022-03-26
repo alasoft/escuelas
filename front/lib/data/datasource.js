@@ -7,7 +7,7 @@ class DsBaseConfig {
     configuration() {
         return {
             key: "id",
-            //            loadMode: this.parameters.cache == true ? "raw" : "processed"
+            loadMode: this.parameters.cache == true ? "raw" : "processed"
         }
     }
 
@@ -26,7 +26,7 @@ class DsListConfig extends DsBaseConfig {
         return Utils.Merge(super.configuration(), {
             load: searchData =>
                 this.rest().list(this.loadData(searchData)),
-            byKey: this.parameters.cache ? undefined : key =>
+            byKey: this.parameters.cache == true ? undefined : key =>
                 this.rest().get({ id: key }),
             onLoaded: data =>
                 this.parameters.onLoaded ? this.parameters.onLoaded(data) : undefined,
@@ -41,7 +41,7 @@ class DsListConfig extends DsBaseConfig {
             }
         }
 
-        return Utils.Merge({ descripcion: searchExpr() }, this.parameters.parameters);
+        return Utils.Merge({ descripcion: searchExpr() }, this.parameters.filter);
     }
 
 }

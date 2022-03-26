@@ -22,4 +22,12 @@ class FilterView extends ListView {
 
     filterItems() {}
 
+    setFilterValue(dataField, value) {
+        this.filter().setEditorValue(dataField, value);
+    }
+
+    getFilterValue(dataField) {
+        return this.filter().getEditorValue(dataField);
+    }
+
 }

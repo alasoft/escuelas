@@ -2,16 +2,18 @@ const { Http } = require("../utils/http");
 const { UsersCreateTable } = require("../users/users");
 const { UsersLogged } = require("../users/userslogged");
 const { UsersRest } = require("../rest/usersrest");
+const { Dates } = require("../utils/dates");
+const { Utils } = require("../utils/utils");
 
 class App {
 
-    static TOKEN_ALIVE_DEFAULT = 30;
+    static TOKEN_MINUTES_DEFAULT = 30;
 
     constructor(parameters) {
         this.parameters = parameters;
         this.port = parameters.port;
         this.root = parameters.root;
-        this.tokenAlive = parameters.tokenAlive || App.TOKEN_ALIVE_DEFAULT;
+        this.tokenMinutes = parameters.tokenMinutes || App.TOKEN_MINUTES_DEFAULT;
     }
 
     init() {
@@ -52,7 +54,8 @@ class App {
             .then(() =>
                 this.listen())
             .catch(err =>
-                console.log(err))
+                this.log(err)
+            )
     }
 
     dbConnect() {
@@ -94,13 +97,13 @@ class App {
     sendError(res, err) {
         if (err instanceof Error) {
             err = {
-                status: Http.Internal,
+                code: err.code,
                 message: err.message
             }
         }
-        console.log(err.stack);
-        console.log(err);
-        res.status(err.status).send(err);
+        this.log(err.stack);
+        this.log(err);
+        res.status(Http.Internal).send(err);
     }
 
     listen() {
@@ -113,6 +116,14 @@ class App {
 
     authenticate(req) {
         this.usersLogged.authenticate(req);
+    }
+
+    log(message) {
+        if (this.parameters.log != false) {
+            const date = Dates.Date().toString();
+            const underline = "-".repeat(date.length);
+            console.log(Utils.LineFeed() + Utils.LineFeed() + Dates.Date() + Utils.LineFeed() + underline + Utils.LineFeed() + message)
+        }
     }
 
 }

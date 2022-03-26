@@ -13,7 +13,7 @@ class UsersLogged {
 
     newToken(user) {
         let userLogged = this.findOrCreate(user);
-        userLogged.token = Utils.NewToken(this.app.tokenAlive);
+        userLogged.token = Utils.NewToken(this.app.tokenMinutes);
         return this.userLoggedToClient(userLogged);
     }
 

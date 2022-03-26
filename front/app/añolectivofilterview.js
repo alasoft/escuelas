@@ -34,7 +34,7 @@ class AñoLectivoFilterView extends FilterView {
         }
     }
 
-    formViewDefaultValues() {
+    formViewDefaultValues(mode) {
         return { añoLectivo: this.añoLectivo().id }
     }
 

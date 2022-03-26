@@ -42,10 +42,6 @@ class Form extends Widget {
         return this.getEditor(dataField).option(propertyName);
     }
 
-    focusEditor(dataField) {
-        this.getEditor(dataField).focus();
-    }
-
     getEditorValue(dataField) {
         return this.getEditor(dataField).option("value");
     }
@@ -61,6 +57,10 @@ class Form extends Widget {
 
     setEditorProperties(dataField, properties) {
         this.getEditor(dataField).option(properties);
+    }
+
+    focusEditor(dataField) {
+        this.getEditor(dataField).focus();
     }
 
     onLoadedSetFirstValue(dataField) {
@@ -144,10 +144,12 @@ class Item {
         function upperCase() {
             if (p.case == "upper") {
                 return {
-                    inputAttr: {
-                        style: "text-transform: uppercase"
-                    },
-                    onValueChanged: e => e.value ? e.component.option("value", e.value.toUpperCase()) : undefined
+                    editorOptions: {
+                        inputAttr: {
+                            style: "text-transform: uppercase"
+                        },
+                        onValueChanged: e => e.value ? e.component.option("value", e.value.toUpperCase()) : undefined
+                    }
                 }
             }
         }
@@ -278,7 +280,6 @@ class Item {
             }
         }
     }
-
 
     static Password(p = {}) {
         return {

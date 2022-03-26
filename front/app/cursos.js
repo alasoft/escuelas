@@ -147,7 +147,7 @@ class CursosForm extends FormView {
     defineRest() {
         return new Rest({
             path: "cursos",
-            transformData: (verb, data) => Utils.TransformPropertiesToIds(data, "año,turno")
+            transformData: (verb, data) => Utils.ReduceIds(data)
         })
     }
 

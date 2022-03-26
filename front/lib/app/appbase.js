@@ -46,22 +46,10 @@ class AppBase {
             });
     }
 
-    static SetUserToken(userToken) {
-        sessionStorage.setItem("userToken", JSON.stringify(userToken));
-    }
-
-    static GetUserToken() {
-        const userToken = sessionStorage.getItem("userToken");
-        return userToken != null ? JSON.parse(userToken) : {};
-    }
-
-    static Token() {
-        return this.GetUserToken().token;
-    }
-
-    static UserNombreApellido() {
-        const userToken = this.GetUserToken();
-        return Utils.Concatenate([userToken.nombre, userToken.apellido])
+    static ClearDesktop() {
+        this.ToolbarElement().empty();
+        this.ItemsElement().empty();
+        this.ViewElement().empty();
     }
 
     static ShowDesktop() {
@@ -86,12 +74,26 @@ class AppBase {
         this.AppItems = new AppItems().render();
     }
 
-    static ToggleItems() {
-        Utils.ToggleVisibility(this.ItemsElement());
+    static SetUser(user) {
+        sessionStorage.setItem("user", JSON.stringify(user));
     }
 
-    static Exit() {
-        window.location.href = "about:blank";
+    static GetUser() {
+        const user = sessionStorage.getItem("user");
+        return user != null ? JSON.parse(user) : {};
+    }
+
+    static Token() {
+        return this.GetUser().token;
+    }
+
+    static UserNombreApellido() {
+        const user = this.GetUser();
+        return Utils.Concatenate([user.nombre, user.apellido])
+    }
+
+    static ToggleItems() {
+        Utils.ToggleVisibility(this.ItemsElement());
     }
 
     static Title(title) {
@@ -142,12 +144,8 @@ class AppBase {
         this.ViewElement().empty();
     }
 
-    static ClearDesktop() {
-        this.ToolbarElement().empty();
-        this.ItemsElement().empty();
-        this.ViewElement().empty();
+    static Exit() {
+        window.location.href = "about:blank";
     }
-
-
 
 }
