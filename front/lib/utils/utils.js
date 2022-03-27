@@ -98,4 +98,12 @@ class Utils {
         return object;
     }
 
+    static HtmlLines(lines) {
+        let text = "";
+        lines.forEach(
+            (line, i) => text += (0 < i ? "<br>" : "") + (Utils.IsDefined(line) ? line : "")
+        )
+        return text;
+    }
+
 }

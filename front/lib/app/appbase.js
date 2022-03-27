@@ -21,6 +21,8 @@ class AppBase {
     static CSS_INPUT_DEFAULT = "-font-input";
     static CSS_READ_ONLY_DEFAULT = "-font-readonly";
 
+    static SingletonClasses = [];
+
     static Url(path, verb) {
         return encodeURI(Strings.Concatenate([this.Host(), this.Root(), path, verb], "/"));
     }
@@ -47,9 +49,20 @@ class AppBase {
     }
 
     static ClearDesktop() {
+        this.EmptySingletones();
         this.ToolbarElement().empty();
         this.ItemsElement().empty();
         this.ViewElement().empty();
+    }
+
+    static EmptySingletones() {
+        this.SingletonClasses.forEach(
+            SingletonClass => SingletonClass.BlankSingleton()
+        )
+    }
+
+    static AddSingletonClass(singletonClass) {
+        this.SingletonClasses.push(singletonClass);
     }
 
     static ShowDesktop() {

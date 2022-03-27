@@ -59,6 +59,14 @@ class MemoryTable extends ObjectBase {
         return this.Instance().items();
     }
 
+    static GetNombre(id) {
+        return this.Instance().getNombre(id);
+    }
+
+    static GetId(nombre) {
+        return this.Instance().getId(nombre);
+    }
+
 }
 
 module.exports.MemoryTable = MemoryTable;

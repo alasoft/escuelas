@@ -33,7 +33,7 @@ class Sql {
 
     static RawValue(value) {
         if (Utils.IsNotDefined(value)) {
-            return "NULL"
+            return null
         } else if (Utils.IsString(value)) {
             return value
         } else if (Utils.IsDate(value)) {

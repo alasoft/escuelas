@@ -1,7 +1,7 @@
 class Escuelas extends ListView {
 
     static DefineDataSource() {
-        return DsList({ path: "escuelas" });
+        return DsList({ path: "escuelas", cache: true });
     }
 
     labelText() {

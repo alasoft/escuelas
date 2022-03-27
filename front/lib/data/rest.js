@@ -2,11 +2,11 @@ class Rest {
 
     constructor(parameters) {
         this.path = parameters.path;
+        this.transformData = parameters.transformData;
     }
 
     list(data) {
-        let list = this.do("list", data);
-        return list;
+        return this.do("list", data);
     }
 
     get(data) {
@@ -26,7 +26,7 @@ class Rest {
     }
 
     do(verb, data) {
-        return this.promise(verb, data).catch(err => {
+        return this.promise({ verb: verb, data: data }).catch(err => {
             if (err.code == Errors.INVALID_TOKEN) {
                 App.Login()
             } else {
@@ -35,40 +35,30 @@ class Rest {
         })
     }
 
-    promise(verb, data) {
+    promise(parameters) {
         return new Promise((resolve, reject) => $.ajax({
-            url: App.Url(this.path, verb),
+            url: App.Url(this.path, parameters.verb),
             type: "POST",
-            headers: this.headersWithToken(),
-            data: this.dataToSend(verb, data),
+            headers: Utils.Merge(Rest.Headers, { token: App.Token() }),
+            data: this.dataToSend(parameters),
             success: data => resolve(data),
-            error: error => reject(this.errorMessage(error))
+            error: err => reject(this.errorObject(err))
         }))
     }
 
-    headersWithToken() {
-        return Utils.Merge(Rest.Headers, { token: App.Token() })
-    }
-
-    dataToSend(verb, data) {
-        if (data != undefined) {
-            if (this.parameters.transformData != undefined) {
-                return JSON.stringify(this.parameters.transformData(verb, data));
-            }
+    dataToSend(parameters) {
+        if (parameters.data != undefined) {
+            const dataToSend = this.transformData != undefined ?
+                this.transformData(parameters.verb, parameters.data) : parameters.data;
+            return JSON.stringify(dataToSend);
         }
     }
 
-    transformData(verb, data) {
-        if (this.parameters.transformData) {
-            return this.parameters.transformData(verb, data)
-        }
-    }
-
-    errorMessage(error) {
+    errorObject(error) {
         if (error.responseJSON != undefined) {
             return error.responseJSON;
         } else {
-            return { message: "La operación no pudo ser realizada .." }
+            return { message: "Ha ocurrido un error .. la operacion no pudo ser realizada" }
         }
     }
 

@@ -1,4 +1,4 @@
-class BaseMemoryTable extends BaseObject {
+class BaseMemoryTable extends ObjectBase {
 
     static DataSource() {
         if (this._DataSource == undefined) {

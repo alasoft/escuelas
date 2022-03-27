@@ -16,7 +16,7 @@ class CreateTables extends CreateTablesBase {
                     escuela: SqlType.Fk(),
                     modalidad: SqlType.Fk(),
                     año: SqlType.Integer(),
-                    division: SqlType.Char(),
+                    division: SqlType.Char({ size: 5 }),
                     turno: SqlType.Char({ size: 1 })
                 }
             }),

@@ -1,4 +1,4 @@
-class Component extends BaseObject {
+class Component extends ObjectBase {
 
     configuration() {
         if (this._configuration == undefined) {

@@ -18,7 +18,7 @@ class Postgres {
                 .then(result =>
                     resolve(result.rows))
                 .catch(err =>
-                    reject(Exceptions.DataBase(err)))
+                    reject(Exceptions.DataBase(err.message != undefined ? err.message : undefined)))
         })
     }
 

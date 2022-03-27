@@ -1,7 +1,7 @@
 class Modalidades extends ListView {
 
     static DefineDataSource() {
-        return DsList({ path: "modalidades" });
+        return DsList({ path: "modalidades", cache: true });
     }
 
     labelText() {

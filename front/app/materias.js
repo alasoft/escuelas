@@ -1,7 +1,7 @@
 class Materias extends ListView {
 
     static DefineDataSource() {
-        return DsList({ path: "materias" });
+        return DsList({ path: "materias", cache: true });
     }
 
     labelText() {

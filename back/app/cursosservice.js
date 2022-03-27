@@ -1,15 +1,28 @@
 const { Utils } = require("../lib/utils/utils");
 const { TableListService, TableGetService, TableInsertService, TableUpdateService, TableDeleteService } = require("../lib/service/tableservice");
+const { Años } = require("./años");
+const { Turnos } = require("./turnos");
 
 class CursosListService extends TableListService {
 
     sqlParameters() {
-        return Utils.Merge(CursosCommonService.SqlBaseParameters(),
-            this.sqlExtraParameters())
-    }
-
-    sqlExtraParameters() {
         return {
+            columns: [
+                "cur.id",
+                "cur.añolectivo",
+                "cur.escuela",
+                "cur.modalidad",
+                "cur.año",
+                "cur.division",
+                "cur.turno",
+                "esc.nombre as escuelanombre",
+                "mod.nombre as modalidadnombre"
+            ],
+            from: "cursos cur",
+            joins: [
+                { tableName: "escuelas", alias: "esc", columnName: "cur.escuela" },
+                { tableName: "modalidades", alias: "mod", columnName: "cur.modalidad" },
+            ],
             where: this.sqlAnd()
                 .addIf(this.isDefined("añoLectivo"), () =>
                     this.sqlText("cur.añolectivo=@añolectivo", {
@@ -19,12 +32,14 @@ class CursosListService extends TableListService {
                     this.sqlText("esc.nombre || esc.modalidad ilike @descripcion", {
                         descripcion: this.value("descripcion")
                     })
-                )
+                ),
+            order: "esc.nombre,mod.nombre,cur.año,cur.division,cur.turno"
         }
     }
 
     transformRow(row) {
-        return CursosCommonService.TransformRow(row);
+        row.añoNombre = Años.GetNombre(row.año);
+        row.turnoNombre = Turnos.GetNombre(row.turno);
     }
 
 }
@@ -32,19 +47,22 @@ class CursosListService extends TableListService {
 class CursosGetService extends TableGetService {
 
     sqlParameters() {
-        return Utils.Merge(CursosCommonService.SqlBaseParameters(),
-            this.sqlExtraParameters())
-    }
 
-    sqlExtraParameters() {
         return {
+            columns: [
+                "cur.id",
+                "cur.añolectivo",
+                "cur.escuela",
+                "cur.modalidad",
+                "cur.año",
+                "cur.division",
+                "cur.turno",
+            ],
+            from: "cursos cur",
             where: "cur.id=@id",
             parameters: { id: this.value("id") }
         }
-    }
 
-    TransformRow(row) {
-        return CursosCommonService.TransformRow(row);
     }
 
 }
@@ -81,33 +99,6 @@ class CursosUpdateService extends TableUpdateService {
 class CursosDeleteService extends TableDeleteService {}
 
 class CursosCommonService {
-
-    static SqlBaseParameters() {
-        return {
-            columns: [
-                "cur.id",
-                "cur.añolectivo",
-                "cur.escuela",
-                "cur.modalidad",
-                "cur.año",
-                "cur.division",
-                "cur.turno",
-                "esc.nombre as escuelanombre",
-                "mod.nombre as modalidadnombre"
-            ],
-            from: "cursos cur",
-            joins: [
-                { tableName: "escuelas", alias: "esc", columnName: "cur.escuela" },
-                { tableName: "modalidades", alias: "mod", columnName: "cur.modalidad" },
-            ],
-            order: "esc.nombre,mod.nombre,cur.año,cur.division,cur.turno"
-        }
-    }
-
-    static TransformRow(row) {
-        row.añoNombre = Años.getNombre(row.año);
-        row.turnoNombre = Turnos.getNombre(row.turno);
-    }
 
     static SqlNotDuplicated(service) {
         return service.sqlSelect({

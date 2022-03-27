@@ -101,8 +101,8 @@ class App {
                 message: err.message
             }
         }
-        this.log(err.stack);
-        this.log(err);
+        //        this.log(err.stack);
+        this.log("Error: " + err.message);
         res.status(Http.Internal).send(err);
     }
 
@@ -116,6 +116,10 @@ class App {
 
     authenticate(req) {
         this.usersLogged.authenticate(req);
+    }
+
+    logError(err) {
+        this.log(err.message)
     }
 
     log(message) {
