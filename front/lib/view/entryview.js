@@ -29,6 +29,10 @@ class EntryView extends DialogView {
         this.form().setData(data);
     }
 
+    updateData(data) {
+        this.form().updateData(data);
+    }
+
     firstEditor() {}
 
     focus() {
@@ -48,8 +52,10 @@ class EntryView extends DialogView {
         this.validate()
             .then(() =>
                 this.close(true))
-            .catch(err =>
-                this.handleError(err))
+            .catch(err => {
+                this.handleError(err)
+                    .then(this.close())
+            })
     }
 
     validate() {

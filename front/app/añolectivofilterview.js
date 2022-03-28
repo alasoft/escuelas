@@ -3,31 +3,32 @@ class AñoLectivoFilterView extends FilterView {
     filterItems() {
         return [
             Item.Lookup({
-                dataField: "añoLectivo",
+                dataField: "añolectivo",
                 dataSource: AñosLectivos.DataSource(),
                 width: 130,
+                label: "Año Lectivo",
                 onValueChanged: e => this.setDataSource(e.value.id)
             }),
         ]
     }
 
-    añoLectivo() {
+    añolectivo() {
         if (this.filter().instance() != undefined) {
-            return this.filter().getEditorValue("añoLectivo");
+            return this.filter().getEditorValue("añolectivo");
         }
     }
 
-    añoLectivoValue() {
+    añolectivoValue() {
         if (this.filter().instance() != undefined) {
-            return this.filter().getEditorValue("añoLectivo").id;
+            return this.filter().getEditorValue("añolectivo").id;
         }
     }
 
-    setDataSource(añoLectivo) {
-        if (añoLectivo != undefined) {
+    setDataSource(añolectivo) {
+        if (añolectivo != undefined) {
             this.list().setDataSource(DsList({
                 path: this.path(),
-                filter: { añoLectivo: añoLectivo }
+                filter: { añolectivo: añolectivo }
             }))
         } else {
             this.list().setDataSource(null);
@@ -35,12 +36,12 @@ class AñoLectivoFilterView extends FilterView {
     }
 
     formViewDefaultValues(mode) {
-        return { añoLectivo: this.añoLectivo().id }
+        return { añolectivo: this.añolectivo().id }
     }
 
     afterRenderComponents() {
         super.afterRenderComponents();
-        this.filter().setEditorValue("añoLectivo", AñosLectivos.Get(Dates.ThisYear()));
+        this.filter().setEditorValue("añolectivo", AñosLectivos.Get(Dates.ThisYear()));
     }
 
 }

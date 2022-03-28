@@ -30,7 +30,11 @@ class Rest {
             if (err.code == Errors.INVALID_TOKEN) {
                 App.Login()
             } else {
-                throw err
+                if (err instanceof TypeError) {
+                    throw { message: err.message }
+                } else {
+                    throw err
+                }
             }
         })
     }
@@ -48,8 +52,10 @@ class Rest {
 
     dataToSend(parameters) {
         if (parameters.data != undefined) {
-            const dataToSend = this.transformData != undefined ?
-                this.transformData(parameters.verb, parameters.data) : parameters.data;
+            const dataToSend = (
+                this.transformData != undefined &&
+                Utils.StringIs(parameters.verb, ["insert", "update"])
+            ) ? this.transformData(parameters.verb, parameters.data) : parameters.data;
             return JSON.stringify(dataToSend);
         }
     }

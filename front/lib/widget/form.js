@@ -1,353 +1,357 @@
-class Form extends Widget {
+ class Form extends Widget {
 
-    widgetName() {
-        return "dxForm";
-    }
+     widgetName() {
+         return "dxForm";
+     }
 
-    defaultConfiguration() {
-        return Utils.Merge(super.defaultConfiguration(), {
-            formData: {},
-            labelLocation: "left",
-            colCount: 1,
-        })
-    }
+     defaultConfiguration() {
+         return Utils.Merge(super.defaultConfiguration(), {
+             formData: {},
+             labelLocation: "left",
+             colCount: 1,
+         })
+     }
 
-    getData() {
-        return this.getProperty("formData");
-    }
+     getData() {
+         return this.getProperty("formData");
+     }
 
-    setData(data) {
-        this.setProperty("formData", data);
-    }
+     setData(data) {
+         this.setProperty("formData", data);
+     }
 
-    validate() {
-        return new Promise(async(resolve, reject) => {
-            let validate = this.instance().validate();
-            if (validate.status == "pending") {
-                validate = await validate.complete;
-            }
-            if (validate.isValid) {
-                resolve(true)
-            } else {
-                reject({ code: Errors.FORM_VALIDATION })
-            }
-        })
-    }
+     updateData(data) {
+         this.instance().updateData(data);
+     }
 
-    getEditor(dataField) {
-        return this.instance().getEditor(dataField);
-    }
+     validate() {
+         return new Promise(async(resolve, reject) => {
+             let validate = this.instance().validate();
+             if (validate.status == "pending") {
+                 validate = await validate.complete;
+             }
+             if (validate.isValid) {
+                 resolve(true)
+             } else {
+                 reject({ code: Errors.FORM_VALIDATION })
+             }
+         })
+     }
 
-    getEditorProperty(dataField, propertyName) {
-        return this.getEditor(dataField).option(propertyName);
-    }
+     getEditor(dataField) {
+         return this.instance().getEditor(dataField);
+     }
 
-    getEditorValue(dataField) {
-        return this.getEditor(dataField).option("value");
-    }
+     getEditorProperty(dataField, propertyName) {
+         return this.getEditor(dataField).option(propertyName);
+     }
 
-    setEditorValue(dataField, value) {
-        this.getEditor(dataField).option("value", value);
-    }
+     getEditorValue(dataField) {
+         return this.getEditor(dataField).option("value");
+     }
 
-    setEditorDataSource(dataField, dataSource) {
-        this.setEditorValue(dataField, null);
-        this.getEditor(dataField).option("dataSource", dataSource);
-    }
+     setEditorValue(dataField, value) {
+         this.getEditor(dataField).option("value", value);
+     }
 
-    setEditorProperties(dataField, properties) {
-        this.getEditor(dataField).option(properties);
-    }
+     setEditorDataSource(dataField, dataSource) {
+         this.setEditorValue(dataField, null);
+         this.getEditor(dataField).option("dataSource", dataSource);
+     }
 
-    focusEditor(dataField) {
-        this.getEditor(dataField).focus();
-    }
+     setEditorProperties(dataField, properties) {
+         this.getEditor(dataField).option(properties);
+     }
 
-    onLoadedSetFirstValue(dataField) {
-        return data =>
-            data.length > 0 ? this.setEditorValue(dataField, data[0]) : undefined;
-    }
+     focusEditor(dataField) {
+         this.getEditor(dataField).focus();
+     }
 
-    clearEditorDataSource(dataField) {
-        this.setEditorDataSource(dataField, null);
-    }
+     onLoadedSetFirstValue(dataField) {
+         return data =>
+             data.length > 0 ? this.setEditorValue(dataField, data[0]) : undefined;
+     }
 
-    setItems(items) {
-        this.setProperty("items", items);
-    }
+     clearEditorDataSource(dataField) {
+         this.setEditorDataSource(dataField, null);
+     }
 
-    toglePassword(dataField) {
-        this.setEditorProperties(dataField, {
-            mode: this.getEditorProperty(dataField, "mode") == "password" ? "text" : "password"
-        })
-    }
+     setItems(items) {
+         this.setProperty("items", items);
+     }
 
-    toglePasswords(dataFields) {
-        dataFields.forEach(
-            dataField => this.toglePassword(dataField)
-        )
-    }
+     toglePassword(dataField) {
+         this.setEditorProperties(dataField, {
+             mode: this.getEditorProperty(dataField, "mode") == "password" ? "text" : "password"
+         })
+     }
 
-}
+     toglePasswords(dataFields) {
+         dataFields.forEach(
+             dataField => this.toglePassword(dataField)
+         )
+     }
 
-class Item {
+ }
 
-    static Id() {
-        return {
-            dataField: "id",
-            visible: false
-        }
-    }
+ class Item {
 
-    static DataField(p = {}) {
+     static Id() {
+         return {
+             dataField: "id",
+             visible: false
+         }
+     }
 
-        function dataField() {
-            return {
-                dataField: p.dataField,
-                isRequired: p.required == true,
-                colSpan: p.colSpan,
-                label: {
-                    text: p.label,
-                },
-                editorOptions: {
-                    showClearButton: p.clearButton == true,
-                    inputAttr: {
-                        class: p.cssInput || App.CSS_INPUT_DEFAULT
-                    },
-                    width: p.width,
-                    placeholder: p.placeholder,
-                    onValueChanged: p.onValueChanged
-                }
-            }
-        }
+     static DataField(p = {}) {
 
-        function readOnly() {
-            if (p.readOnly == true) {
-                return {
-                    editorOptions: {
-                        readOnly: true,
-                        focusStateEnabled: false,
-                        inputAttr: {
-                            class: p.cssInput || App.CSS_READ_ONLY_DEFAULT
-                        }
-                    }
-                }
-            }
-        }
+         function dataField() {
+             return {
+                 dataField: p.dataField,
+                 isRequired: p.required == true,
+                 colSpan: p.colSpan,
+                 label: {
+                     text: p.label,
+                 },
+                 editorOptions: {
+                     showClearButton: p.clearButton == true,
+                     inputAttr: {
+                         class: p.cssInput || App.CSS_INPUT_DEFAULT
+                     },
+                     width: p.width,
+                     placeholder: p.placeholder,
+                     onValueChanged: p.onValueChanged
+                 }
+             }
+         }
 
-        return Utils.Merge(dataField(), readOnly())
+         function readOnly() {
+             if (p.readOnly == true) {
+                 return {
+                     editorOptions: {
+                         readOnly: true,
+                         focusStateEnabled: false,
+                         inputAttr: {
+                             class: p.cssInput || App.CSS_READ_ONLY_DEFAULT
+                         }
+                     }
+                 }
+             }
+         }
 
-    }
+         return Utils.Merge(dataField(), readOnly())
 
-    static Text(p = {}) {
+     }
 
-        function upperCase() {
-            if (p.case == "upper") {
-                return {
-                    editorOptions: {
-                        inputAttr: {
-                            style: "text-transform: uppercase"
-                        },
-                        onValueChanged: e => e.value ? e.component.option("value", e.value.toUpperCase()) : undefined
-                    }
-                }
-            }
-        }
+     static Text(p = {}) {
 
-        function text() {
-            return {
-                editorType: "dxTextBox"
-            }
-        }
+         function upperCase() {
+             if (p.case == "upper") {
+                 return {
+                     editorOptions: {
+                         inputAttr: {
+                             style: "text-transform: uppercase"
+                         },
+                         onValueChanged: e => e.value ? e.component.option("value", e.value.toUpperCase()) : undefined
+                     }
+                 }
+             }
+         }
 
-        return Utils.Merge(this.DataField(p), text(), upperCase())
+         function text() {
+             return {
+                 editorType: "dxTextBox"
+             }
+         }
 
-    }
+         return Utils.Merge(this.DataField(p), text(), upperCase())
 
-    static ReadOnly(p = {}) {
-        return Utils.Merge(this.Text(p), { readOnly: true })
-    }
+     }
 
-    static Date(p) {
+     static ReadOnly(p = {}) {
+         p.readOnly = true;
+         return this.Text(p)
+     }
 
-        function date() {
-            return {
-                editorType: "dxDateBox",
-                editorOptions: {
-                    displayFormat: p.format || App.DATE_FORMAT_DEFAULT,
-                    useMaskBehavior: true,
-                    applyValueMode: "instantly",
-                    calendarOptions: {
-                        showTodayButton: true
-                    },
-                    width: p.width || App.DATE_WIDTH_DEFAULT
-                }
-            }
-        }
+     static Date(p) {
 
-        return Utils.Merge(this.DataField(p), date());
+         function date() {
+             return {
+                 editorType: "dxDateBox",
+                 editorOptions: {
+                     displayFormat: p.format || App.DATE_FORMAT_DEFAULT,
+                     useMaskBehavior: true,
+                     applyValueMode: "instantly",
+                     calendarOptions: {
+                         showTodayButton: true
+                     },
+                     width: p.width || App.DATE_WIDTH_DEFAULT
+                 }
+             }
+         }
 
-    }
+         return Utils.Merge(this.DataField(p), date());
 
-    static Lookup(p = {}) {
+     }
 
-        function lookup() {
-            return {
-                editorType: "dxSelectBox",
-                editorOptions: {
-                    dataSource: p.dataSource,
-                    displayExpr: p.displayExpr || App.DISPLAY_EXPR_DEFAULT,
-                    searchEnabled: p.searchEnabled == true,
-                    deferRendering: p.deferRendering
-                }
-            }
-        }
+     static Lookup(p = {}) {
 
-        return Utils.Merge(this.DataField(p), lookup());
+         function lookup() {
+             return {
+                 editorType: "dxSelectBox",
+                 editorOptions: {
+                     dataSource: p.dataSource,
+                     displayExpr: p.displayExpr || App.DISPLAY_EXPR_DEFAULT,
+                     searchEnabled: p.editable == true,
+                     deferRendering: p.deferRendering
+                 }
+             }
+         }
 
-    }
+         return Utils.Merge(this.DataField(p), lookup());
 
-    static Apellido(p = {}) {
-        return Utils.Merge(this.Text(p), {
-            dataField: "apellido",
-            isRequired: true
-        })
-    }
+     }
 
-    static Nombre(p = {}) {
-        return Utils.Merge(this.Text(p), {
-            dataField: "nombre",
-            isRequired: true
-        })
-    }
+     static Apellido(p = {}) {
+         return Utils.Merge(this.Text(p), {
+             dataField: "apellido",
+             isRequired: true
+         })
+     }
 
-    static Group(p = {}) {
-        return Utils.Merge({
-            itemType: "group"
-        }, p)
-    }
+     static Nombre(p = {}) {
+         return Utils.Merge(this.Text(p), {
+             dataField: "nombre",
+             isRequired: true
+         })
+     }
 
-    static Empty() {
-        return ({ itemType: "empty" })
-    }
+     static Group(p = {}) {
+         return Utils.Merge({
+             itemType: "group"
+         }, p)
+     }
 
-    static Button(p) {
-        return {
-            itemType: "button",
-            horizontalAlignment: p.align,
-            buttonOptions: {
-                text: p.text,
-                onClick: p.onClick,
-                icon: p.icon,
-                type: p.type,
-                width: p.width,
-                focusStateEnabled: false,
-                hint: p.hint
-            }
-        }
-    }
+     static Empty() {
+         return ({ itemType: "empty" })
+     }
 
-    static Check(p) {
-        return Utils.Merge(
-            this.DataField(p), {
-                editorType: "dxCheckBox",
-                editorOptions: {
-                    onValueChanged: e => e.component.option("value", e.value == true ? 1 : 0)
-                }
-            }
-        )
-    }
+     static Button(p) {
+         return {
+             itemType: "button",
+             horizontalAlignment: p.align,
+             buttonOptions: {
+                 text: p.text,
+                 onClick: p.onClick,
+                 icon: p.icon,
+                 type: p.type,
+                 width: p.width,
+                 focusStateEnabled: false,
+                 hint: p.hint
+             }
+         }
+     }
 
-    static Email(p = {}) {
-        return {
-            dataField: p.dataField || "email",
-            isRequired: p.required || true,
-            editorOptions: {
-                mode: "email",
-                inputAttr: {
-                    autocomplete: "on"
-                }
-            },
-        }
-    }
+     static Check(p) {
+         return Utils.Merge(
+             this.DataField(p), {
+                 editorType: "dxCheckBox",
+                 editorOptions: {
+                     onValueChanged: e => e.component.option("value", e.value == true ? 1 : 0)
+                 }
+             }
+         )
+     }
 
-    static RepeatEmail(p = {}) {
-        return {
-            dataField: p.dataField || "repeatEmail",
-            isRequired: p.required || true,
-            label: {
-                text: p.text || "Repite el Email"
-            }
-        }
-    }
+     static Email(p = {}) {
+         return {
+             dataField: p.dataField || "email",
+             isRequired: p.required || true,
+             editorOptions: {
+                 mode: "email",
+                 inputAttr: {
+                     autocomplete: "on"
+                 }
+             },
+         }
+     }
 
-    static Password(p = {}) {
-        return {
-            dataField: p.dataField || "password",
-            isRequired: p.required || true,
-            editorOptions: {
-                mode: "password",
-                width: p.width || 150,
-            }
-        }
-    }
+     static RepeatEmail(p = {}) {
+         return {
+             dataField: p.dataField || "repeatEmail",
+             isRequired: p.required || true,
+             label: {
+                 text: p.text || "Repite el Email"
+             }
+         }
+     }
 
-    static RepeatPassword(p = {}) {
-        return {
-            dataField: p.dataField || "repeatPassword",
-            isRequired: p.required || true,
-            label: {
-                alignment: "right",
-                text: p.text || "Repite el password"
-            },
-            editorOptions: {
-                mode: "password",
-                width: p.width || 150,
-            }
-        }
-    }
+     static Password(p = {}) {
+         return {
+             dataField: p.dataField || "password",
+             isRequired: p.required || true,
+             editorOptions: {
+                 mode: "password",
+                 width: p.width || 150,
+             }
+         }
+     }
 
-    static ToglePassword(p = {}) {
-        return {
-            dataField: p.dataField || "showPassword",
-            editorType: "dxCheckBox",
-            label: {
-                alignment: "right",
-                text: p.text || "Muestra el password"
-            },
-            editorOptions: {
-                onValueChanged: p.onClick || (e => Utils.Evaluate(p.form).toglePassword("password"))
-            }
-        }
-    }
+     static RepeatPassword(p = {}) {
+         return {
+             dataField: p.dataField || "repeatPassword",
+             isRequired: p.required || true,
+             label: {
+                 alignment: "right",
+                 text: p.text || "Repite el password"
+             },
+             editorOptions: {
+                 mode: "password",
+                 width: p.width || 150,
+             }
+         }
+     }
 
-    static RecoverPassword(p = {}) {
-        return {
-            itemType: "button",
-            buttonOptions: {
-                text: p.text || "Olvidé el password",
-                icon: p.icon || "key"
-            }
-        }
-    }
+     static ToglePassword(p = {}) {
+         return {
+             dataField: p.dataField || "showPassword",
+             editorType: "dxCheckBox",
+             label: {
+                 alignment: "right",
+                 text: p.text || "Muestra el password"
+             },
+             editorOptions: {
+                 onValueChanged: p.onClick || (e => Utils.Evaluate(p.form).toglePassword("password"))
+             }
+         }
+     }
 
-    static Message(p = {}) {
-        return {
-            dataField: "message",
-            editorType: "dxTextArea",
-            label: {
-                visible: false,
-            },
-            editorOptions: {
-                text: p.text,
-                height: p.height,
-                readOnly: true,
-                focusStateEnabled: false,
-                inputAttr: {
-                    class: "-font-message"
-                }
-            }
-        }
-    }
+     static RecoverPassword(p = {}) {
+         return {
+             itemType: "button",
+             buttonOptions: {
+                 text: p.text || "Olvidé el password",
+             }
+         }
+     }
 
-}
+     static Message(p = {}) {
+         return {
+             dataField: "message",
+             editorType: "dxTextArea",
+             label: {
+                 visible: false,
+             },
+             editorOptions: {
+                 text: p.text,
+                 height: p.height,
+                 readOnly: true,
+                 focusStateEnabled: false,
+                 inputAttr: {
+                     class: "-font-message"
+                 }
+             }
+         }
+     }
+
+ }

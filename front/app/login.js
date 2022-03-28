@@ -11,7 +11,7 @@ class Login extends EntryView {
         return {
             title: App.Title("Ingreso de Usuario"),
             width: 600,
-            height: 300,
+            height: 350,
         }
     }
 

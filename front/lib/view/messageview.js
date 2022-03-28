@@ -39,7 +39,11 @@ class MessageView extends DialogView {
 
     popupTemplate(e) {
         super.popupTemplate(e);
-        this.findElement("text").append(Utils.Capitalize(this.parameters().message))
+        this.findElement("text").append(this.parameters().message)
+    }
+
+    focus() {
+        this.toolbar().focus()
     }
 
 }

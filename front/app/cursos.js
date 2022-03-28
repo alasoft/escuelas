@@ -13,12 +13,11 @@ class Cursos extends AñoLectivoFilterView {
                 list: {
                     groupPanel: {
                         visible: true
-                    },
-                    filterRow: {
-                        //                        visible: true,
-                        applyFilter: 'auto',
-                    },
+                    }
                 }
+            },
+            operations: {
+                allowExport: true
             }
         }
     }
@@ -32,14 +31,14 @@ class Cursos extends AñoLectivoFilterView {
 
     /*    
         itemAdd() {
-            if (this.añoLectivoValue() == Dates.ThisYear()) {
+            if (this.añolectivoValue() == Dates.ThisYear()) {
                 return super.itemAdd();
             }
         }
     */
 
     itemCopy() {
-        if (this.añoLectivoValue() == Dates.ThisYear() && this.list().isEmpty()) {
+        if (this.añolectivoValue() == Dates.ThisYear() && this.list().isEmpty()) {
             return {
                 widget: "dxButton",
                 location: "before",
@@ -100,7 +99,7 @@ class Cursos extends AñoLectivoFilterView {
     showMaterias() {
         new MateriasCurso({
             mode: "popup",
-            añoLectivo: this.filter().getEditorValue("añoLectivo"),
+            añolectivo: this.filter().getEditorValue("añolectivo"),
             curso: this.list().focusedRowData(),
             masterView: this
         }).render();
@@ -109,7 +108,7 @@ class Cursos extends AñoLectivoFilterView {
     showAlumnos() {
         new AlumnosCurso({
             mode: "popup",
-            añoLectivo: this.filter().getEditorValue("añoLectivo"),
+            añolectivo: this.filter().getEditorValue("añolectivo"),
             curso: this.list().focusedRowData(),
             masterView: this
         }).render();
@@ -118,7 +117,7 @@ class Cursos extends AñoLectivoFilterView {
     showTps() {
         new TpsCurso({
             mode: "popup",
-            añoLectivo: this.filter().getEditorValue("añoLectivo"),
+            añolectivo: this.filter().getEditorValue("añolectivo"),
             curso: this.list().focusedRowData(),
             masterView: this
         }).render();
@@ -138,6 +137,20 @@ class Cursos extends AñoLectivoFilterView {
 
     formViewClass() {
         return CursosForm;
+    }
+
+    static Descripcion(item) {
+        if (Utils.IsDefined(item)) {
+            return Utils.Concatenate([
+                item.escuelanombre,
+                item.modalidadnombre,
+                Años.GetNombre(item.año),
+                item.division,
+                Turnos.GetNombre(item.turno)
+            ], ", ")
+        } else {
+            return ""
+        }
     }
 
 }
@@ -164,11 +177,12 @@ class CursosForm extends FormView {
             Item.Id(),
             Item.Group({
                 items: [
-                    Item.ReadOnly({ dataField: "añoLectivo", width: 100 }),
+                    Item.ReadOnly({ dataField: "añolectivo", width: 100 }),
                     Item.Lookup({
                         dataField: "escuela",
                         dataSource: Escuelas.DataSource(),
                         required: true,
+                        editable: true
                     }),
                     Item.Lookup({
                         dataField: "modalidad",

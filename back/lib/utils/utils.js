@@ -95,6 +95,16 @@ class Utils {
         return "\r\n";
     }
 
+    static Concatenate(array, separator = " ") {
+        return this.NoNulls(array).join(separator);
+    }
+
+    static NoNulls(array) {
+        return array.filter(
+            e => e != undefined && e != null
+        )
+    }
+
 }
 
 module.exports.Utils = Utils;

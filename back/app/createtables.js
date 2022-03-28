@@ -12,11 +12,11 @@ class CreateTables extends CreateTablesBase {
             Sql.Create({
                 tableName: "cursos",
                 columns: {
-                    añoLectivo: SqlType.Integer(),
+                    añolectivo: SqlType.Integer(),
                     escuela: SqlType.Fk(),
                     modalidad: SqlType.Fk(),
                     año: SqlType.Integer(),
-                    division: SqlType.Char({ size: 5 }),
+                    division: SqlType.String({ size: 5 }),
                     turno: SqlType.Char({ size: 1 })
                 }
             }),

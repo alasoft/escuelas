@@ -106,4 +106,17 @@ class Utils {
         return text;
     }
 
+    static StringIs(string, strings) {
+        for (const s of strings) {
+            if (Utils.EqualsIgnoreCase(string, s)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    static EqualsIgnoreCase(s1, s2) {
+        return (s1.toLowerCase() == s2.toLowerCase());
+    }
+
 }

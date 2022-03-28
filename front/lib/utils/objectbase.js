@@ -36,9 +36,7 @@ class ObjectBase {
 
     static BlankSingleton() {
         this.Class()._DataSource = undefined;
-        if (this._Instance != undefined) {
-            this._Instance = undefined;
-        }
+        this._Instance = undefined;
     }
 
 }

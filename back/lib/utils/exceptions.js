@@ -1,3 +1,5 @@
+const { Utils } = require("./utils");
+
 class Exceptions {
 
     static INVALID_TOKEN = 1000;
@@ -5,70 +7,69 @@ class Exceptions {
     static InvalidToken(detail) {
         return new Exception({
             code: Exceptions.INVALID_TOKEN,
-            message: "token inválido",
+            message: "Token inválido",
             detail: detail
         })
     }
 
     static DataBase(detail) {
         return new Exception({
-            message: "error de base de datos",
+            message: "Error de base de datos",
             detail: detail
         })
     }
 
     static RequiredValue(detail) {
         return new Exception({
-            message: "valor requerido",
+            message: "Valor requerido",
             detail: detail
         })
     }
 
     static ParameterValueNotFound(detail) {
         return new Exception({
-            message: "valor de parámetro no encontrado",
+            message: "Valor de parámetro no encontrado",
             detail: detail
         })
     }
 
     static TenantNotDefined(detail) {
         return new Exception({
-            message: "tenant no definido",
+            message: "Tenant no definido",
             detail: detail
         })
     }
 
     static IdNotDefined(detail) {
         return new Exception({
-            message: "id no definido",
+            message: "Valor de id no definido",
             detail: detail
         });
     }
 
     static NotImplemented(detail) {
         return new Exception({
-            message: "no implementedo",
+            message: "No implementado",
             detail: detail
         });
     }
 
     static DuplicatedEmail(detail) {
         return new Exception({
-            message: "email duplicado",
+            message: "Email duplicado",
             detail: detail
         });
     }
 
     static DuplicatedEntity(detail) {
         return new Exception({
-            message: "duplicado",
             detail: detail
         });
     }
 
     static InvalidEmailPassword(detail) {
         return new Exception({
-            message: "email o password inváldos",
+            message: "Email o password inválidos",
             detail: detail
         });
     }
@@ -79,7 +80,7 @@ class Exception {
 
     constructor(parameters = {}) {
         this.code = parameters.code;
-        this.message = parameters.message + (parameters.detail != undefined ? ": " + detail : "");
+        this.message = Utils.Concatenate([parameters.message, parameters.detail], ": ")
     }
 
 }

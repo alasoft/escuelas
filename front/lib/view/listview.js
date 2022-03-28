@@ -1,5 +1,10 @@
 class ListView extends View {
 
+    constructor(...parameters) {
+        super(...parameters);
+        this.class()._DataSource = undefined;
+    }
+
     defaultConfiguration() {
         return Utils.Merge(super.defaultConfiguration(), {
             components: {
@@ -21,6 +26,7 @@ class ListView extends View {
                 allowInserting: true,
                 allowEditing: true,
                 allowDeleting: true,
+                allowExport: false,
                 deleteMessage: "Borra este registro ?"
             }
 
@@ -61,6 +67,10 @@ class ListView extends View {
 
     allowDeleting() {
         return this.allowOperation("deleting", true)
+    }
+
+    allowExport() {
+        return this.allowOperation("export", true)
     }
 
     allowOperation(operationName, checkHasRows = false) {
@@ -156,15 +166,27 @@ class ListView extends View {
         }
     }
 
-    itemSearchPanel() {
-        if (this.list().hasRows() || this.list().hasSearchText()) {
-            return "searchPanel"
-        }
+    listToolbarItems() {
+        return [this.itemInsert(), this.itemGroupPanel(), this.itemExportButton(), this.itemSearchPanel()]
     }
 
     itemExportButton() {
-        if (this.list().hasRows()) {
-            return "exportButton"
+        if (this.allowExport(true)) {
+            return {
+                widget: "dxButton",
+                location: "after",
+                options: {
+                    icon: "exportxlsx",
+                    hint: "Exporta a Excel",
+                    onClick: e => this.exportToExcel(e)
+                }
+            }
+        }
+    }
+
+    itemSearchPanel() {
+        if (this.list().hasRows() || this.list().hasSearchText()) {
+            return "searchPanel"
         }
     }
 
@@ -249,8 +271,29 @@ class ListView extends View {
 
     listOnDataErrorOccurred(e) {
         App.ShowError({ message: "Ha ocurrido un error durante la carga de datos .." })
-            .then(() =>
-                App.BlankViewElement())
+            .then(() => {
+                if (this.isPopup()) {
+                    this.close()
+                } else {
+                    App.BlankViewElement()
+                }
+            })
+    }
+
+    exportToExcel(e) {
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Employees');
+
+        DevExpress.excelExporter.exportDataGrid({
+            component: this.list().instance(),
+            worksheet,
+            autoFilterEnabled: true,
+        }).then(() => {
+            workbook.xlsx.writeBuffer().then((buffer) => {
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Employees.xlsx');
+            });
+        });
+        e.cancel = true;
     }
 
     static DataSource() {
@@ -261,5 +304,18 @@ class ListView extends View {
     }
 
     static DefineDataSource() {}
+
+    static RawData() {
+        return this.DataSource().__rawData;
+    }
+
+    static GetById(id, dataField) {
+        const row = this.RawData().find(
+            row => row.id == id
+        )
+        if (row != undefined) {
+            return row[dataField]
+        }
+    }
 
 }

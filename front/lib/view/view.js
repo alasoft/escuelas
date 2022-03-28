@@ -168,11 +168,12 @@ class View extends Component {
     }
 
     close(closeValue) {
-        if (this.mode() != "popup") {
-            return;
+        if (this.isPopup()) {
+            this.closeValue = closeValue;
+            this.popup().close();
+        } else {
+            App.BlankViewElement()
         }
-        this.closeValue = closeValue;
-        this.popup().close();
     }
 
     popupOnShown(e) {

@@ -15,9 +15,6 @@ class List extends Widget {
                 autoExpandAll: false,
                 contextMenuEnabled: true
             },
-            export: {
-                enabled: true
-            },
             scrolling: {
                 mode: "standard"
             },
@@ -98,6 +95,7 @@ class List extends Widget {
     focusRowById(id) {
         this.setProperty("focusedRowKey", id);
         this.navigateToRow(id);
+        this.focus();
     }
 
     navigateToRow(id) {

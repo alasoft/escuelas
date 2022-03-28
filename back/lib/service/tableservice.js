@@ -65,7 +65,7 @@ class TableGetService extends TableListGetService {
 
     sqlParameters() {
         return {
-            tableName: this.tableName,
+            from: this.tableName,
             where: "id=@id",
             parameters: { id: this.id() }
         }
@@ -129,7 +129,7 @@ class TableInsertUpdateServiceBase extends TableCrudServiceBase {
     }
 
     duplicatedMessage() {
-        return this.tableName
+        return this.parameters.duplicatedMessage || this.tableName + " registro duplicado";
     }
 
 }

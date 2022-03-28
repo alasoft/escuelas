@@ -22,9 +22,11 @@ class FormView extends EntryView {
     get(id) {
         return this.rest().get({ id: id })
             .then(data =>
-                this.setData(data))
-            .catch(err =>
-                this.handleError(err))
+                this.updateData(data))
+            .catch(err => {
+                this.handleError(err)
+                    .then(() => this.close())
+            })
     }
 
     id() {
@@ -89,7 +91,7 @@ class FormView extends EntryView {
         if (id != undefined) {
             this.listView().refresh(id);
         }
-        super.close(id);
+        super.close();
     }
 
     popupOnShown(e) {

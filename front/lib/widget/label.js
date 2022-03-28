@@ -10,4 +10,8 @@ class Label extends Component {
         this.element().text(text)
     }
 
+    setVisible(visible) {
+        this.element().hide();
+    }
+
 }

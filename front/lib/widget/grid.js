@@ -4,5 +4,4 @@ class Grid extends List {
         return "dxDataGrid";
     }
 
-
 }

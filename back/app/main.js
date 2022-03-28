@@ -6,6 +6,7 @@ const { Postgres } = require("../lib/data/postgres");
 const { SimpleTableRest } = require("../lib/rest/simpletablerest");
 const { Turnos } = require("./turnos");
 const { CursosRest } = require("./cursosrest");
+const { MateriasCursosRest } = require("./materiascursosrest");
 
 new App({
     port: 9090,
@@ -29,9 +30,10 @@ function restItems(app) {
     return [
         new MemoryTableRest({ app: app, tableClass: Años }),
         new MemoryTableRest({ app: app, tableClass: Turnos }),
-        new SimpleTableRest({ app: app, tableName: "escuelas" }),
-        new SimpleTableRest({ app: app, tableName: "modalidades" }),
-        new SimpleTableRest({ app: app, tableName: "materias" }),
-        new CursosRest({ app: app })
+        new SimpleTableRest({ app: app, tableName: "escuelas", duplicatedMessage: "Escuela duplicada" }),
+        new SimpleTableRest({ app: app, tableName: "modalidades", duplicatedMessage: "Modalidad duplicada" }),
+        new SimpleTableRest({ app: app, tableName: "materias", duplicatedMessage: "Materia duplicada" }),
+        new CursosRest({ app: app }),
+        new MateriasCursosRest({ app: app })
     ]
 }
