@@ -1,7 +1,5 @@
-const { ObjectBase } = require("../utils/objectbase");
 const { SqlType } = require("./sqltype");
 const { TextBuilder } = require("../utils/textbuilder");
-
 
 class SqlCreate {
 
@@ -35,4 +33,18 @@ class SqlCreate {
 
 }
 
+class SqlDropCreate extends SqlCreate {
+
+    SqlCommands = require("./sql").SqlCommands;
+
+    text() {
+        return new this.SqlCommands()
+            .add("drop table " + this.tableName)
+            .add(super.text())
+            .text()
+    }
+
+}
+
 module.exports.SqlCreate = SqlCreate;
+module.exports.SqlDropCreate = SqlDropCreate;

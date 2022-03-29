@@ -25,7 +25,8 @@ class CreateTables extends CreateTablesBase {
                 columns: {
                     curso: SqlType.Fk(),
                     apellido: SqlType.Apellido(),
-                    nombre: SqlType.Nombre()
+                    nombre: SqlType.Nombre(),
+                    genero: SqlType.Char({ size: 1 })
                 }
             }),
             Sql.Create({
@@ -33,6 +34,15 @@ class CreateTables extends CreateTablesBase {
                 columns: {
                     curso: SqlType.Fk(),
                     materia: SqlType.Fk()
+                }
+            }),
+            Sql.Create({
+                tableName: "periodos",
+                columns: {
+                    añolectivo: SqlType.Integer(),
+                    nombre: SqlType.String(),
+                    desde: SqlType.Date(),
+                    hasta: SqlType.Date()
                 }
             })
         ]

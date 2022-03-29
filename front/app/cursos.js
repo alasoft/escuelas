@@ -139,6 +139,14 @@ class Cursos extends AñoLectivoFilterView {
         return CursosForm;
     }
 
+    firstEditor() {
+        return "escuela";
+    }
+
+    excelFileName() {
+        return "Cursos " + this.filterText("añolectivo");
+    }
+
     static Descripcion(item) {
         if (Utils.IsDefined(item)) {
             return Utils.Concatenate([
@@ -220,10 +228,6 @@ class CursosForm extends FormView {
                 ]
             })
         ]
-    }
-
-    firstEditor() {
-        return "escuela";
     }
 
 }

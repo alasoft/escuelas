@@ -24,7 +24,7 @@ class AppBase {
     static SingletonClasses = [];
 
     static Url(path, verb) {
-        return encodeURI(Strings.Concatenate([this.Host(), this.Root(), path, verb], "/"));
+        return encodeURI(Utils.Concatenate([this.Host(), this.Root(), path, verb], "/"));
     }
 
     static async Start() {
@@ -126,7 +126,7 @@ class AppBase {
     }
 
     static ShowError(parameters) {
-        return new MessageView(parameters).render();
+        return new ErrorView(parameters).render();
     }
 
     static YesNo(parameters) {

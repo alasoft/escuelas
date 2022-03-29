@@ -1,3 +1,5 @@
+const { compareAsc, format } = require('date-fns');
+
 class Dates {
 
     static Date() {
@@ -22,6 +24,14 @@ class Dates {
 
     static LowerOrEqual(d1, d2) {
         return d1 <= d2;
+    }
+
+    static Format(date) {
+        return format(new Date(date), "dd-MMM-yyyy")
+    }
+
+    static YearOf(date) {
+        return new Date(date).getFullYear();
     }
 
 }

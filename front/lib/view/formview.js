@@ -24,8 +24,7 @@ class FormView extends EntryView {
             .then(data =>
                 this.updateData(data))
             .catch(err => {
-                this.handleError(err)
-                    .then(() => this.close())
+                this.handleError(err, true)
             })
     }
 

@@ -13,7 +13,7 @@ class CursosDetalle extends FilterView {
             components: {
                 filter: {
                     items: this.filterItems(),
-                    width: 450
+                    width: 400
                 }
             }
         })
@@ -26,7 +26,7 @@ class CursosDetalle extends FilterView {
     filterItems() {
         return [
             Item.Group({
-                colCount: 3,
+                colCount: 2,
                 items: [
                     this.itemAñoLectivo(),
                     this.itemCurso()
@@ -51,7 +51,7 @@ class CursosDetalle extends FilterView {
             dataField: "curso",
             displayExpr: item => Cursos.Descripcion(item),
             editable: true,
-            width: 350,
+            width: 550,
             onValueChanged: e => this.setDataSource(e.value)
         })
     }

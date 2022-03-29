@@ -6,7 +6,7 @@ const { Utils } = require("../utils/utils");
 
 class UsersService extends ServiceBase {
 
-    sqlCheckEmailParameters() {
+    sqlFindUserParameters() {
         return {
             filterByTenant: false,
             from: "users",
@@ -24,7 +24,7 @@ class UsersRegisterService extends UsersService {
             .then(() =>
                 this.prepareValues())
             .then(() =>
-                this.db.execute(this.sqlInsert()))
+                this.dbExecute(this.sqlInsert()))
             .then(() =>
                 this.sendIdDto())
             .catch(err =>
@@ -42,7 +42,7 @@ class UsersRegisterService extends UsersService {
     }
 
     checkEmail() {
-        return this.db.count(this.sqlCheckEmail()).then(count => {
+        return this.dbCount(this.sqlCheckEmail()).then(count => {
             if (0 < count) {
                 throw Exceptions.DuplicatedEmail()
             }
@@ -50,7 +50,7 @@ class UsersRegisterService extends UsersService {
     }
 
     sqlCheckEmail() {
-        return Sql.Count(this.sqlCheckEmailParameters())
+        return Sql.Count(this.sqlFindUserParameters())
     }
 
     prepareValues() {
@@ -90,11 +90,11 @@ class UsersLoginService extends UsersService {
     }
 
     findUser() {
-        return this.db.selectOne(this.sqlFindUser())
+        return this.dbSelectOne(this.sqlFindUser())
     }
 
     sqlFindUser() {
-        return Sql.Select(this.sqlCheckEmailParameters())
+        return Sql.Select(this.sqlFindUserParameters())
     }
 
     validateUser(user) {

@@ -30,14 +30,15 @@ class UsersLogged {
         return {
             nombre: user.nombre,
             apellido: user.apellido,
+            email: user.email,
             tenant: user.tenant,
             rol: user.rol
         };
     }
 
-    userLoggedToClient(userToken) {
-        const { nombre, apellido, token } = userToken;
-        return { nombre, apellido, token: token.value };
+    userLoggedToClient(userLogged) {
+        const { nombre, apellido, email, token } = userLogged;
+        return { nombre, apellido, email, token: token.value };
     }
 
 

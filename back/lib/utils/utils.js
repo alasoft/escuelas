@@ -80,7 +80,7 @@ class Utils {
 
     static StringIs(string, strings) {
         for (const s of strings) {
-            if (Utils.EqualsIgnoreCase(string, s)) {
+            if (this.EqualsIgnoreCase(string, s)) {
                 return true;
             }
         }
@@ -91,8 +91,8 @@ class Utils {
         return "'" + s + "'";
     }
 
-    static LineFeed() {
-        return "\r\n";
+    static LineFeed(count = 1) {
+        return "\r\n".repeat(count);
     }
 
     static Concatenate(array, separator = " ") {
@@ -103,6 +103,14 @@ class Utils {
         return array.filter(
             e => e != undefined && e != null
         )
+    }
+
+    static Log(lines) {
+        let text = "";
+        lines.forEach(
+            line => text += this.LineFeed() + line
+        )
+        console.log(text + this.LineFeed())
     }
 
 }

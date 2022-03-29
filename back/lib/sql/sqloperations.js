@@ -80,7 +80,7 @@ class SqlUpdate extends SqlWhereTenantId {
     text() {
         const textBuilder = new TextBuilder()
             .add("update")
-            .add(this.tableName.toUpperCase())
+            .add(this.tableName)
             .add("set")
         Object.keys(this.values)
             .filter(key =>

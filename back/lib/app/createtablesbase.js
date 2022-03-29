@@ -10,7 +10,9 @@ class CreateTablesBase {
     }
 
     execute() {
-        return this.db.execute(Sql.Transact(this.sql()));
+        const sql = Sql.Transact(this.sql());
+        this.app.log(sql);
+        return this.db.execute(sql);
     }
 
     sql() {

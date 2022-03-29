@@ -1,4 +1,10 @@
-const { TableListService, TableGetService, TableInsertService, TableUpdateService, TableDeleteService } = require("../lib/service/tableservice");
+const {
+    TableListService,
+    TableGetService,
+    TableInsertService,
+    TableUpdateService,
+    TableDeleteService
+} = require("../lib/service/tableservice");
 
 class MateriasCursosListService extends TableListService {
 

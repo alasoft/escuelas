@@ -7,6 +7,8 @@ const { SimpleTableRest } = require("../lib/rest/simpletablerest");
 const { Turnos } = require("./turnos");
 const { CursosRest } = require("./cursosrest");
 const { MateriasCursosRest } = require("./materiascursosrest");
+const { AlumnosRest } = require("./alumnosrest");
+const { PeriodosRest } = require("./periodosrest");
 
 new App({
     port: 9090,
@@ -33,7 +35,9 @@ function restItems(app) {
         new SimpleTableRest({ app: app, tableName: "escuelas", duplicatedMessage: "Escuela duplicada" }),
         new SimpleTableRest({ app: app, tableName: "modalidades", duplicatedMessage: "Modalidad duplicada" }),
         new SimpleTableRest({ app: app, tableName: "materias", duplicatedMessage: "Materia duplicada" }),
+        new PeriodosRest({ app: app }),
         new CursosRest({ app: app }),
-        new MateriasCursosRest({ app: app })
+        new MateriasCursosRest({ app: app }),
+        new AlumnosRest({ app: app })
     ]
 }

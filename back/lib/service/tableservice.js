@@ -27,7 +27,7 @@ class TableListGetService extends TableServiceBase {
 class TableListService extends TableListGetService {
 
     execute() {
-        this.db.select(this.sql())
+        this.dbSelect(this.sql())
             .then(rows =>
                 this.sendRows(rows))
             .catch(err =>
@@ -56,7 +56,7 @@ class TableListService extends TableListGetService {
 class TableGetService extends TableListGetService {
 
     execute() {
-        this.db.selectOne(this.sql())
+        this.dbSelectOne(this.sql())
             .then(row =>
                 this.sendRow(row))
             .catch(err =>
@@ -84,7 +84,7 @@ class TableCrudServiceBase extends TableServiceBase {
             .then(() =>
                 this.prepare())
             .then(() =>
-                this.db.execute(this.sql()))
+                this.dbExecute(this.sql()))
             .then(() =>
                 this.sendIdDto())
             .catch(err =>
@@ -117,7 +117,7 @@ class TableInsertUpdateServiceBase extends TableCrudServiceBase {
     }
 
     validateNotDuplicated() {
-        return this.db.select(this.sqlNotDuplicated()).then(rows => {
+        return this.dbSelect(this.sqlNotDuplicated()).then(rows => {
             if (1 < rows.length || (rows.length == 1 && rows[0].id != this.id())) {
                 throw Exceptions.DuplicatedEntity(this.duplicatedMessage())
             }

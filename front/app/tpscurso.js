@@ -1,6 +1,6 @@
 class TpsCurso extends CursosDetalle {
 
-    finalConfiguration() {
+    extraConfiguration() {
         return {
             popup: {
                 title: this.labelText(),

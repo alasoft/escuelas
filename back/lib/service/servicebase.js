@@ -1,4 +1,4 @@
-const { Exceptions } = require("../utils/exceptions");
+const { Exceptions, Exception } = require("../utils/exceptions");
 const { Sql } = require("../sql/sql");
 const { Utils } = require("../utils/utils");
 
@@ -76,7 +76,7 @@ class ServiceBase {
     }
 
     sendError(err) {
-        this.app.sendError(this.res, err);
+        this.app.sendError(this.req, this.res, err);
     }
 
     validate() {
@@ -106,6 +106,30 @@ class ServiceBase {
             property => json[property] = this.value(property, true)
         )
         return json;
+    }
+
+    dbSelect(sql) {
+        this.log(sql);
+        return this.db.select(sql);
+    }
+
+    dbSelectOne(sql) {
+        this.log(sql);
+        return this.db.selectOne(sql);
+    }
+
+    dbExecute(sql) {
+        this.log(sql);
+        return this.db.execute(sql);
+    }
+
+    dbCount(sql) {
+        this.log(sql);
+        return this.db.count(sql);
+    }
+
+    log(sql) {
+        this.app.log(sql, this.req);
     }
 
 }

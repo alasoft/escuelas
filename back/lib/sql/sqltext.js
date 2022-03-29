@@ -52,7 +52,7 @@ class SqlText {
         if (key != undefined) {
             return this.values[key];
         } else {
-            throw Exceptions.ParameterValueNotFound(name)
+            throw Exceptions.SqlParameterValueNotFound(name)
         }
     }
 

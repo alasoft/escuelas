@@ -1,10 +1,9 @@
 class AlumnosCurso extends CursosDetalle {
 
-    finalConfiguration() {
+    extraConfiguration() {
         return {
-            popup: {
-                width: 850,
-                height: 600
+            operations: {
+                allowExport: true
             }
         }
     }
@@ -15,12 +14,6 @@ class AlumnosCurso extends CursosDetalle {
 
     path() {
         return "alumnos";
-    }
-
-    listToolbarItems() {
-        return [this.itemInsert(),
-            this.itemSearchPanel()
-        ]
     }
 
     itemImport() {
@@ -39,13 +32,21 @@ class AlumnosCurso extends CursosDetalle {
         return [
             Column.Id(),
             Column.Text({ dataField: "apellido", width: 250 }),
-            Column.Text({ dataField: "nombres" }),
+            Column.Text({ dataField: "nombre" }),
             Column.Calculated({ formula: row => Generos.GetNombre(row.genero), caption: "Género" })
         ]
     }
 
     formViewClass() {
         return AlumnosCursoForm;
+    }
+
+    excelFileName() {
+        return "Alumnos de " + this.filterText("curso");
+    }
+
+    exportExcelDialogWidth() {
+        return 750
     }
 
 }
@@ -55,11 +56,20 @@ class AlumnosCursoForm extends FormView {
     defineRest() {
         return new Rest({
             path: "alumnos",
-            transformData: (verb, data) => {
-                data.genero = data.genero.id
-            }
+            transformData: (verb, data) => this.transformData(verb, data)
         })
     }
+
+    transformData(verb, data) {
+        return {
+            id: data.id,
+            curso: data.curso,
+            apellido: data.apellido,
+            nombre: data.nombre,
+            genero: data.genero.id
+        }
+    }
+
 
     popupExtraConfiguration() {
         return {
@@ -72,16 +82,16 @@ class AlumnosCursoForm extends FormView {
     formItems() {
         return [
             Item.Id(),
-            Item.ReadOnly({ dataField: "curso.añolectivo", width: 80, label: "Año Lectivo" }),
-            Item.ReadOnly({ dataField: "curso.descripcion", label: "Curso" }),
+            Item.ReadOnly({ dataField: "añolectivo", width: 80, label: "Año Lectivo" }),
+            Item.ReadOnly({ dataField: "descripcion", label: "Curso" }),
+            Item.Text({ dataField: "nombre", required: true, width: 250 }),
             Item.Text({ dataField: "apellido", required: true, width: 250 }),
-            Item.Text({ dataField: "nombres", required: true, width: 250 }),
             Item.Lookup({ dataField: "genero", required: true, dataSource: Generos.DataSource(), width: 150 })
         ]
     }
 
     firstEditor() {
-        return "apellido";
+        return "nombre";
     }
 
 }

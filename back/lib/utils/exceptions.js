@@ -8,7 +8,8 @@ class Exceptions {
         return new Exception({
             code: Exceptions.INVALID_TOKEN,
             message: "Token inválido",
-            detail: detail
+            detail: detail,
+            isTokenInvalid: true,
         })
     }
 
@@ -22,13 +23,14 @@ class Exceptions {
     static RequiredValue(detail) {
         return new Exception({
             message: "Valor requerido",
-            detail: detail
+            detail: detail,
+            isValidation: true
         })
     }
 
-    static ParameterValueNotFound(detail) {
+    static SqlParameterValueNotFound(detail) {
         return new Exception({
-            message: "Valor de parámetro no encontrado",
+            message: "Valor de parámetro SQL no encontrado",
             detail: detail
         })
     }
@@ -57,21 +59,40 @@ class Exceptions {
     static DuplicatedEmail(detail) {
         return new Exception({
             message: "Email duplicado",
-            detail: detail
+            detail: detail,
+            isValidation: true
         });
     }
 
     static DuplicatedEntity(detail) {
         return new Exception({
-            detail: detail
+            detail: detail,
+            isValidation: true
         });
     }
 
     static InvalidEmailPassword(detail) {
         return new Exception({
             message: "Email o password inválidos",
-            detail: detail
+            detail: detail,
+            isValidation: true
         });
+    }
+
+    static DesdeNotLowerHasta(detail) {
+        return new Exception({
+            message: "La fecha desde debe ser menor a la fecha hasta",
+            detail: detail,
+            isValidation: true
+        })
+    }
+
+    static DesdeOutOfAñoLectivo(detail) {
+        return new Exception({
+            message: "La fecha desde debe estar dentro del año lectivo",
+            detail: detail,
+            isValidation: true
+        })
     }
 
 }
@@ -81,8 +102,11 @@ class Exception {
     constructor(parameters = {}) {
         this.code = parameters.code;
         this.message = Utils.Concatenate([parameters.message, parameters.detail], ": ")
+        this.isValidation = parameters.isValidation;
+        this.isTokenInvalid = parameters.isTokenInvalid;
     }
 
 }
 
 module.exports.Exceptions = Exceptions;
+module.exports.Exception = Exception;

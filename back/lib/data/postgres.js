@@ -12,13 +12,13 @@ class Postgres {
     }
 
     query(sql) {
-        this.app.log(sql);
         return new Promise((resolve, reject) => {
             this.pool.query(sql)
                 .then(result =>
                     resolve(result.rows))
                 .catch(err =>
-                    reject(Exceptions.DataBase(err.message != undefined ? err.message : undefined)))
+                    reject(err)
+                )
         })
     }
 

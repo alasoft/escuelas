@@ -4,6 +4,7 @@ const { UsersLogged } = require("../users/userslogged");
 const { UsersRest } = require("../rest/usersrest");
 const { Dates } = require("../utils/dates");
 const { Utils } = require("../utils/utils");
+const { Exception } = require("../utils/exceptions");
 
 class App {
 
@@ -91,19 +92,21 @@ class App {
     }
 
     errorHandler(err, req, res, next) {
-        this.sendError(res, err);
+        this.sendError(req, res, err);
     }
 
-    sendError(res, err) {
-        if (err instanceof Error) {
-            err = {
-                code: err.code,
-                message: err.message
-            }
+    sendError(req, res, err) {
+        const errDto = this.errorToDto(err);
+        this.log("Error: " + JSON.stringify(errDto), req);
+        res.status(Http.Internal).send(errDto);
+    }
+
+    errorToDto(err) {
+        if (err instanceof Exception) {
+            return err
+        } else {
+            return { message: err.message != undefined ? err.message : "error interno" }
         }
-        //        this.log(err.stack);
-        this.log("Error: " + err.message);
-        res.status(Http.Internal).send(err);
     }
 
     listen() {
@@ -118,15 +121,19 @@ class App {
         this.usersLogged.authenticate(req);
     }
 
-    logError(err) {
-        this.log(err.message)
-    }
-
-    log(message) {
+    log(value, req) {
         if (this.parameters.log != false) {
             const date = Dates.Date().toString();
-            const underline = "-".repeat(date.length);
-            console.log(Utils.LineFeed() + Utils.LineFeed() + Dates.Date() + Utils.LineFeed() + underline + Utils.LineFeed() + message)
+            const user = this.userEmail(req);
+            const header = date + " - " + (user != undefined ? user : "Sistema")
+            const underline = "-".repeat(header.length);
+            Utils.Log([header, underline, value])
+        }
+    }
+
+    userEmail(req) {
+        if (req != undefined && req.user != undefined) {
+            return req.user.email
         }
     }
 

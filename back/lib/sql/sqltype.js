@@ -11,27 +11,31 @@ class SqlType {
     }
 
     static Fk(parameters) {
-        return "varchar(38)" + SqlType.NotNull(parameters);
+        return "varchar(38)" + this.NotNull(parameters);
     }
 
     static Integer(parameters) {
-        return "int" + SqlType.NotNull(parameters);
+        return "int" + this.NotNull(parameters);
     }
 
     static String(parameters = {}) {
-        return "varchar(" + (parameters.size || SqlType.VARCHAR_SIZE_DEFAULT) + ")" + SqlType.NotNull(parameters);
+        return "varchar(" + (parameters.size || SqlType.VARCHAR_SIZE_DEFAULT) + ")" + this.NotNull(parameters);
     }
 
     static Char(parameters = {}) {
-        return "char(" + (parameters.size || SqlType.CHAR_SIZE_DEFAULT) + ")" + SqlType.NotNull(parameters);
+        return "char(" + (parameters.size || SqlType.CHAR_SIZE_DEFAULT) + ")" + this.NotNull(parameters);
+    }
+
+    static Date(parameters = {}) {
+        return "date" + this.NotNull(parameters);
     }
 
     static Apellido(parameters) {
-        return "varchar(25)" + SqlType.NotNull(parameters);
+        return "varchar(25)" + this.NotNull(parameters);
     }
 
     static Nombre(parameters) {
-        return "varchar(25)" + SqlType.NotNull(parameters);
+        return "varchar(25)" + this.NotNull(parameters);
     }
 
     static UserApellido() {

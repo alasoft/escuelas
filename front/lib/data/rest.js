@@ -53,8 +53,8 @@ class Rest {
     dataToSend(parameters) {
         if (parameters.data != undefined) {
             const dataToSend = (
-                this.transformData != undefined &&
-                Utils.StringIs(parameters.verb, ["insert", "update"])
+                (this.transformData != undefined &&
+                    Utils.StringIs(parameters.verb, ["insert", "update"]))
             ) ? this.transformData(parameters.verb, parameters.data) : parameters.data;
             return JSON.stringify(dataToSend);
         }

@@ -25,11 +25,6 @@ class CursosListService extends TableListService {
         }
     }
 
-    transformRow(row) {
-        row.añoNombre = Años.GetNombre(row.año);
-        row.turnoNombre = Turnos.GetNombre(row.turno);
-    }
-
 }
 
 class CursosGetService extends TableGetService {

@@ -5,7 +5,6 @@ class FilterView extends ListView {
             components: {
                 filter: {
                     items: this.filterItems(),
-                    width: 400,
                     height: 70
                 },
             },
@@ -26,8 +25,12 @@ class FilterView extends ListView {
         this.filter().setEditorValue(dataField, value);
     }
 
-    getFilterValue(dataField) {
+    filterValue(dataField) {
         return this.filter().getEditorValue(dataField);
+    }
+
+    filterText(dataField) {
+        return this.filter().getEditorText(dataField);
     }
 
 }

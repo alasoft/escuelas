@@ -54,7 +54,6 @@ class EntryView extends DialogView {
                 this.close(true))
             .catch(err => {
                 this.handleError(err)
-                    .then(this.close())
             })
     }
 
@@ -66,9 +65,14 @@ class EntryView extends DialogView {
         return this.form().validate();
     }
 
-    handleError(err) {
+    handleError(err, close = false) {
         if (err.code != Errors.FORM_VALIDATION) {
             return this.showError(err)
+                .then(() => {
+                    if (close) {
+                        this.close(false)
+                    }
+                })
         }
     }
 

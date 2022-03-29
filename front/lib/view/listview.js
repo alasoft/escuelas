@@ -27,7 +27,8 @@ class ListView extends View {
                 allowEditing: true,
                 allowDeleting: true,
                 allowExport: false,
-                deleteMessage: "Borra este registro ?"
+                deleteMessage: "Borra este registro ?",
+                excelFileName: this.className()
             }
 
         })
@@ -178,7 +179,7 @@ class ListView extends View {
                 options: {
                     icon: "exportxlsx",
                     hint: "Exporta a Excel",
-                    onClick: e => this.exportToExcel(e)
+                    onClick: e => this.exportExcelDialog(e)
                 }
             }
         }
@@ -280,9 +281,23 @@ class ListView extends View {
             })
     }
 
-    exportToExcel(e) {
+    exportExcelDialog(e) {
+        new ExportExcelDialog({ fileName: this.excelFileName(), width: this.exportExcelDialogWidth() }).render().then(okey => {
+            if (okey) {
+                this.exportExcel(e, this.excelFileName())
+            }
+        })
+    }
+
+    exportExcelDialogWidth() {}
+
+    excelFileName() {
+        return Utils.Evaluate(this.operations().excelFileName);
+    }
+
+    exportExcel(e, fileName) {
         const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet('Employees');
+        const worksheet = workbook.addWorksheet(fileName);
 
         DevExpress.excelExporter.exportDataGrid({
             component: this.list().instance(),
@@ -290,7 +305,7 @@ class ListView extends View {
             autoFilterEnabled: true,
         }).then(() => {
             workbook.xlsx.writeBuffer().then((buffer) => {
-                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Employees.xlsx');
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), fileName + '.xlsx');
             });
         });
         e.cancel = true;

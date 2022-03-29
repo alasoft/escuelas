@@ -58,24 +58,15 @@ class AppItems extends View {
             onClick: e => Materias.Render()
         })
 
-        itemDatos.add({
-            text: "Cursos",
-            onClick: e => Cursos.Render()
+        itemEvaluaciones.add({
+            text: "Períodos",
+            onClick: e => Periodos.Render()
         })
-
-
-        /*        
-                itemEvaluaciones.add({
-                    text: "Períodos",
-                    onClick: e => Periodos.Render()
-                })
 
         itemEvaluaciones.add({
             text: "Cursos",
             onClick: e => Cursos.Render()
         })
-
-        */
 
         return [itemDatos, itemEvaluaciones, itemSalida];
 

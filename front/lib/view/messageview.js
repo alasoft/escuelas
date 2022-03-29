@@ -5,11 +5,15 @@ class MessageView extends DialogView {
 
     popupExtraConfiguration() {
         return {
-            title: "Atención",
+            title: this.title(),
             showCloseButton: false,
             width: this.popupWidth(),
             height: this.popupHeight(),
         }
+    }
+
+    title() {
+        return "Atención"
     }
 
     defineTemplate() {
@@ -30,20 +34,29 @@ class MessageView extends DialogView {
     }
 
     popupWidth() {
-        return MessageView.WIDTH_DEFAULT + this.parameters().message.length + 50;
+        return MessageView.WIDTH_DEFAULT +
+            this.message().length +
+            50 +
+            Utils.Occurences(this.message(), "<br>") * 20;
     }
 
     popupHeight() {
-        return MessageView.HEIGHT_DEFAULT + this.parameters().message.length / 2;
+        return MessageView.HEIGHT_DEFAULT +
+            this.message().length / 2 +
+            Utils.Occurences(this.message(), "<br>") * 10;
     }
 
     popupTemplate(e) {
         super.popupTemplate(e);
-        this.findElement("text").append(this.parameters().message)
+        this.findElement("text").append(this.message())
     }
 
     focus() {
         this.toolbar().focus()
+    }
+
+    message() {
+        return this.parameters().message;
     }
 
 }

@@ -1,14 +1,5 @@
 class MateriasCurso extends CursosDetalle {
 
-    finalConfiguration() {
-        return {
-            popup: {
-                width: 850,
-                height: 450
-            }
-        }
-    }
-
     labelText() {
         return "Materias por Curso"
     }
@@ -37,7 +28,11 @@ class MateriasCursoForm extends FormView {
     }
 
     transformData(verb, data) {
-        return { id: data.id, curso: data.curso, materia: data.materia.id }
+        return {
+            id: data.id,
+            curso: data.curso,
+            materia: data.materia.id
+        }
     }
 
     popupExtraConfiguration() {

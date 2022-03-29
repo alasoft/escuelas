@@ -1,5 +1,5 @@
 const { SqlAnd } = require("./sqland");
-const { SqlCreate } = require("./sqlcreate");
+const { SqlCreate, SqlDropCreate } = require("./sqlcreate");
 const { SqlInsert, SqlUpdate, SqlDelete } = require("./sqloperations");
 const { SqlText } = require("./sqltext");
 const { SqlType } = require("./sqltype");
@@ -59,6 +59,10 @@ class Sql {
         return new SqlCreate(parameters).text()
     }
 
+    static DropCreate(parameters) {
+        return new SqlDropCreate(parameters).text()
+    }
+
     static Insert(parameters) {
         return new SqlInsert(parameters).text()
     }
@@ -111,3 +115,4 @@ class SqlCommands extends TextBuilder {
 }
 
 module.exports.Sql = Sql;
+module.exports.SqlCommands = SqlCommands;

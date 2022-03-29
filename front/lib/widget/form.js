@@ -50,6 +50,10 @@
          return this.getEditor(dataField).option("value");
      }
 
+     getEditorText(dataField) {
+         return this.getEditor(dataField).option("text");
+     }
+
      setEditorValue(dataField, value) {
          this.getEditor(dataField).option("value", value);
      }
@@ -160,7 +164,10 @@
 
          function text() {
              return {
-                 editorType: "dxTextBox"
+                 editorType: "dxTextBox",
+                 editorOptions: {
+                     value: p.value
+                 }
              }
          }
 
