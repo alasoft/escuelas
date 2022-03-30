@@ -1,4 +1,4 @@
-const { Exceptions } = require("../utils/exceptions");
+const { Exceptions } = require("../utils/exceptions.js");
 const { TextBuilder } = require("../utils/textbuilder");
 const { TextParameters } = require("../utils/textparameters");
 const { Utils } = require("../utils/utils");

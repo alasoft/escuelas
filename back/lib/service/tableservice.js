@@ -1,4 +1,4 @@
-const { Exceptions } = require("../utils/exceptions");
+const { Exceptions } = require("../utils/exceptions.js");
 const { ServiceBase } = require("../service/servicebase");
 const { Sql } = require("../sql/sql");
 const { Utils } = require("../utils/utils");

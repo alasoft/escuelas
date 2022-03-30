@@ -1,4 +1,4 @@
-const { compareAsc, format } = require('date-fns');
+const { format } = require('date-fns');
 
 class Dates {
 
@@ -27,11 +27,26 @@ class Dates {
     }
 
     static Format(date) {
-        return format(new Date(date), "dd-MMM-yyyy")
+        return format(date, "dd-MMM-yyyy")
     }
 
     static YearOf(date) {
-        return new Date(date).getFullYear();
+        return date.getFullYear();
+    }
+
+    static Between(d1, d2, d3) {
+        return d2 <= d1 && d1 <= d3;
+    }
+
+    static Contains(d1, d2, d3, d4) {
+        return d1 < d3 && d2 > d4
+    }
+    static Contained(d1, d2, d3, d4) {
+        return d1 >= d3 && d2 <= d4
+    }
+
+    static Intersect(d1, d2, d3, d4) {
+        return d1 >= d3 && d1 <= d4 || d2 >= d3 && d2 <= d4
     }
 
 }

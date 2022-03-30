@@ -1,4 +1,4 @@
-const { Exceptions, Exception } = require("../utils/exceptions");
+const { Exceptions, Exception } = require("../utils/exceptions.js");
 const { Sql } = require("../sql/sql");
 const { Utils } = require("../utils/utils");
 
@@ -33,6 +33,13 @@ class ServiceBase {
 
     value(name) {
         return Utils.GetValue(this.values(), name);
+    }
+
+    date(name) {
+        const value = this.value(name);
+        if (value != undefined) {
+            return new Date(value);
+        }
     }
 
     setValue(name, value) {

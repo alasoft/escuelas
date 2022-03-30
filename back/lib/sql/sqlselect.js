@@ -1,5 +1,5 @@
 const { DbStates } = require("../data/dbstates");
-const { Exceptions } = require("../utils/exceptions");
+const { Exceptions } = require("../utils/exceptions.js");
 const { ObjectBase } = require("../utils/objectbase");
 const { SqlAnd } = require("./sqland");
 const { TextBuilder } = require("../utils/textbuilder");

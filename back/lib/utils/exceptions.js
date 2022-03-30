@@ -79,18 +79,10 @@ class Exceptions {
         });
     }
 
-    static DesdeNotLowerHasta(detail) {
+    static Validation(parameters) {
         return new Exception({
-            message: "La fecha desde debe ser menor a la fecha hasta",
-            detail: detail,
-            isValidation: true
-        })
-    }
-
-    static DesdeOutOfAñoLectivo(detail) {
-        return new Exception({
-            message: "La fecha desde debe estar dentro del año lectivo",
-            detail: detail,
+            message: parameters.message,
+            detail: parameters.detail,
             isValidation: true
         })
     }
