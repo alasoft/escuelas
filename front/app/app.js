@@ -1,7 +1,7 @@
 class App extends AppBase {
 
     static Host() {
-        return "http://127.0.0.1:9090";
+        return "http://alasoft.sytes.net:9090";
     }
 
     static Root() {
