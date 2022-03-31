@@ -13,7 +13,7 @@ class Users {
         id: Utils.NewGuid(),
         apellido: "",
         nombre: "TEST",
-        email: "test@test.com",
+        email: Utils.Encrypt("test@test.com"),
         password: "test",
         rol: this.ROL_TEST
     };
