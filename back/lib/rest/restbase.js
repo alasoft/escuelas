@@ -20,7 +20,7 @@ class RestBase {
     }
 
     verbPath(verb) {
-        return Path.Concatenate([this.app.root, this.path, verb])
+        return Path.Concatenate(this.app.root, this.path, verb)
     }
 
     authenticate(req, res, next) {

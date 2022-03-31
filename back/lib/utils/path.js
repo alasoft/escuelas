@@ -3,8 +3,8 @@ const normalize = require("normalize-path");
 
 class Path {
 
-    static Absolute(relative) {
-        return path.join(__dirname, Path.Normalize(relative));
+    static Absolute(...relative) {
+        return path.join(__dirname, Path.Concatenate(...relative));
     }
 
     static Normalize(path) {
@@ -12,8 +12,8 @@ class Path {
         return encodeURI(normalized);
     }
 
-    static Concatenate(paths) {
-        return this.Normalize(paths.join("/"));
+    static Concatenate(...path) {
+        return this.Normalize(path.join("/"));
     }
 
 }

@@ -5,8 +5,24 @@ const { UsersRest } = require("../rest/usersrest");
 const { Dates } = require("../utils/dates");
 const { Utils } = require("../utils/utils");
 const { Exception } = require("../utils/exceptions");
+const { Path } = require("../utils/path");
 
 class App {
+
+    static IndexRelativePath = "../../../front/app/index.htm";
+
+    static StaticAlias = "static";
+    static StaticRelativePath = "../../../front"
+    static StaticRelativePaths = [
+        "app",
+        "lib/app",
+        "lib/data",
+        "lib/template",
+        "lib/utils",
+        "lib/view",
+        "lib/widget",
+        "styles"
+    ]
 
     static TOKEN_MINUTES_DEFAULT = 30;
 
@@ -51,6 +67,10 @@ class App {
             .then(() =>
                 this.buildAppRest())
             .then(() =>
+                this.buildIndex())
+            .then(() =>
+                this.useStatic())
+            .then(() =>
                 this.useErrorHandler())
             .then(() =>
                 this.listen())
@@ -85,6 +105,25 @@ class App {
                 item.build()
             }
         }
+    }
+
+    buildIndex() {
+        const indexPath = Path.Absolute(App.IndexRelativePath);
+        const root = Path.Normalize(this.root);
+        this.log("GET " + root);
+        this.express.get(root, (req, res) =>
+            res.sendFile(indexPath))
+    }
+
+    useStatic() {
+        var staticAliasPath = Path.Concatenate(this.root, App.StaticAlias);
+        App.StaticRelativePaths.forEach(
+            relativePath => {
+                const staticPath = Path.Absolute(App.StaticRelativePath, relativePath);
+                this.log("STATIC " + staticPath);
+                this.express.use(staticAliasPath, this.expressFunction.static(staticPath))
+            }
+        )
     }
 
     useErrorHandler() {
