@@ -2,7 +2,6 @@ class List extends Widget {
 
     defaultConfiguration() {
         return Utils.Merge(super.defaultConfiguration(), {
-            keyExpr: "id",
             focusedRowEnabled: true,
             focusedRowIndex: 0,
             allowColumnResizing: true,

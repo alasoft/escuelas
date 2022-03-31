@@ -1,5 +1,5 @@
 const { Exceptions } = require("../utils/exceptions");
-const { ServiceBase } = require("../service/servicebase");
+const { ServiceBase } = require("./servicebase");
 const { Sql } = require("../sql/sql");
 const { Users } = require("../users/users");
 const { Utils } = require("../utils/utils");
@@ -57,6 +57,7 @@ class UsersRegisterService extends UsersService {
         this.setValue("tenant", Utils.NewGuid());
         this.setValue("id", Utils.NewGuid());
         this.setValue("rol", Users.ROL_USER)
+        this.setValue("password", Utils.Encrypt(this.value("password")))
     }
 
     sqlInsert() {
@@ -98,7 +99,7 @@ class UsersLoginService extends UsersService {
     }
 
     validateUser(user) {
-        if (Utils.IsNotDefined(user) || user.password != this.value("password")) {
+        if (Utils.IsNotDefined(user) || Utils.Decrypt(user.password) != this.value("password")) {
             throw Exceptions.InvalidEmailPassword();
         }
         return user

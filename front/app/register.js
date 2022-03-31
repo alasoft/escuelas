@@ -44,13 +44,13 @@ class Register extends EntryView {
         return new Promise((resolve, reject) => {
             this.formValidate().then(() => {
                 if (this.email() != this.repeatEmail()) {
-                    reject({ message: "Los emails deben coincidir" })
+                    reject(this.validationError("Los emails deben coincidir"))
                 }
                 if (this.password().length < 8) {
-                    reject({ message: "El password debe tener al menos 8 caracteres" })
+                    reject(this.validationError("El password debe tener al menos 8 caracteres"))
                 }
                 if (this.password() != this.repeatPassword()) {
-                    reject({ message: "Los passwords deben coincidir" })
+                    reject(this.validationError("Los passwords deben coincidir"))
                 }
                 resolve(true)
             }).catch(err =>
@@ -87,7 +87,7 @@ class Register extends EntryView {
     }
 
     exitMessage() {
-        App.Message({ message: "La registración ha sido exitosa" })
+        App.ShowMessage({ message: "La registración ha sido exitosa" })
     }
 
 }

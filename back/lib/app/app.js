@@ -137,7 +137,7 @@ class App {
     sendError(req, res, err) {
         const errDto = this.errorToDto(err);
         this.log("Error: " + JSON.stringify(errDto), req);
-        res.status(Http.Internal).send(errDto);
+        res.status(err.status || Http.Internal).send(errDto);
     }
 
     errorToDto(err) {

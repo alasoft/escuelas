@@ -1,3 +1,4 @@
+const { Http } = require("./http");
 const { Utils } = require("./utils");
 
 class Exceptions {
@@ -6,6 +7,7 @@ class Exceptions {
 
     static InvalidToken(detail) {
         return new Exception({
+            status: Http.Unauthorized,
             code: Exceptions.INVALID_TOKEN,
             message: "Token inválido",
             detail: detail,
@@ -22,6 +24,7 @@ class Exceptions {
 
     static RequiredValue(detail) {
         return new Exception({
+            status: Http.InvalidRequest,
             message: "Valor requerido",
             detail: detail,
             isValidation: true
@@ -37,6 +40,7 @@ class Exceptions {
 
     static TenantNotDefined(detail) {
         return new Exception({
+            status: Http.Unauthorized,
             message: "Tenant no definido",
             detail: detail
         })
@@ -58,6 +62,7 @@ class Exceptions {
 
     static DuplicatedEmail(detail) {
         return new Exception({
+            status: Http.InvalidRequest,
             message: "Email duplicado",
             detail: detail,
             isValidation: true
@@ -66,6 +71,7 @@ class Exceptions {
 
     static DuplicatedEntity(detail) {
         return new Exception({
+            status: Http.InvalidRequest,
             detail: detail,
             isValidation: true
         });
@@ -73,6 +79,7 @@ class Exceptions {
 
     static InvalidEmailPassword(detail) {
         return new Exception({
+            status: Http.InvalidRequest,
             message: "Email o password inválidos",
             detail: detail,
             isValidation: true
@@ -81,6 +88,7 @@ class Exceptions {
 
     static Validation(parameters) {
         return new Exception({
+            status: Http.InvalidRequest,
             message: parameters.message,
             detail: parameters.detail,
             isValidation: true
@@ -92,6 +100,7 @@ class Exceptions {
 class Exception {
 
     constructor(parameters = {}) {
+        this.status = parameters.status;
         this.code = parameters.code;
         this.message = Utils.Concatenate([parameters.message, parameters.detail], ": ")
         this.isValidation = parameters.isValidation;

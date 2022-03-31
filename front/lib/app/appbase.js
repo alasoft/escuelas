@@ -125,6 +125,10 @@ class AppBase {
         return "1.0"
     }
 
+    static ShowMessage(parameters) {
+        return new MessageView(parameters).render()
+    }
+
     static ShowError(parameters) {
         return new ErrorView(parameters).render();
     }

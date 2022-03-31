@@ -101,4 +101,8 @@ class EntryView extends DialogView {
         this.okey()
     }
 
+    validationError(message) {
+        return { isValidation: true, message: message }
+    }
+
 }

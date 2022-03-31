@@ -1,8 +1,13 @@
 const { _ } = require("lodash");
 const cuid = require("cuid");
+const simpleEncryptor = require("simple-encryptor");
+
 const { Dates } = require("../utils/dates");
 
 class Utils {
+
+    static EncryptorKey = process.env.ENCRYPTOR_KEY;
+    static Encryptor = simpleEncryptor(this.EncryptorKey);
 
     static IsDefined(x) {
         return (x != undefined && x != null);
@@ -111,6 +116,14 @@ class Utils {
             line => text += this.LineFeed() + line
         )
         console.log(text + this.LineFeed())
+    }
+
+    static Encrypt(s) {
+        return this.Encryptor.encrypt(s);
+    }
+
+    static Decrypt(s) {
+        return this.Encryptor.decrypt(s);
     }
 
 }
