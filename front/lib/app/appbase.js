@@ -113,8 +113,12 @@ class AppBase {
         return Utils.Concatenate([this.ApplicationFullName(), title], " - ")
     }
 
-    static ApplicationFullName() {
+    static ApplicationShortName() {
         return this.ApplicationName() + " " + this.ApplicationVersion()
+    }
+
+    static ApplicationFullName() {
+        return "Sistema de " + this.ApplicationShortName();
     }
 
     static ApplicationName() {
@@ -122,7 +126,7 @@ class AppBase {
     }
 
     static ApplicationVersion() {
-        return "1.0"
+        return "0.0"
     }
 
     static ShowMessage(parameters) {

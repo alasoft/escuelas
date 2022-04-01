@@ -88,7 +88,7 @@ class CursosDetalle extends FilterView {
     }
 
     formViewDefaultValues() {
-        const curso = this.filter().getEditorValue("curso");
+        const curso = this.curso();
         return {
             curso: curso.id,
             añolectivo: curso.añolectivo,

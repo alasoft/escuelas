@@ -2,82 +2,87 @@ class TpsCurso extends CursosDetalle {
 
     extraConfiguration() {
         return {
-            popup: {
-                title: this.labelText(),
-                //width: 1050,
-                //                height: 550
-            },
             components: {
                 filter: {
-                    height: 100,
-                    //                    width: 1100,
+                    width: 1000,
+                    height: 100
                 }
             }
         }
     }
 
     labelText() {
-        return "Trabajos Prácticos por Curso y Materia xx"
+        return "Trabajos Prácticos por Curso y Materia"
+    }
+
+    filterItemsNew() {
+        return [
+            this.itemAñoLectivo(),
+            this.itemCurso(),
+            this.itemMateria()
+        ]
     }
 
     filterItems() {
         return [
             Item.Group({
+                colCount: 2,
                 items: [
                     this.itemAñoLectivo(),
                 ]
             }),
             Item.Group({
-                colCount: 3,
+                colCount: 2,
                 items: [
                     this.itemCurso(),
-                    this.itemMateria()
+                    this.itemMateriaCurso()
                 ]
-            })
+            }),
         ]
     }
 
     itemCurso() {
         return Item.Lookup({
             dataField: "curso",
-            displayExpr: "descripcion",
-            deferRendering: false,
-            colSpan: 2,
-            onValueChanged: e => this.cursoOnValueChanged(e)
+            displayExpr: item => Cursos.Descripcion(item),
+            editable: true,
+            width: 400,
+            onValueChanged: e => this.setMateriaCursoDataSource(e.value)
         })
     }
 
-    itemMateria() {
+    itemMateriaCurso() {
         return Item.Lookup({
-            dataField: "materiaCurso",
-            displayExpr: "materia.nombre",
+            dataField: "materiacurso",
+            displayExpr: item =>
+                item != null ? item.materianombre : "",
             deferRendering: false,
             width: 250,
             label: "Materia",
-            onValueChanged: e => this.materiaOnValueChanged(e)
+            onValueChanged: e => this.setDataSource(e.value)
         })
     }
 
-    setMateriaDataSource(curso) {
+    setMateriaCursoDataSource(curso) {
         if (curso != undefined) {
-            this.filter().setEditorDataSource("materiaCurso",
+            this.filter().setEditorDataSource("materiacurso",
                 DsList({
                     path: "materias_cursos",
-                    parameters: { curso: curso },
-                    //                    onLoaded: this.filter().onLoadedSetFirstValue("materiaCurso"),
+                    filter: { curso: curso.id },
+                    onLoaded: this.filter().onLoadedSetFirstValue("materiacurso"),
                 })
             );
         } else {
-            this.filter().setEditorDataSource("curso", null);
+            this.filter().setEditorDataSource("materiacurso", null);
         }
     }
 
-    setDataSource(materiaCurso) {
-        if (curso != undefined) {
+    setDataSource(materiacurso) {
+        if (materiacurso != undefined) {
             this.list().setDataSource(
                 DsList({
                     path: "tps",
-                    parameters: { materiaCurso: materiaCurso }
+                    filter: { materiacurso: materiacurso.id }
                 })
             )
         } else {
@@ -85,15 +90,10 @@ class TpsCurso extends CursosDetalle {
         }
     }
 
-
-    path() {
-        return "tps";
-    }
-
     listColumns() {
         return [
             Column.Id(),
-            Column.Text({ dataField: "periodo.nombre", caption: "Período" }),
+            Column.Text({ dataField: "periodonombre", caption: "Período" }),
             Column.Text({ dataField: "nombre" }),
             Column.Date({ dataField: "desde", width: 200 }),
             Column.Date({ dataField: "hasta", caption: "Fecha de Entrega", width: 200 })
@@ -105,12 +105,17 @@ class TpsCurso extends CursosDetalle {
     }
 
     formViewDefaultValues() {
+        const curso = this.filter().getEditorValue("curso");
         return {
-            curso: this.curso(),
-            periodo: null,
-            materiaCurso: this.filter().getEditorValue("materiaCurso"),
+            curso: curso.id,
+            añolectivo: curso.añolectivo,
+            descripcion: Cursos.Descripcion(curso),
             desde: Dates.Today()
         }
+    }
+
+    materiacurso() {
+        return this.filter().getEditorValue("materiacurso")
     }
 
     formViewParameters() {
@@ -134,7 +139,18 @@ class TpsCurso extends CursosDetalle {
 class TpsCursoForm extends FormView {
 
     defineRest() {
-        return new Rest({ path: "tps" })
+        return new Rest({ path: "tps", transformData: (verb, data) => this.transformData(verb, data) })
+    }
+
+    transformData(verb, data) {
+        return {
+            id: data.id,
+            materiacurso: this.materiacurso().id,
+            periodo: data.periodo.id,
+            nombre: data.nombre,
+            desde: data.desde,
+            hasta: data.hasta
+        }
     }
 
     popupExtraConfiguration() {
@@ -153,18 +169,14 @@ class TpsCursoForm extends FormView {
                     Item.Group({
                         colCount: 3,
                         items: [
-                            Item.ReadOnly({ dataField: "curso.añoLectivo", label: "Año Lectivo" }),
-                            Item.ReadOnly({ dataField: "curso.descripcion", label: "Curso", colSpan: 2 }),
+                            Item.ReadOnly({ dataField: "añolectivo", label: "Año Lectivo" }),
+                            Item.ReadOnly({ dataField: "descripcion", label: "Curso", colSpan: 2 }),
                         ]
                     }),
-                    Item.Lookup({
-                        dataField: "materiaCurso",
-                        displayExpr: "materia.nombre",
-                        dataSource: DsList({
-                            path: "materias_cursos",
-                            parameters: { curso: this.parameters().curso }
-                        }),
-                        required: true,
+                    Item.Text({
+                        dataField: "materiacurso",
+                        readOnly: true,
+                        value: this.materiacurso().materianombre,
                         width: 200,
                         label: "Materia"
                     }),
@@ -180,7 +192,7 @@ class TpsCursoForm extends FormView {
                     Item.Lookup({
                         dataField: "periodo",
                         dataSource: DsList({ path: "periodos" }),
-                        displayExpr: "descripcion",
+                        displayExpr: "nombre",
                         required: true,
                         width: 250
                     }),
@@ -201,6 +213,10 @@ class TpsCursoForm extends FormView {
                 ]
             }),
         ]
+    }
+
+    materiacurso() {
+        return this.listView().materiacurso();
     }
 
     firstEditor() {

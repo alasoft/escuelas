@@ -5,21 +5,18 @@ const {
     TableUpdateService,
     TableDeleteService
 } = require("../lib/service/tableservice");
+const { Utils } = require("../lib/utils/utils");
 
 class MateriasCursosListService extends TableListService {
 
     sqlParameters() {
+        return Utils.Merge(
+            MateriasCursosCommonService.SqlBaseParameters(this),
+            this.sqlExtraParameters())
+    }
+
+    sqlExtraParameters() {
         return {
-            columns: [
-                "mc.id",
-                "mc.curso",
-                "mc.materia",
-                "mat.nombre as materianombre"
-            ],
-            from: "materias_cursos mc",
-            joins: [
-                { tableName: "materias", alias: "mat", columnName: "mc.materia" },
-            ],
             where: this.sqlAnd()
                 .addIf(this.isDefined("curso"), () =>
                     this.sqlText("mc.curso=@curso", {
@@ -39,14 +36,14 @@ class MateriasCursosListService extends TableListService {
 class MateriasCursosGetService extends TableGetService {
 
     sqlParameters() {
+        return Utils.Merge(
+            MateriasCursosCommonService.SqlBaseParameters(this),
+            this.sqlExtraParameters())
+    }
+
+    sqlExtraParameters() {
         return {
-            columns: [
-                "mc.id",
-                "mc.curso",
-                "mc.materia"
-            ],
-            from: "materias_cursos mc",
-            where: "id=@id",
+            where: "mc.id=@id",
             parameters: { id: this.id() }
         }
     }
@@ -62,7 +59,6 @@ class MateriasCursosInsertService extends TableInsertService {
     sqlNotDuplicated() {
         return MateriasCursosCommonService.SqlNotDuplicated(this);
     }
-
     duplicatedMessage() {
         return MateriasCursosCommonService.DuplicatedMessage();
     }
@@ -87,6 +83,21 @@ class MateriasCursosDeleteService extends TableDeleteService {
 
 class MateriasCursosCommonService {
 
+    static SqlBaseParameters(service) {
+        return {
+            columns: [
+                "mc.id",
+                "mc.curso",
+                "mc.materia",
+                "mat.nombre as materianombre"
+            ],
+            from: "materias_cursos mc",
+            joins: [
+                { tableName: "materias", alias: "mat", columnName: "mc.materia" },
+            ]
+        }
+    }
+
     static SqlNotDuplicated(service) {
         return service.sqlSelect({
             from: "materias_cursos",
@@ -101,7 +112,6 @@ class MateriasCursosCommonService {
     static DuplicatedMessage() {
         return "Materia duplicada";
     }
-
 
 }
 

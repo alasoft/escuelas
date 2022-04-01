@@ -44,6 +44,16 @@ class CreateTables extends CreateTablesBase {
                     desde: SqlType.Date(),
                     hasta: SqlType.Date()
                 }
+            }),
+            Sql.Create({
+                tableName: "tps",
+                columns: {
+                    materiacurso: SqlType.Fk(),
+                    periodo: SqlType.Fk(),
+                    nombre: SqlType.String(),
+                    desde: SqlType.Date(),
+                    hasta: SqlType.Date()
+                }
             })
         ]
     }

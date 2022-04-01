@@ -1,7 +1,7 @@
 class FormView extends EntryView {
 
     listView() {
-        return this.configuration().listView;
+        return this.parameters().listView;
     }
 
     rest() {

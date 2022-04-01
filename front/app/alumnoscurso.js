@@ -42,7 +42,7 @@ class AlumnosCurso extends CursosDetalle {
     }
 
     excelFileName() {
-        return "Alumnos de " + this.filterText("curso");
+        return "Alumnos de " + this.filterText("curso") + " / " + this.filterText("añolectivo");
     }
 
     exportExcelDialogWidth() {

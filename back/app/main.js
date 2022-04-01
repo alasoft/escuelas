@@ -9,6 +9,7 @@ const { CursosRest } = require("./cursosrest");
 const { MateriasCursosRest } = require("./materiascursosrest");
 const { AlumnosRest } = require("./alumnosrest");
 const { PeriodosRest } = require("./periodosrest");
+const { TpsRest } = require("../lib/rest/tpsrest");
 
 new App({
     port: 9090,
@@ -16,7 +17,9 @@ new App({
     dbConnection: dbConnection,
     createTables: CreateTables,
     restItems: restItems,
-    tokenTime: 30
+    tokenTime: 30,
+    version: "0.9",
+    name: "Sistema de Escuelas",
 }).start()
 
 function dbConnection(app) {
@@ -38,6 +41,7 @@ function restItems(app) {
         new PeriodosRest({ app: app }),
         new CursosRest({ app: app }),
         new MateriasCursosRest({ app: app }),
-        new AlumnosRest({ app: app })
+        new AlumnosRest({ app: app }),
+        new TpsRest({ app: app })
     ]
 }

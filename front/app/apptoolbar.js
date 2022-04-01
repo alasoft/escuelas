@@ -42,7 +42,7 @@ class AppToolbar extends Toolbar {
             location: "after",
             options: {
                 icon: "group",
-                text: "Escuelas 1.0"
+                text: App.ApplicationShortName()
             }
         }
 
