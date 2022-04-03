@@ -39,7 +39,7 @@ class Dates {
     }
 
     static Contains(d1, d2, d3, d4) {
-        return d1 < d3 && d2 > d4
+        return d1 <= d3 && d2 >= d4
     }
     static Contained(d1, d2, d3, d4) {
         return d1 >= d3 && d2 <= d4

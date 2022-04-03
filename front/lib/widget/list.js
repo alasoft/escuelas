@@ -143,40 +143,42 @@ class Column {
         }
     }
 
-    static Text(parameters) {
+    static Text(p) {
         return {
-            dataField: parameters.dataField,
-            caption: parameters.caption,
-            width: parameters.width
+            dataField: p.dataField,
+            caption: p.caption,
+            width: p.width,
+            allowFiltering: p.filtering == true
         }
     }
 
-    static Invisible(parameters) {
+    static Invisible(p) {
         return {
-            dataField: parameters.dataField,
+            dataField: p.dataField,
             visible: false
         }
     }
 
-    static Calculated(parameters) {
+    static Calculated(p) {
         return {
-            calculateCellValue: parameters.formula,
-            caption: parameters.caption,
+            calculateCellValue: p.formula,
+            caption: p.caption,
             allowGrouping: true,
             allowSorting: true,
-            allowFiltering: true,
-            width: parameters.width
+            allowFiltering: p.filtering == true,
+            width: p.width
         }
 
     }
 
-    static Date(c) {
+    static Date(p) {
         return ({
-            dataField: c.dataField,
+            dataField: p.dataField,
             dataType: "date",
-            format: c.format || App.DATE_FORMAT_DEFAULT,
-            caption: c.caption,
-            width: c.width
+            format: p.format || App.DATE_FORMAT_DEFAULT,
+            caption: p.caption,
+            allowFiltering: p.filtering == true,
+            width: p.width
         })
     }
 

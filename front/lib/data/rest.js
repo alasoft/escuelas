@@ -73,4 +73,23 @@ class Rest {
         "Content-Type": "application/json",
     }
 
+    static Promise(parameters) {
+        return new Promise((resolve, reject) => $.ajax({
+            url: App.Url(parameters.path),
+            headers: Utils.Merge(this.Headers, { token: App.Token() }),
+            type: "POST",
+            data: parameters.data != undefined ? JSON.stringify(parameters.data) : undefined,
+            success: data => resolve(data),
+            error: err => reject(this.ErrorObject(err))
+        }))
+    }
+
+    static ErrorObject(err) {
+        if (error.responseJSON != undefined) {
+            return error.responseJSON;
+        } else {
+            return { message: "Ha ocurrido un error .. la operacion no pudo ser realizada" }
+        }
+    }
+
 }

@@ -126,7 +126,7 @@ class Cursos extends AñoLectivoFilterView {
     listColumns() {
         return [
             Column.Id(),
-            Column.Text({ dataField: "escuelanombre", caption: "Escuela", width: 300 }),
+            Column.Text({ dataField: "escuelanombre", caption: "Escuela", width: 300, filtering: true }),
             Column.Text({ dataField: "modalidadnombre", caption: "Modalidad" }),
             Column.Invisible({ dataField: "año" }),
             Column.Calculated({ formula: row => Años.GetNombre(row.año), caption: "Año" }),

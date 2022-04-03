@@ -93,7 +93,7 @@ class TpsCurso extends CursosDetalle {
     listColumns() {
         return [
             Column.Id(),
-            Column.Text({ dataField: "periodonombre", caption: "Período" }),
+            Column.Text({ dataField: "periodonombre", caption: "Período", filtering: true }),
             Column.Text({ dataField: "nombre" }),
             Column.Date({ dataField: "desde", width: 200 }),
             Column.Date({ dataField: "hasta", caption: "Fecha de Entrega", width: 200 })
@@ -139,14 +139,18 @@ class TpsCurso extends CursosDetalle {
 class TpsCursoForm extends FormView {
 
     defineRest() {
-        return new Rest({ path: "tps", transformData: (verb, data) => this.transformData(verb, data) })
+        return new Rest({
+            path: "tps",
+            transformData: (verb, data) =>
+                Utils.ReduceIds(this.transformData(verb, data))
+        })
     }
 
     transformData(verb, data) {
         return {
             id: data.id,
-            materiacurso: this.materiacurso().id,
-            periodo: data.periodo.id,
+            materiacurso: this.materiacurso(),
+            periodo: data.periodo,
             nombre: data.nombre,
             desde: data.desde,
             hasta: data.hasta
@@ -174,7 +178,7 @@ class TpsCursoForm extends FormView {
                         ]
                     }),
                     Item.Text({
-                        dataField: "materiacurso",
+                        dataField: "materianombre",
                         readOnly: true,
                         value: this.materiacurso().materianombre,
                         width: 200,
@@ -207,6 +211,7 @@ class TpsCursoForm extends FormView {
                             Item.Date({
                                 dataField: "hasta",
                                 required: true,
+                                label: "Fecha de Entrega"
                             })
                         ]
                     })
@@ -221,6 +226,14 @@ class TpsCursoForm extends FormView {
 
     firstEditor() {
         return "nombre";
+    }
+
+    beforeRender() {
+        return Rest.Promise({
+            path: "tps/list",
+            data: { añoLectivo: this.listView().añolectivo() }
+        }).then(rows =>
+            this.periodos = rows)
     }
 
 }

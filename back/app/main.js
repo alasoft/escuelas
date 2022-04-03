@@ -19,7 +19,7 @@ new App({
     restItems: restItems,
     tokenTime: 30,
     version: "0.9",
-    name: "Sistema de Escuelas",
+    name: "Escuelas",
 }).start()
 
 function dbConnection(app) {

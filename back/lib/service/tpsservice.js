@@ -1,3 +1,5 @@
+const { Dates } = require("../utils/dates");
+const { Exceptions } = require("../utils/exceptions");
 const { Utils } = require("../utils/utils");
 const { TableListService, TableGetService, TableInsertService, TableUpdateService } = require("./tableservice");
 
@@ -17,6 +19,7 @@ class TpsListService extends TableListService {
                 .add(this.sqlText("tp.materiacurso=@materiacurso", { materiacurso: this.value("materiacurso") })),
             order: [
                 "per.desde",
+                "tp.desde",
                 "tp.nombre"
             ]
         }
@@ -42,6 +45,12 @@ class TpsGetService extends TableGetService {
 
 class TpsInsertService extends TableInsertService {
 
+    validate() {
+        return super.validate()
+            .then(() =>
+                TpsCommonService.ValidateDesdeHasta(this))
+    }
+
     requiredValues() {
         return "materiacurso,periodo,nombre,desde,hasta"
     }
@@ -56,6 +65,12 @@ class TpsInsertService extends TableInsertService {
 }
 
 class TpsUpdateService extends TableUpdateService {
+
+    validate() {
+        return super.validate()
+            .then(() =>
+                TpsCommonService.ValidateDesdeHasta(this))
+    }
 
     sqlNotDuplicated() {
         return TpsCommonService.SqlNotDuplicated(this);
@@ -92,15 +107,71 @@ class TpsCommonService {
             from: "tps",
             where: service.sqlAnd([
                 "materiacurso=@materiacurso",
-                "nombre=@nombre",
+                "periodo=@periodo",
+                "upper(nombre)=upper(@nombre)",
             ]),
-            parameters: service.jsonValues("materiacurso,nombre")
+            parameters: service.jsonValues("materiacurso,periodo,nombre")
         })
     }
 
     static DuplicatedMessage() {
         return "Nombre de Trabajo Práctico duplicado";
     }
+
+    static ValidateDesdeHasta(service) {
+        this.ValidateDesdeLowerHasta(service);
+        return this.ValidateInPeriodo(service);
+    }
+    static ValidateDesdeLowerHasta(service) {
+        if (service.date("hasta") <= service.date("desde")) {
+            throw Exceptions.Validation({
+                message: "La fecha desde debe ser menor a la fecha hasta",
+                detail: this.DetailDesdeHasta(service)
+            })
+        }
+    }
+
+    static ValidateInPeriodo(service) {
+        return this.GetPeriodoData(service)
+            .then(row => {
+                if (!Dates.Contains(row.desde, row.hasta, service.date("desde"), service.date("hasta"))) {
+                    throw Exceptions.Validation({
+                        message: "El trabajo práctico debe estar dentro del " + row.nombre,
+                        detail: this.DetailDesdeHasta(service) + this.PeriodoDesdeHasta(row)
+                    })
+                }
+            })
+    }
+
+    static GetPeriodoData(service) {
+        return service.dbSelectOne(service.sqlSelect({
+            columns: [
+                "per.nombre",
+                "per.desde",
+                "per.hasta"
+            ],
+            from: "periodos per",
+            where: "id=@id",
+            parameters: { id: service.value("periodo") }
+        }))
+    }
+
+    static DetailDesdeHasta(service) {
+        return "<br><br>" + service.value("nombre") +
+            "<br>desde = " +
+            Dates.Format(service.date("desde")) +
+            "<br>fecha de entrega = " +
+            Dates.Format(service.date("hasta"))
+    }
+
+    static PeriodoDesdeHasta(row) {
+        return "<br><br>" + row.nombre +
+            "<br>desde = " +
+            Dates.Format(row.desde) +
+            "<br>hasta = " +
+            Dates.Format(row.hasta)
+    }
+
 
 }
 

@@ -39,8 +39,8 @@ class AñoLectivoFilterView extends FilterView {
         return { añolectivo: this.añolectivo().id }
     }
 
-    afterRenderComponents() {
-        super.afterRenderComponents();
+    afterRender() {
+        super.afterRender();
         this.filter().setEditorValue("añolectivo", AñosLectivos.Get(Dates.ThisYear()));
     }
 

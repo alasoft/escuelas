@@ -19,19 +19,37 @@ class View extends Component {
     }
 
     render() {
+        return this.initRender()
+            .then(() =>
+                this.renderView())
+            .then(() =>
+                this.afterRender())
+            .then(() =>
+                this.endRender());
+    }
+
+    initRender() {
         return new Promise((resolve, reject) => {
-            this.setPromise(resolve, reject);
-            this.renderComponents();
-            this.renderTemplate();
+            resolve(this.beforeRender())
         })
     }
 
-    setPromise(resolve, reject) {
+    beforeRender() {
+
+    }
+
+    renderView() {
+        this.renderComponents();
+        this.renderTemplate();
+    }
+
+    afterRender() {}
+
+    endRender() {
         if (this.isPopup()) {
-            this.resolve = resolve;
-            this.reject = reject;
-        } else {
-            resolve(true);
+            return new Promise((resolve, reject) => {
+                this.resolveRender = resolve;
+            });
         }
     }
 
@@ -39,7 +57,6 @@ class View extends Component {
         Object.keys(this.components()).forEach(
             key => this.components()[key].render()
         )
-        this.afterRenderComponents();
     }
 
     components() {
@@ -155,7 +172,7 @@ class View extends Component {
 
     }
 
-    afterRenderComponents() {}
+    afterRender() {}
 
     focus() {}
 
@@ -181,7 +198,7 @@ class View extends Component {
     }
 
     popupOnHiding(e) {
-        this.resolve(this.closeValue);
+        this.resolveRender(this.closeValue);
     }
 
 }

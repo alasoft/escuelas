@@ -14,6 +14,16 @@ class ListView extends View {
                 list: {
                     dataSource: this.class().DataSource(),
                     columns: this.listColumns(),
+                    headerFilter: {
+                        visible: true,
+                    },
+                    filterPanel: {
+                        visible: true,
+                        filterEnabled: false
+                    },
+                    filterBuilderPopup: {
+                        visible: false
+                    },
                     onContentReady: e => this.listOnContentReady(e),
                     onRowDblClick: e => this.listOnRowDblClick(e),
                     onKeyDown: e => this.listOnKeyDown(e),
@@ -232,7 +242,7 @@ class ListView extends View {
         }
     }
 
-    afterRenderComponents() {
+    afterRender() {
         this.contextMenu().setProperty("target", this.findElement("list"));
         if (this.isPopup()) {
             this.label().setVisible(false);
@@ -282,11 +292,12 @@ class ListView extends View {
     }
 
     exportExcelDialog(e) {
-        new ExportExcelDialog({ fileName: this.excelFileName(), width: this.exportExcelDialogWidth() }).render().then(okey => {
-            if (okey) {
-                this.exportExcel(e, this.excelFileName())
-            }
-        })
+        new ExportExcelDialog({ fileName: this.excelFileName(), width: this.exportExcelDialogWidth() }).render()
+            .then(okey => {
+                if (okey) {
+                    this.exportExcel(e, this.excelFileName())
+                }
+            })
     }
 
     exportExcelDialogWidth() {}

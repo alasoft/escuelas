@@ -82,8 +82,8 @@ class CursosDetalle extends FilterView {
         }
     }
 
-    afterRenderComponents() {
-        super.afterRenderComponents();
+    afterRender() {
+        super.afterRender();
         this.filter().setData({ añolectivo: this.configuration().añolectivo, curso: this.configuration().curso });
     }
 
