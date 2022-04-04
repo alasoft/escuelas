@@ -65,21 +65,6 @@ class EntryView extends DialogView {
         return this.form().validate();
     }
 
-    handleError(err) {
-        if (err.code != Errors.FORM_VALIDATION) {
-            return this.showError(err)
-                .then(() => {
-                    if (err.isValidation != true) {
-                        this.close(false)
-                    }
-                })
-        }
-    }
-
-    showError(err) {
-        return App.ShowError(err)
-    }
-
     cancel() {
         this.close(false);
     }
@@ -104,5 +89,11 @@ class EntryView extends DialogView {
     validationError(message) {
         return { isValidation: true, message: message }
     }
+
+    setEditorValue(dataField, value) {
+        this.form().setEditorValue(dataField, value);
+    }
+
+
 
 }

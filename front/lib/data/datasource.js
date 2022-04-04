@@ -28,6 +28,8 @@ class DsListConfig extends DsBaseConfig {
                 this.rest().list(this.loadData(searchData)),
             byKey: this.parameters.cache == true ? undefined : key =>
                 this.rest().get({ id: key }),
+            remove: key =>
+                this.rest().delete({ id: key }),
             onLoaded: data =>
                 this.parameters.onLoaded ? this.parameters.onLoaded(data) : undefined,
         })
@@ -52,7 +54,6 @@ class DsRestConfig extends DsListConfig {
         return Utils.Merge(super.configuration(), {
             insert: data => this.rest().insert(data),
             update: (key, data) => this.rest().update(Utils.Merge(data, { id: key })),
-            remove: key => this.rest().delete({ id: key })
         })
     }
 

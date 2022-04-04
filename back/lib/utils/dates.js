@@ -1,4 +1,5 @@
-const { format } = require('date-fns');
+const format = require('date-fns/format');
+const es = require('date-fns/locale/es');
 
 class Dates {
 
@@ -27,7 +28,7 @@ class Dates {
     }
 
     static Format(date) {
-        return format(date, "dd-MMM-yyyy")
+        return format(date, "dd-MMM-yyyy", { locale: es })
     }
 
     static YearOf(date) {

@@ -35,7 +35,7 @@ class Sql {
         if (Utils.IsNotDefined(value)) {
             return null
         } else if (Utils.IsString(value)) {
-            return value
+            return value.trimEnd()
         } else if (Utils.IsDate(value)) {
             return this.Date(value)
         } else {

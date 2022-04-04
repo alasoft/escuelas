@@ -1,7 +1,7 @@
 const { Dates } = require("../utils/dates");
 const { Exceptions } = require("../utils/exceptions");
 const { Utils } = require("../utils/utils");
-const { TableListService, TableGetService, TableInsertService, TableUpdateService } = require("./tableservice");
+const { TableListService, TableGetService, TableInsertService, TableUpdateService, TableDeleteService } = require("./tableservice");
 
 class TpsListService extends TableListService {
 
@@ -80,6 +80,8 @@ class TpsUpdateService extends TableUpdateService {
     }
 
 }
+
+class TpsDeleteService extends TableDeleteService {}
 
 
 class TpsCommonService {
@@ -172,10 +174,10 @@ class TpsCommonService {
             Dates.Format(row.hasta)
     }
 
-
 }
 
 module.exports.TpsListService = TpsListService;
 module.exports.TpsGetService = TpsGetService;
 module.exports.TpsInsertService = TpsInsertService;
 module.exports.TpsUpdateService = TpsUpdateService;
+module.exports.TpsDeleteService = TpsDeleteService;

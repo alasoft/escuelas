@@ -7,7 +7,7 @@ class Generos extends LocalMemoryTable {
             },
             {
                 id: "F",
-                nombre: "Feminino"
+                nombre: "Femenino"
             }
         ]
     }

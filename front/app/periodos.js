@@ -31,6 +31,13 @@ class Periodos extends AñoLectivoFilterView {
         return PeriodosFormView;
     }
 
+    deleteMessageParameters() {
+        return {
+            prefix: "este Período",
+            dataField: "nombre"
+        }
+    }
+
 }
 
 class PeriodosFormView extends FormView {

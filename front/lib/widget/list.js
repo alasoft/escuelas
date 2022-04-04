@@ -36,16 +36,12 @@ class List extends Widget {
         return this.rows().length;
     }
 
+    rowValue(rowIndex, dataField) {
+        return this.rowData(rowIndex)[dataField];
+    }
+
     hasRows() {
         return 0 < this.rowCount();
-    }
-
-    isEmpty() {
-        return !this.hasRows();
-    }
-
-    hasSearchText() {
-        return this.getProperty("searchPanel.text") != "";
     }
 
     focusedRowIndex() {
@@ -58,6 +54,10 @@ class List extends Widget {
 
     focusedRowData() {
         return this.focusedRow().data;
+    }
+
+    focusedRowValue(dataField) {
+        return this.focusedRowData()[dataField];
     }
 
     id() {
@@ -125,6 +125,14 @@ class List extends Widget {
         )
     }
 
+    isEmpty() {
+        return !this.hasRows();
+    }
+
+    hasSearchText() {
+        return this.getProperty("searchPanel.text") != "";
+    }
+
 }
 
 class Column {
@@ -148,7 +156,7 @@ class Column {
             dataField: p.dataField,
             caption: p.caption,
             width: p.width,
-            allowFiltering: p.filtering == true
+            allowFiltering: p.filtering != false
         }
     }
 
@@ -165,7 +173,7 @@ class Column {
             caption: p.caption,
             allowGrouping: true,
             allowSorting: true,
-            allowFiltering: p.filtering == true,
+            allowFiltering: p.filtering != false,
             width: p.width
         }
 
@@ -177,7 +185,7 @@ class Column {
             dataType: "date",
             format: p.format || App.DATE_FORMAT_DEFAULT,
             caption: p.caption,
-            allowFiltering: p.filtering == true,
+            allowFiltering: p.filtering != false,
             width: p.width
         })
     }

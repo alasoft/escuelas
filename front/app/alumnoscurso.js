@@ -49,6 +49,22 @@ class AlumnosCurso extends CursosDetalle {
         return 750
     }
 
+    deleteMessage() {
+        return "Borra " + this.generoArticulo() + " ?<br><br>" +
+            Utils.SingleQuotes(this.focusedRowValue("apellido") + " " + this.focusedRowValue("nombre")) +
+            "<br><br>perteneciente al Curso:<br><br>" +
+            Utils.SingleQuotes(this.filterText("curso"))
+    }
+
+    generoArticulo() {
+        if (this.focusedRowValue("genero") == "M") {
+            return "el Alumno"
+        } else {
+            return "la Alumna";
+        }
+    }
+
+
 }
 
 class AlumnosCursoForm extends FormView {

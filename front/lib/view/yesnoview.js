@@ -27,5 +27,4 @@ class YesNoView extends MessageView {
         this.close(false);
     }
 
-
 }

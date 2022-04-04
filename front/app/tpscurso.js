@@ -2,9 +2,12 @@ class TpsCurso extends CursosDetalle {
 
     extraConfiguration() {
         return {
+            popup: {
+                height: 700
+            },
             components: {
                 filter: {
-                    width: 1000,
+                    width: 1150,
                     height: 100
                 }
             }
@@ -13,14 +16,6 @@ class TpsCurso extends CursosDetalle {
 
     labelText() {
         return "Trabajos Prácticos por Curso y Materia"
-    }
-
-    filterItemsNew() {
-        return [
-            this.itemAñoLectivo(),
-            this.itemCurso(),
-            this.itemMateria()
-        ]
     }
 
     filterItems() {
@@ -41,16 +36,6 @@ class TpsCurso extends CursosDetalle {
         ]
     }
 
-    itemCurso() {
-        return Item.Lookup({
-            dataField: "curso",
-            displayExpr: item => Cursos.Descripcion(item),
-            editable: true,
-            width: 400,
-            onValueChanged: e => this.setMateriaCursoDataSource(e.value)
-        })
-    }
-
     itemMateriaCurso() {
         return Item.Lookup({
             dataField: "materiacurso",
@@ -59,7 +44,7 @@ class TpsCurso extends CursosDetalle {
             deferRendering: false,
             width: 250,
             label: "Materia",
-            onValueChanged: e => this.setDataSource(e.value)
+            onValueChanged: e => this.itemMateriaCursoOnValueChanged(e)
         })
     }
 
@@ -104,34 +89,31 @@ class TpsCurso extends CursosDetalle {
         return TpsCursoForm;
     }
 
-    formViewDefaultValues() {
-        const curso = this.filter().getEditorValue("curso");
-        return {
-            curso: curso.id,
-            añolectivo: curso.añolectivo,
-            descripcion: Cursos.Descripcion(curso),
-            desde: Dates.Today()
-        }
+    formViewDefaultValues(mode) {
+        return Utils.Merge(super.formViewDefaultValues(mode),
+            mode == "insert" ? {
+                desde: Dates.Today(),
+                hasta: Dates.TodayPlusDays(5)
+            } : undefined)
     }
 
     materiacurso() {
         return this.filter().getEditorValue("materiacurso")
     }
 
-    formViewParameters() {
-        return { curso: this.curso() }
+    itemCursoOnValueChanged(e) {
+        this.setMateriaCursoDataSource(e.value);
     }
 
-    cursoOnValueChanged(e) {
-        if (this.valueHasChanged(e)) {
-            this.setMateriaDataSource(e.value);
-        }
+    itemMateriaCursoOnValueChanged(e) {
+        this.setDataSource(e.value);
     }
 
-    materiaOnValueChanged(e) {
-        if (this.valueHasChanged(e)) {
-            this.setDataSource(e.value ? e.value : undefined);
-        }
+    deleteMessage() {
+        return "Borra el Trabajo Práctico ?<br><br>" +
+            Utils.SingleQuotes(this.focusedRowValue("nombre")) +
+            "<br><br>del Curso:<br><br>" + Utils.SingleQuotes(this.filterText("curso")) +
+            "<br><br>Materia:<br><br>" + Utils.SingleQuotes(this.filterText("materiacurso"))
     }
 
 }
@@ -230,10 +212,22 @@ class TpsCursoForm extends FormView {
 
     beforeRender() {
         return Rest.Promise({
-            path: "tps/list",
-            data: { añoLectivo: this.listView().añolectivo() }
+            path: "periodos/list",
+            data: { añoLectivo: this.listView().añolectivo().id }
         }).then(rows =>
             this.periodos = rows)
+    }
+
+    afterRender() {
+        if (this.isInserting()) {
+            this.setEditorValue("periodo", this.insertDefaultPeriodo())
+        }
+    }
+
+    insertDefaultPeriodo() {
+        if (this.periodos != undefined && 0 < this.periodos.length) {
+            return { id: this.periodos[0].id }
+        }
     }
 
 }

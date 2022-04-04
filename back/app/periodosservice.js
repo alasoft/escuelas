@@ -180,7 +180,7 @@ class PeriodosCommonService {
     }
 
     static DetailDesdeHasta(service) {
-        return "<br><br>" + service.value("nombre") +
+        return "<br><br>" + service.value("nombre") + "<br>" + "-".repeat(service.value("nombre").length + 5) +
             "<br>desde = " +
             Dates.Format(service.date("desde")) +
             "<br>hasta = " +
@@ -188,7 +188,7 @@ class PeriodosCommonService {
     }
 
     static RowDetailDesdeHasta(row) {
-        return "<br><br>" + row.nombre +
+        return "<br><br>" + row.nombre + "<br>" + "-".repeat(row.nombre.length + 5) +
             "<br>desde = " +
             Dates.Format(row.desde) +
             "<br>hasta = " +

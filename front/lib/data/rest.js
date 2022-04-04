@@ -60,17 +60,12 @@ class Rest {
         }
     }
 
-    errorObject(error) {
-        if (error.responseJSON != undefined) {
-            return error.responseJSON;
+    errorObject(err) {
+        if (err.responseJSON != undefined) {
+            return err.responseJSON;
         } else {
             return { message: "Ha ocurrido un error .. la operacion no pudo ser realizada" }
         }
-    }
-
-    static Headers = {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
     }
 
     static Promise(parameters) {
@@ -84,9 +79,14 @@ class Rest {
         }))
     }
 
+    static Headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+    }
+
     static ErrorObject(err) {
-        if (error.responseJSON != undefined) {
-            return error.responseJSON;
+        if (err.responseJSON != undefined) {
+            return err.responseJSON;
         } else {
             return { message: "Ha ocurrido un error .. la operacion no pudo ser realizada" }
         }

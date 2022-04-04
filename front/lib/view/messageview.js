@@ -36,14 +36,14 @@ class MessageView extends DialogView {
     popupWidth() {
         return MessageView.WIDTH_DEFAULT +
             this.message().length +
-            50 +
+            100 +
             Utils.Occurences(this.message(), "<br>") * 20;
     }
 
     popupHeight() {
         return MessageView.HEIGHT_DEFAULT +
             this.message().length / 2 +
-            Utils.Occurences(this.message(), "<br>") * 10;
+            Utils.Occurences(this.message(), "<br>") * 15;
     }
 
     popupTemplate(e) {

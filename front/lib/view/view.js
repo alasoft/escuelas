@@ -25,7 +25,10 @@ class View extends Component {
             .then(() =>
                 this.afterRender())
             .then(() =>
-                this.endRender());
+                this.endRender())
+            .catch(err =>
+                this.handleError(err)
+            );
     }
 
     initRender() {
@@ -199,6 +202,29 @@ class View extends Component {
 
     popupOnHiding(e) {
         this.resolveRender(this.closeValue);
+    }
+
+    handleError(err) {
+        err = this.errorToObject(err);
+        if (err.code != Errors.FORM_VALIDATION) {
+            return this.showError(err)
+                .then(() => {
+                    if (err.isValidation != true) {
+                        this.close(false)
+                    }
+                })
+        }
+    }
+
+    errorToObject(err) {
+        if (err instanceof TypeError) {
+            err = { message: err.message }
+        }
+        return err;
+    }
+
+    showError(err) {
+        return App.ShowError(err)
     }
 
 }

@@ -1,3 +1,4 @@
+const { Exceptions } = require("../utils/exceptions");
 const { Utils } = require("../utils/utils");
 
 class SqlType {
@@ -11,7 +12,10 @@ class SqlType {
     }
 
     static Fk(parameters) {
-        return "varchar(38)" + this.NotNull(parameters);
+        if (Utils.IsNotDefined(parameters.references)) {
+            throw Exceptions.ForeignKeyReferenceNotDefined({ message: "Foreign Key Field without reference Table" })
+        }
+        return "varchar(38) references " + parameters.references + "(id)" + this.NotNull(parameters);
     }
 
     static Integer(parameters) {

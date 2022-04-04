@@ -48,7 +48,7 @@ class Login extends EntryView {
         ])
     }
 
-    async okey() {
+    okey() {
         this.validate()
             .then(() =>
                 this.login())

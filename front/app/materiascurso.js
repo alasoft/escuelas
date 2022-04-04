@@ -19,6 +19,12 @@ class MateriasCurso extends CursosDetalle {
         return MateriasCursoForm;
     }
 
+    deleteMessage() {
+        return "Borra esta Materia ?<br><br>" +
+            Utils.SingleQuotes(this.focusedRowValue("materianombre")) +
+            "<br><br>dictada en el Curso:<br><br>" + Utils.SingleQuotes(this.filterText("curso"))
+    }
+
 }
 
 class MateriasCursoForm extends FormView {

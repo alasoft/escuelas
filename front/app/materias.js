@@ -19,6 +19,13 @@ class Materias extends ListView {
         return MateriasForm;
     }
 
+    deleteMessageParameters() {
+        return {
+            prefix: "esta Materia",
+            dataField: "nombre"
+        }
+    }
+
 }
 
 class MateriasForm extends FormView {

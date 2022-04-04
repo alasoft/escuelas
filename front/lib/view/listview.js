@@ -14,20 +14,10 @@ class ListView extends View {
                 list: {
                     dataSource: this.class().DataSource(),
                     columns: this.listColumns(),
-                    headerFilter: {
-                        visible: true,
-                    },
-                    filterPanel: {
-                        visible: true,
-                        filterEnabled: false
-                    },
-                    filterBuilderPopup: {
-                        visible: false
-                    },
                     onContentReady: e => this.listOnContentReady(e),
                     onRowDblClick: e => this.listOnRowDblClick(e),
                     onKeyDown: e => this.listOnKeyDown(e),
-                    onDataErrorOccurred: e => this.listOnDataErrorOccurred(e)
+                    onDataErrorOccurred: e => this.listOnDataErrorOccurred(e),
                 },
                 contextMenu: {}
             },
@@ -37,7 +27,6 @@ class ListView extends View {
                 allowEditing: true,
                 allowDeleting: true,
                 allowExport: false,
-                deleteMessage: "Borra este registro ?",
                 excelFileName: this.className()
             }
 
@@ -111,14 +100,27 @@ class ListView extends View {
 
     delete() {
         let rowIndex = this.list().focusedRowIndex();
-        App.YesNo(this.deleteMessage(this.list().rowData(rowIndex))).done(
-            result => result ? this.list().deleteRow(rowIndex) : undefined
+        App.YesNo({ message: this.deleteMessage() }).then(
+            result => {
+                result ? this.list().deleteRow(rowIndex) : undefined
+            }
+
         )
     }
 
     deleteMessage() {
-        return this.operations().deleteMessage;
+        const parameters = this.deleteMessageParameters();
+        if (parameters != undefined) {
+            return "Borra " + parameters.prefix + " ?<br><br>" +
+                Utils.SingleQuotes(parameters.expression != undefined ? parameters.expression :
+                    this.focusedRowValue(parameters.dataField)
+                );
+        } else {
+            return "Borra este registro ?"
+        }
     }
+
+    deleteMessageParameters() {}
 
     formView(extraConfiguration, mode) {
         return new(this.formViewClass())(
@@ -139,6 +141,10 @@ class ListView extends View {
 
     focusedRowData() {
         return this.list().focusedRowData();
+    }
+
+    focusedRowValue(dataField) {
+        return this.focusedRowData()[dataField];
     }
 
     id() {

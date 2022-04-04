@@ -2,6 +2,7 @@ class CursosDetalle extends FilterView {
 
     defaultConfiguration() {
         return Utils.Merge(super.defaultConfiguration(), {
+            mode: "popup",
             popup: {
                 title: this.labelText(),
                 onHidden: e => {
@@ -17,10 +18,6 @@ class CursosDetalle extends FilterView {
                 }
             }
         })
-    }
-
-    defineTemplate() {
-        return Templates.ListWithFilterView();
     }
 
     filterItems() {
@@ -42,7 +39,7 @@ class CursosDetalle extends FilterView {
             width: 100,
             readOnly: true,
             label: "Año Lectivo",
-            onValueChanged: e => this.setCursoDataSource(e.value.id)
+            onValueChanged: e => this.itemAñoLectivoOnValueChanged(e)
         })
     }
 
@@ -51,8 +48,8 @@ class CursosDetalle extends FilterView {
             dataField: "curso",
             displayExpr: item => Cursos.Descripcion(item),
             editable: true,
-            width: 550,
-            onValueChanged: e => this.setDataSource(e.value)
+            width: 450,
+            onValueChanged: e => this.itemCursoOnValueChanged(e)
         })
     }
 
@@ -87,7 +84,7 @@ class CursosDetalle extends FilterView {
         this.filter().setData({ añolectivo: this.configuration().añolectivo, curso: this.configuration().curso });
     }
 
-    formViewDefaultValues() {
+    formViewDefaultValues(mode) {
         const curso = this.curso();
         return {
             curso: curso.id,
@@ -105,5 +102,14 @@ class CursosDetalle extends FilterView {
     curso() {
         return this.filter().getEditorValue("curso");
     }
+
+    itemAñoLectivoOnValueChanged(e) {
+        this.setCursoDataSource(e.value.id);
+    }
+
+    itemCursoOnValueChanged(e) {
+        this.setDataSource(e.value);
+    }
+
 
 }

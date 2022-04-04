@@ -123,4 +123,8 @@ class Utils {
         return s1.split(s2).length - 1;
     }
 
+    static SingleQuotes(s) {
+        return "'" + s + "'";
+    }
+
 }

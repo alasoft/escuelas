@@ -1,5 +1,11 @@
 class AñoLectivoFilterView extends FilterView {
 
+    itemInsert() {
+        if (this.añolectivoValue() == Dates.ThisYear()) {
+            return super.itemInsert();
+        }
+    }
+
     filterItems() {
         return [
             Item.Lookup({

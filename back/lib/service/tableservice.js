@@ -164,7 +164,7 @@ class TableUpdateService extends TableInsertUpdateServiceBase {
 class TableDeleteService extends TableCrudServiceBase {
 
     sqlOperation() {
-        return "Update"
+        return "Delete"
     }
 
     requiredValues() {

@@ -13,8 +13,8 @@ class CreateTables extends CreateTablesBase {
                 tableName: "cursos",
                 columns: {
                     añolectivo: SqlType.Integer(),
-                    escuela: SqlType.Fk(),
-                    modalidad: SqlType.Fk(),
+                    escuela: SqlType.Fk({ references: "escuelas" }),
+                    modalidad: SqlType.Fk({ references: "modalidades" }),
                     año: SqlType.Integer(),
                     division: SqlType.String({ size: 5 }),
                     turno: SqlType.Char({ size: 1 })
@@ -23,7 +23,7 @@ class CreateTables extends CreateTablesBase {
             Sql.Create({
                 tableName: "alumnos",
                 columns: {
-                    curso: SqlType.Fk(),
+                    curso: SqlType.Fk({ references: "cursos" }),
                     apellido: SqlType.Apellido(),
                     nombre: SqlType.Nombre(),
                     genero: SqlType.Char({ size: 1 })
@@ -32,8 +32,8 @@ class CreateTables extends CreateTablesBase {
             Sql.Create({
                 tableName: "materias_cursos",
                 columns: {
-                    curso: SqlType.Fk(),
-                    materia: SqlType.Fk()
+                    curso: SqlType.Fk({ references: "cursos" }),
+                    materia: SqlType.Fk({ references: "materias" })
                 }
             }),
             Sql.Create({
@@ -48,8 +48,8 @@ class CreateTables extends CreateTablesBase {
             Sql.Create({
                 tableName: "tps",
                 columns: {
-                    materiacurso: SqlType.Fk(),
-                    periodo: SqlType.Fk(),
+                    materiacurso: SqlType.Fk({ references: "materias_cursos" }),
+                    periodo: SqlType.Fk({ references: "periodos" }),
                     nombre: SqlType.String(),
                     desde: SqlType.Date(),
                     hasta: SqlType.Date()

@@ -29,14 +29,6 @@ class Cursos extends AñoLectivoFilterView {
         ]
     }
 
-    /*    
-        itemAdd() {
-            if (this.añolectivoValue() == Dates.ThisYear()) {
-                return super.itemAdd();
-            }
-        }
-    */
-
     itemCopy() {
         if (this.añolectivoValue() == Dates.ThisYear() && this.list().isEmpty()) {
             return {
@@ -97,30 +89,23 @@ class Cursos extends AñoLectivoFilterView {
     }
 
     showMaterias() {
-        new MateriasCurso({
-            mode: "popup",
-            añolectivo: this.filter().getEditorValue("añolectivo"),
-            curso: this.list().focusedRowData(),
-            masterView: this
-        }).render();
+        new MateriasCurso(this.detailParameters()).render();
     }
 
     showAlumnos() {
-        new AlumnosCurso({
-            mode: "popup",
-            añolectivo: this.filter().getEditorValue("añolectivo"),
-            curso: this.list().focusedRowData(),
-            masterView: this
-        }).render();
+        new AlumnosCurso(this.detailParameters()).render();
     }
 
     showTps() {
-        new TpsCurso({
-            mode: "popup",
+        new TpsCurso(this.detailParameters()).render();
+    }
+
+    detailParameters() {
+        return {
             añolectivo: this.filter().getEditorValue("añolectivo"),
             curso: this.list().focusedRowData(),
             masterView: this
-        }).render();
+        }
     }
 
     listColumns() {
@@ -145,6 +130,13 @@ class Cursos extends AñoLectivoFilterView {
 
     excelFileName() {
         return "Cursos " + this.filterText("añolectivo");
+    }
+
+    deleteMessageParameters() {
+        return {
+            prefix: "este Curso",
+            expression: Cursos.Descripcion(this.focusedRowData())
+        }
     }
 
     static Descripcion(item) {

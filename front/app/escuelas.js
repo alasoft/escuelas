@@ -18,6 +18,13 @@ class Escuelas extends ListView {
         return EscuelasFormView;
     }
 
+    deleteMessageParameters() {
+        return {
+            prefix: "esta Escuela",
+            dataField: "nombre"
+        }
+    }
+
 }
 
 class EscuelasFormView extends FormView {

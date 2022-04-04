@@ -18,6 +18,13 @@ class Modalidades extends ListView {
         return ModalidadesForm;
     }
 
+    deleteMessageParameters() {
+        return {
+            prefix: "esta Modalidad",
+            dataField: "nombre"
+        }
+    }
+
 }
 
 class ModalidadesForm extends FormView {

@@ -95,6 +95,13 @@ class Exceptions {
         })
     }
 
+    static ForeignKeyReferenceNotDefined(parameters) {
+        return new Exception({
+            message: parameters.message,
+            detail: parameters.detail,
+        })
+    }
+
 }
 
 class Exception {
