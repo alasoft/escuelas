@@ -1,7 +1,5 @@
 const { Utils } = require("../lib/utils/utils");
 const { TableListService, TableGetService, TableInsertService, TableUpdateService, TableDeleteService } = require("../lib/service/tableservice");
-const { Años } = require("./años");
-const { Turnos } = require("./turnos");
 
 class CursosListService extends TableListService {
 

@@ -1,7 +1,13 @@
-const { Dates } = require("../utils/dates");
-const { Exceptions } = require("../utils/exceptions");
-const { Utils } = require("../utils/utils");
-const { TableListService, TableGetService, TableInsertService, TableUpdateService, TableDeleteService } = require("./tableservice");
+const { Dates } = require("../lib/utils/dates");
+const { Exceptions } = require("../lib/utils/exceptions");
+const { Utils } = require("../lib/utils/utils");
+const {
+    TableListService,
+    TableGetService,
+    TableInsertService,
+    TableUpdateService,
+    TableDeleteService
+} = require("../lib/service/tableservice");
 
 class TpsListService extends TableListService {
 
@@ -14,9 +20,9 @@ class TpsListService extends TableListService {
     sqlExtraParameters() {
         return {
             where: this.sqlAnd()
+                .add(this.sqlText("tp.materiacurso=@materiacurso", { materiacurso: this.value("materiacurso") }))
                 .addIf(this.isDefined("descripcion"), () =>
-                    this.sqlText("tp.nombre ilike @nombre", { nombre: this.sqlLike(this.value("descripcion")) }))
-                .add(this.sqlText("tp.materiacurso=@materiacurso", { materiacurso: this.value("materiacurso") })),
+                    this.sqlText("tp.nombre ilike @nombre", { nombre: this.sqlLike(this.value("descripcion")) })),
             order: [
                 "per.desde",
                 "tp.desde",
@@ -159,7 +165,7 @@ class TpsCommonService {
     }
 
     static DetailDesdeHasta(service) {
-        return "<br><br>" + service.value("nombre") +
+        return "<br><br>" + service.value("nombre") + "<br>" + "-".repeat(service.value("nombre").length + 5) +
             "<br>desde = " +
             Dates.Format(service.date("desde")) +
             "<br>fecha de entrega = " +
@@ -167,7 +173,7 @@ class TpsCommonService {
     }
 
     static PeriodoDesdeHasta(row) {
-        return "<br><br>" + row.nombre +
+        return "<br><br>" + row.nombre + "<br>" + "-".repeat(row.nombre.length + 5) +
             "<br>desde = " +
             Dates.Format(row.desde) +
             "<br>hasta = " +

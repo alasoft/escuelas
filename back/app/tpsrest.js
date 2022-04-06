@@ -1,5 +1,11 @@
-const { TpsListService, TpsGetService, TpsInsertService, TpsUpdateService, TpsDeleteService } = require("../service/tpsservice");
-const { TableRest } = require("./tablerest");
+const {
+    TpsListService,
+    TpsGetService,
+    TpsInsertService,
+    TpsUpdateService,
+    TpsDeleteService
+} = require("./tpsservice");
+const { TableRest } = require("../lib/rest/tablerest");
 
 class TpsRest extends TableRest {
 

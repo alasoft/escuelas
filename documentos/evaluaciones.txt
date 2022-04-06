@@ -1,0 +1,32 @@
+id,apellido,nombre,tp-id,tp-id,tp-id,tp-id
+
+curso
+	alumnos
+	.
+	.
+tp
+	materia,periodo
+
+evaluacion
+	alumno,tp,nota
+		tp.materia=
+
+{
+dataField: "id"
+},
+{
+dataField: "nombre"
+},
+{
+dataField: "apellido"
+},
+{
+dataField: cl1kbuj3j0000vssr029c8f9f
+caption: "
+}
+
+
+nombre: "Juan", apellido: "Perez", cl1kbuj3j0000vssr029c8f9f: 1, 
+	
+	
+	

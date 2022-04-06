@@ -1,5 +1,9 @@
 class AlumnosCurso extends CursosDetalle {
 
+    constructor(...parameters) {
+        super(...parameters);
+    }
+
     extraConfiguration() {
         return {
             operations: {

@@ -68,6 +68,11 @@ class AppItems extends View {
             onClick: e => Cursos.Render()
         })
 
+        itemEvaluaciones.add({
+            text: "Evaluaciones",
+            onClick: e => new Evaluaciones().render()
+        })
+
         return [itemDatos, itemEvaluaciones, itemSalida];
 
     }

@@ -133,6 +133,43 @@ class List extends Widget {
         return this.getProperty("searchPanel.text") != "";
     }
 
+    resetColumns(columns) {
+        this.beginUpdate();
+        try {
+            this.deleteColumns();
+            this.addColumns(columns);
+        } finally {
+            this.endUpdate();
+        }
+    }
+
+    columnCount() {
+        return this.instance().columnCount();
+    }
+
+    deleteColumns() {
+        this.setProperty("columns", [])
+    }
+
+    deleteColumn(id) {
+        this.instance().deleteColumn(id);
+    }
+
+    addColumns(columns) {
+        this.beginUpdate();
+        try {
+            columns.forEach(
+                column => this.addColumn(column)
+            )
+        } finally {
+            this.endUpdate()
+        }
+    }
+
+    addColumn(column) {
+        this.instance().addColumn(column);
+    }
+
 }
 
 class Column {
@@ -156,7 +193,8 @@ class Column {
             dataField: p.dataField,
             caption: p.caption,
             width: p.width,
-            allowFiltering: p.filtering != false
+            allowFiltering: p.filtering != false,
+            allowEditing: p.allowEditing == true
         }
     }
 

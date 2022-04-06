@@ -20,6 +20,10 @@ class CursosDetalle extends FilterView {
         })
     }
 
+    añoLectivoReadOnly() {
+        return true;
+    }
+
     filterItems() {
         return [
             Item.Group({
@@ -37,7 +41,7 @@ class CursosDetalle extends FilterView {
             dataField: "añolectivo",
             dataSource: AñosLectivos.DataSource(),
             width: 100,
-            readOnly: true,
+            readOnly: this.añoLectivoReadOnly(),
             label: "Año Lectivo",
             onValueChanged: e => this.itemAñoLectivoOnValueChanged(e)
         })

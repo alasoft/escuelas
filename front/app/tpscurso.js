@@ -1,4 +1,4 @@
-class TpsCurso extends CursosDetalle {
+class TpsCurso extends CursosMateriasDetalle {
 
     extraConfiguration() {
         return {
@@ -16,50 +16,6 @@ class TpsCurso extends CursosDetalle {
 
     labelText() {
         return "Trabajos Prácticos por Curso y Materia"
-    }
-
-    filterItems() {
-        return [
-            Item.Group({
-                colCount: 2,
-                items: [
-                    this.itemAñoLectivo(),
-                ]
-            }),
-            Item.Group({
-                colCount: 2,
-                items: [
-                    this.itemCurso(),
-                    this.itemMateriaCurso()
-                ]
-            }),
-        ]
-    }
-
-    itemMateriaCurso() {
-        return Item.Lookup({
-            dataField: "materiacurso",
-            displayExpr: item =>
-                item != null ? item.materianombre : "",
-            deferRendering: false,
-            width: 250,
-            label: "Materia",
-            onValueChanged: e => this.itemMateriaCursoOnValueChanged(e)
-        })
-    }
-
-    setMateriaCursoDataSource(curso) {
-        if (curso != undefined) {
-            this.filter().setEditorDataSource("materiacurso",
-                DsList({
-                    path: "materias_cursos",
-                    filter: { curso: curso.id },
-                    onLoaded: this.filter().onLoadedSetFirstValue("materiacurso"),
-                })
-            );
-        } else {
-            this.filter().setEditorDataSource("materiacurso", null);
-        }
     }
 
     setDataSource(materiacurso) {
@@ -97,23 +53,15 @@ class TpsCurso extends CursosDetalle {
             } : undefined)
     }
 
-    materiacurso() {
-        return this.filter().getEditorValue("materiacurso")
-    }
-
-    itemCursoOnValueChanged(e) {
-        this.setMateriaCursoDataSource(e.value);
-    }
-
-    itemMateriaCursoOnValueChanged(e) {
-        this.setDataSource(e.value);
-    }
-
     deleteMessage() {
         return "Borra el Trabajo Práctico ?<br><br>" +
             Utils.SingleQuotes(this.focusedRowValue("nombre")) +
             "<br><br>del Curso:<br><br>" + Utils.SingleQuotes(this.filterText("curso")) +
             "<br><br>Materia:<br><br>" + Utils.SingleQuotes(this.filterText("materiacurso"))
+    }
+
+    itemMateriaCursoOnValueChanged(e) {
+        this.setDataSource(e.value);
     }
 
 }

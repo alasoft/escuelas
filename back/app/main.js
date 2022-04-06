@@ -9,7 +9,8 @@ const { CursosRest } = require("./cursosrest");
 const { MateriasCursosRest } = require("./materiascursosrest");
 const { AlumnosRest } = require("./alumnosrest");
 const { PeriodosRest } = require("./periodosrest");
-const { TpsRest } = require("../lib/rest/tpsrest");
+const { TpsRest } = require("./tpsrest");
+const { EvaluacionesRest } = require("./evaluacionesrest");
 
 new App({
     port: 9090,
@@ -42,6 +43,7 @@ function restItems(app) {
         new CursosRest({ app: app }),
         new MateriasCursosRest({ app: app }),
         new AlumnosRest({ app: app }),
-        new TpsRest({ app: app })
+        new TpsRest({ app: app }),
+        new EvaluacionesRest({ app: app })
     ]
 }

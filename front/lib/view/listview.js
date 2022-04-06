@@ -183,10 +183,6 @@ class ListView extends View {
         }
     }
 
-    listToolbarItems() {
-        return [this.itemInsert(), this.itemGroupPanel(), this.itemExportButton(), this.itemSearchPanel()]
-    }
-
     itemExportButton() {
         if (this.allowExport(true)) {
             return {

@@ -54,6 +54,14 @@ class CreateTables extends CreateTablesBase {
                     desde: SqlType.Date(),
                     hasta: SqlType.Date()
                 }
+            }),
+            Sql.Create({
+                tableName: "evaluaciones",
+                columns: {
+                    alumno: SqlType.Fk({ references: "alumnos" }),
+                    tp: SqlType.Fk({ references: "tps" }),
+                    evaluacion: SqlType.String({ size: 10 })
+                }
             })
         ]
     }

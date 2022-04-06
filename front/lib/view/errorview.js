@@ -4,7 +4,7 @@ class ErrorView extends MessageView {
         if (this.parameters().isValidation) {
             return "Atención"
         } else {
-            return "Error interno"
+            return "Error"
         }
     }
 
