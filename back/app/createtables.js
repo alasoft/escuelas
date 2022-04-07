@@ -60,7 +60,7 @@ class CreateTables extends CreateTablesBase {
                 columns: {
                     alumno: SqlType.Fk({ references: "alumnos" }),
                     tp: SqlType.Fk({ references: "tps" }),
-                    evaluacion: SqlType.String({ size: 10 })
+                    nota: SqlType.String({ size: 10 })
                 }
             })
         ]

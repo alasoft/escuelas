@@ -137,37 +137,26 @@ class List extends Widget {
         this.beginUpdate();
         try {
             this.deleteColumns();
-            this.addColumns(columns);
+            this.setColumns(columns);
         } finally {
             this.endUpdate();
         }
-    }
-
-    columnCount() {
-        return this.instance().columnCount();
     }
 
     deleteColumns() {
         this.setProperty("columns", [])
     }
 
-    deleteColumn(id) {
-        this.instance().deleteColumn(id);
+    setColumns(columns) {
+        this.setProperty("columns", columns)
     }
 
-    addColumns(columns) {
-        this.beginUpdate();
-        try {
-            columns.forEach(
-                column => this.addColumn(column)
-            )
-        } finally {
-            this.endUpdate()
-        }
+    editColumnName() {
+        return this.getProperty("editing.editColumnName");
     }
 
-    addColumn(column) {
-        this.instance().addColumn(column);
+    cancelEditCell() {
+        this.instance().cancelEditData();
     }
 
 }

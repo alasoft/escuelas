@@ -14,6 +14,7 @@ class SqlSelect extends ObjectBase {
         this.filterByTenant = parameters.filterByTenant != false;
         this.filterByStates = parameters.filterByStates || [DbStates.Active];
         this.tenant = parameters.tenant;
+        this.distinct = parameters.distinct == true;
         this.columns = new SqlColumns({ sqlSelect: this, items: parameters.columns });
         this.joins = new SqlJoins({ sqlSelect: this, joins: parameters.joins });
         this.from = new SqlFrom(parameters.from);
@@ -127,7 +128,7 @@ class SqlColumns extends TextBuilder {
 
     beforeItem(itemText, i) {
         if (i == 0) {
-            return "select "
+            return "select " + (this.sqlSelect.distinct ? "distinct " : "")
         } else {
             return ", ";
         }

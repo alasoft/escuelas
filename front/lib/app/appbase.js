@@ -133,8 +133,16 @@ class AppBase {
         return new MessageView(parameters).render()
     }
 
-    static ShowError(parameters) {
-        return new ErrorView(parameters).render();
+    static ShowError(err) {
+        return new ErrorView(this.ErrorToObject(err)).render();
+    }
+
+    static ErrorToObject(err) {
+        if (err.responseJSON != undefined) {
+            return err.responseJSON;
+        } else {
+            return { message: "Ha ocurrido un error .. la operacion no pudo ser realizada" }
+        }
     }
 
     static YesNo(parameters) {

@@ -1,5 +1,8 @@
 const { TableRest } = require("../lib/rest/tablerest");
-const { EvaluacionesListService } = require("./evaluacionesservice");
+const {
+    EvaluacionesListService,
+    EvaluacionesUpdateService
+} = require("./evaluacionesservice");
 
 class EvaluacionesRest extends TableRest {
 
@@ -9,6 +12,7 @@ class EvaluacionesRest extends TableRest {
 
     build() {
         this.buildVerb("list", EvaluacionesListService);
+        this.buildVerb("update", EvaluacionesUpdateService);
     }
 
 }

@@ -23,7 +23,7 @@ class CursosMateriasDetalle extends CursosDetalle {
             dataField: "materiacurso",
             displayExpr: item =>
                 item != null ? item.materianombre : "",
-            //            deferRendering: false,
+            deferRendering: false,
             width: 250,
             label: "Materia",
             onValueChanged: e => this.itemMateriaCursoOnValueChanged(e)
@@ -36,7 +36,7 @@ class CursosMateriasDetalle extends CursosDetalle {
                 DsList({
                     path: "materias_cursos",
                     filter: { curso: curso.id },
-                    //                    onLoaded: this.filter().onLoadedSetFirstValue("materiacurso"),
+                    onLoaded: this.filter().onLoadedSetFirstValue("materiacurso"),
                 })
             );
         } else {

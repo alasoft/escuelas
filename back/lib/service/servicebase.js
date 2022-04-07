@@ -70,6 +70,31 @@ class ServiceBase {
         return Sql.Select(Utils.Merge(parameters, { tenant: this.tenant() }))
     }
 
+    sqlInsert(parameters) {
+        return Sql.Insert(this.valuesWithTenantAndId(parameters))
+    }
+
+    sqlUpdate(parameters) {
+        return Sql.Insert(this.valuesWithTenant(parameters))
+    }
+
+    sqlDelete(parameters) {
+        return Sql.Delete(this.valuesWithTenant(parameters))
+    }
+
+    valuesWithTenant(parameters) {
+        parameters.values.tenant = this.tenant();
+        return parameters;
+    }
+
+    valuesWithTenantAndId(parameters) {
+        parameters = this.valuesWithTenant(parameters);
+        if (parameters.values.id == undefined) {
+            parameters.values.id = Utils.NewGuid()
+        }
+        return parameters;
+    }
+
     sendOkey(data) {
         this.res.json(data);
     }
@@ -115,6 +140,12 @@ class ServiceBase {
         return json;
     }
 
+    jsonValuesWithTenant(names) {
+        const json = this.jsonValues(names);
+        json.tenant = this.tenant();
+        return json;
+    }
+
     dbSelect(sql) {
         this.log(sql);
         return this.db.select(sql);
@@ -133,6 +164,11 @@ class ServiceBase {
     dbCount(sql) {
         this.log(sql);
         return this.db.count(sql);
+    }
+
+    dbExists(sql) {
+        this.log(sql)
+        return this.db.exists(sql);
     }
 
     log(sql) {

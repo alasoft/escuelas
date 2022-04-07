@@ -1,4 +1,5 @@
 const { ServiceBase } = require("../lib/service/servicebase");
+const { Sql } = require("../lib/sql/sql");
 
 class EvaluacionesListService extends ServiceBase {
 
@@ -20,6 +21,8 @@ class EvaluacionesListService extends ServiceBase {
             .then(() =>
                 this.loadAlumnos())
             .then(() =>
+                this.loadPeriodos())
+            .then(() =>
                 this.loadTps())
             .then(() =>
                 this.loadEvaluaciones()
@@ -28,21 +31,40 @@ class EvaluacionesListService extends ServiceBase {
 
     data() {
         return {
-            columns: this.columns(),
+            tpColumns: this.tpColumns(),
             rows: this.rows()
         }
     }
 
-    columns() {
-        const columns = [];
-        for (const tp of this.tps()) {
+    tpColumns() {
+        const columns = []
+        for (const periodo of this.periodos()) {
             columns.push({
-                dataField: tp.id,
-                caption: tp.nombre,
-                width: 150
+                caption: periodo.nombre,
+                alignment: "center",
+                columns: this.periodoTpColumns(periodo.id)
             })
         }
-        columns.push({})
+        return columns;
+    }
+
+    periodoTpColumns(periodo) {
+        const columns = [];
+        for (const tp of this.tps()) {
+            if (tp.periodo == periodo) {
+                columns.push({
+                    dataField: tp.id,
+                    caption: tp.nombre,
+                    alignment: "left",
+                    dataType: "number",
+                    allowResizing: false,
+                    allowReordering: false,
+                    allowSorting: false,
+                    width: 120
+                })
+
+            }
+        }
         return columns;
     }
 
@@ -62,9 +84,9 @@ class EvaluacionesListService extends ServiceBase {
     rowAddEvaluaciones(row) {
         const evaluaciones = this.evaluaciones()
             .filter(evaluacion =>
-                evaluacion.alumno == row.alumno);
+                evaluacion.alumno == row.id);
         for (const evaluacion of evaluaciones) {
-            row[evaluacion.tp] = evaluacion.evaluacion;
+            row[evaluacion.tp] = evaluacion.nota;
         }
         return row;
     }
@@ -86,12 +108,9 @@ class EvaluacionesListService extends ServiceBase {
                 "tp.nombre",
                 "tp.periodo",
                 "tp.desde",
-                "tp.hasta"
+                "tp.hasta",
             ],
             from: "tps tp",
-            joins: [
-                { tableName: "periodos", alias: "per", columnName: "tp.periodo" }
-            ],
             where: "tp.materiacurso=@materiacurso",
             parameters: { materiacurso: this.value("materiacurso") }
         })
@@ -160,7 +179,7 @@ class EvaluacionesListService extends ServiceBase {
                 "eva.id",
                 "eva.alumno",
                 "eva.tp",
-                "eva.evaluacion",
+                "eva.nota",
                 "tp.nombre as tpnombre",
             ],
             from: "evaluaciones eva",
@@ -172,6 +191,108 @@ class EvaluacionesListService extends ServiceBase {
         })
     }
 
+    periodos() {
+        return this._periodos;
+    }
+
+    loadPeriodos() {
+        return this.dbSelect(this.sqlPeriodos())
+            .then(rows =>
+                this._periodos = rows)
+    }
+
+    sqlPeriodos() {
+        return this.sqlSelect({
+            columns: [
+                "per.id",
+                "per.nombre"
+            ],
+            distinct: true,
+            from: "tps tp",
+            joins: [
+                { tableName: "periodos", alias: "per", columnName: "tp.periodo" }
+            ],
+            where: "tp.materiacurso=@materiacurso",
+            parameters: { materiacurso: this.value("materiacurso") }
+        })
+    }
+
+}
+
+class EvaluacionesUpdateService extends ServiceBase {
+
+    execute() {
+        this.validate()
+            .then(() =>
+                this.saveEvaluacion())
+            .then(() =>
+                this.sendOkey(this.values()))
+            .catch(err =>
+                this.sendError(err))
+    }
+
+    requiredValues() {
+        return "alumno,tp"
+    }
+
+    saveEvaluacion() {
+        return this.defineSql()
+            .then(sql =>
+                this.dbExecute(sql))
+    }
+
+    defineSql() {
+        return this.dbExists(this.sqlExistsEvaluacion())
+            .then(exists => {
+                if (this.isDefined("nota")) {
+                    if (exists) {
+                        return this.sqlUpdateEvaluacion()
+                    } else {
+                        return this.sqlInsertEvaluacion()
+                    }
+                } else {
+                    if (exists) {
+                        return this.sqlDeleteEvaluacion()
+                    }
+                }
+            })
+    }
+
+    sqlExistsEvaluacion() {
+        return this.sqlSelect({
+            columns: [
+                "id"
+            ],
+            from: "evaluaciones",
+            where: this.sqlAnd()
+                .add("alumno=@alumno")
+                .add("tp=@tp"),
+            parameters: this.jsonValues("alumno,tp")
+        })
+    }
+
+    sqlInsertEvaluacion() {
+        return this.sqlInsert({
+            tableName: "evaluaciones",
+            values: this.jsonValues("alumno,tp,nota")
+        })
+    }
+
+    sqlUpdateEvaluacion() {
+        return this.sqlUpdate({
+            tableName: "evaluaciones",
+            values: this.jsonValues("id,nota"),
+        })
+    }
+
+    sqlDeleteEvaluacion() {
+        return this.sqlDelete({
+            tableName: "evaluaciones",
+            values: this.jsonValues("id")
+        })
+    }
+
 }
 
 module.exports.EvaluacionesListService = EvaluacionesListService;
+module.exports.EvaluacionesUpdateService = EvaluacionesUpdateService;

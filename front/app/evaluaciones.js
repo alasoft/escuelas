@@ -9,28 +9,30 @@ class Evaluaciones extends CursosMateriasDetalle {
                     height: 100
                 },
                 list: {
-                    columns: this.fixedColumns(),
-                    allowColumnResizing: false,
-                    allowColumnReordering: false,
-                    wordWrapEnabled: true,
+                    key: "id",
                     //                    focusedRowEnabled: false,
+                    columns: this.fixedColumns(),
+                    wordWrapEnabled: true,
                     editing: {
                         mode: "cell",
                         allowUpdating: true,
                         selectTextOnEditStart: true,
-                        startEditAction: "click"
+                        startEditAction: "dblClick"
                     },
                     columnFixing: {
-                        //                        enabled: true
+                        enabled: true
                     },
                     scrolling: {
-                        //                        mode: "infinite"
+                        mode: "infinite"
                     },
+                    width: 1150,
+                    showBorders: true,
                     onFocusedCellChanging: e => this.onFocusedCellChanging(e),
+                    onRowUpdated: e => this.onRowUpdated(e)
                 },
             },
             operations: {
-                allowInserting: false,
+                editable: false
             }
         }
     }
@@ -40,14 +42,19 @@ class Evaluaciones extends CursosMateriasDetalle {
     }
 
     setRowsAndColumns(data) {
-        this.list().resetColumns(this.fixedColumns(0 < data.columns.length).concat(data.columns));
+        const hasTpColumns = data.tpColumns != undefined && 0 < data.tpColumns.length;
+        let columns = this.fixedColumns(hasTpColumns);
+        if (hasTpColumns) {
+            columns = columns.concat(data.tpColumns)
+        }
+        this.list().resetColumns(columns);
         this.list().setDataSource(DsArray(data.rows));
     }
 
-    fixedColumns(additionalColumns = false) {
+    fixedColumns(hasTpColumns) {
         return [{
             caption: "Alumnos",
-            alignment: "center",
+            alignment: hasTpColumns ? "center" : "left",
             columns: [{
                     dataField: "id",
                     visible: false
@@ -55,12 +62,14 @@ class Evaluaciones extends CursosMateriasDetalle {
                 {
                     dataField: "apellido",
                     width: 140,
-                    allowEditing: false
+                    allowEditing: false,
+                    allowResizing: false,
                 },
                 {
                     dataField: "nombre",
-                    width: (additionalColumns ? 140 : undefined),
+                    width: 140,
                     allowEditing: false,
+                    allowResizing: false
                 }
             ],
             fixed: true
@@ -76,23 +85,48 @@ class Evaluaciones extends CursosMateriasDetalle {
         this.filter().setEditorValue("añolectivo", AñosLectivos.Get(Dates.ThisYear()));
     }
 
-    itemMateriaCursoOnValueChanged(e) {
-        if (this.filterText("materiacurso")) {
-            Rest.Promise({ path: "evaluaciones/list", data: { materiacurso: this.materiacurso().id } })
-                .then(data =>
-                    this.setRowsAndColumns(data))
-        } else {
-            this.blankData()
-        }
-    }
-
     blankData() {
         this.list().resetColumns(this.fixedColumns());
         this.list().setDataSource(null);
     }
 
+    itemMateriaCursoOnValueChanged(e) {
+        if (this.materiacurso() != undefined) {
+            Rest.Promise({ path: "evaluaciones/list", data: { materiacurso: this.materiacurso().id } })
+                .then(data =>
+                    this.setRowsAndColumns(data))
+        } else {
+            Rest.Promise({ path: "alumnos/list", data: { curso: this.curso().id } })
+                .then(data =>
+                    this.setRowsAndColumns({ rows: data }))
+        }
+    }
+
     onFocusedCellChanging(e) {
-        //        return e.newColumnIndex < 2 ? e.cancel = true : undefined
+        return e.newColumnIndex < 2 ? e.cancel = true : undefined
+    }
+
+    onRowUpdated(e) {
+        const tpNota = this.tpNota(e.data);
+        Rest.Promise({
+                path: "evaluaciones/update",
+                data: {
+                    alumno: e.data.id,
+                    tp: tpNota.tp,
+                    nota: tpNota.nota
+                }
+            })
+            .then(data =>
+                this.list().focus())
+            .catch(err => {
+                App.ShowError(err);
+                this.list().cancelEditCell();
+            })
+    }
+
+    tpNota(data) {
+        const tp = this.list().editColumnName();
+        return { tp: tp, nota: data[tp] };
     }
 
 }

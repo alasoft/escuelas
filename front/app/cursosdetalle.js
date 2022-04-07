@@ -115,5 +115,4 @@ class CursosDetalle extends FilterView {
         this.setDataSource(e.value);
     }
 
-
 }
