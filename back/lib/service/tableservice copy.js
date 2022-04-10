@@ -64,14 +64,14 @@ class TableGetService extends TableListGetService {
     }
 
     requiredValues() {
-        return "id"
+        return "id";
     }
 
     sqlParameters() {
         return {
             from: this.tableName,
             where: "id=@id",
-            parameters: { id: this.received("id") }
+            parameters: { id: this.id() }
         }
     }
 
@@ -86,22 +86,13 @@ class TableCrudServiceBase extends TableServiceBase {
     execute() {
         return this.validate()
             .then(() =>
+                this.prepare())
+            .then(() =>
                 this.dbExecute(this.sql()))
             .then(() =>
                 this.sendIdDto())
             .catch(err =>
                 this.sendError(err))
-    }
-
-    sqlParameters() {
-        return {
-            tableName: this.tableName,
-            values: this.sqlValues()
-        }
-    }
-
-    sqlValues() {
-        return this.values()
     }
 
 }
@@ -128,6 +119,13 @@ class TableInsertUpdateServiceBase extends TableCrudServiceBase {
 
     duplicatedMessage() {
         return this.parameters.duplicatedMessage || this.tableName + " registro duplicado";
+    }
+
+    sqlParameters() {
+        return {
+            tableName: this.tableName,
+            values: this.sqlValues()
+        }
     }
 
 }
@@ -162,8 +160,10 @@ class TableDeleteService extends TableCrudServiceBase {
         return this.sqlDelete(this.sqlParameters())
     }
 
-    sqlValues() {
-        return { id: this.id() }
+    sqlParameters() {
+        return {
+            tableName: this.tableName
+        }
     }
 
 }

@@ -155,8 +155,8 @@ class List extends Widget {
         return this.getProperty("editing.editColumnName");
     }
 
-    cancelEditCell() {
-        this.instance().cancelEditData();
+    cancelEdit() {
+        this.instance().cancelEditData()
     }
 
 }

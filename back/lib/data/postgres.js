@@ -1,3 +1,5 @@
+const { timeStamp } = require('console');
+const { isThisQuarter } = require('date-fns');
 const { Pool } = require('pg');
 
 class Postgres {
@@ -10,7 +12,8 @@ class Postgres {
 
     }
 
-    query(sql) {
+    query(sql, service) {
+        this.log(sql, service);
         return new Promise((resolve, reject) => {
             this.pool.query(sql)
                 .then(result =>
@@ -47,6 +50,10 @@ class Postgres {
 
     execute(sql) {
         return this.query(sql);
+    }
+
+    log(sql, service) {
+        this.app.log(sql, service != undefined ? service.req : undefined)
     }
 
 }

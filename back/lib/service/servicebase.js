@@ -1,11 +1,19 @@
-const { Exceptions, Exception } = require("../utils/exceptions.js");
+const { Exceptions, } = require("../utils/exceptions.js");
 const { Sql } = require("../sql/sql");
 const { Utils } = require("../utils/utils");
+const { ObjectBase } = require("../utils/objectbase.js");
+const {
+    SqlInsert,
+    SqlUpdate,
+    SqlDelete,
+    SqlUpdateWhere,
+    SqlDeleteWhere
+} = require("../sql/sqloperations.js");
 
-class ServiceBase {
+class ServiceBase extends ObjectBase {
 
     constructor(parameters) {
-        this.parameters = parameters;
+        super(parameters)
 
         this.app = this.parameters.app;
         this.req = this.parameters.req;
@@ -32,18 +40,7 @@ class ServiceBase {
     }
 
     value(name) {
-        return Utils.GetValue(this.values(), name);
-    }
-
-    date(name) {
-        const value = this.value(name);
-        if (value != undefined) {
-            return new Date(value);
-        }
-    }
-
-    setValue(name, value) {
-        Utils.SetValue(this.values(), name, value);
+        return this.values()[name];
     }
 
     isDefined(name) {
@@ -54,61 +51,15 @@ class ServiceBase {
         return !this.isDefined(name);
     }
 
-    sqlAnd(items) {
-        return Sql.And({ items: items });
+    setValue(name, value) {
+        this.values()[name] = value;
     }
 
-    sqlText(items, values) {
-        return Sql.Text({ items: items, values: values });
-    }
-
-    sqlLike(value) {
-        return Sql.Like(value)
-    }
-
-    sqlSelect(parameters) {
-        return Sql.Select(Utils.Merge(parameters, { tenant: this.tenant() }))
-    }
-
-    sqlInsert(parameters) {
-        return Sql.Insert(this.valuesWithTenantAndId(parameters))
-    }
-
-    sqlUpdate(parameters) {
-        return Sql.Insert(this.valuesWithTenant(parameters))
-    }
-
-    sqlDelete(parameters) {
-        return Sql.Delete(this.valuesWithTenant(parameters))
-    }
-
-    valuesWithTenant(parameters) {
-        parameters.values.tenant = this.tenant();
-        return parameters;
-    }
-
-    valuesWithTenantAndId(parameters) {
-        parameters = this.valuesWithTenant(parameters);
-        if (parameters.values.id == undefined) {
-            parameters.values.id = Utils.NewGuid()
+    date(name) {
+        const value = this.value(name);
+        if (value != undefined) {
+            return new Date(value);
         }
-        return parameters;
-    }
-
-    sendOkey(data) {
-        this.res.json(data);
-    }
-
-    sendIdDto() {
-        this.sendOkey(this.idDto());
-    }
-
-    idDto() {
-        return { id: this.id() };
-    }
-
-    sendError(err) {
-        this.app.sendError(this.req, this.res, err);
     }
 
     validate() {
@@ -131,6 +82,81 @@ class ServiceBase {
 
     requiredValues() {}
 
+    sqlAnd(items) {
+        return Sql.And({ items: items });
+    }
+
+    sqlText(items, values) {
+        return Sql.Text({ items: items, values: values });
+    }
+
+    sqlLike(value) {
+        return Sql.Like(value)
+    }
+
+    sqlSelect(parameters) {
+        if (Utils.IsNotDefined(parameters.tenant)) {
+            parameters.tenant = this.tenant();
+        }
+        return Sql.Select(parameters);
+    }
+
+    sqlInsert(parameters) {
+        this.defineValuesToSendInsert(parameters);
+        return new SqlInsert(parameters).text()
+    }
+
+    sqlUpdate(parameters) {
+        this.defineValuesToSend(parameters);
+        return new SqlUpdate(parameters).text()
+    }
+
+    sqlUpdateWhere(parameters) {
+        this.defineValuesToSend(parameters);
+        return new SqlUpdateWhere(parameters).text();
+    }
+
+    sqlDelete(parameters) {
+        this.defineValuesToSend(parameters);
+        return new SqlDelete(parameters).text()
+    }
+
+    sqlDeleteWhere(parameters) {
+        this.defineValuesToSend(parameters);
+        return new SqlDeleteWhere(parameters).text();
+    }
+
+    defineValuesToSend(parameters) {
+        if (Utils.IsNotDefined(parameters.values)) {
+            parameters.values = {};
+        }
+        this.valuesToSend = parameters.values;
+        this.valuesToSend.tenant = this.tenant();
+    }
+
+    defineValuesToSendInsert(parameters) {
+        this.defineValuesToSend(parameters);
+        if (Utils.IsNotDefined(this.valuesToSend.id)) {
+            this.valuesToSend.id = Utils.NewGuid()
+        }
+    }
+
+    sendOkey(data) {
+        this.res.json(data);
+    }
+
+    sendIdDto() {
+        this.sendOkey(this.idDto());
+    }
+
+    idDto() {
+        return { id: this.valuesToSend.id };
+    }
+
+    sendError(err) {
+        this.app.sendError(this.req, this.res, err);
+    }
+
     jsonValues(names) {
         const json = {};
         const properties = names.split(",")
@@ -147,32 +173,23 @@ class ServiceBase {
     }
 
     dbSelect(sql) {
-        this.log(sql);
-        return this.db.select(sql);
+        return this.db.select(sql, this);
     }
 
     dbSelectOne(sql) {
-        this.log(sql);
-        return this.db.selectOne(sql);
+        return this.db.selectOne(sql, this);
     }
 
     dbExecute(sql) {
-        this.log(sql);
-        return this.db.execute(sql);
+        return this.db.execute(sql, this);
     }
 
     dbCount(sql) {
-        this.log(sql);
-        return this.db.count(sql);
+        return this.db.count(sql, this);
     }
 
     dbExists(sql) {
-        this.log(sql)
-        return this.db.exists(sql);
-    }
-
-    log(sql) {
-        this.app.log(sql, this.req);
+        return this.db.exists(sql, this);
     }
 
 }

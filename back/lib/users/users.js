@@ -38,7 +38,7 @@ class UsersCreateTable {
                 }
             })
             .catch(err =>
-                this.app.sendError(err))
+                this.app.terminate(err))
     }
 
     createTable() {

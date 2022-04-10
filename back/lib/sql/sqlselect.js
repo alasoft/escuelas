@@ -1,9 +1,9 @@
+const { ObjectBase } = require("../utils/objectbase");
 const { DbStates } = require("../data/dbstates");
 const { Exceptions } = require("../utils/exceptions.js");
-const { ObjectBase } = require("../utils/objectbase");
-const { SqlAnd } = require("./sqland");
 const { TextBuilder } = require("../utils/textbuilder");
 const { Utils } = require("../utils/utils");
+const { SqlAnd, SqlWhere } = require("./sqloperators");
 
 class SqlSelect extends ObjectBase {
 
@@ -18,7 +18,7 @@ class SqlSelect extends ObjectBase {
         this.columns = new SqlColumns({ sqlSelect: this, items: parameters.columns });
         this.joins = new SqlJoins({ sqlSelect: this, joins: parameters.joins });
         this.from = new SqlFrom(parameters.from);
-        this.where = new SqlWhere({ sqlSelect: this, items: parameters.where })
+        this.where = new SqlWhereSelect({ sqlSelect: this, items: parameters.where })
         this.order = new SqlOrder({ sqlSelect: this, items: parameters.order })
         this.values = parameters.parameters;
     }
@@ -169,30 +169,12 @@ class SqlFrom {
 
 }
 
-class SqlWhere extends TextBuilder {
+class SqlWhereSelect extends SqlWhere {
 
     constructor(parameters) {
         super(parameters);
         this.sqlSelect = parameters.sqlSelect;
-        this.addBaseConditions();
-    }
-
-    addBaseConditions() {
         this.add(this.sqlSelect.baseConditions());
-    }
-
-    beforeItem(itemText, i) {
-        if (i == 0) {
-            return "where ("
-        } else {
-            return " and ";
-        }
-    }
-
-    finalText(text, itemCount) {
-        if (0 < itemCount) {
-            return text + ")";
-        }
     }
 
 }
@@ -244,11 +226,6 @@ class SqlJoin {
 }
 
 class SqlOrder extends TextBuilder {
-
-    constructor(parameters) {
-        super(parameters);
-        this.sqlSelect = parameters.sqlSelect;
-    }
 
     beforeItem(item, i) {
         if (i == 0) {

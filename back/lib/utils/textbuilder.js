@@ -64,14 +64,6 @@ class TextBuilder {
         return finalItems;
     }
 
-    beforeItem(item, i) {
-        if (i == 0) {
-            return ""
-        } else {
-            return " "
-        }
-    }
-
     itemToText(item, i) {
         if (Utils.IsFunction(item)) {
             return this.itemToText(item(), i);
@@ -79,6 +71,14 @@ class TextBuilder {
             return item.text()
         } else {
             return item;
+        }
+    }
+
+    beforeItem(item, i) {
+        if (i == 0) {
+            return ""
+        } else {
+            return " "
         }
     }
 

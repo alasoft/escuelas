@@ -116,6 +116,7 @@ class PeriodosCommonService {
     static ValidateDesdeHasta(service) {
         this.ValidateDesdeLowerHasta(service);
         this.ValidaDesdeInAñoLectivo(service)
+        this.ValidaHastaInAñoLectivo(service)
         return this.ValidateNoDateCollision(service);
     }
 
@@ -132,6 +133,17 @@ class PeriodosCommonService {
         if (Dates.YearOf(service.date("desde")) != service.value("añolectivo")) {
             throw Exceptions.Validation({
                 message: "La fecha desde debe estar dentro del año lectivo",
+                detail: "<br><br>desde = " +
+                    Dates.Format(service.date("desde")) +
+                    "<br>año lectivo = " + service.value("añolectivo")
+            })
+        }
+    }
+
+    static ValidaHastaInAñoLectivo(service) {
+        if (Dates.YearOf(service.date("hasta")) != service.value("añolectivo")) {
+            throw Exceptions.Validation({
+                message: "La fecha hasta debe estar dentro del año lectivo",
                 detail: "<br><br>desde = " +
                     Dates.Format(service.date("desde")) +
                     "<br>año lectivo = " + service.value("añolectivo")
@@ -180,7 +192,7 @@ class PeriodosCommonService {
     }
 
     static DetailDesdeHasta(service) {
-        return "<br><br>" + service.value("nombre") + "<br>" + "-".repeat(service.value("nombre").length + 5) +
+        return "<br><br>" + service.value("nombre") + "<br>" + "-".repeat(service.value("nombre").length + 10) +
             "<br>desde = " +
             Dates.Format(service.date("desde")) +
             "<br>hasta = " +
@@ -188,7 +200,7 @@ class PeriodosCommonService {
     }
 
     static RowDetailDesdeHasta(row) {
-        return "<br><br>" + row.nombre + "<br>" + "-".repeat(row.nombre.length + 5) +
+        return "<br><br>" + row.nombre + "<br>" + "-".repeat(row.nombre.length + 10) +
             "<br>desde = " +
             Dates.Format(row.desde) +
             "<br>hasta = " +

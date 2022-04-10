@@ -3,7 +3,7 @@ class TpsCurso extends CursosMateriasDetalle {
     extraConfiguration() {
         return {
             popup: {
-                height: 700
+                height: 650
             },
             components: {
                 filter: {

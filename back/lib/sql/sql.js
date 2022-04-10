@@ -1,11 +1,10 @@
-const { SqlAnd } = require("./sqland");
-const { SqlCreate, SqlDropCreate } = require("./sqlcreate");
-const { SqlInsert, SqlUpdate, SqlDelete } = require("./sqloperations");
+const { SqlInsert, SqlUpdate, SqlDelete, SqlCreate } = require("./sqloperations");
 const { SqlText } = require("./sqltext");
 const { SqlType } = require("./sqltype");
 const { TextBuilder } = require("../utils/textbuilder");
 const { SqlCount, SqlSelect } = require("./sqlselect");
 const { Utils } = require("../utils/utils");
+const { SqlAnd } = require("./sqloperators");
 
 const { escape } = require("sqlutils/pg");
 

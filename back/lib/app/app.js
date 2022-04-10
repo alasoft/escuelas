@@ -75,7 +75,7 @@ class App {
             .then(() =>
                 this.listen())
             .catch(err =>
-                this.log(err)
+                this.terminate(err)
             )
     }
 
@@ -136,8 +136,14 @@ class App {
 
     sendError(req, res, err) {
         const errDto = this.errorToDto(err);
-        this.log("Error: " + JSON.stringify(errDto), req);
+        this.log("Error: " + JSON.stringify(errDto));
         res.status(err.status || Http.Internal).send(errDto);
+    }
+
+    terminate(err) {
+        const errDto = this.errorToDto(err);
+        this.log("Error: " + JSON.stringify(errDto));
+        process.exit();
     }
 
     errorToDto(err) {

@@ -43,11 +43,11 @@ class SimpleTableInsertService extends TableInsertService {
     }
 
     requiredValues() {
-        return "nombre"
+        return "id,nombre"
     }
 
     sqlValues() {
-        return { nombre: this.value("nombre") }
+        return this.values("nombre")
     }
 
 }
@@ -59,7 +59,7 @@ class SimpleTableUpdateService extends TableUpdateService {
     }
 
     sqlValues() {
-        return { nombre: this.value("nombre") }
+        return this.values("nombre")
     }
 
 }

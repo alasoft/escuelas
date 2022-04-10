@@ -66,6 +66,10 @@ class FormView extends EntryView {
             )
     }
 
+    cancel() {
+        super.close(false);
+    }
+
     saveInsert() {
         return this.rest().insert(this.dataToInsert())
             .then(data =>
@@ -90,7 +94,7 @@ class FormView extends EntryView {
         if (id != undefined) {
             this.listView().refresh(id);
         }
-        super.close();
+        super.close(id);
     }
 
     popupOnShown(e) {

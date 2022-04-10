@@ -94,6 +94,4 @@ class EntryView extends DialogView {
         this.form().setEditorValue(dataField, value);
     }
 
-
-
 }

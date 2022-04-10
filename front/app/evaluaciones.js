@@ -10,14 +10,13 @@ class Evaluaciones extends CursosMateriasDetalle {
                 },
                 list: {
                     key: "id",
-                    //                    focusedRowEnabled: false,
                     columns: this.fixedColumns(),
                     wordWrapEnabled: true,
                     editing: {
                         mode: "cell",
                         allowUpdating: true,
-                        selectTextOnEditStart: true,
-                        startEditAction: "dblClick"
+                        startEditAction: "click",
+                        selectTextOnEditStart: true
                     },
                     columnFixing: {
                         enabled: true
@@ -25,10 +24,9 @@ class Evaluaciones extends CursosMateriasDetalle {
                     scrolling: {
                         mode: "infinite"
                     },
-                    width: 1150,
                     showBorders: true,
                     onFocusedCellChanging: e => this.onFocusedCellChanging(e),
-                    onRowUpdated: e => this.onRowUpdated(e)
+                    onRowValidating: e => this.onRowValidating(e),
                 },
             },
             operations: {
@@ -41,14 +39,84 @@ class Evaluaciones extends CursosMateriasDetalle {
         return false;
     }
 
+    cursoDeferRendering() {
+        return false;
+    }
+
     setRowsAndColumns(data) {
-        const hasTpColumns = data.tpColumns != undefined && 0 < data.tpColumns.length;
-        let columns = this.fixedColumns(hasTpColumns);
-        if (hasTpColumns) {
-            columns = columns.concat(data.tpColumns)
+        this.tpColumns = data.tpColumns;
+        this.hasTpColumns = this.tpColumns != undefined && 0 < this.tpColumns.length;
+        this.columns = this.fixedColumns(this.hasTpColumns);
+        if (this.hasTpColumns) {
+            this.columns = this.columns.concat(data.tpColumns)
         }
-        this.list().resetColumns(columns);
+        this.list().resetColumns(this.columns);
         this.list().setDataSource(DsArray(data.rows));
+    }
+
+    contextMenuItems() {
+        return [
+            this.itemAddAlumno(),
+            this.itemAddTp()
+        ]
+    }
+
+    itemAddAlumno() {
+        if (this.materiacurso() != undefined) {
+            return {
+                text: "Agrega Alumno",
+                onClick: e => this.addAlumno()
+            }
+        }
+    }
+
+    itemAddTp() {
+        if (this.materiacurso() != undefined) {
+            return {
+                text: "Agrega Trabajo Práctico",
+                onClick: e => this.addTp(),
+            }
+        }
+    }
+
+    addAlumno() {
+        new AlumnosCursoForm({
+            listView: this,
+            components: {
+                form: {
+                    formData: {
+                        añolectivo: this.filterValue("añolectivo").id,
+                        curso: this.curso().id,
+                        descripcion: this.filterText("curso"),
+                    }
+                }
+            }
+        }).render().then(id => {
+            if (Utils.IsString(id)) {
+                this.refresh(id);
+            }
+        })
+    }
+
+    addTp() {
+        new TpsCursoForm({
+                listView: this,
+                components: {
+                    form: {
+                        formData: {
+                            añolectivo: this.filterValue("añolectivo").id,
+                            descripcion: this.filterText("curso"),
+                            desde: Dates.Today(),
+                            hasta: Dates.TodayPlusDays(5)
+                        }
+                    }
+                }
+            }).render()
+            .then(id => {
+                if (Utils.IsString(id)) {
+                    this.refresh()
+                }
+            });
     }
 
     fixedColumns(hasTpColumns) {
@@ -67,7 +135,7 @@ class Evaluaciones extends CursosMateriasDetalle {
                 },
                 {
                     dataField: "nombre",
-                    width: 140,
+                    width: hasTpColumns ? 140 : undefined,
                     allowEditing: false,
                     allowResizing: false
                 }
@@ -90,37 +158,54 @@ class Evaluaciones extends CursosMateriasDetalle {
         this.list().setDataSource(null);
     }
 
-    itemMateriaCursoOnValueChanged(e) {
+    refresh(id) {
+        let promise;
         if (this.materiacurso() != undefined) {
-            Rest.Promise({ path: "evaluaciones/list", data: { materiacurso: this.materiacurso().id } })
+            promise = Rest.Promise({ path: "evaluaciones/list", data: { materiacurso: this.materiacurso().id } })
                 .then(data =>
                     this.setRowsAndColumns(data))
         } else {
-            Rest.Promise({ path: "alumnos/list", data: { curso: this.curso().id } })
+            promise = Rest.Promise({ path: "alumnos/list", data: { curso: this.curso().id } })
                 .then(data =>
                     this.setRowsAndColumns({ rows: data }))
         }
+        return promise
+            .then(() => {
+                if (id != undefined) {
+                    this.list().focusRowById(id)
+                } else {
+                    this.list().focus();
+                }
+
+            })
+    }
+
+    itemMateriaCursoOnValueChanged(e) {
+        return this.refresh()
     }
 
     onFocusedCellChanging(e) {
-        return e.newColumnIndex < 2 ? e.cancel = true : undefined
+        if (e.newColumnIndex < 2) {
+            e.cancel = true
+        }
     }
 
-    onRowUpdated(e) {
-        const tpNota = this.tpNota(e.data);
-        Rest.Promise({
+    onRowValidating(e) {
+        const tpNota = this.tpNota(e.newData);
+        e.promise = Rest.Promise({
                 path: "evaluaciones/update",
                 data: {
-                    alumno: e.data.id,
+                    alumno: e.oldData.id,
                     tp: tpNota.tp,
                     nota: tpNota.nota
                 }
             })
             .then(data =>
-                this.list().focus())
+                this.list().focus()
+            )
             .catch(err => {
                 App.ShowError(err);
-                this.list().cancelEditCell();
+                this.list().cancelEdit();
             })
     }
 
@@ -128,5 +213,7 @@ class Evaluaciones extends CursosMateriasDetalle {
         const tp = this.list().editColumnName();
         return { tp: tp, nota: data[tp] };
     }
+
+    listOnRowDblClick(e) {}
 
 }

@@ -51,10 +51,15 @@ class CursosDetalle extends FilterView {
         return Item.Lookup({
             dataField: "curso",
             displayExpr: item => Cursos.Descripcion(item),
+            deferRendering: this.cursoDeferRendering(),
             editable: true,
             width: 450,
             onValueChanged: e => this.itemCursoOnValueChanged(e)
         })
+    }
+
+    cursoDeferRendering() {
+        return true;
     }
 
     setCursoDataSource(añolectivo) {
@@ -63,6 +68,7 @@ class CursosDetalle extends FilterView {
                 DsList({
                     path: "cursos",
                     filter: { añolectivo: añolectivo },
+                    onLoaded: this.filter().onLoadedSetFirstValue("curso"),
                 })
             );
         } else {

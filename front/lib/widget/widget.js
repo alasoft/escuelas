@@ -26,11 +26,11 @@ class Widget extends Component {
     }
 
     beginUpdate() {
-        //        this.instance().beginUpdate();
+        this.instance().beginUpdate();
     }
 
     endUpdate() {
-        //        this.instance().endUpdate();
+        this.instance().endUpdate();
     }
 
 }

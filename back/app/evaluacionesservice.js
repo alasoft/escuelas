@@ -1,5 +1,6 @@
 const { ServiceBase } = require("../lib/service/servicebase");
-const { Sql } = require("../lib/sql/sql");
+const { Exceptions } = require("../lib/utils/exceptions");
+const { Utils } = require("../lib/utils/utils");
 
 class EvaluacionesListService extends ServiceBase {
 
@@ -45,6 +46,9 @@ class EvaluacionesListService extends ServiceBase {
                 columns: this.periodoTpColumns(periodo.id)
             })
         }
+        if (0 < columns.length) {
+            columns[columns.length - 1].columns.push({})
+        }
         return columns;
     }
 
@@ -55,14 +59,19 @@ class EvaluacionesListService extends ServiceBase {
                 columns.push({
                     dataField: tp.id,
                     caption: tp.nombre,
-                    alignment: "left",
+                    //                    alignment: "left",
                     dataType: "number",
+                    editorOptions: {
+                        format: "#",
+                        inputAttr: {
+                            style: "text-align: right"
+                        }
+                    },
                     allowResizing: false,
                     allowReordering: false,
                     allowSorting: false,
                     width: 120
                 })
-
             }
         }
         return columns;
@@ -231,8 +240,21 @@ class EvaluacionesUpdateService extends ServiceBase {
                 this.sendError(err))
     }
 
+    validate() {
+        return this.validateRequiredValues()
+            .then(() =>
+                this.validateNota())
+    }
+
     requiredValues() {
         return "alumno,tp"
+    }
+
+    validateNota() {
+        const nota = this.value("nota");
+        if (Utils.IsDefined(nota) && (nota < 1 || 10 < nota)) {
+            throw Exceptions.Validation({ message: "La nota debe estar entre 1 y 10" })
+        }
     }
 
     saveEvaluacion() {
@@ -244,16 +266,14 @@ class EvaluacionesUpdateService extends ServiceBase {
     defineSql() {
         return this.dbExists(this.sqlExistsEvaluacion())
             .then(exists => {
-                if (this.isDefined("nota")) {
-                    if (exists) {
+                if (exists) {
+                    if (this.isDefined("nota")) {
                         return this.sqlUpdateEvaluacion()
                     } else {
-                        return this.sqlInsertEvaluacion()
-                    }
-                } else {
-                    if (exists) {
                         return this.sqlDeleteEvaluacion()
                     }
+                } else {
+                    return this.sqlInsertEvaluacion();
                 }
             })
     }
@@ -279,17 +299,28 @@ class EvaluacionesUpdateService extends ServiceBase {
     }
 
     sqlUpdateEvaluacion() {
-        return this.sqlUpdate({
+        return this.sqlUpdateWhere({
             tableName: "evaluaciones",
-            values: this.jsonValues("id,nota"),
+            values: this.jsonValues("nota"),
+            where: this.whereAlumnoTp()
         })
     }
 
     sqlDeleteEvaluacion() {
-        return this.sqlDelete({
+        return this.sqlDeleteWhere({
             tableName: "evaluaciones",
-            values: this.jsonValues("id")
+            where: this.whereAlumnoTp()
         })
+    }
+
+    whereAlumnoTp() {
+        return this.sqlAnd()
+            .add(this.sqlText("alumno=@alumno", {
+                alumno: this.value("alumno")
+            }))
+            .add(this.sqlText("tp=@tp", {
+                tp: this.value("tp")
+            }))
     }
 
 }

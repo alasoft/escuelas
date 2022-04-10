@@ -180,6 +180,24 @@
          return this.Text(p)
      }
 
+     static Number(p) {
+
+         function number() {
+             return {
+                 editorType: "dxNumberBox",
+                 editorOptions: {
+                     format: p.format || App.NUMBER_FORMAT_DEFAULT,
+                     width: p.width || App.NUMBER_WIDTH_DEFAULT,
+                     inputAttr: {
+                         style: "text-align: right"
+                     }
+                 }
+             }
+         }
+
+         return Utils.Merge(this.DataField(p), number())
+     }
+
      static Date(p) {
 
          function date() {

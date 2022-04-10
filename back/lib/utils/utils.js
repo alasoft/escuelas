@@ -41,11 +41,11 @@ class Utils {
         return _.merge({}, ...objects);
     }
 
-    static GetValue(object, path) {
+    static GetProperty(object, path) {
         return _.get(object, path);
     }
 
-    static SetValue(object, path, value) {
+    static SetProperty(object, path, value) {
         _.set(object, path, value);
     }
 

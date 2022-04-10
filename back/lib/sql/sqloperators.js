@@ -1,12 +1,30 @@
 const { TextBuilder } = require("../utils/textbuilder");
 
+class SqlWhere extends TextBuilder {
+
+    beforeItem(itemText, i) {
+        if (i == 0) {
+            return "where ("
+        } else {
+            return " and ";
+        }
+    }
+
+    finalText(text, itemCount) {
+        if (0 < itemCount) {
+            return text + ")";
+        }
+    }
+
+}
+
 class SqlAnd extends TextBuilder {
 
     beforeItem(item, i) {
         if (i == 0) {
             return ""
         } else {
-            return " AND ";
+            return " and ";
         }
     }
 
@@ -20,4 +38,5 @@ class SqlAnd extends TextBuilder {
 
 }
 
+module.exports.SqlWhere = SqlWhere;
 module.exports.SqlAnd = SqlAnd;

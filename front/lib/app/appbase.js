@@ -140,6 +140,8 @@ class AppBase {
     static ErrorToObject(err) {
         if (err.responseJSON != undefined) {
             return err.responseJSON;
+        } else if (err.isValidation == true) {
+            return err
         } else {
             return { message: "Ha ocurrido un error .. la operacion no pudo ser realizada" }
         }
