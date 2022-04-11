@@ -59,7 +59,7 @@ class EvaluacionesListService extends ServiceBase {
                 columns.push({
                     dataField: tp.id,
                     caption: tp.nombre,
-                    //                    alignment: "left",
+                    alignment: "center",
                     dataType: "number",
                     editorOptions: {
                         format: "#",

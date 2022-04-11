@@ -1,12 +1,19 @@
 class Evaluaciones extends CursosMateriasDetalle {
 
+    constructor(...parameters) {
+        super(...parameters);
+    }
+
     extraConfiguration() {
         return {
             mode: "view",
             components: {
                 filter: {
-                    width: 1150,
-                    height: 100
+                    width: 950,
+                    height: 80
+                },
+                label: {
+                    text: "Evaluaciones"
                 },
                 list: {
                     key: "id",
@@ -30,28 +37,146 @@ class Evaluaciones extends CursosMateriasDetalle {
                 },
             },
             operations: {
-                editable: false
+                editable: false,
+                allowExport: true
             }
         }
+    }
+
+    filterItems() {
+        return [
+            Item.Group({
+                colCount: 5,
+                items: [
+                    this.itemAñoLectivo(),
+                    this.itemCurso(),
+                    this.itemMateriaCurso()
+                ]
+            }),
+        ]
+    }
+
+    itemCursoWidth() {
+        return 450
+    }
+
+    itemCursoColSpan() {
+        return 3;
     }
 
     añoLectivoReadOnly() {
         return false;
     }
 
-    cursoDeferRendering() {
+    itemCursoDeferRendering() {
         return false;
     }
 
+    listToolbarItems() {
+        if (this.filter().isReady()) {
+            return [this.itemMaterias(),
+                this.itemAlumnos(), this.itemTps(),
+                this.itemExportButton(), this.itemSearchPanel()
+            ]
+        }
+    }
+
+    itemMaterias() {
+        if (Utils.IsDefined(this.curso())) {
+            return {
+                widget: "dxButton",
+                location: "before",
+                options: {
+                    text: "Materias",
+                    icon: "folder",
+                    onClick: e => this.showMaterias(e)
+                }
+            }
+        }
+    }
+
+    itemAlumnos() {
+        if (Utils.IsDefined(this.curso())) {
+            return {
+                widget: "dxButton",
+                location: "before",
+                options: {
+                    text: "Alumnos",
+                    icon: "group",
+                    onClick: e => this.showAlumnos(e)
+                }
+            }
+        }
+    }
+
+    itemTps() {
+        if (Utils.IsDefined(this.materiacurso())) {
+            return {
+                widget: "dxButton",
+                location: "before",
+                options: {
+                    text: "Trabajos Prácticos",
+                    icon: "check",
+                    onClick: e => this.showTps(e)
+                }
+            }
+        }
+    }
+
+    showMaterias() {
+        new MateriasCurso(this.detailParameters()).render();
+    }
+
+    showAlumnos() {
+        new AlumnosCurso(this.detailParameters()).render();
+    }
+
+    showTps() {
+        new TpsCurso(this.detailParameters()).render();
+    }
+
+    detailParameters() {
+        return {
+            añolectivo: this.filter().getEditorValue("añolectivo"),
+            curso: this.curso(),
+            masterView: this
+        }
+    }
+
     setRowsAndColumns(data) {
-        this.tpColumns = data.tpColumns;
-        this.hasTpColumns = this.tpColumns != undefined && 0 < this.tpColumns.length;
+        this.tpColumns = Utils.IsDefined(data) ? data.tpColumns : undefined;
+        this.hasTpColumns = Utils.IsDefined(this.tpColumns) && (0 < this.tpColumns.length);
         this.columns = this.fixedColumns(this.hasTpColumns);
         if (this.hasTpColumns) {
             this.columns = this.columns.concat(data.tpColumns)
         }
         this.list().resetColumns(this.columns);
         this.list().setDataSource(DsArray(data.rows));
+    }
+
+    fixedColumns(hasTpColumns) {
+        return [{
+            caption: "Alumnos",
+            alignment: hasTpColumns ? "center" : "left",
+            columns: [{
+                    dataField: "id",
+                    visible: false
+                },
+                {
+                    dataField: "apellido",
+                    width: 140,
+                    allowEditing: false,
+                    allowResizing: false,
+                },
+                {
+                    dataField: "nombre",
+                    width: hasTpColumns ? 140 : undefined,
+                    allowEditing: false,
+                    allowResizing: false
+                }
+            ],
+            fixed: true
+        }]
     }
 
     contextMenuItems() {
@@ -119,35 +244,6 @@ class Evaluaciones extends CursosMateriasDetalle {
             });
     }
 
-    fixedColumns(hasTpColumns) {
-        return [{
-            caption: "Alumnos",
-            alignment: hasTpColumns ? "center" : "left",
-            columns: [{
-                    dataField: "id",
-                    visible: false
-                },
-                {
-                    dataField: "apellido",
-                    width: 140,
-                    allowEditing: false,
-                    allowResizing: false,
-                },
-                {
-                    dataField: "nombre",
-                    width: hasTpColumns ? 140 : undefined,
-                    allowEditing: false,
-                    allowResizing: false
-                }
-            ],
-            fixed: true
-        }]
-    }
-
-    labelText() {
-        return "Evaluaciones"
-    }
-
     afterRender() {
         super.afterRender();
         this.filter().setEditorValue("añolectivo", AñosLectivos.Get(Dates.ThisYear()));
@@ -164,10 +260,12 @@ class Evaluaciones extends CursosMateriasDetalle {
             promise = Rest.Promise({ path: "evaluaciones/list", data: { materiacurso: this.materiacurso().id } })
                 .then(data =>
                     this.setRowsAndColumns(data))
-        } else {
+        } else if (Utils.IsDefined(this.curso())) {
             promise = Rest.Promise({ path: "alumnos/list", data: { curso: this.curso().id } })
                 .then(data =>
                     this.setRowsAndColumns({ rows: data }))
+        } else {
+            promise = Promise.resolve(this.setRowsAndColumns())
         }
         return promise
             .then(() => {
@@ -185,8 +283,8 @@ class Evaluaciones extends CursosMateriasDetalle {
     }
 
     onFocusedCellChanging(e) {
-        if (e.newColumnIndex < 2) {
-            e.cancel = true
+        if (e.newColumnIndex < 1) {
+            //            e.cancel = true
         }
     }
 

@@ -257,7 +257,7 @@
          }, p)
      }
 
-     static Empty() {
+     static Space() {
          return ({ itemType: "empty" })
      }
 

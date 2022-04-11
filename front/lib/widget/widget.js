@@ -33,4 +33,8 @@ class Widget extends Component {
         this.instance().endUpdate();
     }
 
+    isReady() {
+        return this.instance() != undefined
+    }
+
 }

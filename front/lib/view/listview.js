@@ -261,6 +261,10 @@ class ListView extends View {
         this.list().focus();
     }
 
+    focusRowById(id) {
+        this.list().focusRowById(id)
+    }
+
     listOnContentReady(e) {
         this.refreshListToolbar();
         this.refreshContextMenuItems()

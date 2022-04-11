@@ -22,13 +22,6 @@ class Cursos extends AñoLectivoFilterView {
         }
     }
 
-    listToolbarItems() {
-        return [this.itemInsert(), this.itemMaterias(),
-            this.itemAlumnos(), this.itemTps(),
-            this.itemExportButton(), this.itemSearchPanel()
-        ]
-    }
-
     itemCopy() {
         if (this.añolectivoValue() == Dates.ThisYear() && this.list().isEmpty()) {
             return {
@@ -42,70 +35,8 @@ class Cursos extends AñoLectivoFilterView {
         }
     }
 
-    itemMaterias() {
-        if (this.list().hasRows()) {
-            return {
-                widget: "dxButton",
-                location: "before",
-                options: {
-                    text: "Materias",
-                    icon: "folder",
-                    onClick: e => this.showMaterias(e)
-                }
-            }
-        }
-    }
-
-    itemAlumnos() {
-        if (this.list().hasRows()) {
-            return {
-                widget: "dxButton",
-                location: "before",
-                options: {
-                    text: "Alumnos",
-                    icon: "group",
-                    onClick: e => this.showAlumnos(e)
-                }
-            }
-        }
-    }
-
-    itemTps() {
-        if (this.list().hasRows()) {
-            return {
-                widget: "dxButton",
-                location: "before",
-                options: {
-                    text: "Trabajos Prácticos",
-                    icon: "check",
-                    onClick: e => this.showTps(e)
-                }
-            }
-        }
-    }
-
     copyCursosMaterias() {
         new CursosMaterias({ cursosView: this }).render();
-    }
-
-    showMaterias() {
-        new MateriasCurso(this.detailParameters()).render();
-    }
-
-    showAlumnos() {
-        new AlumnosCurso(this.detailParameters()).render();
-    }
-
-    showTps() {
-        new TpsCurso(this.detailParameters()).render();
-    }
-
-    detailParameters() {
-        return {
-            añolectivo: this.filter().getEditorValue("añolectivo"),
-            curso: this.list().focusedRowData(),
-            masterView: this
-        }
     }
 
     listColumns() {

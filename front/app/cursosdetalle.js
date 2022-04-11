@@ -6,8 +6,8 @@ class CursosDetalle extends FilterView {
             popup: {
                 title: this.labelText(),
                 onHidden: e => {
-                    if (this.configuration().masterView != undefined) {
-                        this.configuration().masterView.list().focusRowById(this.curso().id);
+                    if (this.masterView() != undefined) {
+                        this.masterView().focusRowById(this.curso().id);
                     }
                 }
             },
@@ -18,6 +18,10 @@ class CursosDetalle extends FilterView {
                 }
             }
         })
+    }
+
+    masterView() {
+        return this.parameters().masterView;
     }
 
     añoLectivoReadOnly() {
@@ -51,14 +55,23 @@ class CursosDetalle extends FilterView {
         return Item.Lookup({
             dataField: "curso",
             displayExpr: item => Cursos.Descripcion(item),
-            deferRendering: this.cursoDeferRendering(),
+            deferRendering: this.itemCursoDeferRendering(),
             editable: true,
-            width: 450,
+            width: this.itemCursoWidth(),
+            colSpan: this.itemCursoColSpan(),
             onValueChanged: e => this.itemCursoOnValueChanged(e)
         })
     }
 
-    cursoDeferRendering() {
+    itemCursoWidth() {
+        return 450
+    }
+
+    itemCursoColSpan() {
+        return 1;
+    }
+
+    itemCursoDeferRendering() {
         return true;
     }
 
@@ -91,7 +104,7 @@ class CursosDetalle extends FilterView {
 
     afterRender() {
         super.afterRender();
-        this.filter().setData({ añolectivo: this.configuration().añolectivo, curso: this.configuration().curso });
+        this.filter().setData({ añolectivo: this.parameters().añolectivo, curso: this.parameters().curso });
     }
 
     formViewDefaultValues(mode) {
