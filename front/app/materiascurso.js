@@ -1,7 +1,11 @@
 class MateriasCurso extends CursosDetalle {
 
-    labelText() {
-        return "Materias del Curso"
+    extraConfiguration() {
+        return {
+            popup: {
+                title: "Materias del Curso",
+            }
+        }
     }
 
     path() {
@@ -41,7 +45,7 @@ class MateriasCursoForm extends FormView {
         }
     }
 
-    popupExtraConfiguration() {
+    popupConfiguration() {
         return {
             title: "Materia del Curso",
             width: 600,

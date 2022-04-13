@@ -1,117 +1,112 @@
-class AlumnosCurso extends CursosDetalle {
+    class AlumnosCurso extends CursosDetalle {
 
-    constructor(...parameters) {
-        super(...parameters);
-    }
-
-    extraConfiguration() {
-        return {
-            operations: {
-                allowExport: true
-            }
-        }
-    }
-
-    labelText() {
-        return "Alumnos por Curso"
-    }
-
-    path() {
-        return "alumnos";
-    }
-
-    itemImport() {
-        if (this.añolectivo().id == Dates.ThisYear() && this.curso() != undefined) {
+        extraConfiguration() {
             return {
-                widget: "dxButton",
-                location: "before",
-                options: {
-                    text: "Importar Alumnos de planilla Excel"
+                popup: {
+                    title: "Alumnos por Curso"
+                },
+                operations: {
+                    allowExport: true
                 }
             }
         }
-    }
 
-    listColumns() {
-        return [
-            Column.Id(),
-            Column.Text({ dataField: "apellido", width: 250 }),
-            Column.Text({ dataField: "nombre" }),
-            Column.Calculated({ formula: row => Generos.GetNombre(row.genero), caption: "Género" })
-        ]
-    }
-
-    formViewClass() {
-        return AlumnosCursoForm;
-    }
-
-    excelFileName() {
-        return "Alumnos de " + this.filterText("curso") + " / " + this.filterText("añolectivo");
-    }
-
-    exportExcelDialogWidth() {
-        return 750
-    }
-
-    deleteMessage() {
-        return "Borra " + this.generoArticulo() + " ?<br><br>" +
-            Utils.SingleQuotes(this.focusedRowValue("apellido") + " " + this.focusedRowValue("nombre")) +
-            "<br><br>perteneciente al Curso:<br><br>" +
-            Utils.SingleQuotes(this.filterText("curso"))
-    }
-
-    generoArticulo() {
-        if (this.focusedRowValue("genero") == "M") {
-            return "el Alumno"
-        } else {
-            return "la Alumna";
+        path() {
+            return "alumnos";
         }
-    }
 
-
-}
-
-class AlumnosCursoForm extends FormView {
-
-    defineRest() {
-        return new Rest({
-            path: "alumnos",
-            transformData: (verb, data) => this.transformData(verb, data)
-        })
-    }
-
-    transformData(verb, data) {
-        return {
-            id: data.id,
-            curso: data.curso,
-            apellido: data.apellido,
-            nombre: data.nombre,
-            genero: data.genero.id
+        itemImport() {
+            if (this.añolectivo().id == Dates.ThisYear() && this.curso() != undefined) {
+                return {
+                    widget: "dxButton",
+                    location: "before",
+                    options: {
+                        text: "Importar Alumnos de planilla Excel"
+                    }
+                }
+            }
         }
-    }
 
-
-    popupExtraConfiguration() {
-        return {
-            title: "Alumno",
-            width: 600,
-            height: 450
+        listColumns() {
+            return [
+                Column.Id(),
+                Column.Text({ dataField: "apellido", width: 250 }),
+                Column.Text({ dataField: "nombre" }),
+                Column.Calculated({ formula: row => Generos.GetNombre(row.genero), caption: "Género" })
+            ]
         }
+
+        formViewClass() {
+            return AlumnosCursoForm;
+        }
+
+        excelFileName() {
+            return "Alumnos de " + this.filterText("curso") + " / " + this.filterText("añolectivo");
+        }
+
+        exportExcelDialogWidth() {
+            return 750
+        }
+
+        deleteMessage() {
+            return "Borra " + this.generoArticulo() + " ?<br><br>" +
+                Utils.SingleQuotes(this.focusedRowValue("apellido") + " " + this.focusedRowValue("nombre")) +
+                "<br><br>perteneciente al Curso:<br><br>" +
+                Utils.SingleQuotes(this.filterText("curso"))
+        }
+
+        generoArticulo() {
+            if (this.focusedRowValue("genero") == "M") {
+                return "el Alumno"
+            } else {
+                return "la Alumna";
+            }
+        }
+
+
     }
 
-    formItems() {
-        return [
-            Item.Id(),
-            Item.ReadOnly({ dataField: "añolectivo", width: 80, label: "Año Lectivo" }),
-            Item.ReadOnly({ dataField: "descripcion", label: "Curso" }),
-            Item.Text({ dataField: "nombre", required: true, width: 250 }),
-            Item.Text({ dataField: "apellido", required: true, width: 250 }),
-            Item.Lookup({ dataField: "genero", required: true, dataSource: Generos.DataSource(), width: 150 })
-        ]
-    }
+    class AlumnosCursoForm extends FormView {
 
-    firstEditor() {
-        return "nombre";
-    }
+        defineRest() {
+            return new Rest({
+                path: "alumnos",
+                transformData: (verb, data) => this.transformData(verb, data)
+            })
+        }
 
-}
+        transformData(verb, data) {
+            return {
+                id: data.id,
+                curso: data.curso,
+                apellido: data.apellido,
+                nombre: data.nombre,
+                genero: data.genero
+            }
+        }
+
+
+        popupConfiguration() {
+            return {
+                title: "Alumno",
+                width: 600,
+                height: 450
+            }
+        }
+
+        formItems() {
+            return [
+                Item.Id(),
+                Item.ReadOnly({ dataField: "añolectivo", width: 80, label: "Año Lectivo" }),
+                Item.ReadOnly({ dataField: "descripcion", label: "Curso" }),
+                Item.Text({ dataField: "nombre", required: true, width: 250 }),
+                Item.Text({ dataField: "apellido", required: true, width: 250 }),
+                Item.Lookup({ dataField: "genero", required: true, dataSource: Generos.DataSource(), width: 150 })
+            ]
+        }
+
+        firstEditor() {
+            return "nombre";
+        }
+
+    }

@@ -13,7 +13,6 @@ class CursosDetalle extends FilterView {
             },
             components: {
                 filter: {
-                    items: this.filterItems(),
                     width: 400
                 }
             }
@@ -104,7 +103,11 @@ class CursosDetalle extends FilterView {
 
     afterRender() {
         super.afterRender();
-        this.filter().setData({ añolectivo: this.parameters().añolectivo, curso: this.parameters().curso });
+        this.filter().setData(this.dataAterRender());
+    }
+
+    dataAterRender() {
+        return { añolectivo: this.parameters().añolectivo, curso: this.parameters().curso }
     }
 
     formViewDefaultValues(mode) {

@@ -130,6 +130,9 @@ class ServiceBase extends ObjectBase {
         if (Utils.IsNotDefined(parameters.values)) {
             parameters.values = {};
         }
+        if (Utils.IsNotDefined(parameters.values.id)) {
+            parameters.values.id = this.id();
+        }
         this.valuesToSend = parameters.values;
         this.valuesToSend.tenant = this.tenant();
     }

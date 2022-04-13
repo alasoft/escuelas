@@ -1,15 +1,11 @@
 class Evaluaciones extends CursosMateriasDetalle {
 
-    constructor(...parameters) {
-        super(...parameters);
-    }
-
     extraConfiguration() {
         return {
             mode: "view",
             components: {
                 filter: {
-                    width: 950,
+                    width: 930,
                     height: 80
                 },
                 label: {
@@ -37,7 +33,8 @@ class Evaluaciones extends CursosMateriasDetalle {
                 },
             },
             operations: {
-                editable: false,
+                allowEditing: false,
+                allowDeleting: false,
                 allowExport: true
             }
         }
@@ -57,7 +54,7 @@ class Evaluaciones extends CursosMateriasDetalle {
     }
 
     itemCursoWidth() {
-        return 450
+        return 480
     }
 
     itemCursoColSpan() {
@@ -74,9 +71,12 @@ class Evaluaciones extends CursosMateriasDetalle {
 
     listToolbarItems() {
         if (this.filter().isReady()) {
-            return [this.itemMaterias(),
-                this.itemAlumnos(), this.itemTps(),
-                this.itemExportButton(), this.itemSearchPanel()
+            return [
+                this.itemAlumnos(),
+                this.itemMaterias(),
+                this.itemTps(),
+                this.itemExportButton(),
+                this.itemSearchPanel()
             ]
         }
     }
@@ -124,22 +124,30 @@ class Evaluaciones extends CursosMateriasDetalle {
     }
 
     showMaterias() {
-        new MateriasCurso(this.detailParameters()).render();
+        this.showDetail(MateriasCurso)
     }
 
     showAlumnos() {
-        new AlumnosCurso(this.detailParameters()).render();
+        this.showDetail(AlumnosCurso)
     }
 
     showTps() {
-        new TpsCurso(this.detailParameters()).render();
+        this.showDetail(TpsCurso)
+    }
+
+    showDetail(detailClass) {
+        new detailClass(this.detailParameters()).render().then(data => {
+            if (data.dataHasChanged) {
+                this.refresh()
+            }
+        });
     }
 
     detailParameters() {
         return {
             añolectivo: this.filter().getEditorValue("añolectivo"),
             curso: this.curso(),
-            masterView: this
+            materiacurso: this.materiacurso()
         }
     }
 

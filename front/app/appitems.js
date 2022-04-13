@@ -35,8 +35,8 @@ class AppItems extends View {
             id: "3",
             text: "Cierra Sesión",
             onClick: e => {
-                App.YesNo({ message: "Cierra la Sesión ?" }).then(yes => {
-                    if (yes) {
+                App.YesNo({ message: "Cierra la Sesión ?" }).then(view => {
+                    if (view.okeyPressed) {
                         App.Login()
                     }
                 })
@@ -70,7 +70,7 @@ class AppItems extends View {
 
         itemEvaluaciones.add({
             text: "Evaluaciones",
-            onClick: e => new Evaluaciones().render()
+            onClick: e => Evaluaciones.Render()
         })
 
         return [itemDatos, itemEvaluaciones, itemSalida];

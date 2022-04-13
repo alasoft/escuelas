@@ -75,7 +75,7 @@ class SqlBaseCrud {
 
     idRequired() {
         if (Utils.IsNotDefined(this.values.id)) {
-            Exceptions.IdNotDefined()
+            throw Exceptions.IdNotDefined()
         }
     }
 

@@ -3,7 +3,7 @@ class MessageView extends DialogView {
     static WIDTH_DEFAULT = 250;
     static HEIGHT_DEFAULT = 200;
 
-    popupExtraConfiguration() {
+    popupConfiguration() {
         return {
             title: this.title(),
             showCloseButton: false,

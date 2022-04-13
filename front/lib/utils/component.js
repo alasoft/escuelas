@@ -13,7 +13,18 @@ class Component extends ObjectBase {
 
     defaultConfiguration() {}
 
+    extra() {
+        if (this._extra == undefined) {
+            this._extra = this.extraConfiguration()
+        }
+        return this._extra;
+    }
+
     extraConfiguration() {}
+
+    value(names) {
+
+    }
 
     element() {
         if (this._element == undefined) {

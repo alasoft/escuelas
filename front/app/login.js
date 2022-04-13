@@ -7,7 +7,7 @@ class Login extends EntryView {
         return "users";
     }
 
-    popupExtraConfiguration() {
+    popupConfiguration() {
         return {
             title: App.Title("Ingreso de Usuario"),
             width: 600,

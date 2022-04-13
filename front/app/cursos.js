@@ -9,11 +9,6 @@ class Cursos extends AñoLectivoFilterView {
             components: {
                 label: {
                     text: "Cursos"
-                },
-                list: {
-                    groupPanel: {
-                        visible: true
-                    }
                 }
             },
             operations: {
@@ -55,10 +50,6 @@ class Cursos extends AñoLectivoFilterView {
         return CursosForm;
     }
 
-    firstEditor() {
-        return "escuela";
-    }
-
     excelFileName() {
         return "Cursos " + this.filterText("añolectivo");
     }
@@ -91,11 +82,22 @@ class CursosForm extends FormView {
     defineRest() {
         return new Rest({
             path: "cursos",
-            transformData: (verb, data) => Utils.ReduceIds(data)
+            transformData: (verb, data) => this.transformData(verb, data)
         })
     }
 
-    popupExtraConfiguration() {
+    transformData(verb, data) {
+        return {
+            id: data.id,
+            escuela: data.escuela,
+            modalidad: data.modalidad,
+            año: data.año,
+            division: data.division,
+            turno: data.turno
+        }
+    }
+
+    popupConfiguration() {
         return {
             title: "Curso",
             width: 650,
@@ -151,6 +153,10 @@ class CursosForm extends FormView {
                 ]
             })
         ]
+    }
+
+    firstEditor() {
+        return "escuela";
     }
 
 }

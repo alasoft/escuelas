@@ -3,6 +3,7 @@ class TpsCurso extends CursosMateriasDetalle {
     extraConfiguration() {
         return {
             popup: {
+                title: "Trabajos Prácticos por Curso y Materia",
                 height: 650
             },
             components: {
@@ -15,7 +16,7 @@ class TpsCurso extends CursosMateriasDetalle {
     }
 
     labelText() {
-        return "Trabajos Prácticos por Curso y Materia"
+        return
     }
 
     setDataSource(materiacurso) {
@@ -87,7 +88,7 @@ class TpsCursoForm extends FormView {
         }
     }
 
-    popupExtraConfiguration() {
+    popupConfiguration() {
         return {
             title: "Trabajo Práctico",
             width: 750,
@@ -137,7 +138,7 @@ class TpsCursoForm extends FormView {
                                 dataField: "desde",
                                 required: true
                             }),
-                            Item.Empty(),
+                            Item.Space(),
                             Item.Date({
                                 dataField: "hasta",
                                 required: true,

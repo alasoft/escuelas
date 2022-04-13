@@ -3,7 +3,7 @@ class DialogView extends View {
     defaultConfiguration() {
         return Utils.Merge(super.defaultConfiguration(), {
             mode: "popup",
-            popup: this.popupExtraConfiguration(),
+            popup: this.popupConfiguration(),
             components: {
                 toolbar: {
                     items: this.toolbarItems()
@@ -16,7 +16,11 @@ class DialogView extends View {
         return Templates.DialogView();
     }
 
-    popupExtraConfiguration() {}
+    popupConfiguration() {
+        return {
+            visible: true
+        }
+    }
 
     toolbar() {
         return this.components().toolbar;
@@ -39,11 +43,12 @@ class DialogView extends View {
     }
 
     okey() {
-        this.close(true)
+        this.okeyData = { okey: true }
+        super.close()
     }
 
     cancel() {
-        this.close(false);
+        this.close();
     }
 
 }

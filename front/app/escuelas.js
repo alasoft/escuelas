@@ -33,7 +33,7 @@ class EscuelasFormView extends FormView {
         return new Rest({ path: "escuelas" });
     }
 
-    popupExtraConfiguration() {
+    popupConfiguration() {
         return {
             title: "Escuela",
             width: 500,

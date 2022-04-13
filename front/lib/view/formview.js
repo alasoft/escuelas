@@ -23,6 +23,8 @@ class FormView extends EntryView {
         return this.rest().get({ id: id })
             .then(data =>
                 this.updateData(data))
+            .then(data =>
+                this.saveData(data))
             .catch(err => {
                 this.handleError(err, true)
             })
@@ -55,10 +57,14 @@ class FormView extends EntryView {
     okey() {
         this.validate()
             .then(() => {
-                if (this.isInserting()) {
-                    return this.saveInsert()
+                if (this.mustSave()) {
+                    if (this.isInserting()) {
+                        return this.saveInsert()
+                    } else {
+                        return this.saveUpdate()
+                    }
                 } else {
-                    return this.saveUpdate()
+                    this.close();
                 }
             })
             .catch(err =>
@@ -66,20 +72,28 @@ class FormView extends EntryView {
             )
     }
 
+    mustSave() {
+        return this.isInserting() || this.dataHasChanged();
+    }
+
     cancel() {
-        super.close(false);
+        super.close();
     }
 
     saveInsert() {
         return this.rest().insert(this.dataToInsert())
-            .then(data =>
-                this.close(data.id));
+            .then(data => {
+                this.closeData = { okey: true, id: data.id };
+                this.close(data.id);
+            });
     }
 
     saveUpdate() {
         return this.rest().update(this.dataToUpdate())
-            .then(data =>
-                this.close(data.id));
+            .then(data => {
+                this.closeData = { okey: true, id: data.id };
+                this.close(data.id);
+            });
     }
 
     dataToInsert() {
@@ -87,14 +101,16 @@ class FormView extends EntryView {
     }
 
     dataToUpdate() {
-        return this.data();
+        const data = this.changedData();
+        data.id = this.id();
+        return data;
     }
 
     close(id) {
-        if (id != undefined) {
+        if (id != undefined && this.listView() != undefined) {
             this.listView().refresh(id);
         }
-        super.close(id);
+        super.close();
     }
 
     popupOnShown(e) {

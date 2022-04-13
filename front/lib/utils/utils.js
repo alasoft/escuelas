@@ -127,4 +127,8 @@ class Utils {
         return "'" + s + "'";
     }
 
+    static Clone(object) {
+        return Object.assign({}, object);
+    }
+
 }

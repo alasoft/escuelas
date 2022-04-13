@@ -2,6 +2,7 @@ class View extends Component {
 
     defaultConfiguration() {
         return Utils.Merge(super.defaultConfiguration(), {
+            mode: "view",
             popup: {
                 contentTemplate: e => this.popupTemplate(e),
                 onShown: e => this.popupOnShown(e),
@@ -179,29 +180,16 @@ class View extends Component {
 
     focus() {}
 
-    showError(parameters) {
-        App.ShowError(parameters);
-    }
-
     valueHasChanged(e) {
         return (e.previousValue == undefined || e.value == undefined || e.value.id != e.previousValue.id);
     }
 
-    close(closeValue) {
+    close() {
         if (this.isPopup()) {
-            this.closeValue = closeValue;
             this.popup().close();
         } else {
             App.BlankViewElement()
         }
-    }
-
-    popupOnShown(e) {
-        this.focus();
-    }
-
-    popupOnHiding(e) {
-        this.resolveRender(this.closeValue);
     }
 
     handleError(err) {
@@ -210,7 +198,8 @@ class View extends Component {
             return this.showError(err)
                 .then(() => {
                     if (err.isValidation != true) {
-                        this.close(false)
+                        this.closeData = { error: true }
+                        this.close()
                     }
                 })
         }
@@ -223,8 +212,20 @@ class View extends Component {
         return err;
     }
 
-    showError(err) {
-        return App.ShowError(err)
+    showError(parameters) {
+        return App.ShowError(parameters);
+    }
+
+    closeData() {
+        return {}
+    }
+
+    popupOnShown(e) {
+        this.focus();
+    }
+
+    popupOnHiding(e) {
+        this.resolveRender(this.closeData || {});
     }
 
 }

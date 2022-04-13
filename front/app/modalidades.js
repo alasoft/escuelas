@@ -33,7 +33,7 @@ class ModalidadesForm extends FormView {
         return new Rest({ path: "modalidades" });
     }
 
-    popupExtraConfiguration() {
+    popupConfiguration() {
         return {
             title: "Modalidad",
             width: 500,

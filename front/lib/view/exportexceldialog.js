@@ -1,6 +1,6 @@
 class ExportExcelDialog extends EntryView {
 
-    popupExtraConfiguration() {
+    popupConfiguration() {
         return {
             title: "Exporta a Excel",
             width: this.parameters().width || 550,

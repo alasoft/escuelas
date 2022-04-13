@@ -1,7 +1,7 @@
 class ListView extends View {
 
-    constructor(...parameters) {
-        super(...parameters);
+    constructor(parameters) {
+        super(parameters);
         this.class()._DataSource = undefined;
     }
 
@@ -75,9 +75,13 @@ class ListView extends View {
 
     allowOperation(operationName, checkHasRows = false) {
         const operations = this.operations();
-        return Utils.Evaluate(operations.editable) &&
-            (checkHasRows ? this.list().hasRows() : true) &&
+        return (checkHasRows ? this.list().hasRows() : true) &&
             Utils.Evaluate(operations["allow" + Utils.Capitalize(operationName)])
+            /*
+                    return Utils.Evaluate(operations.editable) &&
+                        (checkHasRows ? this.list().hasRows() : true) &&
+                        Utils.Evaluate(operations["allow" + Utils.Capitalize(operationName)])
+            */
     }
 
     operations() {
@@ -85,26 +89,39 @@ class ListView extends View {
     }
 
     insert() {
-        this.formView(null, "insert").render();
+        this.formViewRender(null, "insert");
     }
 
     edit() {
-        this.formView({
+        this.formViewRender({
             components: {
                 form: {
                     formData: { id: this.id() }
                 }
             }
-        }, "edit").render();
+        }, "edit");
+    }
+
+    formViewRender(parameters, mode) {
+        this.formView(parameters, mode).render().then(data => {
+            this.dataHasChanged = data.dataHasChanged;
+        })
+    }
+
+    closeData() {
+        return { dataHasChanged: this.dataHasChanged }
     }
 
     delete() {
         let rowIndex = this.list().focusedRowIndex();
         App.YesNo({ message: this.deleteMessage() }).then(
-            result => {
-                result ? this.list().deleteRow(rowIndex) : undefined
+            data => {
+                if (data.okey) {
+                    this.list().deleteRow(rowIndex)
+                        .then(() =>
+                            this.dataHasChanged = true)
+                }
             }
-
         )
     }
 
@@ -287,9 +304,10 @@ class ListView extends View {
     }
 
     listOnDataErrorOccurred(e) {
-        App.ShowError({ message: "Ha ocurrido un error durante la carga de datos .." })
+        this.showError({ message: "Ha ocurrido un error durante la carga de datos .." })
             .then(() => {
                 if (this.isPopup()) {
+                    this.closeData = { error: true }
                     this.close()
                 } else {
                     App.BlankViewElement()

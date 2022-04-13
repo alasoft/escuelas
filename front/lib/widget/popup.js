@@ -1,9 +1,5 @@
 class Popup extends Widget {
 
-    constructor(...parameters) {
-        super(...parameters);
-    }
-
     widgetName() {
         return "dxPopup";
     }

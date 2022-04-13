@@ -34,7 +34,7 @@ class MateriasForm extends FormView {
         return new Rest({ path: "materias" })
     }
 
-    popupExtraConfiguration() {
+    popupConfiguration() {
         return {
             title: "Materia",
             width: 600,

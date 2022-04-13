@@ -1,7 +1,7 @@
 class ObjectBase {
 
-    constructor(...parameters) {
-        this._parameters = Utils.Merge(...parameters);
+    constructor(parameters = {}) {
+        this._parameters = parameters;
     }
 
     afterConstruction() {}

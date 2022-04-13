@@ -12,7 +12,7 @@
          })
      }
 
-     getData() {
+     data() {
          return this.getProperty("formData");
      }
 
@@ -22,6 +22,7 @@
 
      updateData(data) {
          this.instance().updateData(data);
+         return data;
      }
 
      validate() {
@@ -95,6 +96,50 @@
              dataField => this.toglePassword(dataField)
          )
      }
+
+     saveData() {
+         this.dataSaved = Utils.Clone(this.data());
+     }
+
+     dataHasChanged() {
+
+         function equals(value, valueSaved) {
+             const v = Utils.IsObject(value) ? value.id : value;
+             const vSaved = Utils.IsObject(valueSaved) ? valueSaved.id : valueSaved;
+             return v == vSaved;
+         }
+
+         const data = this.data();
+         return Object.keys(data).find(
+             key => !equals(data[key], this.dataSaved[key])
+         ) != undefined;
+
+     }
+
+     changedData() {
+         const data = Utils.ReduceIds(this.data());
+         const dataSaved = Utils.ReduceIds(this.dataSaved);
+         var updated = {};
+         Object.keys(data).forEach(
+             key => data[key] != dataSaved[key] ? updated[key] = data[key] : undefined
+         )
+         return updated;
+     }
+
+
+     datoToUpdate() {
+
+         const dataSaved = Utils.Reduce(this.transformData(this.dataSaved));
+         var fieldsValues = Utils.Reduce(this.transformData(this.form.getFieldsValues()));
+         var updated = {};
+         Object.keys(fieldsValues).forEach(
+             key => fieldsValuesSaved[key] != fieldsValues[key] ? updated[key] = fieldsValues[key] : undefined
+         )
+         return updated;
+
+     }
+
+
 
  }
 

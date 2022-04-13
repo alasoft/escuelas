@@ -39,8 +39,8 @@ class AppBase {
     static Login() {
         this.ClearDesktop();
         new Login().render()
-            .then(logged => {
-                if (logged) {
+            .then(data => {
+                if (data.okey) {
                     this.ShowDesktop()
                 } else {
                     this.Exit()

@@ -22,7 +22,7 @@ class EntryView extends DialogView {
     formItems() {};
 
     data() {
-        return this.form().getData();
+        return this.form().data();
     }
 
     setData(data) {
@@ -31,6 +31,18 @@ class EntryView extends DialogView {
 
     updateData(data) {
         this.form().updateData(data);
+    }
+
+    saveData() {
+        this.form().saveData()
+    }
+
+    dataHasChanged() {
+        return this.form().dataHasChanged()
+    }
+
+    changedData() {
+        return this.form().changedData();
     }
 
     firstEditor() {}
@@ -51,7 +63,7 @@ class EntryView extends DialogView {
     okey() {
         this.validate()
             .then(() =>
-                this.close(true))
+                this.okey())
             .catch(err => {
                 this.handleError(err)
             })
@@ -65,8 +77,13 @@ class EntryView extends DialogView {
         return this.form().validate();
     }
 
+    okey() {
+        this.closeData = { okey: true, dataHasChanged: this.dataHasChanged() }
+        this.close();
+    }
+
     cancel() {
-        this.close(false);
+        this.close();
     }
 
     rest() {
@@ -93,5 +110,6 @@ class EntryView extends DialogView {
     setEditorValue(dataField, value) {
         this.form().setEditorValue(dataField, value);
     }
+
 
 }
