@@ -109,10 +109,14 @@
              return v == vSaved;
          }
 
-         const data = this.data();
-         return Object.keys(data).find(
-             key => !equals(data[key], this.dataSaved[key])
-         ) != undefined;
+         if (this.dataSaved == undefined) {
+             return true;
+         } else {
+             const data = this.data();
+             return Object.keys(data).find(
+                 key => !equals(data[key], this.dataSaved[key])
+             ) != undefined;
+         }
 
      }
 

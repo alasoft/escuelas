@@ -6,6 +6,7 @@ class Periodos extends AñoLectivoFilterView {
 
     extraConfiguration() {
         return {
+            mode: "view",
             components: {
                 label: {
                     text: "Períodos"
@@ -46,15 +47,12 @@ class PeriodosFormView extends FormView {
         return new Rest({ path: "periodos" });
     }
 
-    extraConfiguration() {
+    popupConfiguration() {
         return {
-            popup: {
-                title: "Período",
-                width: 550,
-                height: 400
-            }
+            title: "Período",
+            width: 550,
+            height: 400
         }
-
     }
 
     formItems() {

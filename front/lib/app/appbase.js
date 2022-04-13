@@ -107,6 +107,9 @@ class AppBase {
 
     static ToggleItems() {
         Utils.ToggleVisibility(this.ItemsElement());
+        if (this.EvaluacionesView != undefined) {
+            this.EvaluacionesView.resize()
+        }
     }
 
     static Title(title) {

@@ -317,8 +317,8 @@ class ListView extends View {
 
     exportExcelDialog(e) {
         new ExportExcelDialog({ fileName: this.excelFileName(), width: this.exportExcelDialogWidth() }).render()
-            .then(okey => {
-                if (okey) {
+            .then(data => {
+                if (data.okey) {
                     this.exportExcel(e, this.excelFileName())
                 }
             })

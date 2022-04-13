@@ -12,6 +12,7 @@ class Evaluaciones extends CursosMateriasDetalle {
                     text: "Evaluaciones"
                 },
                 list: {
+                    width: $("#app-view").width(),
                     key: "id",
                     columns: this.fixedColumns(),
                     wordWrapEnabled: true,
@@ -69,9 +70,22 @@ class Evaluaciones extends CursosMateriasDetalle {
         return false;
     }
 
+    resize() {
+        this.list().setProperty("width", App.ViewElement().width() - 22)
+        this.list().instance().repaint();
+    }
+
     listToolbarItems() {
         if (this.filter().isReady()) {
-            return [
+            return [{
+                    widget: "dxButton",
+                    location: "before",
+                    options: {
+                        text: "Resize",
+                        icon: "resize",
+                        onClick: e => this.resize()
+                    }
+                },
                 this.itemAlumnos(),
                 this.itemMaterias(),
                 this.itemTps(),
@@ -318,6 +332,17 @@ class Evaluaciones extends CursosMateriasDetalle {
     tpNota(data) {
         const tp = this.list().editColumnName();
         return { tp: tp, nota: data[tp] };
+    }
+
+    excelFileName() {
+        return "Evaluaciones de  " +
+            this.filterText("curso") + " / " +
+            this.filterText("materiacurso") + " / " +
+            this.filterText("añolectivo");
+    }
+
+    exportExcelDialogWidth() {
+        return 850
     }
 
     listOnRowDblClick(e) {}
