@@ -83,16 +83,18 @@ class FormView extends EntryView {
     saveInsert() {
         return this.rest().insert(this.dataToInsert())
             .then(data => {
-                this.closeData = { okey: true, id: data.id };
-                this.close(data.id);
+                this.close(this.closeDataOkey());
             });
+    }
+
+    closeDataOkey() {
+        return { okey: true, id: data.id };
     }
 
     saveUpdate() {
         return this.rest().update(this.dataToUpdate())
             .then(data => {
-                this.closeData = { okey: true, id: data.id };
-                this.close(data.id);
+                this.close(this.closeDataOkey());
             });
     }
 

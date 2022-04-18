@@ -78,8 +78,11 @@ class EntryView extends DialogView {
     }
 
     okey() {
-        this.closeData = { okey: true, dataHasChanged: this.dataHasChanged() }
-        this.close();
+        this.close(this.closeDataOkey());
+    }
+
+    closeDataOkey() {
+        return { okey: true, dataHasChanged: this.dataHasChanged() }
     }
 
     cancel() {

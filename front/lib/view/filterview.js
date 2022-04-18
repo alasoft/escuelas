@@ -21,7 +21,7 @@ class FilterView extends ListView {
 
     filterItems() {}
 
-    setFilterValue(dataField, value) {
+    filterSetValue(dataField, value) {
         this.filter().setEditorValue(dataField, value);
     }
 

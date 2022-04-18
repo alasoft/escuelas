@@ -132,6 +132,10 @@ body {
     height: 350px;
 }
 
+.-width-0 {
+    width: 0px;
+}
+
 .-width-90pct {
     width: 90%;
 }

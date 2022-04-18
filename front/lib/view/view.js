@@ -184,7 +184,8 @@ class View extends Component {
         return (e.previousValue == undefined || e.value == undefined || e.value.id != e.previousValue.id);
     }
 
-    close() {
+    close(closeData) {
+        this.closeData = closeData;
         if (this.isPopup()) {
             this.popup().close();
         } else {
@@ -198,8 +199,7 @@ class View extends Component {
             return this.showError(err)
                 .then(() => {
                     if (err.isValidation != true) {
-                        this.closeData = { error: true }
-                        this.close()
+                        this.close({ error: true })
                     }
                 })
         }
@@ -214,10 +214,6 @@ class View extends Component {
 
     showError(parameters) {
         return App.ShowError(parameters);
-    }
-
-    closeData() {
-        return {}
     }
 
     popupOnShown(e) {

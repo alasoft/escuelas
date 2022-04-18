@@ -6,13 +6,13 @@ class Evaluaciones extends CursosMateriasDetalle {
             components: {
                 filter: {
                     width: 930,
-                    height: 80
+                    height: 120
                 },
                 label: {
                     text: "Evaluaciones"
                 },
                 list: {
-                    width: $("#app-view").width(),
+                    //                    width: $("#app-view").width(),
                     key: "id",
                     columns: this.fixedColumns(),
                     wordWrapEnabled: true,
@@ -43,10 +43,10 @@ class Evaluaciones extends CursosMateriasDetalle {
 
     filterItems() {
         return [
+            this.itemAñoLectivo(),
             Item.Group({
-                colCount: 5,
+                colCount: 2,
                 items: [
-                    this.itemAñoLectivo(),
                     this.itemCurso(),
                     this.itemMateriaCurso()
                 ]
@@ -55,7 +55,7 @@ class Evaluaciones extends CursosMateriasDetalle {
     }
 
     itemCursoWidth() {
-        return 480
+        return 400
     }
 
     itemCursoColSpan() {
@@ -71,8 +71,7 @@ class Evaluaciones extends CursosMateriasDetalle {
     }
 
     resize() {
-        this.list().setProperty("width", App.ViewElement().width() - 22)
-        this.list().instance().repaint();
+        this.list().setProperty("width", 1300)
     }
 
     listToolbarItems() {
@@ -150,11 +149,13 @@ class Evaluaciones extends CursosMateriasDetalle {
     }
 
     showDetail(detailClass) {
-        new detailClass(this.detailParameters()).render().then(data => {
-            if (data.dataHasChanged) {
-                this.refresh()
-            }
-        });
+        new detailClass(this.detailParameters()).render()
+            .then(data => {
+                this.filterSetValue("curso", data.curso)
+                if (Utils.IsDefined(data.materiacurso)) {
+                    this.filterSetValue("materiacurso", data.materiacurso)
+                }
+            });
     }
 
     detailParameters() {
@@ -173,7 +174,11 @@ class Evaluaciones extends CursosMateriasDetalle {
             this.columns = this.columns.concat(data.tpColumns)
         }
         this.list().resetColumns(this.columns);
-        this.list().setDataSource(DsArray(data.rows));
+        if (Utils.IsDefined(data)) {
+            this.list().setDataSource(DsArray(data.rows));
+        } else {
+            this.list().clearDataSource();
+        }
     }
 
     fixedColumns(hasTpColumns) {

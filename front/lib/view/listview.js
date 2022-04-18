@@ -307,8 +307,7 @@ class ListView extends View {
         this.showError({ message: "Ha ocurrido un error durante la carga de datos .." })
             .then(() => {
                 if (this.isPopup()) {
-                    this.closeData = { error: true }
-                    this.close()
+                    this.close({ error: true })
                 } else {
                     App.BlankViewElement()
                 }

@@ -58,4 +58,8 @@ class CursosMateriasDetalle extends CursosDetalle {
 
     itemMateriaCursoOnValueChanged(e) {}
 
+    popupOnHiding(e) {
+        this.resolveRender({ curso: this.curso(), materiacurso: this.materiacurso() });
+    }
+
 }

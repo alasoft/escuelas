@@ -84,7 +84,7 @@ class AppBase {
     }
 
     static ShowItems() {
-        this.AppItems = new AppItems().render();
+        //        this.AppItems = new AppItems().render();
     }
 
     static SetUser(user) {
