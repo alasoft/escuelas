@@ -64,7 +64,7 @@ class FormView extends EntryView {
                         return this.saveUpdate()
                     }
                 } else {
-                    this.close();
+                    this.close(this.closeDataNotSaved());
                 }
             })
             .catch(err =>
@@ -76,26 +76,18 @@ class FormView extends EntryView {
         return this.isInserting() || this.dataHasChanged();
     }
 
-    cancel() {
-        super.close();
-    }
-
     saveInsert() {
         return this.rest().insert(this.dataToInsert())
             .then(data => {
-                this.close(this.closeDataOkey());
+                this.close(this.closeDataSaveInsert(data.id));
             });
-    }
-
-    closeDataOkey() {
-        return { okey: true, id: data.id };
     }
 
     saveUpdate() {
         return this.rest().update(this.dataToUpdate())
-            .then(data => {
-                this.close(this.closeDataOkey());
-            });
+            .then(data =>
+                this.close(this.closeDataSaveUpdate())
+            );
     }
 
     dataToInsert() {
@@ -108,15 +100,52 @@ class FormView extends EntryView {
         return data;
     }
 
-    close(id) {
-        if (id != undefined && this.listView() != undefined) {
-            this.listView().refresh(id);
+    close(closeData) {
+        if (closeData.mustRefreshListView == true && this.listView() != undefined) {
+            this.listView().refresh(closeData.id);
         }
-        super.close();
+        super.close(closeData);
     }
 
     popupOnShown(e) {
         this.init();
+    }
+
+    closeDataInsert(id) {
+        return {
+            okey: true,
+            operation: this.operation(),
+            id: id,
+            mustRefreshListView: true
+        };
+    }
+
+    closeDataUpdate() {
+        return {
+            okey: true,
+            operation: this.operation(),
+            id: this.id(),
+            dataHasChanged: this.dataHasChanged(),
+            mustRefreshListView: this.dataHasChanged()
+        }
+    }
+
+    closeDataNotSaved() {
+        return {
+            okey: true,
+            operation: this.operation(),
+            id: this.id(),
+            dataHasChanged: false,
+            mustRefreshListView: false
+        }
+    }
+
+    operation() {
+        if (this.isInserting()) {
+            return "insert";
+        } else {
+            return "update";
+        }
     }
 
 }

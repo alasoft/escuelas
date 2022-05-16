@@ -185,7 +185,7 @@ class View extends Component {
     }
 
     close(closeData) {
-        this.closeData = closeData;
+        this._closeData = closeData;
         if (this.isPopup()) {
             this.popup().close();
         } else {
@@ -221,7 +221,7 @@ class View extends Component {
     }
 
     popupOnHiding(e) {
-        this.resolveRender(this.closeData || {});
+        this.resolveRender(this._closeData || {});
     }
 
 }

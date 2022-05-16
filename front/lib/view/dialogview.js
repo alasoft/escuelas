@@ -43,12 +43,19 @@ class DialogView extends View {
     }
 
     okey() {
-        this.okeyData = { okey: true }
-        super.close()
+        this.close(this.closeDataOkey())
     }
 
     cancel() {
-        this.close();
+        this.close(this.closeDataCancel());
+    }
+
+    closeDataOkey() {
+        return { okey: true };
+    }
+
+    closeDataCancel() {
+        return { okey: false };
     }
 
 }

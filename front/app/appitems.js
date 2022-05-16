@@ -35,8 +35,8 @@ class AppItems extends View {
             id: "3",
             text: "Cierra Sesión",
             onClick: e => {
-                App.YesNo({ message: "Cierra la Sesión ?" }).then(view => {
-                    if (view.okeyPressed) {
+                App.YesNo({ message: "Cierra la Sesión ?" }).then(data => {
+                    if (data.okey) {
                         App.Login()
                     }
                 })

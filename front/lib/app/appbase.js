@@ -84,7 +84,7 @@ class AppBase {
     }
 
     static ShowItems() {
-        //        this.AppItems = new AppItems().render();
+        this.AppItems = new AppItems().render();
     }
 
     static SetUser(user) {
@@ -141,7 +141,9 @@ class AppBase {
     }
 
     static ErrorToObject(err) {
-        if (err.responseJSON != undefined) {
+        if (Utils.IsString(err)) {
+            return { message: err }
+        } else if (err.responseJSON != undefined) {
             return err.responseJSON;
         } else if (err.isValidation == true) {
             return err

@@ -55,7 +55,8 @@ class Login extends EntryView {
             .then(user =>
                 App.SetUser(user))
             .then(() =>
-                this.close(true))
+                this.close(this.closeDataOkey())
+            )
             .catch(err =>
                 this.handleError(err)
             );
@@ -80,8 +81,12 @@ class Login extends EntryView {
 
     checkMaxAllowed() {
         if (++this.count == this.maxAllowed) {
-            this.close();
+            this.close(this.closeDataAboveMaxAllowed());
         }
+    }
+
+    closeDataAboveMaxAllowed() {
+        return { okey: false, aboveMaxAllowed: true };
     }
 
 }

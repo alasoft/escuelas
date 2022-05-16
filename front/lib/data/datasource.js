@@ -29,7 +29,7 @@ class DsListConfig extends DsBaseConfig {
             byKey: this.parameters.cache == true ? undefined : key =>
                 this.rest().get({ id: key }),
             remove: key =>
-                this.rest().delete({ id: key }),
+                this.rest().promise("delete", { id: key }).catch(err => App.ShowError("Ha ocurrido un error .. No pudo ejecutarse el borrado.")),
             onLoaded: data =>
                 this.parameters.onLoaded ? this.parameters.onLoaded(data) : undefined,
         })

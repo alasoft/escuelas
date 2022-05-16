@@ -20,11 +20,11 @@ class YesNoView extends MessageView {
     }
 
     yes() {
-        this.close({ okey: true });
+        this.okey();
     }
 
     no() {
-        this.close();
+        this.cancel();
     }
 
 }

@@ -5,14 +5,13 @@ class Evaluaciones extends CursosMateriasDetalle {
             mode: "view",
             components: {
                 filter: {
-                    width: 930,
+                    width: 900,
                     height: 120
                 },
                 label: {
                     text: "Evaluaciones"
                 },
                 list: {
-                    //                    width: $("#app-view").width(),
                     key: "id",
                     columns: this.fixedColumns(),
                     wordWrapEnabled: true,
@@ -43,14 +42,18 @@ class Evaluaciones extends CursosMateriasDetalle {
 
     filterItems() {
         return [
-            this.itemAñoLectivo(),
             Item.Group({
-                colCount: 2,
+                colCount: 4,
                 items: [
+                    this.itemAñoLectivo(),
                     this.itemCurso(),
-                    this.itemMateriaCurso()
                 ]
             }),
+            Item.Group({
+                items: [
+                    this.itemMateriaCurso()
+                ]
+            })
         ]
     }
 
@@ -70,21 +73,9 @@ class Evaluaciones extends CursosMateriasDetalle {
         return false;
     }
 
-    resize() {
-        this.list().setProperty("width", 1300)
-    }
-
     listToolbarItems() {
         if (this.filter().isReady()) {
-            return [{
-                    widget: "dxButton",
-                    location: "before",
-                    options: {
-                        text: "Resize",
-                        icon: "resize",
-                        onClick: e => this.resize()
-                    }
-                },
+            return [
                 this.itemAlumnos(),
                 this.itemMaterias(),
                 this.itemTps(),

@@ -63,7 +63,7 @@ class EntryView extends DialogView {
     okey() {
         this.validate()
             .then(() =>
-                this.okey())
+                super.okey())
             .catch(err => {
                 this.handleError(err)
             })
@@ -77,16 +77,8 @@ class EntryView extends DialogView {
         return this.form().validate();
     }
 
-    okey() {
-        this.close(this.closeDataOkey());
-    }
-
     closeDataOkey() {
         return { okey: true, dataHasChanged: this.dataHasChanged() }
-    }
-
-    cancel() {
-        this.close();
     }
 
     rest() {

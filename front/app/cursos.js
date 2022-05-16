@@ -87,14 +87,15 @@ class CursosForm extends FormView {
     }
 
     transformData(verb, data) {
-        return {
+        return Utils.ReduceIds({
             id: data.id,
             escuela: data.escuela,
             modalidad: data.modalidad,
+            añolectivo: data.añolectivo,
             año: data.año,
             division: data.division,
             turno: data.turno
-        }
+        })
     }
 
     popupConfiguration() {
