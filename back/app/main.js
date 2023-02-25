@@ -7,7 +7,7 @@ const { SimpleTableRest } = require("../lib/rest/simpletablerest");
 const { Turnos } = require("./turnos");
 const { CursosRest } = require("./cursosrest");
 const { MateriasCursosRest } = require("./materiascursosrest");
-const { MdhRest } = require("./mdhrest");
+const { MateriasDiasRest } = require("./materiasdiasrest");
 const { AlumnosRest } = require("./alumnosrest");
 const { PeriodosRest } = require("./periodosrest");
 const { TpsRest } = require("./tpsrest");
@@ -43,7 +43,7 @@ function restItems(app) {
         new PeriodosRest({ app: app }),
         new CursosRest({ app: app }),
         new MateriasCursosRest({ app: app }),
-        new MdhRest({ app: app }),
+        new MateriasDiasRest({ app: app }),
         new AlumnosRest({ app: app }),
         new TpsRest({ app: app }),
         new EvaluacionesRest({ app: app })

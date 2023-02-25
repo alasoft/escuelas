@@ -130,6 +130,14 @@ class Utils {
         return "&emsp;".repeat(n);
     }
 
+    static ZeroesLeft(n, z) {
+        return n.toString().padStart(z, '0');
+    }
+
+    static TimeAsString(d) {
+        return Utils.ZeroesLeft(d.getHours(), 2) + ":" + Utils.ZeroesLeft(d.getMinutes(), 2) + ":" + Utils.ZeroesLeft(d.getSeconds(), 2);
+    }
+
 }
 
 module.exports.Utils = Utils;

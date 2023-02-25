@@ -35,9 +35,8 @@ class SqlType {
     }
 
     static Time(parameters = {}) {
-        return "date" + this.NotNull(parameters);
+        return "time" + this.NotNull(parameters);
     }
-
 
     static Apellido(parameters) {
         return "varchar(25)" + this.NotNull(parameters);
