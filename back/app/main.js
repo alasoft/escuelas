@@ -12,6 +12,7 @@ const { MateriasDiasAllRest } = require("./materiasdiasallrest");
 const { AlumnosRest } = require("./alumnosrest");
 const { PeriodosRest } = require("./periodosrest");
 const { TpsRest } = require("./tpsrest");
+const { TpsAllRest } = require("./tpsallrest");
 const { EvaluacionesRest } = require("./evaluacionesrest");
 
 new App({
@@ -48,6 +49,7 @@ function restItems(app) {
         new MateriasDiasAllRest({ app: app, path: "materias_dias_all" }),
         new AlumnosRest({ app: app }),
         new TpsRest({ app: app }),
+        new TpsAllRest({ app: app, path: "tps_all" }),
         new EvaluacionesRest({ app: app })
     ]
 }

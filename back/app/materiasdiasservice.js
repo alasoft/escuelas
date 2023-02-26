@@ -34,13 +34,22 @@ class MateriasDiasListService extends TableListService {
 class MateriasDiasGetService extends TableGetService {
 
     sqlParameters() {
-        return Utils.Merge(
-            MateriasDiasCommonService.SqlBaseParameters(this),
-            this.sqlExtraParameters())
-    }
-
-    sqlExtraParameters() {
         return {
+            columns: [
+                "md.id",
+                "md.materiacurso",
+                "md.dia",
+                "md.desde",
+                "md.hasta",
+                "mat.nombre as materianombre",
+                "cur.id as curso"
+            ],
+            from: "materias_dias md",
+            joins: [
+                { tableName: "materias_cursos", alias: "mc", columnName: "md.materiacurso" },
+                { tableName: "cursos", alias: "cur", columnName: "mc.curso" },
+                { tableName: "materias", alias: "mat", columnName: "mc.materia" }
+            ],
             where: "md.id=@id",
             parameters: { id: this.id() }
         }

@@ -5,7 +5,6 @@ const { CursosCommonService, } = require("./cursosservice");
 class MateriasDiasListAllService extends TableListService {
 
     sqlParameters() {
-
         return {
             columns: [
                 "md.id",
@@ -14,7 +13,7 @@ class MateriasDiasListAllService extends TableListService {
                 "md.desde",
                 "md.hasta",
                 "mat.nombre as materianombre",
-                "cur.id as cursoId"
+                "cur.id as cursoid"
             ].concat(CursosCommonService.ColumnsNoId()),
             from: "materias_dias md",
             joins: [
@@ -25,12 +24,13 @@ class MateriasDiasListAllService extends TableListService {
                 { tableName: "materias", alias: "mat", columnName: "mc.materia" }
             ],
             where: this.sqlAnd()
-                .add(this.sqlText("cur.añolectivo=@añolectivo", { añolectivo: this.value("añolectivo") })),
+                .add(this.sqlText("cur.añolectivo=@añolectivo", { añolectivo: this.value("añolectivo") }))
+                .addIf(this.isDefined("curso"), () => this.sqlText("cur.id=@curso", { curso: this.value("curso") }))
+                .addIf(this.isDefined("materiacurso"), () => this.sqlText("mc.id=@materiacurso", { materiacurso: this.value("materiacurso") })),
             order: [
                 "md.dia",
                 "md.desde"
             ]
-
         }
     }
 
