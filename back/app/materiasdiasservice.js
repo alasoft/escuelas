@@ -1,5 +1,4 @@
 const { Utils } = require("../lib/utils/utils");
-const { Dates } = require("../lib/utils/dates");
 const {
     TableListService,
     TableGetService,
@@ -7,7 +6,7 @@ const {
     TableUpdateService,
     TableDeleteService
 } = require("../lib/service/tableservice");
-
+const { CursosCommonService } = require("./cursosservice")
 
 class MateriasDiasListService extends TableListService {
 
@@ -63,10 +62,6 @@ class MateriasDiasInsertService extends TableInsertService {
 
     validateNotDuplicated() {}
 
-    sqlValues() {
-        return MateriasDiasCommonService.SqlValues(this)
-    }
-
 }
 
 class MateriasDiasUpdateService extends TableUpdateService {
@@ -78,10 +73,6 @@ class MateriasDiasUpdateService extends TableUpdateService {
     }
 
     validateNotDuplicated() {}
-
-    sqlValues() {
-        return MateriasDiasCommonService.SqlValues(this)
-    }
 
 }
 
@@ -111,16 +102,6 @@ class MateriasDiasCommonService {
     static ValidateDesdeLowerHasta(service) {}
 
     static ValidateNoDesdeHastaCollision(service) {}
-
-    static SqlValues(service) {
-        return {
-            materiacurso: service.value("materiacurso"),
-            dia: service.value("dia"),
-            desde: Utils.TimeAsString(service.date("desde")),
-            hasta: Utils.TimeAsString(service.date("hasta"))
-        }
-    }
-
 
 }
 

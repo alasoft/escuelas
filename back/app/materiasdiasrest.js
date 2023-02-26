@@ -1,3 +1,5 @@
+const { TableRest } = require("../lib/rest/tablerest");
+
 const {
     MateriasDiasListService,
     MateriasDiasGetService,
@@ -5,7 +7,6 @@ const {
     MateriasDiasUpdateService,
     MateriasDiasDeleteService
 } = require("./MateriasDiasservice");
-const { TableRest } = require("../lib/rest/tablerest");
 
 class MateriasDiasRest extends TableRest {
 

@@ -8,6 +8,7 @@ const { Turnos } = require("./turnos");
 const { CursosRest } = require("./cursosrest");
 const { MateriasCursosRest } = require("./materiascursosrest");
 const { MateriasDiasRest } = require("./materiasdiasrest");
+const { MateriasDiasAllRest } = require("./materiasdiasallrest");
 const { AlumnosRest } = require("./alumnosrest");
 const { PeriodosRest } = require("./periodosrest");
 const { TpsRest } = require("./tpsrest");
@@ -44,6 +45,7 @@ function restItems(app) {
         new CursosRest({ app: app }),
         new MateriasCursosRest({ app: app }),
         new MateriasDiasRest({ app: app }),
+        new MateriasDiasAllRest({ app: app, path: "materias_dias_all" }),
         new AlumnosRest({ app: app }),
         new TpsRest({ app: app }),
         new EvaluacionesRest({ app: app })

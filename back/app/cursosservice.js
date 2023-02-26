@@ -16,11 +16,11 @@ class CursosListService extends TableListService {
                         añolectivo: this.value("añolectivo")
                     }))
                 .addIf(this.isDefined("descripcion"), () =>
-                    this.sqlText("esc.nombre || mod.nombre || cur.año ilike @descripcion", {
+                    this.sqlText("esc.nombre || mdl.nombre || cur.año ilike @descripcion", {
                         descripcion: this.sqlLike(this.value("descripcion"))
                     })
                 ),
-            order: "esc.nombre,mod.nombre,cur.año,cur.division,cur.turno"
+            order: "esc.nombre,mdl.nombre,cur.año,cur.division,cur.turno"
         }
     }
 
@@ -73,23 +73,28 @@ class CursosDeleteService extends TableDeleteService {}
 
 class CursosCommonService {
 
+    static ColumnsNoId() {
+        return [
+            "cur.añolectivo",
+            "cur.escuela",
+            "cur.modalidad",
+            "cur.año",
+            "cur.division",
+            "cur.turno",
+            "esc.nombre as escuelanombre",
+            "mdl.nombre as modalidadnombre"
+        ]
+    }
+
     static SqlParametersBase() {
         return {
             columns: [
-                "cur.id",
-                "cur.añolectivo",
-                "cur.escuela",
-                "cur.modalidad",
-                "cur.año",
-                "cur.division",
-                "cur.turno",
-                "esc.nombre as escuelaNombre",
-                "mod.nombre as modalidadNombre"
-            ],
+                "cur.id"
+            ].concat(this.ColumnsNoId()),
             from: "cursos cur",
             joins: [
                 { tableName: "escuelas", alias: "esc", columnName: "cur.escuela" },
-                { tableName: "modalidades", alias: "mod", columnName: "cur.modalidad" },
+                { tableName: "modalidades", alias: "mdl", columnName: "cur.modalidad" },
             ]
         }
     }
@@ -120,3 +125,4 @@ module.exports.CursosGetService = CursosGetService
 module.exports.CursosInsertService = CursosInsertService;
 module.exports.CursosUpdateService = CursosUpdateService;
 module.exports.CursosDeleteService = CursosDeleteService;
+module.exports.CursosCommonService = CursosCommonService;
