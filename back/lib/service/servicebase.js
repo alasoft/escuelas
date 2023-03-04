@@ -25,7 +25,7 @@ class ServiceBase extends ObjectBase {
     }
 
     user() {
-        return this.req.user;
+        return this.req._user;
     }
 
     tenant() {
@@ -127,15 +127,15 @@ class ServiceBase extends ObjectBase {
     }
 
     sqlDeleteWhere(parameters) {
-        this.defineValuesToSend(parameters);
+        this.defineValuesToSend(parameters, false);
         return new SqlDeleteWhere(parameters).text();
     }
 
-    defineValuesToSend(parameters) {
+    defineValuesToSend(parameters, checkId = true) {
         if (Utils.IsNotDefined(parameters.values)) {
             parameters.values = {};
         }
-        if (Utils.IsNotDefined(parameters.values.id)) {
+        if (checkId && Utils.IsNotDefined(parameters.values.id)) {
             parameters.values.id = this.id();
         }
         this.valuesToSend = parameters.values;

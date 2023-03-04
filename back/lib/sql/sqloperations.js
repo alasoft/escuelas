@@ -16,9 +16,9 @@ class SqlCreate {
 
     addDefaults() {
         this.columns.id = SqlType.Pk();
-        this.columns.created = SqlType.Created();
-        this.columns.updated = SqlType.Updated({ required: false })
-        this.columns.state = SqlType.State();
+        this.columns._created = SqlType.Created();
+        this.columns._updated = SqlType.Updated({ required: false })
+        this.columns._state = SqlType.State();
         this.columns.tenant = SqlType.Tenant();
     }
 
@@ -29,7 +29,7 @@ class SqlCreate {
             .add(this.tableName)
             .add("(");
         Object.keys(this.columns).forEach(
-            (key, i) => textBuilder.add((0 < i ? ", " : "") + key + " " + this.columns[key])
+            (key, i) => textBuilder.add((0 < i ? ", " : "") + Utils.DoubleQuotes(key) + " " + this.columns[key])
         )
         return textBuilder
             .add(")")
@@ -108,10 +108,10 @@ class SqlInsert extends SqlBaseCrud {
         if (Utils.IsNotDefined(this.values.id)) {
             this.values.id = Utils.NewGuid();
         }
-        if (Utils.IsNotDefined(this.values.state)) {
-            this.values.state = DbStates.Active;
+        if (Utils.IsNotDefined(this.values._state)) {
+            this.values._state = DbStates.Active;
         }
-        this.values.created = Dates.TimeStamp();
+        this.values._created = Dates.TimeStamp();
     }
 
     text() {
@@ -121,7 +121,7 @@ class SqlInsert extends SqlBaseCrud {
             .add(this.tableName)
             .add("(");
         Object.keys(this.values).forEach(
-            (key, i) => textBuilder.add((0 < i ? ", " : "") + key)
+            (key, i) => textBuilder.add((0 < i ? ", " : "") + Utils.DoubleQuotes(key))
         )
         textBuilder.add(")")
             .add("values")
@@ -142,7 +142,7 @@ class SqlBaseUpdate extends SqlBaseCrud {
 
     setValuesDefault() {
         super.setValuesDefault();
-        this.values.updated = Dates.TimeStamp();
+        this.values._updated = Dates.TimeStamp();
     }
 
     text() {

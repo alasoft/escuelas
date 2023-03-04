@@ -104,10 +104,13 @@ class TpsCommonService {
                 "tp.nombre",
                 "tp.desde",
                 "tp.hasta",
+                "cur.id as curso",
                 "per.nombre as periodonombre"
             ],
             from: "tps tp",
             joins: [
+                { tableName: "materias_cursos", alias: "mc", columnName: "tp.materiacurso" },
+                { tableName: "cursos", alias: "cur", columnName: "mc.curso" },
                 { tableName: "periodos", alias: "per", columnName: "tp.periodo" },
             ],
         }

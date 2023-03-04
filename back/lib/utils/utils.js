@@ -96,6 +96,10 @@ class Utils {
         return "'" + s + "'";
     }
 
+    static DoubleQuotes(s) {
+        return '"' + s + '"';
+    }
+
     static LineFeed(count = 1) {
         return "\r\n".repeat(count);
     }

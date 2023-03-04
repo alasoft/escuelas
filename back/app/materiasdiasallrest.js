@@ -1,13 +1,6 @@
 const { TableRest } = require("../lib/rest/tablerest");
-
-const {
-    MateriasDiasListAllService,
-} = require("./materiasdiasallservice");
-
-const {
-    MateriasDiasGetService
-} = require("./materiasdiasservice")
-
+const { MateriasDiasListAllService } = require("./materiasdiasallservice");
+const { MateriasDiasGetService } = require("./materiasdiasservice")
 
 class MateriasDiasAllRest extends TableRest {
 
@@ -19,7 +12,6 @@ class MateriasDiasAllRest extends TableRest {
         this.buildVerb("list", MateriasDiasListAllService);
         this.buildVerb("get", MateriasDiasGetService);
     }
-
 
 }
 

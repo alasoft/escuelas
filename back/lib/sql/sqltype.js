@@ -13,7 +13,7 @@ class SqlType {
 
     static Fk(parameters) {
         if (Utils.IsNotDefined(parameters.references)) {
-            throw Exceptions.ForeignKeyReferenceNotDefined({ message: "Foreign Key Field without reference Table" })
+            throw Exceptions.ForeignKeyReferenceNotDefined(parameters)
         }
         return "varchar(38) references " + parameters.references + "(id)" + this.NotNull(parameters);
     }

@@ -30,9 +30,9 @@ class SqlInsert extends SqlOperation {
     checkValues() {
         super.checkValues();
         if (Utils.IsNotDefined(this.values.state)) {
-            this.values.state = DbStates.Active;
+            this.values._state = DbStates.Active;
         }
-        this.values.created = Dates.TimeStamp();
+        this.values._created = Dates.TimeStamp();
     }
 
     text() {
@@ -74,7 +74,7 @@ class SqlUpdate extends SqlWhereTenantId {
 
     checkValues() {
         super.checkValues();
-        this.values.updated = Dates.TimeStamp();
+        this.values._updated = Dates.TimeStamp();
     }
 
     text() {

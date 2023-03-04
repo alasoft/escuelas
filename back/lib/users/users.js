@@ -29,7 +29,7 @@ class UsersCreateTable {
     }
 
     execute() {
-        return this.createTable()
+        return this.createTableUsers()
             .then(() =>
                 this.userTestExists())
             .then(exists => {
@@ -37,15 +37,17 @@ class UsersCreateTable {
                     return this.insertUserTest()
                 }
             })
+            .then(() =>
+                this.createTableUsersStates())
             .catch(err =>
                 this.app.terminate(err))
     }
 
-    createTable() {
-        return this.db.execute(this.sqlCreateTable());
+    createTableUsers() {
+        return this.db.execute(this.sqlCreateTableUsers());
     }
 
-    sqlCreateTable() {
+    sqlCreateTableUsers() {
         return Sql.Create({
             tableName: "users",
             columns: {
@@ -81,6 +83,21 @@ class UsersCreateTable {
         return Sql.Insert({
             tableName: "users",
             values: Users.UserTest
+        })
+    }
+
+    createTableUsersStates() {
+        return this.db.execute(this.sqlCreateTableUsersStates());
+    }
+
+    sqlCreateTableUsersStates() {
+        return Sql.Create({
+            tableName: "users_states",
+            columns: {
+                user: SqlType.Fk({ references: "users" }),
+                module: SqlType.String({ size: 100 }),
+                state: SqlType.String({ size: 3000 })
+            }
         })
     }
 

@@ -3,36 +3,39 @@ const { Utils } = require("./utils");
 
 class Exceptions {
 
-    static INVALID_TOKEN = 1000;
+    static AUTHENTICATION = "authentication"
+    static INVALID_TOKEN = "invalidToken";
+    static VALIDATION = "validation";
+    static INTERNAL = "internal";
 
     static InvalidToken(detail) {
         return new Exception({
-            status: Http.Unauthorized,
-            code: Exceptions.INVALID_TOKEN,
+            type: Exceptions.INVALID_TOKEN,
             message: "Token inválido",
-            detail: detail,
-            isTokenInvalid: true,
+            detail: detail
         })
     }
 
-    static DataBase(detail) {
+    static DataBase(parameters) {
         return new Exception({
+            type: Exceptions.INTERNAL,
             message: "Error de base de datos",
-            detail: detail
+            sql: parameters.sql,
+            detail: parameters.detail
         })
     }
 
     static RequiredValue(detail) {
         return new Exception({
-            status: Http.InvalidRequest,
+            type: Exceptions.VALIDATION,
             message: "Valor requerido",
             detail: detail,
-            isValidation: true
         })
     }
 
     static SqlParameterValueNotFound(detail) {
         return new Exception({
+            type: Exceptions.INTERNAL,
             message: "Valor de parámetro SQL no encontrado",
             detail: detail
         })
@@ -40,7 +43,7 @@ class Exceptions {
 
     static TenantNotDefined(detail) {
         return new Exception({
-            status: Http.Unauthorized,
+            type: Exceptions.AUTHENTICATION,
             message: "Tenant no definido",
             detail: detail
         })
@@ -48,13 +51,23 @@ class Exceptions {
 
     static IdNotDefined(detail) {
         return new Exception({
+            type: Exceptions.INTERNAL,
             message: "Valor de id no definido",
             detail: detail
         });
     }
 
+    static UserNotExists(detail) {
+        return new Exception({
+            type: Exceptions.AUTHENTICATION,
+            message: "Usuario inexistente",
+            detail: detail
+        })
+    }
+
     static NotImplemented(detail) {
         return new Exception({
+            type: Exceptions.INTERNAL,
             message: "No implementado",
             detail: detail
         });
@@ -62,56 +75,68 @@ class Exceptions {
 
     static DuplicatedEmail(detail) {
         return new Exception({
-            status: Http.InvalidRequest,
+            type: Exceptions.VALIDATION,
             message: "Email duplicado",
             detail: detail,
-            isValidation: true
         });
     }
 
-    static DuplicatedEntity(message) {
+    static DuplicatedEntity(detail) {
         return new Exception({
-            status: Http.InvalidRequest,
+            type: Exceptions.VALIDATION,
             message: message,
-            isValidation: true
+            detail: detail
         });
     }
 
     static InvalidEmailPassword(detail) {
         return new Exception({
-            status: Http.InvalidRequest,
+            type: Exceptions.VALIDATION,
             message: "Email o password inválidos",
             detail: detail,
-            isValidation: true
         });
     }
 
     static Validation(parameters) {
         return new Exception({
-            status: Http.InvalidRequest,
-            message: parameters.message,
+            type: Exceptions.VALIDATION,
+            message: parameters.message || "Error de validación",
             detail: parameters.detail,
-            isValidation: true
         })
     }
 
-    static ForeignKeyReferenceNotDefined(parameters) {
+    static ForeignKeyReferenceNotDefined(detail) {
         return new Exception({
-            message: parameters.message,
-            detail: parameters.detail,
+            type: Exceptions.INTERNAL,
+            message: "Campo de clave foranea sin Tabla de referencia",
+            detail: detail
         })
     }
 
 }
 
-class Exception {
+class Exception extends Object {
 
     constructor(parameters = {}) {
-        this.status = parameters.status;
-        this.code = parameters.code;
-        this.message = parameters.message + "<br><br><br>" + (parameters.detail || "");
-        this.isValidation = parameters.isValidation;
-        this.isTokenInvalid = parameters.isTokenInvalid;
+        super();
+        this.type = parameters.type;
+        this.status = this.status();
+        this.message = parameters.message;
+        this.detail = parameters.detail;
+        this.sql = parameters.sql;
+    }
+
+    status(type) {
+        if (type == Exceptions.AUTHENTICATION) {
+            return Http.Unauthorized;
+        }
+        if (type == Exceptions.INVALID_TOKEN) {
+            return Http.Unauthorized;
+        }
+        if (type == Exceptions.VALIDATION) {
+            return Http.InvalidRequest;
+        }
+        return Http.Internal;
     }
 
 }

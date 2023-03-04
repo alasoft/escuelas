@@ -2,6 +2,7 @@ const { Http } = require("../utils/http");
 const { UsersCreateTable } = require("../users/users");
 const { UsersLogged } = require("../users/userslogged");
 const { UsersRest } = require("../rest/usersrest");
+const { UserStateRest } = require("../rest/userstaterest");
 const { Dates } = require("../utils/dates");
 const { Utils } = require("../utils/utils");
 const { Exception } = require("../utils/exceptions");
@@ -65,6 +66,8 @@ class App {
             .then(() =>
                 this.buildUsersRest())
             .then(() =>
+                this.buildUserStateRest())
+            .then(() =>
                 this.buildAppRest())
             .then(() =>
                 this.buildIndex())
@@ -91,12 +94,16 @@ class App {
 
     createTables() {
         if (this.parameters.createTables != undefined) {
-            new this.parameters.createTables({ app: this }).execute();
+            return new this.parameters.createTables({ app: this }).execute();
         }
     }
 
     buildUsersRest() {
         new UsersRest({ app: this }).build()
+    }
+
+    buildUserStateRest() {
+        new UserStateRest({ app: this }).build()
     }
 
     buildAppRest() {

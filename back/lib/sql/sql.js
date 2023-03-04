@@ -4,7 +4,7 @@ const { SqlType } = require("./sqltype");
 const { TextBuilder } = require("../utils/textbuilder");
 const { SqlCount, SqlSelect } = require("./sqlselect");
 const { Utils } = require("../utils/utils");
-const { SqlAnd } = require("./sqloperators");
+const { SqlAnd, SqlWhere } = require("./sqloperators");
 
 const { escape } = require("sqlutils/pg");
 
@@ -16,6 +16,10 @@ class Sql {
 
     static Count(parameters) {
         return new SqlCount(parameters).text();
+    }
+
+    static Where(parameters) {
+        return new SqlWhere(parameters);
     }
 
     static And(parameters) {

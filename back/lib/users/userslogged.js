@@ -12,9 +12,10 @@ class UsersLogged {
     }
 
     newToken(user) {
-        let userLogged = this.findOrCreate(user);
+        const userLogged = this.findOrCreate(user);
         userLogged.token = Utils.NewToken(this.app.tokenMinutes);
-        return this.userLoggedToClient(userLogged);
+        const { nombre, apellido, email, rol, token } = userLogged;
+        return { id: user.id, nombre, apellido, email, rol, token: token.value }
     }
 
     findOrCreate(user) {
@@ -36,18 +37,12 @@ class UsersLogged {
         };
     }
 
-    userLoggedToClient(userLogged) {
-        const { nombre, apellido, email, token } = userLogged;
-        return { nombre, apellido, email, token: token.value };
-    }
-
-
     authenticate(req) {
         const userLogged = this.findByToken(req.headers.token)
         if (userLogged == undefined) {
             throw Exceptions.InvalidToken()
         }
-        req.user = userLogged;
+        req._user = userLogged;
     }
 
     findByToken(tokenValue) {

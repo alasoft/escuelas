@@ -1,6 +1,7 @@
 const { timeStamp } = require('console');
 const { isThisQuarter } = require('date-fns');
 const { Pool } = require('pg');
+const { Exceptions } = require("../utils/exceptions")
 
 class Postgres {
 
@@ -13,13 +14,14 @@ class Postgres {
     }
 
     query(sql, service) {
-        this.log(sql, service);
         return new Promise((resolve, reject) => {
             this.pool.query(sql)
-                .then(result =>
-                    resolve(result.rows))
+                .then(result => {
+                    this.log(sql, service);
+                    resolve(result.rows);
+                })
                 .catch(err =>
-                    reject(err)
+                    reject(Exceptions.DataBase({ detail: err.message, sql: sql }))
                 )
         })
     }

@@ -11,7 +11,6 @@ class CreateTablesBase {
 
     execute() {
         const sql = Sql.Transact(this.sql());
-        this.app.log(sql);
         return this.db.execute(sql);
     }
 

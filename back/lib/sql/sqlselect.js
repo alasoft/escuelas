@@ -73,11 +73,11 @@ class SqlSelect extends ObjectBase {
     }
 
     baseConditions() {
-        return this.tenantAndStateConditions(this.fromColumn("tenant"), this.fromColumn("state"));
+        return this.tenantAndStateConditions(this.fromColumn("tenant"), this.fromColumn("_state"));
     }
 
     baseJoinConditions(sqlJoin) {
-        return this.tenantAndStateConditions(sqlJoin.alias + ".tenant", sqlJoin.alias + ".state");
+        return this.tenantAndStateConditions(sqlJoin.alias + ".tenant", sqlJoin.alias + "._state");
     }
 
     fromColumn(columnName) {

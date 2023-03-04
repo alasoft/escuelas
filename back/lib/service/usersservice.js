@@ -111,5 +111,6 @@ class UsersLoginService extends UsersService {
 
 }
 
+
 module.exports.UsersRegisterService = UsersRegisterService;
 module.exports.UsersLoginService = UsersLoginService;
