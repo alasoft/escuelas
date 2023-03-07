@@ -92,7 +92,6 @@ class Rest extends ObjectBase {
             success: data =>
                 resolve(data),
             error: err => {
-                new RestError(err);
                 reject(Errors.ErrorObject(err))
             }
 
