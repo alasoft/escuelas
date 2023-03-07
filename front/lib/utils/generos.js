@@ -1,0 +1,19 @@
+class Generos extends LocalMemoryTable {
+
+    static DefineData() {
+        return [{
+                id: "M",
+                nombre: "Masculino"
+            },
+            {
+                id: "F",
+                nombre: "Femenino"
+            },
+            {
+                id: "O",
+                nombre: "Otro"
+            }
+        ]
+    }
+
+}

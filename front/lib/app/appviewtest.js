@@ -1,0 +1,3 @@
+class AppViewTest extends AppViewBase {
+
+}

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>DevExtreme Demo</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.10.1/polyfill.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/3.8.0/exceljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    <script>
+        window.jQuery || document.write(decodeURIComponent('%3Cscript src="js/jquery.min.js"%3E%3C/script%3E'))
+    </script>
+
+    <!--
+    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/22.2.3/css/dx.material.blue.light.compact.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/22.2.3/css/dx.light.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/22.2.3/css/dx.material.orange.light.compact.css" />
+
+
+        <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/22.2.3/css/dx.softblue.compact.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/22.2.3/css/dx.material.teal.light.compact.css" />
+
+
+-->
+
+    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/22.2.3/css/dx.material.teal.light.compact.css" />
+
+    <!-- 
+
+    <script src="https://cdn3.devexpress.com/jslib/21.2.9/js/dx.all.js"></script>
+    <script src="https://cdn3.devexpress.com/jslib/21.2.9/js/localization/dx.messages.es.js"></script>
+
+    
+-->
+
+    <script src="https://cdn3.devexpress.com/jslib/22.2.3/js/dx.all.js"></script>
+    <script src="https://cdn3.devexpress.com/jslib/22.2.3/js/localization/dx.messages.es.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+
+    <script src="utils.js"></script>
+    <script src="errors.js"></script>
+    <script src="resterror.js"></script>
+    <script src="strings.js"></script>
+    <script src="dates.js"></script>
+    <script src="hours.js"></script>
+    <script src="arrays.js"></script>
+    <script src="html.js"></script>
+
+    <script src="dateformat.js"></script>
+
+    <script src="objectbase.js"></script>
+    <script src="component.js"></script>
+
+    <script src="rest.js"></script>
+    <script src="datasource.js"></script>
+    <script src="memorytable.js"></script>
+
+    <script src="widget.js"></script>
+    <script src="list.js"></script>
+    <script src="grid.js"></script>
+    <script src="treeitems.js"></script>
+    <script src="form.js"></script>
+    <script src="toolbar.js"></script>
+    <script src="resizer.js"></script>
+    <script src="popup.js"></script>
+    <script src="contextmenu.js"></script>
+    <script src="button.js"></script>
+    <script src="label.js"></script>
+    <script src="scheduler.js"></script>
+
+    <script src="listcolumns.js"></script>
+    <script src="formitems.js"></script>
+
+    <script src="template.js"></script>
+    <script src="listviewtemplate.js"></script>
+    <script src="filterviewtemplate.js"></script>
+    <script src="dialogviewtemplate.js"></script>
+    <script src="entryviewtemplate.js"></script>
+    <script src="messageviewtemplate.js"></script>
+
+    <script src="view.js"></script>
+    <script src="listview.js"></script>
+    <script src="filterview.js"></script>
+    <script src="dialogview.js"></script>
+    <script src="entryview.js"></script>
+    <script src="formview.js"></script>
+    <script src="messageview.js"></script>
+    <script src="errorview.js"></script>
+    <script src="yesnoview.js"></script>
+
+    <script src="appbase.js"></script>
+    <script src="appviewbase.js"></script>
+    <script src="appview.js"></script>
+    <script src="appviewtest.js"></script>
+    <script src="appviewtemplate.js"></script>
+
+    <script src="exportexceldialog.js"></script>
+
+    <script src="app.js"></script>
+    <script src="loginview.js"></script>
+    <script src="registerview.js"></script>
+    <script src="users.js"></script>
+
+    <script src="escuelas.js"></script>
+    <script src="materias.js"></script>
+    <script src="generos.js"></script>
+    <script src="añoslectivos.js"></script>
+    <script src="diassemana.js"></script>
+    <script src="añolectivofilterview.js"></script>
+    <script src="periodos.js"></script>
+    <script src="cursos.js"></script>
+    <script src="modalidades.js"></script>
+    <script src="años.js"></script>
+    <script src="turnos.js"></script>
+    <script src="cursosdetalle.js"></script>
+    <script src="cursosmateriasdetalle.js"></script>
+    <script src="alumnoscurso.js"></script>
+    <script src="materiascurso.js"></script>
+    <script src="materiascursotemplate.js"></script>
+    <script src="materiasdias.js"></script>
+    <script src="tpscurso.js"></script>
+    <script src="evaluaciones.js"></script>
+
+    <script src="añocursomateriafilterview.js"></script>
+    <script src="materiasdiasall.js"></script>
+
+    <script src="cursosmateriasform.js"></script>
+    <script src="horas.js"></script>
+    <script src="tps.js"></script>
+
+    <script src="diascalendario.js"></script>
+
+    <script src="samples.js"></script>
+
+</head>
+
+<body>
+</body>
+
+<script>
+    $(function() {
+        App.InitUserTest()
+    })
+</script>
+
+</html>

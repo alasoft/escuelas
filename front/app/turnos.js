@@ -1,0 +1,1 @@
+class Turnos extends RestMemoryTable {}
