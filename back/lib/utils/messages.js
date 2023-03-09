@@ -2,21 +2,19 @@ const { Utils } = require("./utils");
 
 class Messages {
 
-    stati
-
     static Section(parameters) {
 
         function title() {
-            return "<u>" + parameters.title + "</u><br><br>";
+            return (parameters.underLine == true ? "<u>" : "") + parameters.title + "</u><br><br>";
         }
 
         function line(line) {
-            return Utils.HtmlTab() + line + "<br>"
+            return Utils.HtmlTab(2) + line + "<br>"
         }
 
         let section = title();
 
-        parameters.lines.forEach(l =>
+        Utils.ToArray(parameters.lines).forEach(l =>
             section += line(l));
 
         return section + "<br><br>";

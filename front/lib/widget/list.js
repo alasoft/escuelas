@@ -6,8 +6,12 @@ class List extends Widget {
             focusedRowIndex: 0,
             allowColumnResizing: true,
             allowColumnReordering: true,
+            columnsAutoWidth: true,
             showColumnLines: true,
             showBorders: false,
+            sorting: {
+                mode: "multiple"
+            },
             groupPanel: {
                 visible: true
             },
@@ -15,13 +19,24 @@ class List extends Widget {
                 autoExpandAll: true,
                 contextMenuEnabled: true
             },
+            searchPanel: {
+                visible: true
+            },
             scrolling: {
                 mode: "standard"
             },
             editing: {
                 confirmDelete: false,
+            },
+            export: {
+                enabled: true
             }
         })
+    }
+
+    configuration() {
+        const c = super.configuration();
+        return c;
     }
 
     rows() {

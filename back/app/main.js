@@ -14,6 +14,7 @@ const { PeriodosRest } = require("./periodosrest");
 const { TpsRest } = require("./tpsrest");
 const { TpsAllRest } = require("./tpsallrest");
 const { EvaluacionesRest } = require("./evaluacionesrest");
+const { Messages } = require("../lib/utils/messages");
 
 new App({
     port: 9090,
@@ -39,9 +40,21 @@ function restItems(app) {
     return [
         new MemoryTableRest({ app: app, tableClass: Años }),
         new MemoryTableRest({ app: app, tableClass: Turnos }),
-        new SimpleTableRest({ app: app, tableName: "escuelas", duplicatedMessage: "Escuela duplicada" }),
-        new SimpleTableRest({ app: app, tableName: "modalidades", duplicatedMessage: "Modalidad duplicada" }),
-        new SimpleTableRest({ app: app, tableName: "materias", duplicatedMessage: "Materia duplicada" }),
+        new SimpleTableRest({
+            app: app,
+            tableName: "escuelas",
+            duplicatedTitle: "Ya existe una Escuela de nombre"
+        }),
+        new SimpleTableRest({
+            app: app,
+            tableName: "modalidades",
+            duplicatedTitle: "Ya existe una Modalidad de nombre"
+        }),
+        new SimpleTableRest({
+            app: app,
+            tableName: "materias",
+            duplicatedTitle: "Ya existe una Materia de nombre"
+        }),
         new PeriodosRest({ app: app }),
         new CursosRest({ app: app }),
         new MateriasCursosRest({ app: app }),

@@ -6,6 +6,9 @@ const {
     TableDeleteService
 } = require("../lib/service/tableservice");
 
+const { Strings } = require("../lib/utils/utils");
+const { Messages } = require("../lib/utils/messages");
+
 class AlumnosListService extends TableListService {
 
     sqlParameters() {
@@ -62,7 +65,7 @@ class AlumnosInsertService extends TableInsertService {
     }
 
     duplicatedMessage() {
-        return AlumnosCommonService.DuplicatedMessage();
+        return AlumnosCommonService.DuplicatedMessage(this);
     }
 
 }
@@ -74,7 +77,7 @@ class AlumnosUpdateService extends TableUpdateService {
     }
 
     duplicatedMessage() {
-        return AlumnosCommonService.DuplicatedMessage();
+        return AlumnosCommonService.DuplicatedMessage(this);
     }
 
 }
@@ -96,10 +99,14 @@ class AlumnosCommonService {
         })
     }
 
-    static DuplicatedMessage() {
-        return "Alumno duplicado en el Curso";
+    static DuplicatedMessage(service) {
+        return Messages.Section({
+            title: "Ya existe un Alumno de nombre",
+            lines: Strings.SingleQuotes(Strings.Concatenate([
+                service.value("apellido"), service.value("nombre")
+            ], ", "))
+        })
     }
-
 
 }
 

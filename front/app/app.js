@@ -23,4 +23,9 @@ class App extends AppBase {
         return "1.0"
     }
 
+    static Host() {
+        return "http://127.0.0.1:9090";
+    }
+
+
 }

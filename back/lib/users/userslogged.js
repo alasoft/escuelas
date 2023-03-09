@@ -1,6 +1,5 @@
-const { Dates } = require("../utils/dates");
 const { Exceptions } = require("../utils/exceptions");
-const { Utils } = require("../utils/utils");
+const { Utils, Dates } = require("../utils/utils");
 
 class UsersLogged {
 

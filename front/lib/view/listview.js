@@ -210,7 +210,7 @@ class ListView extends View {
     }
 
     toolbarItems() {
-        return [this.itemInsert(), this.itemExportButton()]
+        return [this.itemInsert()]
     }
 
     itemInsert() {
@@ -316,8 +316,12 @@ class ListView extends View {
         }
     }
 
+
     afterRender() {
         super.afterRender();
+        if (this.list().columnCount() == 1) {
+            this.list().setProperty("groupPanel.visible", false);
+        }
         this.contextMenu().setProperty("target", this.findElementByClass("list"));
         if (this.isPopup()) {
             this.label().setVisible(false);

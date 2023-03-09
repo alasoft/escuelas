@@ -20,6 +20,10 @@ class Utils {
         return (typeof x === "function");
     }
 
+    static IsArray(x) {
+        return Array.isArray(x);
+    }
+
     static Merge(...parameters) {
         return $.extend(true, {}, ...parameters);
     }
@@ -34,9 +38,9 @@ class Utils {
         })
     }
 
-    static Evaluate(x) {
+    static Evaluate(x, ...parameters) {
         if (this.IsFunction(x)) {
-            return x();
+            return x(...parameters);
         } else {
             return x;
         }

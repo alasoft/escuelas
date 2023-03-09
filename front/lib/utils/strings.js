@@ -35,12 +35,21 @@ class Strings {
     }
 
     static StringIs(string, strings) {
-        for (const s of strings) {
+
+        for (const s of this.ToArray(strings)) {
             if (this.EqualsIgnoreCase(string, s)) {
                 return true;
             }
         }
         return false;
+    }
+
+    static ToArray(s) {
+        if (Utils.IsArray(s)) {
+            return s
+        } else {
+            return s.split(",");
+        }
     }
 
     static Replace(s1, s2, s3) {
@@ -65,6 +74,10 @@ class Strings {
 
     static RemoveLastChar(s) {
         return str.substring(0, s.length - 1);
+    }
+
+    static Contains(s1, s2) {
+        return s1.includes(s2);
     }
 
 }

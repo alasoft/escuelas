@@ -2,7 +2,12 @@ class AlumnosCurso extends CursosDetalle {
 
     extraConfiguration() {
         return {
-            mode: "view"
+            mode: "view",
+            components: {
+                filter: {
+                    width: 280
+                }
+            }
         }
     }
 

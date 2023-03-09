@@ -2,7 +2,7 @@ const { ObjectBase } = require("../utils/objectbase");
 const { DbStates } = require("../data/dbstates");
 const { Exceptions } = require("../utils/exceptions.js");
 const { TextBuilder } = require("../utils/textbuilder");
-const { Utils } = require("../utils/utils");
+const { Utils, Strings } = require("../utils/utils");
 const { SqlAnd, SqlWhere } = require("./sqloperators");
 
 class SqlSelect extends ObjectBase {
@@ -67,7 +67,7 @@ class SqlSelect extends ObjectBase {
     tenantAndStateConditions(tenantColumn, stateColumn) {
         return new SqlAnd()
             .addIf(this.filterByTenant, () =>
-                tenantColumn + "=" + Utils.SingleQuotes(this.tenant))
+                tenantColumn + "=" + Strings.SingleQuotes(this.tenant))
             .addIf(0 < this.filterByStates.length, () =>
                 stateColumn + " in (" + this.Sql.In(this.filterByStates) + ")")
     }

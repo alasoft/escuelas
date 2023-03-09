@@ -1,8 +1,8 @@
 const { _ } = require("lodash");
 const cuid = require("cuid");
 const simpleEncryptor = require("simple-encryptor");
-
-const { Dates } = require("../utils/dates");
+const format = require('date-fns/format');
+const es = require('date-fns/locale/es');
 
 class Utils {
 
@@ -92,22 +92,6 @@ class Utils {
         return false;
     }
 
-    static SingleQuotes(s) {
-        return "'" + s + "'";
-    }
-
-    static DoubleQuotes(s) {
-        return '"' + s + '"';
-    }
-
-    static LineFeed(count = 1) {
-        return "\r\n".repeat(count);
-    }
-
-    static Concatenate(array, separator = " ") {
-        return this.NoNulls(array).join(separator);
-    }
-
     static NoNulls(array) {
         return array.filter(
             e => e != undefined && e != null
@@ -117,9 +101,9 @@ class Utils {
     static Log(lines) {
         let text = "";
         lines.forEach(
-            line => text += this.LineFeed() + line
+            line => text += Strings.LineFeed() + line
         )
-        console.log(text + this.LineFeed())
+        console.log(text + Strings.LineFeed())
     }
 
     static Encrypt(s) {
@@ -144,4 +128,81 @@ class Utils {
 
 }
 
+class Strings {
+
+    static Concatenate(array, separator = " ") {
+        return Utils.NoNulls(array).join(separator);
+    }
+
+    static SingleQuotes(s) {
+        return "'" + s + "'";
+    }
+
+    static DoubleQuotes(s) {
+        return '"' + s + '"';
+    }
+
+    static LineFeed(count = 1) {
+        return "\r\n".repeat(count);
+    }
+
+    static Capitalize(s) {
+        return s.charAt(0).toUpperCase() + s.substr(1).toLowerCase();
+    }
+
+}
+
+class Dates {
+
+    static Date() {
+        return new Date();
+    }
+
+    static Now() {
+        return new Date().getTime();
+    }
+
+    static TimeStamp() {
+        return new Date().toUTCString();
+    }
+
+    static AddHours(date, hours) {
+        return date.setHours(date.getHours() + hours)
+    }
+
+    static AddMinutes(date, minutes) {
+        return date.setMinutes(date.getMinutes() + minutes);
+    }
+
+    static LowerOrEqual(d1, d2) {
+        return d1 <= d2;
+    }
+
+    static Format(date) {
+        return format(date, "dd MMM yyyy", { locale: es })
+    }
+
+    static YearOf(date) {
+        return date.getFullYear();
+    }
+
+    static Between(d1, d2, d3) {
+        return d2 <= d1 && d1 <= d3;
+    }
+
+    static Contains(d1, d2, d3, d4) {
+        return d1 <= d3 && d2 >= d4
+    }
+    static Contained(d1, d2, d3, d4) {
+        return d1 >= d3 && d2 <= d4
+    }
+
+    static Intersect(d1, d2, d3, d4) {
+        return (d1 >= d3 && d1 <= d4) || (d2 >= d3 && d2 <= d4);
+    }
+
+}
+
+module.exports.Strings = Strings;
 module.exports.Utils = Utils;
+module.exports.Dates = Dates;

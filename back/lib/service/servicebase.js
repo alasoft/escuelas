@@ -1,7 +1,6 @@
 const { Exceptions, } = require("../utils/exceptions.js");
 const { Sql } = require("../sql/sql");
-const { Utils } = require("../utils/utils");
-const { Dates } = require("../utils/dates");
+const { Utils, Strings, Dates } = require("../utils/utils");
 const { ObjectBase } = require("../utils/objectbase.js");
 const {
     SqlInsert,
@@ -198,6 +197,21 @@ class ServiceBase extends ObjectBase {
 
     dbExists(sql) {
         return this.db.exists(sql, this);
+    }
+
+    concatenate(p = {}) {
+        const names = p.names.split(",");
+        const values = names.map(name => this.value(name));
+        const concatenate = Strings.Concatenate(values, p.separator || ", ");
+        return p.singleQuotes != false ? Strings.SingleQuotes(concatenate) : concatenate;
+    }
+
+    clientDescription() {
+        return this.req.headers.client_description;
+    }
+
+    duplicatedTitle() {
+        return this.parameters.duplicatedTitle || "Registro duplicado";
     }
 
 }

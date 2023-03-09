@@ -112,14 +112,14 @@ class Cursos extends AñoLectivoFilterView {
         return Cursos.Descripcion(this.focusedRowData());
     }
 
-    static Descripcion(curso) {
-        if (Utils.IsDefined(curso)) {
+    static Descripcion(data) {
+        if (Utils.IsDefined(data)) {
             return Strings.Concatenate([
-                curso.escuelanombre,
-                curso.modalidadnombre,
-                Años.GetNombre(curso.año),
-                curso.division,
-                Turnos.GetNombre(curso.turno)
+                data.escuelanombre,
+                data.modalidadnombre,
+                Años.GetNombre(data.año),
+                data.division,
+                Turnos.GetNombre(data.turno)
             ], ", ")
         } else {
             return ""
@@ -133,8 +133,21 @@ class CursosForm extends FormView {
     defineRest() {
         return new Rest({
             path: "cursos",
-            transformData: (verb, data) => this.transformData(verb, data)
+            transformData: (verb, data) => this.transformData(verb, data),
+            headers: verb => this.headers(verb)
         })
+    }
+
+    headers(verb) {
+        if (Strings.StringIs(verb, "insert,update")) {
+            return {
+                [App.CLIENT_DESCRIPTION_HEADER]: this.descripcion()
+            }
+        }
+    }
+
+    descripcion() {
+        return this.concatenateTexts("escuela,modalidad,año+division,turno")
     }
 
     transformData(verb, data) {

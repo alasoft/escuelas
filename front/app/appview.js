@@ -66,13 +66,18 @@ class AppView extends AppViewBase {
         })
 
         itemDictado.addChild({
-            text: "Dias y horas de Materias",
-            onClick: e => new Horas().render()
+            text: "Materias dictadas",
+            onClick: e => new MateriasCurso().render()
         })
 
         itemDictado.addChild({
             text: "Alumnos",
             onClick: e => new AlumnosCurso().render()
+        })
+
+        itemDictado.addChild({
+            text: "Dias y horas",
+            onClick: e => new Horas().render()
         })
 
         itemEvaluaciones.addChild({
@@ -82,11 +87,14 @@ class AppView extends AppViewBase {
 
         itemEvaluaciones.addChild({
             text: "Trabajos Prácticos",
+            onClick: e => new TpsCurso().render()
+        }).addChild({
+            text: "Todos",
             onClick: e => new Tps().render()
         })
 
         itemEvaluaciones.addChild({
-            text: "Notas",
+            text: "Calificaciones",
             onClick: e => new Evaluaciones().render()
         })
 

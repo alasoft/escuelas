@@ -41,6 +41,7 @@ class AppBase {
     static DISPLAY_EXPR = "nombre";
 
     static MESSAGE_TITLE = "Atención"
+    static VALIDATION_MESSAGE_TITLE = "Atención"
     static ERROR_MESSAGE_TITLE = "Error"
     static INTERNAL_ERROR_MESSAGE_TITLE = "Error Interno"
 
@@ -48,6 +49,8 @@ class AppBase {
 
     static ZONA_HORARIA_ARGENTINA = "America/Argentina/Buenos_Aires";
     static BASE_DATE = "1900 01 01";
+
+    static CLIENT_DESCRIPTION_HEADER = "client_description"
 
     static USER_TEST_DATA = {
         email: "test@test.com",

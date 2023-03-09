@@ -1,7 +1,7 @@
 const { Exceptions } = require("../utils/exceptions");
 const { ServiceBase } = require("./servicebase");
 const { Sql } = require("../sql/sql");
-const { Utils } = require("../utils/utils")
+const { Utils, Strings } = require("../utils/utils")
 
 class UserStateSave extends ServiceBase {
 
@@ -63,7 +63,7 @@ class UserStateSave extends ServiceBase {
         return this.sqlDeleteWhere({
             tableName: "users_states",
             where: this.sqlAnd()
-                .add(this.sqlText(Utils.DoubleQuotes("user") + "=@user", { user: this.value("user") }))
+                .add(this.sqlText(Strings.DoubleQuotes("user") + "=@user", { user: this.value("user") }))
                 .add(this.sqlText("upper(module)=upper(@module)", { module: this.value("module") })),
         })
     }
@@ -105,7 +105,7 @@ class UserStateGet extends ServiceBase {
             ],
             from: "users_states",
             where: this.sqlAnd()
-                .add(this.sqlText(Utils.DoubleQuotes("user") + "=@user", { user: this.value("user") }))
+                .add(this.sqlText(Strings.DoubleQuotes("user") + "=@user", { user: this.value("user") }))
                 .add(this.sqlText("upper(module)=upper(@module)", { module: this.value("module") })),
         })
     }

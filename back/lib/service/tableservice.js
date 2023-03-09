@@ -1,5 +1,6 @@
 const { Exceptions } = require("../utils/exceptions.js");
 const { ServiceBase } = require("../service/servicebase");
+const { Messages } = require("../utils/messages");
 
 class TableServiceBase extends ServiceBase {
 
@@ -117,7 +118,7 @@ class TableInsertUpdateServiceBase extends TableCrudServiceBase {
     validateNotDuplicated() {
         return this.dbSelect(this.sqlNotDuplicated()).then(rows => {
             if (1 < rows.length || (rows.length == 1 && rows[0].id != this.id())) {
-                throw Exceptions.DuplicatedEntity(this.duplicatedMessage())
+                throw Exceptions.Validation({ message: this.duplicatedMessage() })
             }
         })
     }
@@ -127,7 +128,7 @@ class TableInsertUpdateServiceBase extends TableCrudServiceBase {
     }
 
     duplicatedMessage() {
-        return this.parameters.duplicatedMessage || this.tableName + " registro duplicado";
+        return Messages.Section({ title: "Registro duplicado" });
     }
 
 }

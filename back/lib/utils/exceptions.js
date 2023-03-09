@@ -101,7 +101,6 @@ class Exceptions {
         return new Exception({
             type: Exceptions.VALIDATION,
             message: parameters.message || "Error de validación",
-            detail: parameters.detail,
         })
     }
 
