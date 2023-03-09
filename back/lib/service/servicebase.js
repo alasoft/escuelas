@@ -28,7 +28,10 @@ class ServiceBase extends ObjectBase {
     }
 
     tenant() {
-        return this.user().tenant;
+        const user = this.user();
+        if (user != undefined) {
+            return user.tenant;
+        }
     }
 
     values() {
@@ -141,10 +144,10 @@ class ServiceBase extends ObjectBase {
         if (checkId && Utils.IsNotDefined(parameters.values.id)) {
             parameters.values.id = this.id();
         }
-        this.valuesToSend = parameters.values;
-        if (parameters.tenant == undefined) {
-            this.valuesToSend.tenant = this.tenant();
+        if (Utils.IsNotDefined(parameters.values.tenant)) {
+            parameters.values.tenant = this.tenant();
         }
+        this.valuesToSend = parameters.values;
     }
 
     defineValuesToSendInsert(parameters) {

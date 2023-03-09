@@ -40,9 +40,9 @@ class RegisterView extends EntryView {
             .then(() =>
                 this.register())
             .then(() =>
-                this.close(true))
-            .then(() =>
                 this.exitMessage())
+            .then(() =>
+                this.close(true))
             .catch(err =>
                 this.handleError(err))
     }
