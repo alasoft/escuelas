@@ -2,21 +2,32 @@ class MateriasCurso extends CursosDetalle {
 
     extraConfiguration() {
         return {
+            mode: "view",
             popup: {
                 title: "Materias dictadas en el Curso",
             },
             components: {
-                toolbar: {}
+                filter: {
+                    width: 280
+                }
             }
         }
     }
 
-    defineTemplate() {
-        return new MateriasCursoTemplate();
+    labelText() {
+        return "Materias por Curso"
     }
 
     path() {
         return "materias_cursos";
+    }
+
+    itemAñoLectivo() {
+        return super.itemAñoLectivo({ readOnly: false })
+    }
+
+    itemCurso() {
+        return super.itemCurso({ deferRendering: false })
     }
 
     listColumns() {
@@ -34,15 +45,34 @@ class MateriasCurso extends CursosDetalle {
         return [this.itemInsert()]
     }
 
-    itemTps() {
+    itemSpace() {
+        return {
+            text: "   ",
+            location: "before"
+        }
+    }
+
+    contextMenuItems() {
+        return super.contextMenuItems().concat(this.contextMenuEvaluaciones())
+    }
+
+    contextMenuEvaluaciones() {
+        return {
+            text: "Evaluaciones",
+            onClick: () => this.evaluaciones()
+        }
+    }
+
+    itemEvaluaciones() {
         if (this.list().hasRows()) {
             return {
                 widget: "dxButton",
                 location: "before",
                 options: {
-                    text: "Trabajos Prácticos",
-                    icon: "file",
-                    onClick: e => this.tps()
+                    text: "Evaluaciones",
+                    //                    stylingMode: "contained",
+                    icon: "edit",
+                    onClick: e => this.evaluaciones()
                 }
             }
         }
@@ -62,15 +92,15 @@ class MateriasCurso extends CursosDetalle {
         }
     }
 
-    itemEvaluaciones() {
+    itemTps() {
         if (this.list().hasRows()) {
             return {
                 widget: "dxButton",
                 location: "before",
                 options: {
-                    text: "Evaluaciones",
-                    icon: "edit",
-                    onClick: e => this.evaluaciones()
+                    text: "Trabajos Prácticos",
+                    icon: "file",
+                    onClick: e => this.tps()
                 }
             }
         }

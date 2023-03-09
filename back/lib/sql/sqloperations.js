@@ -1,8 +1,7 @@
 const { DbStates } = require("../data/dbstates");
-const { Dates } = require("../utils/dates");
 const { Exceptions } = require("../utils/exceptions");
 const { TextBuilder } = require("../utils/textbuilder");
-const { Utils } = require("../utils/utils");
+const { Utils, Strings, Dates } = require("../utils/utils");
 const { SqlWhere } = require("./sqloperators");
 const { SqlType } = require("./sqltype");
 
@@ -29,7 +28,7 @@ class SqlCreate {
             .add(this.tableName)
             .add("(");
         Object.keys(this.columns).forEach(
-            (key, i) => textBuilder.add((0 < i ? ", " : "") + Utils.DoubleQuotes(key) + " " + this.columns[key])
+            (key, i) => textBuilder.add((0 < i ? ", " : "") + Strings.DoubleQuotes(key) + " " + this.columns[key])
         )
         return textBuilder
             .add(")")
@@ -86,11 +85,11 @@ class SqlBaseCrud {
     }
 
     whereTenant() {
-        return "tenant=" + Utils.SingleQuotes(this.values.tenant);
+        return "tenant=" + Strings.SingleQuotes(this.values.tenant);
     }
 
     whereId() {
-        return "id=" + Utils.SingleQuotes(this.values.id);
+        return "id=" + Strings.SingleQuotes(this.values.id);
     }
 
     sqlWhere() {
@@ -121,7 +120,7 @@ class SqlInsert extends SqlBaseCrud {
             .add(this.tableName)
             .add("(");
         Object.keys(this.values).forEach(
-            (key, i) => textBuilder.add((0 < i ? ", " : "") + Utils.DoubleQuotes(key))
+            (key, i) => textBuilder.add((0 < i ? ", " : "") + Strings.DoubleQuotes(key))
         )
         textBuilder.add(")")
             .add("values")

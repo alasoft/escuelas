@@ -5,10 +5,10 @@ const {
     TableUpdateService,
     TableDeleteService
 } = require("../lib/service/tableservice");
-const { Dates } = require("../lib/utils/dates");
-const { Exceptions } = require("../lib/utils/exceptions.js");
-const { Utils } = require("../lib/utils/utils.js");
+const { Strings, Dates } = require("../lib/utils/utils");
 const { Messages } = require("../lib/utils/messages");
+const { Exceptions } = require("../lib/utils/exceptions.js");
+
 
 class PeriodosListService extends TableListService {
 
@@ -72,7 +72,7 @@ class PeriodosInsertService extends TableInsertService {
     }
 
     duplicatedMessage() {
-        return PeriodosCommonService.DuplicatedMessage();
+        return PeriodosCommonService.DuplicatedMessage(this);
     }
 
 }
@@ -90,7 +90,7 @@ class PeriodosUpdateService extends TableUpdateService {
     }
 
     duplicatedMessage() {
-        return PeriodosCommonService.DuplicatedMessage();
+        return PeriodosCommonService.DuplicatedMessage(this);
     }
 
 }
@@ -111,8 +111,11 @@ class PeriodosCommonService {
         })
     }
 
-    static DuplicatedMessage() {
-        return "Período con nombre duplicado";
+    static DuplicatedMessage(service) {
+        return Messages.Section({
+            title: "Ya existe un Período de nombre",
+            lines: Strings.SingleQuotes(service.value("nombre"))
+        });
     }
 
     static ValidateDesdeHasta(service) {

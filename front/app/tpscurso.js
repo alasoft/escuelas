@@ -2,6 +2,7 @@ class TpsCurso extends CursosMateriasDetalle {
 
     extraConfiguration() {
         return {
+            mode: "view",
             popup: {
                 title: "Trabajos Prácticos por Curso y Materia",
                 height: 600,
@@ -13,10 +14,6 @@ class TpsCurso extends CursosMateriasDetalle {
                 }
             }
         }
-    }
-
-    itemCurso() {
-        return super.itemCurso({ readOnly: true })
     }
 
     setDataSource(materiacurso) {

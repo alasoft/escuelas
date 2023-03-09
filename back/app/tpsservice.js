@@ -1,6 +1,5 @@
-const { Dates } = require("../lib/utils/dates");
 const { Exceptions } = require("../lib/utils/exceptions");
-const { Utils } = require("../lib/utils/utils");
+const { Utils, Strings, Dates } = require("../lib/utils/utils");
 const { Messages } = require("../lib/utils/messages");
 const {
     TableListService,
@@ -68,7 +67,7 @@ class TpsInsertService extends TableInsertService {
     }
 
     duplicatedMessage() {
-        return TpsCommonService.DuplicatedMessage();
+        return TpsCommonService.DuplicatedMessage(this);
     }
 
 }
@@ -85,7 +84,7 @@ class TpsUpdateService extends TableUpdateService {
         return TpsCommonService.SqlNotDuplicated(this);
     }
     duplicatedMessage() {
-        return TpsCommonService.DuplicatedMessage();
+        return TpsCommonService.DuplicatedMessage(this);
     }
 
 }
@@ -128,8 +127,11 @@ class TpsCommonService {
         })
     }
 
-    static DuplicatedMessage() {
-        return "Nombre de Trabajo Práctico duplicado";
+    static DuplicatedMessage(service) {
+        return Messages.Section({
+            title: "Ya existe un Trabajo Práctico de nombre",
+            lines: Strings.SingleQuotes(service.value("nombre"))
+        })
     }
 
     static ValidateDesdeHasta(service) {

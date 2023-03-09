@@ -33,7 +33,7 @@ class Rest extends ObjectBase {
         //        const data = this.dataToString(parameters.verb, parameters.data);
         return new Promise((resolve, reject) => $.ajax({
             url: url,
-            headers: this.headers(),
+            headers: this.headers(parameters.verb),
             type: type,
             data: JSON.stringify(data),
             success: data =>
@@ -69,10 +69,11 @@ class Rest extends ObjectBase {
         }
     }
 
-    headers() {
+    headers(verb) {
         return Utils.Merge(this.class().Headers, {
-            token: App.GetToken()
-        })
+                token: App.GetToken()
+            },
+            Utils.Evaluate(this.parameters.headers, verb))
     }
 
     static Headers = {

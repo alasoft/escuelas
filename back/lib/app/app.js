@@ -3,8 +3,7 @@ const { UsersCreateTable } = require("../users/users");
 const { UsersLogged } = require("../users/userslogged");
 const { UsersRest } = require("../rest/usersrest");
 const { UserStateRest } = require("../rest/userstaterest");
-const { Dates } = require("../utils/dates");
-const { Utils } = require("../utils/utils");
+const { Utils, Dates } = require("../utils/utils");
 const { Exception } = require("../utils/exceptions");
 const { Path } = require("../utils/path");
 

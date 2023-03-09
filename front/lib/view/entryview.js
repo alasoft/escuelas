@@ -119,5 +119,29 @@ class EntryView extends DialogView {
         return this.form().getEditorValue(dataField);
     }
 
+    getEditorText(dataField) {
+        return this.form().getEditorText(dataField);
+    }
+
+    concatenateTexts(names, separatorValues = ", ", separatorSubValues = " ") {
+
+        function subValues(view, subNames) {
+            const subValues = subNames.split("+").map(subName =>
+                view.getEditorText(subName));
+            return Strings.Concatenate(subValues, separatorSubValues)
+        }
+
+        const values = names.split(",").map(name => {
+            if (Strings.Contains(name, "+")) {
+                return subValues(this, name)
+            } else {
+                return this.getEditorText(name)
+            }
+        })
+
+        return Strings.Concatenate(values, separatorValues);
+
+    }
+
 
 }
