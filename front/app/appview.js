@@ -1,7 +1,7 @@
 class AppView extends AppViewBase {
 
     toolbarItems() {
-        return super.toolbarItems().concat([this.userButton()])
+        return super.toolbarItems().concat([this.userButton(), this.sistemaButton()])
     }
 
     userButton() {
@@ -11,6 +11,17 @@ class AppView extends AppViewBase {
             options: {
                 icon: "rename",
                 text: "Docente: " + App.UserNombreApellido()
+            }
+        }
+    }
+
+    sistemaButton() {
+        return {
+            widget: "dxButton",
+            location: "after",
+            options: {
+                icon: "group",
+                text: App.ShortName()
             }
         }
     }
@@ -91,10 +102,8 @@ class AppView extends AppViewBase {
         itemEvaluaciones.addChild({
             text: "Trabajos Prácticos",
             onClick: e => new TpsCurso().render()
-        }).addChild({
-            text: "Todos",
-            onClick: e => new Tps().render()
         })
+
 
         itemEvaluaciones.addChild({
             text: "Calificaciones",

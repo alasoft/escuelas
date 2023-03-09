@@ -210,7 +210,7 @@ class ListView extends View {
     }
 
     toolbarItems() {
-        return [this.itemInsert()]
+        return [this.itemInsert(), this.itemExportButton()]
     }
 
     itemInsert() {
@@ -332,7 +332,7 @@ class ListView extends View {
     }
 
     focus() {
-        //        this.list().focus();
+        this.list().focus();
     }
 
     focusRowById(id) {

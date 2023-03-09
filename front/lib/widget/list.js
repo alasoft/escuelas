@@ -28,9 +28,6 @@ class List extends Widget {
             editing: {
                 confirmDelete: false,
             },
-            export: {
-                enabled: true
-            }
         })
     }
 

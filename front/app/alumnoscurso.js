@@ -25,10 +25,18 @@ class AlumnosCurso extends CursosDetalle {
         itemAñoLectivo() {
             return super.itemAñoLectivo({ readOnly: false })
         }
+
+
+
+*/
+
     itemCurso() {
         return super.itemCurso({ deferRendering: false })
     }
-*/
+
+    cursoLoadFirst() {
+        return false;
+    }
 
     itemImport() {
         if (this.añoLectivo() == Dates.ThisYear() && this.curso() != undefined) {

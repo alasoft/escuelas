@@ -6,7 +6,11 @@ class Tps extends AñoLectivoFilterView {
 
     extraConfiguration() {
         return {
-            fullScreen: false,
+            mode: "popup",
+            popup: {
+                title: "Trabajos Prácticos de todos los Cursos",
+                fullScreen: true,
+            }
         }
     }
 

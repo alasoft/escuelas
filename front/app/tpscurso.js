@@ -83,6 +83,26 @@ class TpsCurso extends CursosMateriasDetalle {
         this.setDataSource(e.value);
     }
 
+    toolbarItems() {
+        return [this.itemInsert(), this.itemTodos()]
+    }
+
+    itemTodos() {
+        return {
+            widget: "dxButton",
+            location: "before",
+            options: {
+                text: "Todos los Trabajos Prácticos",
+                icon: "folder",
+                onClick: e => this.todos()
+            }
+        }
+    }
+
+    todos() {
+        new Tps().render()
+    }
+
 }
 
 class TpsCursoForm extends FormView {

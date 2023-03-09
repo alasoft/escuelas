@@ -62,12 +62,16 @@ class CursosDetalle extends FilterView {
                 Ds({
                     path: "cursos",
                     filter: { añolectivo: añolectivo },
-                    onLoaded: this.filter().onLoadedSetFirstValue("curso")
+                    onLoaded: this.cursoLoadFirst() ? this.filter().onLoadedSetFirstValue("curso") : undefined
                 })
             );
         } else {
             this.filter().setEditorDataSource("curso", null);
         }
+    }
+
+    cursoLoadFirst() {
+        return true;
     }
 
     setDataSource(curso) {

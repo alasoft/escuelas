@@ -20,7 +20,7 @@ class App extends AppBase {
     }
 
     static Version() {
-        return "1.0"
+        return "0.0"
     }
 
     static Host() {
