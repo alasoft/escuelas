@@ -2,7 +2,9 @@ class AlumnosCurso extends CursosDetalle {
 
     extraConfiguration() {
         return {
-            mode: "view",
+            popup: {
+                title: "Alumnos por Curso"
+            },
             components: {
                 filter: {
                     width: 280
@@ -19,13 +21,14 @@ class AlumnosCurso extends CursosDetalle {
         return "Alumnos por Curso"
     }
 
-    itemAñoLectivo() {
-        return super.itemAñoLectivo({ readOnly: false })
-    }
-
+    /*    
+        itemAñoLectivo() {
+            return super.itemAñoLectivo({ readOnly: false })
+        }
     itemCurso() {
         return super.itemCurso({ deferRendering: false })
     }
+*/
 
     itemImport() {
         if (this.añoLectivo() == Dates.ThisYear() && this.curso() != undefined) {

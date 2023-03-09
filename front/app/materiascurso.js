@@ -2,7 +2,6 @@ class MateriasCurso extends CursosDetalle {
 
     extraConfiguration() {
         return {
-            mode: "view",
             popup: {
                 title: "Materias dictadas en el Curso",
             },
@@ -22,13 +21,15 @@ class MateriasCurso extends CursosDetalle {
         return "materias_cursos";
     }
 
-    itemAñoLectivo() {
-        return super.itemAñoLectivo({ readOnly: false })
-    }
+    /*    
+        itemAñoLectivo() {
+            return super.itemAñoLectivo({ readOnly: false })
+        }
 
-    itemCurso() {
-        return super.itemCurso({ deferRendering: false })
-    }
+        itemCurso() {
+            return super.itemCurso({ deferRendering: false })
+        }
+    */
 
     listColumns() {
         return [
@@ -39,10 +40,6 @@ class MateriasCurso extends CursosDetalle {
 
     toolbar() {
         return this.components().toolbar;
-    }
-
-    toolbarItems() {
-        return [this.itemInsert()]
     }
 
     itemSpace() {

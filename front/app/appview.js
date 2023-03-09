@@ -65,15 +65,18 @@ class AppView extends AppViewBase {
             onClick: e => new Cursos().render()
         })
 
+        /*        
+
         itemDictado.addChild({
             text: "Materias dictadas",
             onClick: e => new MateriasCurso().render()
         })
 
-        itemDictado.addChild({
-            text: "Alumnos",
-            onClick: e => new AlumnosCurso().render()
-        })
+                itemDictado.addChild({
+                    text: "Alumnos",
+                    onClick: e => new AlumnosCurso().render()
+                })
+        */
 
         itemDictado.addChild({
             text: "Dias y horas",

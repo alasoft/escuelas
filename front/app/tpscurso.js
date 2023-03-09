@@ -16,6 +16,22 @@ class TpsCurso extends CursosMateriasDetalle {
         }
     }
 
+    labelText() {
+        return "Trabajos Prácticos por Curso y Materia"
+    }
+
+    itemAñoLectivo() {
+        return super.itemAñoLectivo({ readOnly: false })
+    }
+
+    itemCurso() {
+        return super.itemCurso({ deferRendering: false })
+    }
+
+    itemMateriaCurso() {
+        return super.itemMateriaCurso({ deferRendering: false })
+    }
+
     setDataSource(materiacurso) {
         if (materiacurso != undefined) {
             this.list().setDataSource(

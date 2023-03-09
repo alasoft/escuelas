@@ -332,7 +332,7 @@ class ListView extends View {
     }
 
     focus() {
-        this.list().focus();
+        //        this.list().focus();
     }
 
     focusRowById(id) {
@@ -351,7 +351,7 @@ class ListView extends View {
 
     loadState() {
         return Users.GetState({ module: this.className() }).then(s =>
-            this.setState(JSON.parse(s)))
+            this.setState(s != null ? JSON.parse(s) : { list: null }))
     }
 
     saveState() {

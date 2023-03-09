@@ -18,6 +18,11 @@ class Cursos extends AñoLectivoFilterView {
         return "Cursos";
     }
 
+    toolbarItems() {
+        return [this.itemInsert(), this.itemAlumnosCurso(), this.itemMateriasCurso()]
+    }
+
+
     itemAlumnosCurso() {
         if (this.list().hasRows()) {
             return {

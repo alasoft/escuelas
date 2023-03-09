@@ -84,7 +84,7 @@ class UserStateGet extends ServiceBase {
             .then(() =>
                 this.getState())
             .then(row =>
-                this.sendOkey(row != undefined ? row.state : undefined))
+                this.sendOkey(row != undefined ? row.state : null))
             .catch(err =>
                 this.sendError(err))
 
