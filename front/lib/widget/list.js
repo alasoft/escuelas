@@ -81,6 +81,10 @@ class List extends Widget {
         return this.focusedRowData().id;
     }
 
+    firstId() {
+        return this.rowData(0).id;
+    }
+
     deleteRow(parameters) {
         return new Rest({ path: parameters.path }).promise({
                 verb: "delete",
@@ -111,6 +115,10 @@ class List extends Widget {
             () =>
             id ? this.focusRowById(id) : undefined
         )
+    }
+
+    focusFirstRow() {
+        this.setProperty("focusedRowIndex", 0)
     }
 
     focusRowById(id) {

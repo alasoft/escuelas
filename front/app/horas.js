@@ -11,7 +11,7 @@ class Horas extends AñoLectivoFilterView {
     }
 
     labelText() {
-        return "Dias y Horas de Materias";
+        return "Horarios de Materias";
     }
 
     listColumns() {

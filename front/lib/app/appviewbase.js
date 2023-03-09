@@ -24,6 +24,10 @@ class AppViewBase extends View {
         })
     }
 
+    items() {
+        return this.components().items;
+    }
+
     defineTemplate() {
         return new AppViewTemplate();
     }
@@ -51,6 +55,10 @@ class AppViewBase extends View {
         } else {
             App.BlankViewElement();
         }
+    }
+
+    selectFirstItem() {
+        this.items().focusFirstRow();
     }
 
 }

@@ -3,7 +3,7 @@ class MateriasDias extends CursosMateriasDetalle {
     extraConfiguration() {
         return {
             popup: {
-                title: "Dias y Horas por Curso y Materia",
+                title: "Horarios por Curso y Materia",
             }
         }
     }

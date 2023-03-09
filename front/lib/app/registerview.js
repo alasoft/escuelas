@@ -4,6 +4,10 @@ class RegisterView extends EntryView {
         super(parameters);
     }
 
+    path() {
+        return "users";
+    }
+
     extraConfiguration() {
         return {
             popup: {

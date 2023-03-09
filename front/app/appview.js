@@ -51,6 +51,8 @@ class AppView extends AppViewBase {
                 App.YesNo({ message: "Cierra la Sesión ?" }).then(data => {
                     if (data.okey) {
                         App.Login()
+                    } else {
+                        App.SelectFirstItem()
                     }
                 })
             }
@@ -58,17 +60,17 @@ class AppView extends AppViewBase {
 
         itemDatos.addChild({
             text: "Escuelas",
-            onClick: e => Escuelas.Render()
+            onClick: e => new Escuelas().render()
         })
 
         itemDatos.addChild({
             text: "Modalidades",
-            onClick: e => Modalidades.Render()
+            onClick: e => new Modalidades().render()
         })
 
         itemDatos.addChild({
             text: "Materias",
-            onClick: e => Materias.Render()
+            onClick: e => new Materias().render()
         })
 
         itemDictado.addChild({
@@ -76,21 +78,8 @@ class AppView extends AppViewBase {
             onClick: e => new Cursos().render()
         })
 
-        /*        
-
         itemDictado.addChild({
-            text: "Materias dictadas",
-            onClick: e => new MateriasCurso().render()
-        })
-
-                itemDictado.addChild({
-                    text: "Alumnos",
-                    onClick: e => new AlumnosCurso().render()
-                })
-        */
-
-        itemDictado.addChild({
-            text: "Dias y horas",
+            text: "Horarios",
             onClick: e => new Horas().render()
         })
 

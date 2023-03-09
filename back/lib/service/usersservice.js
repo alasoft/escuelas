@@ -24,7 +24,7 @@ class UsersRegisterService extends UsersService {
             .then(() =>
                 this.prepareValues())
             .then(() =>
-                this.dbExecute(this.sqlInsert()))
+                this.dbExecute(this.sql()))
             .then(() =>
                 this.sendIdDto())
             .catch(err =>
@@ -60,8 +60,8 @@ class UsersRegisterService extends UsersService {
         this.setValue("password", Utils.Encrypt(this.value("password")))
     }
 
-    sqlInsert() {
-        return Sql.Insert({
+    sql() {
+        return this.sqlInsert({
             tableName: "users",
             values: this.values()
         })

@@ -19,6 +19,10 @@ class TreeItems extends Widget {
         })
     }
 
+    focusFirstRow() {
+        this.setProperty("focusedRowIndex", 0)
+    }
+
     onFocusedRowChanged(e) {
         if (e.row.data.onClick) {
             e.row.data.onClick();

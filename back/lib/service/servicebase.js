@@ -94,6 +94,10 @@ class ServiceBase extends ObjectBase {
         return Sql.Text({ items: items, values: values });
     }
 
+    sqlIn(columnName, values) {
+        return columnName + " in (" + Sql.In(values) + ")";
+    }
+
     sqlLike(value) {
         return Sql.Like(value)
     }
@@ -138,7 +142,9 @@ class ServiceBase extends ObjectBase {
             parameters.values.id = this.id();
         }
         this.valuesToSend = parameters.values;
-        this.valuesToSend.tenant = this.tenant();
+        if (parameters.tenant == undefined) {
+            this.valuesToSend.tenant = this.tenant();
+        }
     }
 
     defineValuesToSendInsert(parameters) {

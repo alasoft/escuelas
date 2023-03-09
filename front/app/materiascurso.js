@@ -26,20 +26,26 @@ class MateriasCurso extends CursosDetalle {
             return super.itemAñoLectivo({ readOnly: false })
         }
 
-        itemCurso() {
-            return super.itemCurso({ deferRendering: false })
-        }
     */
+
+    itemCurso() {
+        return super.itemCurso({ deferRendering: false })
+    }
+
+    cursoLoadFirst() {
+        return false;
+    }
 
     listColumns() {
         return [
             Column.Id(),
-            Column.Text({ dataField: "materianombre", caption: "Materia" })
+            Column.Text({ dataField: "materianombre", caption: "Materia", width: 300 }),
+            Column.Text({ dataField: "horarios" })
         ]
     }
 
-    toolbar() {
-        return this.components().toolbar;
+    toolbarItems() {
+        return [this.itemInsert(), this.itemMateriasDias(), this.itemTps()];
     }
 
     itemSpace() {
@@ -81,7 +87,7 @@ class MateriasCurso extends CursosDetalle {
                 widget: "dxButton",
                 location: "before",
                 options: {
-                    text: "Dias y Horas agendados",
+                    text: "Horarios",
                     icon: "event",
                     onClick: e => this.materiasDias()
                 }
@@ -126,7 +132,8 @@ class MateriasCurso extends CursosDetalle {
             masterView: this,
             añolectivo: this.añoLectivo(),
             curso: this.curso(),
-            materiacurso: this.id()
+            materiacurso: this.id(),
+            mode: "popup"
         }
     }
 

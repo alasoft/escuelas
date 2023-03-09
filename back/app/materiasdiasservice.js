@@ -6,7 +6,6 @@ const {
     TableUpdateService,
     TableDeleteService
 } = require("../lib/service/tableservice");
-const { CursosCommonService } = require("./cursosservice")
 
 class MateriasDiasListService extends TableListService {
 
@@ -15,7 +14,6 @@ class MateriasDiasListService extends TableListService {
             MateriasDiasCommonService.SqlBaseParameters(this),
             this.sqlExtraParameters())
     }
-
 
     sqlExtraParameters() {
         return {
@@ -27,7 +25,6 @@ class MateriasDiasListService extends TableListService {
             ]
         }
     }
-
 
 }
 

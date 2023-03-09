@@ -132,7 +132,7 @@ class AppBase {
     static AfterLogin(closeData) {
         if (closeData.okey) {
             return this.LoadMemoryTables().then(() =>
-                this.View().render())
+                this.ReloadView())
         } else {
             return this.Exit()
         }
@@ -177,6 +177,13 @@ class AppBase {
 
     static DefineViewTest() {
         return new AppViewTest();
+    }
+
+    static ReloadView() {
+        this._View = undefined;
+        this._ViewNormal = undefined;
+        this._ViewTest = undefined;
+        this.View().render();
     }
 
     static AppElement() {
@@ -284,6 +291,10 @@ class AppBase {
 
     static UserId() {
         return this.GetUser().id;
+    }
+
+    static SelectFirstItem() {
+        this.View().selectFirstItem();
     }
 
 }

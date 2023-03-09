@@ -154,6 +154,12 @@ class Strings {
 
 class Dates {
 
+    static DayNames = ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"]
+
+    static DayName(day) {
+        return this.DayNames[day - 1];
+    }
+
     static Date() {
         return new Date();
     }

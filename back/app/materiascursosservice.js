@@ -5,7 +5,7 @@ const {
     TableUpdateService,
     TableDeleteService
 } = require("../lib/service/tableservice");
-const { Utils } = require("../lib/utils/utils");
+const { Utils, Dates } = require("../lib/utils/utils");
 
 class MateriasCursosListService extends TableListService {
 
@@ -30,6 +30,51 @@ class MateriasCursosListService extends TableListService {
             order: "mat.nombre"
         }
     }
+
+    sendRows(rows) {
+        return this.dbSelect(this.sqlHorarios(this.materiasCursos(rows)))
+            .then(hoursRows =>
+                this.hoursRows = hoursRows)
+            .then(() =>
+                super.sendRows(rows))
+    }
+
+    materiasCursos(rows) {
+        return rows.map(row =>
+            row.id);
+    }
+
+    sqlHorarios(materiasCursos) {
+        return this.sqlSelect({
+            columns: [
+                "materiacurso",
+                "dia",
+                "desde",
+                "hasta"
+            ],
+            from: "materias_dias",
+            where: this.sqlAnd().addIf(0 < materiasCursos.length, () =>
+                this.sqlIn("materiacurso", materiasCursos))
+        })
+    }
+
+    transformRow(row) {
+        row.horarios = this.horarios(row.id)
+    }
+
+    horarios(materiacurso) {
+        let horarios = "";
+        for (const row of this.hoursRows) {
+            if (row.materiacurso == materiacurso) {
+                if (horarios != "") {
+                    horarios += " - "
+                }
+                horarios += Dates.DayName(row.dia) + " de " + row.desde.substring(0, 5) + " a " + row.hasta.substring(0, 5)
+            }
+        }
+        return horarios;
+    }
+
 
 }
 
