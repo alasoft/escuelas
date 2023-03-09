@@ -23,4 +23,9 @@ class App extends AppBase {
         return "1.0"
     }
 
+    static Host() {
+        return "http://alasoft.sytes.net:9090";
+    }
+
+
 }
