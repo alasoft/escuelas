@@ -5,7 +5,7 @@ class Evaluaciones extends CursosMateriasDetalle {
             mode: "view",
             components: {
                 label: {
-                    text: "Evaluaciones"
+                    text: "Calificaciones"
                 },
                 list: {
                     key: "id",
@@ -52,7 +52,7 @@ class Evaluaciones extends CursosMateriasDetalle {
             return [
                 this.itemAlumnos(),
                 this.itemTps(),
-                this.itemExportButton(),
+                this.itemExport(),
             ]
         }
     }

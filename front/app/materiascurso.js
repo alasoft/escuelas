@@ -21,13 +21,6 @@ class MateriasCurso extends CursosDetalle {
         return "materias_cursos";
     }
 
-    /*    
-        itemAñoLectivo() {
-            return super.itemAñoLectivo({ readOnly: false })
-        }
-
-    */
-
     itemCurso() {
         return super.itemCurso({ deferRendering: false })
     }
@@ -39,13 +32,22 @@ class MateriasCurso extends CursosDetalle {
     listColumns() {
         return [
             Column.Id(),
-            Column.Text({ dataField: "materianombre", caption: "Materia", width: 300 }),
-            Column.Text({ dataField: "horarios" })
+            Column.Text({
+                dataField: "materianombre",
+                caption: "Materia",
+                width: 300,
+            }),
+            Column.Text({
+                dataField: "horarios",
+                template: (container, options) => {
+                    $("<div>").html(options.value).appendTo(container)
+                }
+            })
         ]
     }
 
     toolbarItems() {
-        return [this.itemInsert(), this.itemMateriasDias(), this.itemTps()];
+        return [this.itemInsert(), this.itemHorarios()];
     }
 
     itemSpace() {
@@ -81,7 +83,7 @@ class MateriasCurso extends CursosDetalle {
         }
     }
 
-    itemMateriasDias() {
+    itemHorarios() {
         if (this.list().hasRows()) {
             return {
                 widget: "dxButton",
@@ -89,7 +91,7 @@ class MateriasCurso extends CursosDetalle {
                 options: {
                     text: "Horarios",
                     icon: "event",
-                    onClick: e => this.materiasDias()
+                    onClick: e => this.horarios()
                 }
             }
         }
@@ -113,7 +115,7 @@ class MateriasCurso extends CursosDetalle {
         new TpsCurso(this.detailData()).render();
     }
 
-    materiasDias() {
+    horarios() {
         new MateriasDias(this.detailData()).render()
     }
 

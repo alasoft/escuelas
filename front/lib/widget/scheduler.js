@@ -8,12 +8,12 @@ class Scheduler extends Widget {
         return Utils.Merge(super.defaultConfiguration(), {
             timeZone: App.ZONA_HORARIA_ARGENTINA,
             currentView: 'week',
-            startDayHour: 9,
-            endDayHour: 23,
+            startDayHour: 7,
+            endDayHour: 22,
             showAllDayPanel: false,
             showCurrentTimeIndicator: false,
-            startDateExpr: "desde",
-            endDateExpr: "hasta",
+            startDateExpr: "fechaDesde",
+            endDateExpr: "fechaHasta",
         })
     }
 

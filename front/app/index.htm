@@ -36,6 +36,9 @@
     <script src="https://cdn3.devexpress.com/jslib/21.2.9/js/dx.all.js"></script>
     <script src="https://cdn3.devexpress.com/jslib/21.2.9/js/localization/dx.messages.es.js"></script>
 
+    <script src="https://cdn3.devexpress.com/jslib/22.2.3/js/dx.all.js"></script>
+    <script src="https://cdn3.devexpress.com/jslib/22.2.3/js/localization/dx.messages.es.js"></script>
+
     
 -->
 
@@ -144,7 +147,12 @@
 
 <script>
     $(function() {
-        App.InitUserTest()
+        App.InitUserTest();
+        /*        
+                App.InitTest().then(() => new DiasCalendario({
+                    añoLectivo: 2023
+                }).render())
+        */
     })
 </script>
 

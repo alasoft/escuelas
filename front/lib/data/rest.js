@@ -90,6 +90,7 @@ class Rest extends ObjectBase {
             headers: headers,
             data: data,
             type: "POST",
+            dataType: "json",
             success: data =>
                 resolve(data),
             error: err => {

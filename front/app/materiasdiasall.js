@@ -9,7 +9,7 @@ class MateriasDiasAll extends AñoCursoMateriaFilterView {
     }
 
     listToolbarItems() {
-        return [this.itemInsert(), this.itemCalendario(), this.itemExportButton(), this.itemSearchPanel()]
+        return [this.itemInsert(), this.itemCalendario(), this.itemExport(), this.itemSearchPanel()]
     }
 
     itemCalendario() {

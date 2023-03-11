@@ -14,6 +14,24 @@ class Horas extends AñoLectivoFilterView {
         return "Horarios de Materias";
     }
 
+    toolbarItems() {
+        return [this.itemInsert(), this.itemCalendario(), this.itemExport()]
+    }
+
+    itemCalendario() {
+        if (this.hasRows()) {
+            return {
+                widget: "dxButton",
+                location: "before",
+                options: {
+                    icon: "event",
+                    text: "Calendario",
+                    onClick: e => this.calendario()
+                }
+            }
+        }
+    }
+
     listColumns() {
         return [
             Column.Id(),
@@ -57,6 +75,10 @@ class Horas extends AñoLectivoFilterView {
 
     formViewClass() {
         return HorasForm;
+    }
+
+    calendario() {
+        new DiasCalendario({ añoLectivo: this.añoLectivo() }).render();
     }
 
 }

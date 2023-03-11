@@ -12,6 +12,7 @@ class Column {
             allowHeaderFiltering: p.filtering != false,
             allowSorting: p.sorting != false,
             visible: p.visible != false,
+            cellTemplate: p.template,
             headerFilter: {
                 width: p.filterWidth
             },

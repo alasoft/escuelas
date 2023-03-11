@@ -23,13 +23,14 @@ class DataSource extends ObjectBase {
             path: this.parameters.path,
             key: this.keyName,
             loadMode: this.loadMode,
-            load: searchData =>
-                this.rest().promise({
+            load: searchData => {
+                return this.rest().promise({
                     verb: "list",
                     data: this.listData(searchData)
                 }).then(data =>
                     this.transformData(data)
-                ),
+                )
+            },
             byKey: this.parameters.cache == true ? undefined : key =>
                 this.rest().promise({
                     verb: "get",

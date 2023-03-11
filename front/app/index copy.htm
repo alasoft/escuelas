@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>Sistema de Escuelas</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.10.1/polyfill.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/3.8.0/exceljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    <script>
+        window.jQuery || document.write(decodeURIComponent('%3Cscript src="js/jquery.min.js"%3E%3C/script%3E'))
+    </script>
+
+    <!--
+    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/22.2.3/css/dx.material.blue.light.compact.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/22.2.3/css/dx.light.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/22.2.3/css/dx.material.orange.light.compact.css" />
+
+
+        <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/22.2.3/css/dx.softblue.compact.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/22.2.3/css/dx.material.teal.light.compact.css" />
+
+
+-->
+
+    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/22.2.3/css/dx.material.blue.light.compact.css" />
+
+    <!-- 
+
+    <script src="https://cdn3.devexpress.com/jslib/21.2.9/js/dx.all.js"></script>
+    <script src="https://cdn3.devexpress.com/jslib/21.2.9/js/localization/dx.messages.es.js"></script>
+
+    
+-->
+
+    <script src="https://cdn3.devexpress.com/jslib/22.2.3/js/dx.all.js"></script>
+    <script src="https://cdn3.devexpress.com/jslib/22.2.3/js/localization/dx.messages.es.js"></script>
+
+    <script src="../lib/app/appbase.js"></script>
+    <script src="../lib/utils/dates.js"></script>
+
+</head>
+
+<body>
+    <div id="scheduler"></div>
+</body>
+
+<script>
+    $(function() {
+
+        DevExpress.localization.locale("es");
+
+        //        const date = Dates.AddDays(Dates.FirstDayOfWeek(), 1)
+        const date = Dates.DateFromDayOfWeek(Dates.Today(), 5)
+
+        const data = [{
+            text: "Hola que tal",
+            fechaDesde: new Date(2023, 2, 6, 14, 30),
+            fechaHasta: new Date(2023, 2, 6, 15, 30)
+        }, {
+            text: "Hola que tal",
+            fechaDesde: new Date(2023, 2, 8, 17, 30),
+            fechaHasta: new Date(2023, 2, 8, 18, 30)
+        }, {
+            text: "Hola que tal",
+            fechaDesde: Dates.SetTime(date, "14:00:00"),
+            fechaHasta: Dates.SetTime(date, "16:00:00")
+        }]
+
+        $('#scheduler').dxScheduler({
+            timeZone: AppBase.ZONA_HORARIA_ARGENTINA,
+            dataSource: data,
+            currentView: 'week',
+            currentDate: Dates.Today(),
+            startDayHour: 7,
+            endDayHour: 22,
+            showAllDayPanel: false,
+            currentDate: Dates.Today(),
+            height: 800,
+            startDateExpr: "fechaDesde",
+            endDateExpr: "fechaHasta",
+        }).dxScheduler('instance');
+    })
+</script>
+
+</html>

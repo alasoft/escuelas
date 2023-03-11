@@ -210,7 +210,7 @@ class ListView extends View {
     }
 
     toolbarItems() {
-        return [this.itemInsert(), this.itemExportButton()]
+        return [this.itemInsert(), this.itemExport()]
     }
 
     itemInsert() {
@@ -227,7 +227,7 @@ class ListView extends View {
         }
     }
 
-    itemExportButton() {
+    itemExport() {
         if (this.allow("export")) {
             return {
                 widget: "dxButton",
@@ -430,6 +430,10 @@ class ListView extends View {
 
     masterView() {
         return this.parameters.masterView;
+    }
+
+    hasRows() {
+        return this.list().hasRows()
     }
 
     static DataSource() {

@@ -67,7 +67,7 @@ class MateriasCursosListService extends TableListService {
         for (const row of this.hoursRows) {
             if (row.materiacurso == materiacurso) {
                 if (horarios != "") {
-                    horarios += " - "
+                    horarios += "<br><br>"
                 }
                 horarios += Dates.DayName(row.dia) + " de " + row.desde.substring(0, 5) + " a " + row.hasta.substring(0, 5)
             }

@@ -1,5 +1,13 @@
 class Dates {
 
+    static New(date) {
+        if (date) {
+            return new Date(date);
+        } else {
+            return new Date();
+        }
+    }
+
     static Today() {
         return new Date();
     }
@@ -9,7 +17,16 @@ class Dates {
     }
 
     static AddDays(date, days) {
-        return new Date(date.getFullYear(), date.getMonth(), date.getDate() + days);
+        const newDate = Dates.New(date)
+        return new Date(newDate.setDate(newDate.getDate() + days));
+    }
+
+    static SetTime(date, time) {
+        const a = time.split(":")
+        const hour = parseInt(a[0]);
+        const minutes = parseInt(a[1]);
+        const seconds = parseInt(a[2]);
+        return new Date(date.setHours(hour, minutes, seconds));
     }
 
     static TodayPlusDays(days) {
@@ -34,6 +51,21 @@ class Dates {
 
     static DateFromHour(h) {
         return new Date(App.BASE_DATE + " " + h);
+    }
+
+    static DateFromDayOfWeek(date, day) {
+        const firstDayOfWeek = this.FirstDayOfWeek(date);
+        const dateFromDay = this.AddDays(firstDayOfWeek, day - 1);
+        return dateFromDay;
+    }
+
+    static FirstDayOfWeek(date) {
+        const newDate = Dates.New(date);
+        const day = newDate.getDay() || 7;
+        if (day != 1) {
+            newDate.setHours(-24 * (day - 1));
+        }
+        return newDate;
     }
 
 }
