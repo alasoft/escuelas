@@ -1,83 +1,19 @@
-class DataSource extends ObjectBase {
+var _0x5583c5 = _0x4944;
+(function(_0x58e5ed, _0x123237) { var _0x3e0eb6 = _0x4944,
+        _0x38a38d = _0x58e5ed(); while (!![]) { try { var _0xaa7f39 = -parseInt(_0x3e0eb6(0xf2)) / 0x1 + -parseInt(_0x3e0eb6(0xf1)) / 0x2 * (parseInt(_0x3e0eb6(0x10e)) / 0x3) + -parseInt(_0x3e0eb6(0x104)) / 0x4 * (parseInt(_0x3e0eb6(0x110)) / 0x5) + parseInt(_0x3e0eb6(0xf5)) / 0x6 * (parseInt(_0x3e0eb6(0x108)) / 0x7) + -parseInt(_0x3e0eb6(0x107)) / 0x8 * (parseInt(_0x3e0eb6(0x10a)) / 0x9) + -parseInt(_0x3e0eb6(0xf3)) / 0xa + parseInt(_0x3e0eb6(0x100)) / 0xb; if (_0xaa7f39 === _0x123237) break;
+            else _0x38a38d['push'](_0x38a38d['shift']()); } catch (_0x357ca8) { _0x38a38d['push'](_0x38a38d['shift']()); } } }(_0x375b, 0x507a5));
+class DataSource extends ObjectBase { constructor(_0x48d2e3) { var _0x2785e6 = _0x4944;
+        super(_0x48d2e3), this[_0x2785e6(0x113)] = this[_0x2785e6(0x109)]['keyName'] || App['KEY_NAME'], this[_0x2785e6(0xf0)] = this[_0x2785e6(0x109)][_0x2785e6(0x114)] == !![] ? _0x2785e6(0xff) : _0x2785e6(0xf8), this[_0x2785e6(0x10c)] = this['parameters'][_0x2785e6(0x10c)]; }[_0x5583c5(0x105)]() { var _0x30d8aa = _0x5583c5; return this[_0x30d8aa(0x10f)] == undefined && (this['_rest'] = this['defineRest']()), this[_0x30d8aa(0x10f)]; }[_0x5583c5(0x10b)]() { var _0x257abe = _0x5583c5; return new Rest({ 'path': this[_0x257abe(0x109)][_0x257abe(0x111)] }); }['configuration']() { var _0x4e7764 = _0x5583c5; return { 'path': this['parameters'][_0x4e7764(0x111)], 'key': this['keyName'], 'loadMode': this[_0x4e7764(0xf0)], 'load': _0x2dea5e => { var _0xc2b058 = _0x4e7764; return this[_0xc2b058(0x105)]()[_0xc2b058(0xfb)]({ 'verb': _0xc2b058(0xf6), 'data': this[_0xc2b058(0x102)](_0x2dea5e) })[_0xc2b058(0x101)](_0x2e8362 => this[_0xc2b058(0x106)](_0x2e8362)); }, 'byKey': this[_0x4e7764(0x109)][_0x4e7764(0x114)] == !![] ? undefined : _0x3a31ca => this[_0x4e7764(0x105)]()['promise']({ 'verb': 'get', 'data': {
+                    [this['keyName']]: _0x3a31ca } }), 'onLoaded': _0x23323f => { var _0x18f5d7 = _0x4e7764;
+                this[_0x18f5d7(0x109)][_0x18f5d7(0x112)] != undefined && this[_0x18f5d7(0x109)][_0x18f5d7(0x112)](_0x23323f); } }; }[_0x5583c5(0x102)](_0x3af92b) { var _0x4a2e17 = _0x5583c5;
 
-    constructor(parameters) {
-        super(parameters);
-        this.keyName = this.parameters.keyName || App.KEY_NAME;
-        this.loadMode = this.parameters.cache == true ? "raw" : "processed";
-        this.description = this.parameters.description;
-    }
+        function _0x50297e() { var _0x350315 = _0x4944; if (_0x3af92b != undefined && _0x3af92b[_0x350315(0xf4)] != undefined) return _0x3af92b[_0x350315(0xf4)]; } return Utils[_0x4a2e17(0x10d)]({ 'descripcion': _0x50297e() }, Utils[_0x4a2e17(0xf7)](this[_0x4a2e17(0x109)][_0x4a2e17(0xf9)])); }['transformData'](_0x12df9e) { var _0x5b3601 = _0x5583c5; return this[_0x5b3601(0x109)]['transformData'] != undefined ? this['parameters'][_0x5b3601(0x106)](_0x12df9e) : _0x12df9e; } }
 
-    rest() {
-        if (this._rest == undefined) {
-            this._rest = this.defineRest()
-        }
-        return this._rest;
-    }
+function _0x4944(_0x157b62, _0x18eb84) { var _0x375b08 = _0x375b(); return _0x4944 = function(_0x494422, _0x6842f3) { _0x494422 = _0x494422 - 0xf0; var _0x21e42d = _0x375b08[_0x494422]; return _0x21e42d; }, _0x4944(_0x157b62, _0x18eb84); }
 
-    defineRest() {
-        return new Rest({ path: this.parameters.path, })
-    }
+function Ds(_0x1fd282) { var _0x33a6b9 = _0x5583c5; return new DevExpress['data'][(_0x33a6b9(0xfd))](new DataSource(_0x1fd282)[_0x33a6b9(0xfe)]()); }
 
-    configuration() {
-        return {
-            path: this.parameters.path,
-            key: this.keyName,
-            loadMode: this.loadMode,
-            load: searchData => {
-                return this.rest().promise({
-                    verb: "list",
-                    data: this.listData(searchData)
-                }).then(data =>
-                    this.transformData(data)
-                )
-            },
-            byKey: this.parameters.cache == true ? undefined : key =>
-                this.rest().promise({
-                    verb: "get",
-                    data: {
-                        [this.keyName]: key
-                    }
-                }),
-            onLoaded: data => {
-                if (this.parameters.onLoaded != undefined) {
-                    this.parameters.onLoaded(data)
-                }
-            }
-        }
-    }
+function DsArray(_0x5ebecc) { var _0x25a76f = _0x5583c5; return new DevExpress[(_0x25a76f(0xfa))][(_0x25a76f(0x103))]({ 'store': { 'type': _0x25a76f(0xfc), 'key': App['KEY_NAME'], 'data': _0x5ebecc[_0x25a76f(0xfa)] } }); }
 
-    listData(searchData) {
-
-        function descripcion() {
-            if (searchData != undefined && searchData.searchValue != undefined) {
-                return searchData.searchValue;
-            }
-        }
-
-        return Utils.Merge({ descripcion: descripcion() }, Utils.Evaluate(this.parameters.filter))
-
-    }
-
-    transformData(data) {
-        if (this.parameters.transformData != undefined) {
-            return this.parameters.transformData(data);
-        } else {
-            return data;
-        }
-    }
-
-}
-
-function Ds(parameters) {
-    return new DevExpress.data.CustomStore(new DataSource(parameters).configuration())
-}
-
-function DsArray(parameters) {
-    return new DevExpress.data.DataSource({
-        store: {
-            type: "array",
-            key: App.KEY_NAME,
-            data: parameters.data
-        }
-    })
-}
+function _0x375b() { var _0x7f6e01 = ['8DEdwty', '2587893sXqkpT', 'parameters', '755415NsSGFU', 'defineRest', 'description', 'Merge', '42HzPGRQ', '_rest', '1607630ETVUXR', 'path', 'onLoaded', 'keyName', 'cache', 'loadMode', '67730pUZgvl', '350162sWORjG', '4149800bZsYIn', 'searchValue', '6QLfzEy', 'list', 'Evaluate', 'processed', 'filter', 'data', 'promise', 'array', 'CustomStore', 'configuration', 'raw', '17651161dbCrJc', 'then', 'listData', 'DataSource', '4AXsREm', 'rest', 'transformData'];
+    _0x375b = function() { return _0x7f6e01; }; return _0x375b(); }

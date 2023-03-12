@@ -1,159 +1,19 @@
+function _0x4bb2() { const _0x27dc59 = ['169096UMvKsR', 'closeDataNotSaved', '221110ZmKzjm', '93850vyZVvC', 'saveUpdate', 'getData', 'dataToUpdate', 'close', 'Merge', 'getChangedData', '28KkGvLM', 'Agrega\x20', 'get', '371160biMbFO', 'rest', 'dataToInsert', 'insert', 'isInserting', 'sendAllData', 'refreshTitle', 'then', 'catch', 'path', 'originalTitle', '47772fWnJSy', 'saveInsert', 'closeDataSaveUpdate', 'saveData', 'okey', 'validate', 'defaultConfiguration', 'listView', '305838wQnjMO', 'configuration', '117876hdGYfn', 'handleError', 'popupOnShown', 'update', 'title', 'operation', 'dataHasChanged', 'mustSave', 'init', 'Modifica\x20', 'afterGetData', 'updateData', 'closeDataSaveInsert'];
+    _0x4bb2 = function() { return _0x27dc59; }; return _0x4bb2(); }
+const _0x2aa039 = _0x2771;
+
+function _0x2771(_0x1f9181, _0x152243) { const _0x4bb2c2 = _0x4bb2(); return _0x2771 = function(_0x2771f3, _0x5d3b1c) { _0x2771f3 = _0x2771f3 - 0x18b; let _0xfdcf6f = _0x4bb2c2[_0x2771f3]; return _0xfdcf6f; }, _0x2771(_0x1f9181, _0x152243); }(function(_0x3d2549, _0x18fa6c) { const _0x79b021 = _0x2771,
+        _0x1507ac = _0x3d2549(); while (!![]) { try { const _0x353e27 = parseInt(_0x79b021(0x18e)) / 0x1 + parseInt(_0x79b021(0x1a3)) / 0x2 + -parseInt(_0x79b021(0x198)) / 0x3 + parseInt(_0x79b021(0x1ad)) / 0x4 + parseInt(_0x79b021(0x18d)) / 0x5 + -parseInt(_0x79b021(0x1ab)) / 0x6 + -parseInt(_0x79b021(0x195)) / 0x7 * (-parseInt(_0x79b021(0x18b)) / 0x8); if (_0x353e27 === _0x18fa6c) break;
+            else _0x1507ac['push'](_0x1507ac['shift']()); } catch (_0x25ef82) { _0x1507ac['push'](_0x1507ac['shift']()); } } }(_0x4bb2, 0x18ba2));
 class FormView extends EntryView {
-
-    path() {
-        return this.listView().path()
-    }
-
-    defaultConfiguration() {
-        return Utils.Merge(super.defaultConfiguration(), {
-            sendAllData: true
-        })
-    }
-
-    listView() {
-        return this.parameters.listView;
-    }
-
-    async init() {
-        this.refreshTitle();
-        if (this.id() != undefined) {
-            await this.get(this.id());
-        }
-        this.focus();
-    }
-
-    refreshTitle() {
-        this.popup().setTitle(this.title())
-    }
-
-    title() {
-        if (this.isInserting()) {
-            return "Agrega " + this.originalTitle()
-        } else {
-            return "Modifica " + this.originalTitle()
-        }
-    }
-
-    isInserting() {
-        return this.id() == undefined;
-    }
-
-    id() {
-        return this.getData().id;
-    }
-
-    get(id) {
-        return this.rest().get({ id: id })
-            .then(data =>
-                this.afterGetData(data))
-            .then(data =>
-                this.updateData(data))
-            .then(() =>
-                this.saveData())
-            .catch(err => {
-                this.handleError(err)
-            })
-    }
-
-    afterGetData(data) {
-        return data;
-    }
-
-    okey() {
-        this.validate()
-            .then(() => {
-                if (this.mustSave()) {
-                    if (this.isInserting()) {
-                        return this.saveInsert()
-                    } else {
-                        return this.saveUpdate()
-                    }
-                } else {
-                    this.close(this.closeDataNotSaved());
-                }
-            })
-            .catch(err =>
-                this.handleError(err)
-            )
-    }
-
-    mustSave() {
-        return this.isInserting() || this.dataHasChanged();
-    }
-
-    saveInsert() {
-        return this.rest().insert(this.dataToInsert())
-            .then(data => {
-                this.close(this.closeDataSaveInsert(data.id));
-            });
-    }
-
-    saveUpdate() {
-        return this.rest().update(this.dataToUpdate())
-            .then(data =>
-                this.close(this.closeDataSaveUpdate())
-            );
-    }
-
-    dataToInsert() {
-        return this.getData();
-    }
-
-    dataToUpdate() {
-        let data;
-        if (this.configuration().sendAllData == true) {
-            data = this.getData();
-        } else {
-            data = Utils.Merge(this.getChangedData(), { id: this.id() });
-        }
-        return data;
-    }
-
-    closeDataSaveInsert(id) {
-        return {
-            okey: true,
-            operation: this.operation(),
-            id: id,
-            dataHasChanged: true,
-        };
-    }
-
-    closeDataSaveUpdate() {
-        const dataHasChanged = this.dataHasChanged();
-        return {
-            okey: true,
-            operation: this.operation(),
-            id: this.id(),
-            dataHasChanged: dataHasChanged,
-        }
-    }
-
-    closeDataNotSaved() {
-        return {
-            okey: true,
-            operation: this.operation(),
-            id: this.id(),
-            dataHasChanged: false,
-        }
-    }
-
-    close(closeData) {
-        if (closeData.dataHasChanged == true && this.listView() != undefined) {
-            this.listView().refresh(closeData.id);
-        }
-        super.close(closeData);
-    }
-
-    popupOnShown(e) {
-        this.init();
-    }
-
-    operation() {
-        if (this.isInserting()) {
-            return "insert";
-        } else {
-            return "update";
-        }
-    }
-
-}
+    [_0x2aa039(0x1a1)]() { const _0x4051f2 = _0x2aa039; return this['listView']()[_0x4051f2(0x1a1)](); }['defaultConfiguration']() { const _0x41c7ba = _0x2aa039; return Utils['Merge'](super[_0x41c7ba(0x1a9)](), { 'sendAllData': !![] }); }['listView']() { return this['parameters']['listView']; }
+    async [_0x2aa039(0x1b5)]() { const _0x44358e = _0x2aa039;
+        this[_0x44358e(0x19e)](), this['id']() != undefined && await this['get'](this['id']()), this['focus'](); }[_0x2aa039(0x19e)]() { const _0xae050f = _0x2aa039;
+        this['popup']()['setTitle'](this[_0xae050f(0x1b1)]()); }[_0x2aa039(0x1b1)]() { const _0xe1c45 = _0x2aa039; return this[_0xe1c45(0x19c)]() ? _0xe1c45(0x196) + this[_0xe1c45(0x1a2)]() : _0xe1c45(0x1b6) + this[_0xe1c45(0x1a2)](); }[_0x2aa039(0x19c)]() { return this['id']() == undefined; }['id']() { const _0x12a6b5 = _0x2aa039; return this[_0x12a6b5(0x190)]()['id']; }[_0x2aa039(0x197)](_0xefa59a) { const _0x3c5010 = _0x2aa039; return this[_0x3c5010(0x199)]()[_0x3c5010(0x197)]({ 'id': _0xefa59a })[_0x3c5010(0x19f)](_0x47f7e3 => this['afterGetData'](_0x47f7e3))[_0x3c5010(0x19f)](_0x328a5c => this[_0x3c5010(0x1b8)](_0x328a5c))[_0x3c5010(0x19f)](() => this[_0x3c5010(0x1a6)]())[_0x3c5010(0x1a0)](_0x395000 => { const _0x207453 = _0x3c5010;
+            this[_0x207453(0x1ae)](_0x395000); }); }[_0x2aa039(0x1b7)](_0x13be65) { return _0x13be65; }[_0x2aa039(0x1a7)]() { const _0x193fa9 = _0x2aa039;
+        this[_0x193fa9(0x1a8)]()[_0x193fa9(0x19f)](() => { const _0x3e5303 = _0x193fa9; if (this['mustSave']()) return this[_0x3e5303(0x19c)]() ? this[_0x3e5303(0x1a4)]() : this[_0x3e5303(0x18f)]();
+            else this[_0x3e5303(0x192)](this['closeDataNotSaved']()); })[_0x193fa9(0x1a0)](_0x2ea4a9 => this[_0x193fa9(0x1ae)](_0x2ea4a9)); }[_0x2aa039(0x1b4)]() { const _0x93e40f = _0x2aa039; return this[_0x93e40f(0x19c)]() || this['dataHasChanged'](); }[_0x2aa039(0x1a4)]() { const _0x49b9d3 = _0x2aa039; return this[_0x49b9d3(0x199)]()[_0x49b9d3(0x19b)](this[_0x49b9d3(0x19a)]())['then'](_0x221dd7 => { const _0x2fa25d = _0x49b9d3;
+            this['close'](this[_0x2fa25d(0x1b9)](_0x221dd7['id'])); }); }[_0x2aa039(0x18f)]() { const _0x573564 = _0x2aa039; return this['rest']()[_0x573564(0x1b0)](this[_0x573564(0x191)]())[_0x573564(0x19f)](_0x1498ea => this[_0x573564(0x192)](this[_0x573564(0x1a5)]())); }[_0x2aa039(0x19a)]() { return this['getData'](); }[_0x2aa039(0x191)]() { const _0x51a9d9 = _0x2aa039; let _0x528135; return this[_0x51a9d9(0x1ac)]()[_0x51a9d9(0x19d)] == !![] ? _0x528135 = this[_0x51a9d9(0x190)]() : _0x528135 = Utils[_0x51a9d9(0x193)](this[_0x51a9d9(0x194)](), { 'id': this['id']() }), _0x528135; }[_0x2aa039(0x1b9)](_0x45291f) { const _0x5e0733 = _0x2aa039; return { 'okey': !![], 'operation': this[_0x5e0733(0x1b2)](), 'id': _0x45291f, 'dataHasChanged': !![] }; }[_0x2aa039(0x1a5)]() { const _0x4f3a27 = _0x2aa039,
+            _0x7556c1 = this[_0x4f3a27(0x1b3)](); return { 'okey': !![], 'operation': this['operation'](), 'id': this['id'](), 'dataHasChanged': _0x7556c1 }; }[_0x2aa039(0x18c)]() { const _0x42419f = _0x2aa039; return { 'okey': !![], 'operation': this[_0x42419f(0x1b2)](), 'id': this['id'](), 'dataHasChanged': ![] }; }[_0x2aa039(0x192)](_0x7058e4) { const _0x2beb31 = _0x2aa039;
+        _0x7058e4[_0x2beb31(0x1b3)] == !![] && this[_0x2beb31(0x1aa)]() != undefined && this[_0x2beb31(0x1aa)]()['refresh'](_0x7058e4['id']), super['close'](_0x7058e4); }[_0x2aa039(0x1af)](_0x272853) { const _0x32f8b2 = _0x2aa039;
+        this[_0x32f8b2(0x1b5)](); }['operation']() { const _0x1185df = _0x2aa039; return this[_0x1185df(0x19c)]() ? 'insert' : _0x1185df(0x1b0); } }

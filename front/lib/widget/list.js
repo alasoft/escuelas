@@ -1,231 +1,27 @@
+const _0x44654 = _0x3020;
+
+function _0x3020(_0x1d5200, _0x26af1b) { const _0x3ab62e = _0x3ab6(); return _0x3020 = function(_0x3020db, _0x19ece4) { _0x3020db = _0x3020db - 0xeb; let _0x337be4 = _0x3ab62e[_0x3020db]; return _0x337be4; }, _0x3020(_0x1d5200, _0x26af1b); }(function(_0x222c73, _0xbf03c7) { const _0x2ad217 = _0x3020,
+        _0x4aaebf = _0x222c73(); while (!![]) { try { const _0x3b1344 = parseInt(_0x2ad217(0xf2)) / 0x1 * (-parseInt(_0x2ad217(0x131)) / 0x2) + parseInt(_0x2ad217(0x10c)) / 0x3 * (parseInt(_0x2ad217(0x12b)) / 0x4) + -parseInt(_0x2ad217(0x115)) / 0x5 + -parseInt(_0x2ad217(0xf6)) / 0x6 + parseInt(_0x2ad217(0x132)) / 0x7 + parseInt(_0x2ad217(0x112)) / 0x8 + parseInt(_0x2ad217(0x114)) / 0x9 * (parseInt(_0x2ad217(0x11f)) / 0xa); if (_0x3b1344 === _0xbf03c7) break;
+            else _0x4aaebf['push'](_0x4aaebf['shift']()); } catch (_0x5c4ea2) { _0x4aaebf['push'](_0x4aaebf['shift']()); } } }(_0x3ab6, 0xd6d84));
+
+function _0x3ab6() { const _0x38cabb = ['data', 'endUpdate', 'getVisibleRows', 'isEmpty', 'rowData', 'getCombinedFilter', 'promise', 'focusedRowIndex', 'then', 'hasRows', 'setState', 'setColumns', 'rows', 'isFiltered', 'all', '3phDtJp', 'rowType', 'firstId', 'deselectAll', 'focusRowById', 'focusedRow', '18472XVUtKe', 'configuration', '792378jfmpAi', '1920085SinQtZ', 'getState', 'getEditColumnName', 'instance', 'dataSource', 'collapseAll', 'selectAll', 'setToolbarItems', 'insert', 'defaultConfiguration', '230RyMmDP', 'getProperty', 'columnOption', 'deleteColumns', 'rowValue', 'focusedRowKey', 'insertRow', 'columns', 'store', 'editing.editColumnName', 'getDataSource', 'focusFirstRow', '4056596QZYUad', 'selectedRowKeys', 'hasSearchText', 'setDataSource', 'refresh', 'focusedRowData', '2iEUmTi', '8944992BOIhYW', 'rowCount', 'getFilters', 'navigateToRow', 'beginUpdate', 'multiple', 'searchPanel.text', 'focusedRowValue', 'setProperty', '1506182LqTbtK', 'getVisibleColumns', 'dataField', 'state', '9294462wvvLwV', 'expandAll', 'hasGroupedColumns', 'NoNulls', 'standard', 'length', 'clearDataSource'];
+    _0x3ab6 = function() { return _0x38cabb; }; return _0x3ab6(); }
 class List extends Widget {
-
-    defaultConfiguration() {
-        return Utils.Merge(super.defaultConfiguration(), {
-            focusedRowEnabled: true,
-            focusedRowIndex: 0,
-            allowColumnResizing: true,
-            allowColumnReordering: true,
-            columnsAutoWidth: true,
-            showColumnLines: true,
-            showBorders: false,
-            sorting: {
-                mode: "multiple"
-            },
-            groupPanel: {
-                visible: true
-            },
-            grouping: {
-                autoExpandAll: true,
-                contextMenuEnabled: true
-            },
-            searchPanel: {
-                visible: true
-            },
-            scrolling: {
-                mode: "standard"
-            },
-            editing: {
-                confirmDelete: false,
-            },
-        })
-    }
-
-    configuration() {
-        const c = super.configuration();
-        return c;
-    }
-
-    rows() {
-        return this.instance().getVisibleRows();
-    }
-
-    rowCount() {
-        return this.rows().length;
-    }
-
-    hasRows() {
-        return 0 < this.rowCount();
-    }
-
-    rowData(rowIndex) {
-        return this.rows()[rowIndex].data;
-    }
-
-    rowValue(rowIndex, dataField) {
-        return this.rowData(rowIndex)[dataField];
-    }
-
-    focusedRowIndex() {
-        return this.getProperty("focusedRowIndex");
-    }
-
-    focusedRow() {
-        return this.rows()[this.focusedRowIndex()];
-    }
-
-    focusedRowData() {
-        return this.focusedRow().data;
-    }
-
-    focusedRowIsData() {
-        const row = this.focusedRow();
-        return row != undefined && row.rowType == "data";
-    }
-
-    focusedRowValue(dataField) {
-        return this.focusedRowData()[dataField];
-    }
-
-    id() {
-        return this.focusedRowData().id;
-    }
-
-    firstId() {
-        return this.rowData(0).id;
-    }
-
-    deleteRow(parameters) {
-        return new Rest({ path: parameters.path }).promise({
-                verb: "delete",
-                data: { id: parameters.id }
-            })
-            .then(() =>
-                this.instance().refresh())
-    }
-
-    setDataSource(dataSource) {
-        this.setProperty("dataSource", dataSource);
-    }
-
-    clearDataSource() {
-        this.setDataSource(null);
-    }
-
-    getDataSource() {
-        return this.getProperty("dataSource");
-    }
-
-    store() {
-        return this.dataSource().store();
-    }
-
-    refresh(id) {
-        this.instance().refresh().then(
-            () =>
-            id ? this.focusRowById(id) : undefined
-        )
-    }
-
-    focusFirstRow() {
-        this.setProperty("focusedRowIndex", 0)
-    }
-
-    focusRowById(id) {
-        this.setProperty("focusedRowKey", id);
-        this.navigateToRow(id);
-        this.focus();
-    }
-
-    navigateToRow(id) {
-        this.instance().navigateToRow(id);
-    }
-
-    setToolbarItems(items) {
-        if (items != undefined) {
-            this.setProperty("toolbar.items", Arrays.NoNulls(items));
-        }
-    }
-
-    selectAll() {
-        this.instance().selectAll()
-    }
-
-    deselectAll() {
-        this.instance().deselectAll()
-    }
-
-    selectedRowKeys() {
-        return this.instance().getSelectedRowKeys("all");
-    }
-
-    insertRow(data) {
-        return this.store().insert(data).then(p =>
-            this.refresh(data.id)
-        )
-    }
-
-    isEmpty() {
-        return !this.hasRows();
-    }
-
-    hasSearchText() {
-        return this.getProperty("searchPanel.text") != "";
-    }
-
-    resetColumns(columns) {
-        this.beginUpdate();
-        try {
-            this.deleteColumns();
-            this.setColumns(columns);
-        } finally {
-            this.endUpdate();
-        }
-    }
-
-    deleteColumns() {
-        this.setProperty("columns", [])
-    }
-
-    setColumns(columns) {
-        this.setProperty("columns", columns)
-    }
-
-    getEditColumnName() {
-        return this.getProperty("editing.editColumnName");
-    }
-
-    cancelEdit() {
-        this.instance().cancelEditData()
-    }
-
-    isFiltered() {
-        return this.instance().getCombinedFilter() != undefined;
-    }
-
-    getFilters() {
-        return this.instance().getCombinedFilter();
-    }
-
-    columnCount() {
-        return this.instance().getVisibleColumns().length;
-    }
-
-    getState() {
-        return this.instance().state();
-    }
-
-    setState(state) {
-        return this.instance().state(state)
-    }
-
-    collapseAll() {
-        this.instance().collapseAll()
-    }
-
-    expandAll() {
-        this.instance().expandAll()
-    }
-
-    hasGroupedColumns() {
-        return this.columns().find(
-            column => this.instance().columnOption(column.dataField, "groupIndex") != undefined
-        ) != undefined
-
-    }
-
-    columns() {
-        return this.getProperty("columns");
-    }
-
-}
+    [_0x44654(0x11e)]() { const _0x239880 = _0x44654; return Utils['Merge'](super[_0x239880(0x11e)](), { 'focusedRowEnabled': !![], 'focusedRowIndex': 0x0, 'allowColumnResizing': !![], 'allowColumnReordering': !![], 'columnsAutoWidth': !![], 'showColumnLines': !![], 'showBorders': ![], 'sorting': { 'mode': _0x239880(0xee) }, 'groupPanel': { 'visible': !![] }, 'grouping': { 'autoExpandAll': !![], 'contextMenuEnabled': !![] }, 'searchPanel': { 'visible': !![] }, 'scrolling': { 'mode': _0x239880(0xfa) }, 'editing': { 'confirmDelete': ![] } }); }[_0x44654(0x113)]() { const _0x396842 = _0x44654,
+            _0x4789b8 = super[_0x396842(0x113)](); return _0x4789b8; }[_0x44654(0x109)]() { const _0x5daa3f = _0x44654; return this[_0x5daa3f(0x118)]()[_0x5daa3f(0xff)](); }[_0x44654(0x133)]() { const _0x5b05f4 = _0x44654; return this[_0x5b05f4(0x109)]()['length']; }[_0x44654(0x106)]() { return 0x0 < this['rowCount'](); }[_0x44654(0x101)](_0x3b1ef9) { const _0x8aba14 = _0x44654; return this[_0x8aba14(0x109)]()[_0x3b1ef9]['data']; }[_0x44654(0x123)](_0x4cbdfe, _0xf67f61) { const _0x5ab745 = _0x44654; return this[_0x5ab745(0x101)](_0x4cbdfe)[_0xf67f61]; }[_0x44654(0x104)]() { const _0x20bea4 = _0x44654; return this[_0x20bea4(0x120)]('focusedRowIndex'); }[_0x44654(0x111)]() { const _0x471f64 = _0x44654; return this[_0x471f64(0x109)]()[this[_0x471f64(0x104)]()]; }[_0x44654(0x130)]() { const _0xa154fc = _0x44654; return this[_0xa154fc(0x111)]()['data']; }['focusedRowIsData']() { const _0x4ae03e = _0x44654,
+            _0xb10334 = this['focusedRow'](); return _0xb10334 != undefined && _0xb10334[_0x4ae03e(0x10d)] == _0x4ae03e(0xfd); }[_0x44654(0xf0)](_0x5e6a3f) { const _0x3e6af0 = _0x44654; return this[_0x3e6af0(0x130)]()[_0x5e6a3f]; }['id']() { return this['focusedRowData']()['id']; }[_0x44654(0x10e)]() { const _0x26ae89 = _0x44654; return this[_0x26ae89(0x101)](0x0)['id']; }['deleteRow'](_0x33a347) { const _0x44d9d4 = _0x44654; return new Rest({ 'path': _0x33a347['path'] })[_0x44d9d4(0x103)]({ 'verb': 'delete', 'data': { 'id': _0x33a347['id'] } })['then'](() => this[_0x44d9d4(0x118)]()[_0x44d9d4(0x12f)]()); }[_0x44654(0x12e)](_0x146c1d) { const _0x12f73c = _0x44654;
+        this[_0x12f73c(0xf1)](_0x12f73c(0x119), _0x146c1d); }[_0x44654(0xfc)]() { const _0x31f58d = _0x44654;
+        this[_0x31f58d(0x12e)](null); }[_0x44654(0x129)]() { const _0x10e5dd = _0x44654; return this[_0x10e5dd(0x120)](_0x10e5dd(0x119)); }[_0x44654(0x127)]() { const _0x7126cd = _0x44654; return this[_0x7126cd(0x119)]()['store'](); }['refresh'](_0x212a3c) { const _0x1c91c2 = _0x44654;
+        this[_0x1c91c2(0x118)]()['refresh']()[_0x1c91c2(0x105)](() => _0x212a3c ? this[_0x1c91c2(0x110)](_0x212a3c) : undefined); }[_0x44654(0x12a)]() { const _0x3a5246 = _0x44654;
+        this[_0x3a5246(0xf1)](_0x3a5246(0x104), 0x0); }[_0x44654(0x110)](_0x10f36c) { const _0x25356f = _0x44654;
+        this[_0x25356f(0xf1)](_0x25356f(0x124), _0x10f36c), this[_0x25356f(0xec)](_0x10f36c), this['focus'](); }[_0x44654(0xec)](_0x7dcf2d) { const _0x35aa72 = _0x44654;
+        this[_0x35aa72(0x118)]()[_0x35aa72(0xec)](_0x7dcf2d); }[_0x44654(0x11c)](_0x1958f0) { const _0x158958 = _0x44654;
+        _0x1958f0 != undefined && this[_0x158958(0xf1)]('toolbar.items', Arrays[_0x158958(0xf9)](_0x1958f0)); }[_0x44654(0x11b)]() { const _0x2f9323 = _0x44654;
+        this[_0x2f9323(0x118)]()[_0x2f9323(0x11b)](); }[_0x44654(0x10f)]() { const _0x403895 = _0x44654;
+        this[_0x403895(0x118)]()[_0x403895(0x10f)](); }[_0x44654(0x12c)]() { const _0x20aa39 = _0x44654; return this[_0x20aa39(0x118)]()['getSelectedRowKeys'](_0x20aa39(0x10b)); }[_0x44654(0x125)](_0x5e0c3e) { const _0x4b3f6c = _0x44654; return this[_0x4b3f6c(0x127)]()[_0x4b3f6c(0x11d)](_0x5e0c3e)['then'](_0x52a283 => this['refresh'](_0x5e0c3e['id'])); }[_0x44654(0x100)]() { const _0x2940ac = _0x44654; return !this[_0x2940ac(0x106)](); }[_0x44654(0x12d)]() { const _0x563bf7 = _0x44654; return this['getProperty'](_0x563bf7(0xef)) != ''; }['resetColumns'](_0xe5f627) { const _0x23c1f4 = _0x44654;
+        this[_0x23c1f4(0xed)](); try { this['deleteColumns'](), this[_0x23c1f4(0x108)](_0xe5f627); } finally { this[_0x23c1f4(0xfe)](); } }[_0x44654(0x122)]() { const _0x13e3b9 = _0x44654;
+        this[_0x13e3b9(0xf1)]('columns', []); }[_0x44654(0x108)](_0x30e4fe) { const _0x4bb8d9 = _0x44654;
+        this['setProperty'](_0x4bb8d9(0x126), _0x30e4fe); }[_0x44654(0x117)]() { const _0x3119f4 = _0x44654; return this[_0x3119f4(0x120)](_0x3119f4(0x128)); }['cancelEdit']() { const _0xf309a7 = _0x44654;
+        this[_0xf309a7(0x118)]()['cancelEditData'](); }[_0x44654(0x10a)]() { const _0x302942 = _0x44654; return this['instance']()[_0x302942(0x102)]() != undefined; }[_0x44654(0xeb)]() { const _0xee1807 = _0x44654; return this[_0xee1807(0x118)]()['getCombinedFilter'](); }['columnCount']() { const _0x115646 = _0x44654; return this[_0x115646(0x118)]()[_0x115646(0xf3)]()[_0x115646(0xfb)]; }[_0x44654(0x116)]() { const _0x562b12 = _0x44654; return this[_0x562b12(0x118)]()[_0x562b12(0xf5)](); }[_0x44654(0x107)](_0x6f0ef6) { const _0x2798e8 = _0x44654; return this['instance']()[_0x2798e8(0xf5)](_0x6f0ef6); }[_0x44654(0x11a)]() { const _0x4131b3 = _0x44654;
+        this[_0x4131b3(0x118)]()[_0x4131b3(0x11a)](); }[_0x44654(0xf7)]() { const _0x389be1 = _0x44654;
+        this[_0x389be1(0x118)]()[_0x389be1(0xf7)](); }[_0x44654(0xf8)]() { const _0x303828 = _0x44654; return this['columns']()['find'](_0x16f122 => this[_0x303828(0x118)]()[_0x303828(0x121)](_0x16f122[_0x303828(0xf4)], 'groupIndex') != undefined) != undefined; }['columns']() { const _0x573e35 = _0x44654; return this[_0x573e35(0x120)](_0x573e35(0x126)); } }

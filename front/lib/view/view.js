@@ -1,209 +1,23 @@
+function _0x5f57() { const _0x1532f4 = ['components', '_componentsClasses', 'initRender', 'POPUP_BACKGROUND_COLOR', 'defineComponents', '1567354ILclgn', 'keys', '_components', 'componentsClasses', '_template', 'beforeRender', 'popupTemplate', '13744632MznUDT', 'Merge', 'close', 'popupOnShown', 'defineTemplate', 'css', '6rzqAGr', 'catch', 'previousValue', 'column', 'HideItems', '2gNbVlC', '328ihpTRz', 'componentClass', 'flex', 'value', 'resolveRender', 'renderComponents', 'isFullScreen', '9136728dhqoeJ', 'form', 'render', 'Handle', 'element', 'templateDefault', 'endRender', 'defaultConfiguration', 'valueHasChanged', '_popup', 'treeItems', 'set', 'definePopup', 'afterRender', '11XLpeiP', 'forEach', 'renderTemplate', 'parentView', '_closeData', 'defineComponent', '117096uUmIci', 'fullScreen', 'configuration', 'BlankViewElement', 'list', '39030fqLHgJ', 'templateClass', 'scheduler', 'findElementByClass', 'focus', 'popup', '1442590zajZWW', 'EmptyPromise', 'toolbar', 'then', 'isPopup', 'appendTo', 'label', 'popupOnHiding', 'length', '3301665zfoYXV', '602CMoDEZ', 'get', 'contextMenu', 'show', 'template', 'handleError', 'defineComponentsClasses'];
+    _0x5f57 = function() { return _0x1532f4; }; return _0x5f57(); }
+const _0x3ac6ae = _0x41ad;
+(function(_0x1ba411, _0x9001b6) { const _0x58ec77 = _0x41ad,
+        _0x203043 = _0x1ba411(); while (!![]) { try { const _0x532703 = parseInt(_0x58ec77(0x178)) / 0x1 * (parseInt(_0x58ec77(0x166)) / 0x2) + -parseInt(_0x58ec77(0x14a)) / 0x3 * (parseInt(_0x58ec77(0x179)) / 0x4) + -parseInt(_0x58ec77(0x159)) / 0x5 * (parseInt(_0x58ec77(0x173)) / 0x6) + parseInt(_0x58ec77(0x15a)) / 0x7 * (parseInt(_0x58ec77(0x194)) / 0x8) + parseInt(_0x58ec77(0x180)) / 0x9 + -parseInt(_0x58ec77(0x150)) / 0xa + parseInt(_0x58ec77(0x18e)) / 0xb * (-parseInt(_0x58ec77(0x16d)) / 0xc); if (_0x532703 === _0x9001b6) break;
+            else _0x203043['push'](_0x203043['shift']()); } catch (_0x170006) { _0x203043['push'](_0x203043['shift']()); } } }(_0x5f57, 0xc94d2));
+
+function _0x41ad(_0x7f906e, _0x27e947) { const _0x5f5750 = _0x5f57(); return _0x41ad = function(_0x41ada9, _0x53279f) { _0x41ada9 = _0x41ada9 - 0x146; let _0x3d1631 = _0x5f5750[_0x41ada9]; return _0x3d1631; }, _0x41ad(_0x7f906e, _0x27e947); }
 class View extends Component {
-
-    defaultConfiguration() {
-        return Utils.Merge(super.defaultConfiguration(), {
-            popup: {
-                showCloseButton: true,
-                contentTemplate: e => this.popupTemplate(e),
-                onShown: e => this.popupOnShown(e),
-                onHiding: e => this.popupOnHiding(e)
-            }
-        })
-    }
-
-    isPopup() {
-        return this.configuration().mode == "popup";
-    }
-
-    isFullScreen() {
-        return this.configuration().fullScreen == true;
-    }
-
-    render() {
-        return this.initRender()
-            .then(() =>
-                this.beforeRender())
-            .then(() =>
-                this.renderComponents())
-            .then(() =>
-                this.renderTemplate())
-            .then(() =>
-                this.afterRender())
-            .then(() =>
-                this.endRender())
-            .catch(err =>
-                this.handleError(err))
-    }
-
-    initRender() {
-        return Utils.EmptyPromise();
-    }
-
-    beforeRender() {}
-
-    renderComponents() {
-        Object.keys(this.components()).forEach(
-            key => this.components()[key].render()
-        )
-    }
-
-    components() {
-        if (this._components == undefined) {
-            this._components = this.defineComponents();
-        }
-        return this._components;
-    }
-
-    defineComponents() {
-        const components = {};
-        const configurationComponents = this.configuration().components || {};
-        Object.keys(configurationComponents).forEach(
-            key => {
-                const component = this.defineComponent(key, configurationComponents[key]);
-                if (component != undefined) {
-                    components[key] = component;
-                }
-            }
-        )
-        return components;
-    }
-
-    defineComponent(key, configuration) {
-        const componentClass = this.componentClass(key, configuration)
-        if (componentClass != undefined) {
-            if (configuration.element == undefined) {
-                configuration.element = this.template().findElementByClass(configuration.templateClass || key);
-            }
-            if (0 < configuration.element.length) {
-                configuration.parentView = this;
-                return new(componentClass)(configuration);
-            }
-        }
-    }
-
-    componentClass(key, configuration) {
-        let componentClass = configuration.componentClass;
-        if (componentClass == undefined) {
-            componentClass = this.componentsClasses().get(key);
-        }
-        return componentClass;
-    }
-
-    componentsClasses() {
-        if (this._componentsClasses == undefined) {
-            this._componentsClasses = this.defineComponentsClasses();
-        }
-        return this._componentsClasses;
-    }
-
-    defineComponentsClasses() {
-        return new Map()
-            .set("list", Grid)
-            .set("grid", Grid)
-            .set("toolbar", Toolbar)
-            .set("contextMenu", ContextMenu)
-            .set("form", Form)
-            .set("button", Button)
-            .set("label", Label)
-            .set("treeItems", TreeItems)
-            .set("filter", Form)
-            .set("scheduler", Scheduler)
-    }
-
-    template() {
-        if (this._template == undefined) {
-            this._template = this.defineTemplate()
-        }
-        return this._template;
-    }
-
-    defineTemplate() {
-        return this.configuration().template || this.templateDefault();
-    }
-
-    templateDefault() {
-        return new Template()
-    }
-
-    renderTemplate() {
-        if (this.isPopup()) {
-            this.popup().show();
-        } else {
-            this.template().appendTo(this.element());
-        }
-    }
-
-    popup() {
-        if (this._popup == undefined) {
-            this._popup = this.definePopup();
-        }
-        return this._popup;
-    }
-
-    definePopup() {
-        return new Popup(this.configuration().popup);
-    }
-
-    afterRender() {
-        if (this.isFullScreen()) {
-            App.HideItems()
-        }
-    }
-
-    endRender() {
-        if (this.isPopup()) {
-            return new Promise((resolve, reject) => {
-                this.resolveRender = resolve;
-            });
-        } else {
-            return null;
-        }
-    }
-
-    popupTemplate(e) {
-        e.parent().css({
-            "background-color": App.POPUP_BACKGROUND_COLOR
-        });
-        e.css({
-            "display": "flex",
-            "flex-direction": "column"
-        })
-        this.template().appendTo(e)
-    }
-
-    parentView() {
-        return this.configuration().parentView;
-    }
-
-    findElementByClass(className) {
-        return this.template().findElementByClass(className);
-    }
-
-    focus() {}
-
-    valueHasChanged(e) {
-        return (e.previousValue == undefined || e.value == undefined || e.value.id != e.previousValue.id);
-    }
-
-    close(closeData) {
-        if (this.isPopup()) {
-            this._closeData = closeData;
-            this.popup().close();
-        } else {
-            App.BlankViewElement()
-        }
-    }
-
-    popupOnShown(e) {
-        this.focus();
-    }
-
-    popupOnHiding(e) {
-        this.resolveRender(this._closeData || {});
-    }
-
-    handleError(err) {
-        Errors.Handle(err);
-    }
-
-}
+    [_0x3ac6ae(0x187)]() { const _0x21bf92 = _0x3ac6ae; return Utils[_0x21bf92(0x16e)](super[_0x21bf92(0x187)](), { 'popup': { 'showCloseButton': !![], 'contentTemplate': _0x2d1180 => this['popupTemplate'](_0x2d1180), 'onShown': _0x4c2f32 => this[_0x21bf92(0x170)](_0x4c2f32), 'onHiding': _0x58a56a => this[_0x21bf92(0x157)](_0x58a56a) } }); }[_0x3ac6ae(0x154)]() { const _0x3b1274 = _0x3ac6ae; return this[_0x3b1274(0x147)]()['mode'] == _0x3b1274(0x14f); }['isFullScreen']() { const _0x2bf0e5 = _0x3ac6ae; return this[_0x2bf0e5(0x147)]()[_0x2bf0e5(0x146)] == !![]; }[_0x3ac6ae(0x182)]() { const _0x2c0b07 = _0x3ac6ae; return this[_0x2c0b07(0x163)]()[_0x2c0b07(0x153)](() => this[_0x2c0b07(0x16b)]())['then'](() => this[_0x2c0b07(0x17e)]())[_0x2c0b07(0x153)](() => this[_0x2c0b07(0x190)]())['then'](() => this[_0x2c0b07(0x18d)]())[_0x2c0b07(0x153)](() => this[_0x2c0b07(0x186)]())[_0x2c0b07(0x174)](_0x2aea79 => this[_0x2c0b07(0x15f)](_0x2aea79)); }[_0x3ac6ae(0x163)]() { const _0x374107 = _0x3ac6ae; return Utils[_0x374107(0x151)](); }[_0x3ac6ae(0x16b)]() {}[_0x3ac6ae(0x17e)]() { const _0x3f5be3 = _0x3ac6ae;
+        Object[_0x3f5be3(0x167)](this['components']())[_0x3f5be3(0x18f)](_0x2b4c01 => this[_0x3f5be3(0x161)]()[_0x2b4c01][_0x3f5be3(0x182)]()); }[_0x3ac6ae(0x161)]() { const _0x278d2f = _0x3ac6ae; return this[_0x278d2f(0x168)] == undefined && (this[_0x278d2f(0x168)] = this[_0x278d2f(0x165)]()), this[_0x278d2f(0x168)]; }['defineComponents']() { const _0x1ced01 = _0x3ac6ae,
+            _0x3b15a4 = {},
+            _0x12d5c9 = this[_0x1ced01(0x147)]()[_0x1ced01(0x161)] || {}; return Object[_0x1ced01(0x167)](_0x12d5c9)[_0x1ced01(0x18f)](_0x4d88b9 => { const _0x5bb048 = this['defineComponent'](_0x4d88b9, _0x12d5c9[_0x4d88b9]);
+            _0x5bb048 != undefined && (_0x3b15a4[_0x4d88b9] = _0x5bb048); }), _0x3b15a4; }[_0x3ac6ae(0x193)](_0x38e4b9, _0x430f7c) { const _0x398961 = _0x3ac6ae,
+            _0x165824 = this[_0x398961(0x17a)](_0x38e4b9, _0x430f7c); if (_0x165824 != undefined) { _0x430f7c[_0x398961(0x184)] == undefined && (_0x430f7c[_0x398961(0x184)] = this[_0x398961(0x15e)]()[_0x398961(0x14d)](_0x430f7c[_0x398961(0x14b)] || _0x38e4b9)); if (0x0 < _0x430f7c[_0x398961(0x184)][_0x398961(0x158)]) return _0x430f7c['parentView'] = this, new _0x165824(_0x430f7c); } }[_0x3ac6ae(0x17a)](_0x55901a, _0x5c43b9) { const _0x4a8a3e = _0x3ac6ae; let _0x342aa0 = _0x5c43b9[_0x4a8a3e(0x17a)]; return _0x342aa0 == undefined && (_0x342aa0 = this[_0x4a8a3e(0x169)]()[_0x4a8a3e(0x15b)](_0x55901a)), _0x342aa0; }['componentsClasses']() { const _0x107d49 = _0x3ac6ae; return this['_componentsClasses'] == undefined && (this[_0x107d49(0x162)] = this[_0x107d49(0x160)]()), this[_0x107d49(0x162)]; }[_0x3ac6ae(0x160)]() { const _0x18dcc = _0x3ac6ae; return new Map()['set'](_0x18dcc(0x149), Grid)['set']('grid', Grid)['set'](_0x18dcc(0x152), Toolbar)[_0x18dcc(0x18b)](_0x18dcc(0x15c), ContextMenu)[_0x18dcc(0x18b)](_0x18dcc(0x181), Form)['set']('button', Button)['set'](_0x18dcc(0x156), Label)['set'](_0x18dcc(0x18a), TreeItems)[_0x18dcc(0x18b)]('filter', Form)['set'](_0x18dcc(0x14c), Scheduler); }[_0x3ac6ae(0x15e)]() { const _0x4226a0 = _0x3ac6ae; return this[_0x4226a0(0x16a)] == undefined && (this[_0x4226a0(0x16a)] = this[_0x4226a0(0x171)]()), this['_template']; }[_0x3ac6ae(0x171)]() { const _0x277e58 = _0x3ac6ae; return this[_0x277e58(0x147)]()['template'] || this[_0x277e58(0x185)](); }[_0x3ac6ae(0x185)]() { return new Template(); }[_0x3ac6ae(0x190)]() { const _0x215f09 = _0x3ac6ae;
+        this[_0x215f09(0x154)]() ? this[_0x215f09(0x14f)]()[_0x215f09(0x15d)]() : this[_0x215f09(0x15e)]()[_0x215f09(0x155)](this['element']()); }[_0x3ac6ae(0x14f)]() { const _0x30db50 = _0x3ac6ae; return this[_0x30db50(0x189)] == undefined && (this['_popup'] = this[_0x30db50(0x18c)]()), this[_0x30db50(0x189)]; }[_0x3ac6ae(0x18c)]() { const _0x174721 = _0x3ac6ae; return new Popup(this[_0x174721(0x147)]()[_0x174721(0x14f)]); }[_0x3ac6ae(0x18d)]() { const _0x4278c9 = _0x3ac6ae;
+        this[_0x4278c9(0x17f)]() && App[_0x4278c9(0x177)](); }[_0x3ac6ae(0x186)]() { const _0x9dbcff = _0x3ac6ae; return this[_0x9dbcff(0x154)]() ? new Promise((_0x25f36e, _0x25eea3) => { const _0x537412 = _0x9dbcff;
+            this[_0x537412(0x17d)] = _0x25f36e; }) : null; }[_0x3ac6ae(0x16c)](_0x10fceb) { const _0x523c6b = _0x3ac6ae;
+        _0x10fceb['parent']()[_0x523c6b(0x172)]({ 'background-color': App[_0x523c6b(0x164)] }), _0x10fceb[_0x523c6b(0x172)]({ 'display': _0x523c6b(0x17b), 'flex-direction': _0x523c6b(0x176) }), this[_0x523c6b(0x15e)]()['appendTo'](_0x10fceb); }['parentView']() { const _0x485d7b = _0x3ac6ae; return this[_0x485d7b(0x147)]()[_0x485d7b(0x191)]; }[_0x3ac6ae(0x14d)](_0x5efa0a) { const _0x27f0a8 = _0x3ac6ae; return this[_0x27f0a8(0x15e)]()[_0x27f0a8(0x14d)](_0x5efa0a); }[_0x3ac6ae(0x14e)]() {}[_0x3ac6ae(0x188)](_0x12f062) { const _0x475246 = _0x3ac6ae; return _0x12f062['previousValue'] == undefined || _0x12f062['value'] == undefined || _0x12f062[_0x475246(0x17c)]['id'] != _0x12f062[_0x475246(0x175)]['id']; }[_0x3ac6ae(0x16f)](_0x7de5c9) { const _0x19f659 = _0x3ac6ae;
+        this[_0x19f659(0x154)]() ? (this[_0x19f659(0x192)] = _0x7de5c9, this[_0x19f659(0x14f)]()[_0x19f659(0x16f)]()) : App[_0x19f659(0x148)](); }[_0x3ac6ae(0x170)](_0x293792) { const _0x3c127d = _0x3ac6ae;
+        this[_0x3c127d(0x14e)](); }['popupOnHiding'](_0x3856b8) { const _0x314c78 = _0x3ac6ae;
+        this['resolveRender'](this[_0x314c78(0x192)] || {}); }[_0x3ac6ae(0x15f)](_0x1b016) { const _0x5e6a73 = _0x3ac6ae;
+        Errors[_0x5e6a73(0x183)](_0x1b016); } }

@@ -293,4 +293,20 @@ class Item {
         return this.Text(p)
     }
 
+    static Button(p = {}) {
+        return {
+            itemType: "button",
+            horizontalAlignment: p.alignment,
+            buttonOptions: {
+                text: p.text,
+                onClick: p.onClick,
+                icon: p.icon,
+                type: p.type,
+                width: p.width,
+                focusStateEnabled: false,
+                hint: p.hint
+            }
+        }
+    }
+
 }

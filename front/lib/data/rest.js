@@ -1,103 +1,22 @@
-class Rest extends ObjectBase {
+const _0x43bcaf = _0x45b6;
 
-    constructor(parameters) {
-        super(parameters);
-        this.path = parameters.path;
-        this.transformData = parameters.transformData;
-    }
+function _0x45b6(_0x2edcc1, _0x1761b7) { const _0x26ef0f = _0x26ef(); return _0x45b6 = function(_0x45b64e, _0x17215a) { _0x45b64e = _0x45b64e - 0x1af; let _0x20b0fd = _0x26ef0f[_0x45b64e]; return _0x20b0fd; }, _0x45b6(_0x2edcc1, _0x1761b7); }(function(_0x564001, _0x66217f) { const _0x5abcfe = _0x45b6,
+        _0x384a00 = _0x564001(); while (!![]) { try { const _0x174d24 = -parseInt(_0x5abcfe(0x1be)) / 0x1 * (-parseInt(_0x5abcfe(0x1b6)) / 0x2) + -parseInt(_0x5abcfe(0x1af)) / 0x3 + parseInt(_0x5abcfe(0x1c5)) / 0x4 * (parseInt(_0x5abcfe(0x1c0)) / 0x5) + -parseInt(_0x5abcfe(0x1c3)) / 0x6 + -parseInt(_0x5abcfe(0x1c2)) / 0x7 + parseInt(_0x5abcfe(0x1cd)) / 0x8 * (parseInt(_0x5abcfe(0x1d1)) / 0x9) + parseInt(_0x5abcfe(0x1d2)) / 0xa; if (_0x174d24 === _0x66217f) break;
+            else _0x384a00['push'](_0x384a00['shift']()); } catch (_0x3240af) { _0x384a00['push'](_0x384a00['shift']()); } } }(_0x26ef, 0x49871));
+class Rest extends ObjectBase { constructor(_0x55b9f8) { const _0x2d13a2 = _0x45b6;
+        super(_0x55b9f8), this['path'] = _0x55b9f8[_0x2d13a2(0x1ba)], this[_0x2d13a2(0x1b2)] = _0x55b9f8[_0x2d13a2(0x1b2)]; }[_0x43bcaf(0x1b1)]() { const _0x204f8c = _0x43bcaf; return this[_0x204f8c(0x1c8)]({ 'verb': 'list' }); }['get'](_0x36e864) { const _0x22c3fa = _0x43bcaf; return this[_0x22c3fa(0x1c8)]({ 'verb': _0x22c3fa(0x1c7), 'data': _0x36e864 }); }[_0x43bcaf(0x1bb)](_0x2f7c04) { const _0x5d6004 = _0x43bcaf; return this[_0x5d6004(0x1c8)]({ 'verb': 'insert', 'data': _0x2f7c04 }); }[_0x43bcaf(0x1bd)](_0x341332) { const _0x4ed739 = _0x43bcaf; return this[_0x4ed739(0x1c8)]({ 'verb': _0x4ed739(0x1bd), 'data': _0x341332 }); }[_0x43bcaf(0x1bf)](_0x7b0867) { const _0x74fd28 = _0x43bcaf; return this[_0x74fd28(0x1c8)]({ 'verb': 'delete', 'data': _0x7b0867 }); }[_0x43bcaf(0x1c8)](_0x1f9b4b) { const _0x8e5658 = _0x43bcaf,
+            _0x1d4321 = App[_0x8e5658(0x1b0)](this['path'], _0x1f9b4b[_0x8e5658(0x1c1)]),
+            _0x12e83c = _0x8e5658(0x1b8),
+            _0x2bf6b5 = this['data'](_0x1f9b4b[_0x8e5658(0x1c1)], _0x1f9b4b[_0x8e5658(0x1ce)]); return new Promise((_0x68074e, _0x3b8c7f) => $['ajax']({ 'url': _0x1d4321, 'headers': this[_0x8e5658(0x1bc)](_0x1f9b4b['verb']), 'type': _0x12e83c, 'data': JSON[_0x8e5658(0x1b4)](_0x2bf6b5), 'success': _0x59e976 => _0x68074e(_0x59e976), 'error': _0x242979 => { const _0x3a9b24 = _0x8e5658;
+                _0x3b8c7f(Errors[_0x3a9b24(0x1b7)](_0x242979)); } })); }['data'](_0x19b951, _0x462177) { const _0x114718 = _0x43bcaf; if (Utils[_0x114718(0x1ca)](_0x462177)) return undefined;
+        else { let _0x2604ed = _0x462177; return this[_0x114718(0x1b2)] != undefined && Strings['StringIs'](_0x19b951, ['insert', 'update']) && (_0x2604ed = this[_0x114718(0x1b2)](_0x19b951, _0x462177)), _0x2604ed; } }[_0x43bcaf(0x1d0)](_0x5b06b6, _0x40a10e) { const _0x2e3e22 = _0x43bcaf; if (Utils[_0x2e3e22(0x1ca)](_0x40a10e)) return undefined;
+        else { let _0x27f2a9 = _0x40a10e; return this['transformData'] != undefined && Strings[_0x2e3e22(0x1b9)](_0x5b06b6, [_0x2e3e22(0x1bb), _0x2e3e22(0x1bd)]) && (_0x27f2a9 = this['transformData'](_0x5b06b6, _0x40a10e)), JSON['stringify'](_0x27f2a9); } }[_0x43bcaf(0x1bc)](_0x44403e) { const _0xfc3dee = _0x43bcaf; return Utils[_0xfc3dee(0x1cb)](this[_0xfc3dee(0x1cf)]()[_0xfc3dee(0x1c6)], { 'token': App['GetToken']() }, Utils[_0xfc3dee(0x1b5)](this[_0xfc3dee(0x1c4)][_0xfc3dee(0x1bc)], _0x44403e)); }
+    static[_0x43bcaf(0x1c6)] = { 'Accept': 'application/json', 'Content-Type': 'application/json' };
+    static[_0x43bcaf(0x1c9)](_0x4d0aad) { const _0x13c42d = _0x43bcaf,
+            _0x50a338 = App[_0x13c42d(0x1b0)](_0x4d0aad[_0x13c42d(0x1ba)]),
+            _0xf0ed1c = Utils[_0x13c42d(0x1ca)](_0x4d0aad['data']) ? undefined : JSON[_0x13c42d(0x1b4)](_0x4d0aad[_0x13c42d(0x1ce)]),
+            _0x497443 = Utils[_0x13c42d(0x1cb)](this['Headers'], { 'token': App['GetToken']() }); return new Promise((_0x4ad91a, _0x46ede1) => $[_0x13c42d(0x1cc)]({ 'url': _0x50a338, 'headers': _0x497443, 'data': _0xf0ed1c, 'type': _0x13c42d(0x1b8), 'dataType': _0x13c42d(0x1b3), 'success': _0x1c6543 => _0x4ad91a(_0x1c6543), 'error': _0x5ba420 => { const _0x293b86 = _0x13c42d;
+                _0x46ede1(Errors[_0x293b86(0x1b7)](_0x5ba420)); } })); } }
 
-    list() {
-        return this.promise({ verb: "list" })
-    }
-
-    get(data) {
-        return this.promise({ verb: "get", data: data })
-    }
-
-    insert(data) {
-        return this.promise({ verb: "insert", data: data })
-    }
-
-    update(data) {
-        return this.promise({ verb: "update", data: data })
-    }
-
-    delete(data) {
-        return this.promise({ verb: "delete", data: data })
-    }
-
-    promise(parameters) {
-        const url = App.Url(this.path, parameters.verb);
-        const type = "POST";
-        const data = this.data(parameters.verb, parameters.data);
-        //        const data = this.dataToString(parameters.verb, parameters.data);
-        return new Promise((resolve, reject) => $.ajax({
-            url: url,
-            headers: this.headers(parameters.verb),
-            type: type,
-            data: JSON.stringify(data),
-            success: data =>
-                resolve(data),
-            error: err => {
-                //                new RestError({ err: err, url: url, type: type, data: data });
-                reject(Errors.ErrorObject(err))
-            }
-        }))
-    }
-
-    data(verb, data) {
-        if (Utils.IsEmptyObject(data)) {
-            return undefined;
-        } else {
-            let dataTransformed = data;
-            if (this.transformData != undefined && Strings.StringIs(verb, ["insert", "update"])) {
-                dataTransformed = this.transformData(verb, data);
-            }
-            return dataTransformed;
-        }
-    }
-
-    dataToString(verb, data) {
-        if (Utils.IsEmptyObject(data)) {
-            return undefined;
-        } else {
-            let dataTransformed = data;
-            if (this.transformData != undefined && Strings.StringIs(verb, ["insert", "update"])) {
-                dataTransformed = this.transformData(verb, data);
-            }
-            return JSON.stringify(dataTransformed);
-        }
-    }
-
-    headers(verb) {
-        return Utils.Merge(this.class().Headers, {
-                token: App.GetToken()
-            },
-            Utils.Evaluate(this.parameters.headers, verb))
-    }
-
-    static Headers = {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-    }
-
-    static Promise(parameters) {
-        const url = App.Url(parameters.path);
-        const data = Utils.IsEmptyObject(parameters.data) ? undefined : JSON.stringify(parameters.data);
-        const headers = Utils.Merge(this.Headers, { token: App.GetToken() })
-        return new Promise((resolve, reject) => $.ajax({
-            url: url,
-            headers: headers,
-            data: data,
-            type: "POST",
-            dataType: "json",
-            success: data =>
-                resolve(data),
-            error: err => {
-                reject(Errors.ErrorObject(err))
-            }
-
-        }))
-    }
-
-}
+function _0x26ef() { const _0x1433c9 = ['json', 'stringify', 'Evaluate', '2xBIlGh', 'ErrorObject', 'POST', 'StringIs', 'path', 'insert', 'headers', 'update', '343441rLrUqc', 'delete', '467545DAPfDK', 'verb', '1767710xpewep', '2149536xpusJe', 'parameters', '16caKzEE', 'Headers', 'get', 'promise', 'Promise', 'IsEmptyObject', 'Merge', 'ajax', '27760BEamGi', 'data', 'class', 'dataToString', '1125ItKmLL', '2267330kLIwYW', '1398015Epixhc', 'Url', 'list', 'transformData'];
+    _0x26ef = function() { return _0x1433c9; }; return _0x26ef(); }

@@ -1,172 +1,21 @@
+function _0x43a3(_0x557eed, _0x2b4ff2) { const _0x335ee0 = _0x335e(); return _0x43a3 = function(_0x43a3e0, _0xad8cf) { _0x43a3e0 = _0x43a3e0 - 0xe9; let _0x4c72c4 = _0x335ee0[_0x43a3e0]; return _0x4c72c4; }, _0x43a3(_0x557eed, _0x2b4ff2); }
+const _0x307e83 = _0x43a3;
+(function(_0x53edfe, _0x45ce1c) { const _0x496748 = _0x43a3,
+        _0x40c7d3 = _0x53edfe(); while (!![]) { try { const _0x2cb40a = -parseInt(_0x496748(0xfc)) / 0x1 * (parseInt(_0x496748(0xef)) / 0x2) + parseInt(_0x496748(0xfe)) / 0x3 + parseInt(_0x496748(0xf0)) / 0x4 + parseInt(_0x496748(0xeb)) / 0x5 + -parseInt(_0x496748(0x10b)) / 0x6 * (parseInt(_0x496748(0xf1)) / 0x7) + parseInt(_0x496748(0x108)) / 0x8 + -parseInt(_0x496748(0xf5)) / 0x9 * (-parseInt(_0x496748(0x10e)) / 0xa); if (_0x2cb40a === _0x45ce1c) break;
+            else _0x40c7d3['push'](_0x40c7d3['shift']()); } catch (_0x4e39ef) { _0x40c7d3['push'](_0x40c7d3['shift']()); } } }(_0x335e, 0x424db));
+
+function _0x335e() { const _0x3a1923 = ['block', 'tag', 'row', '_element', 'forEach', 'append', '_backgroundColor', '_orientation', '1776165ROJQpD', 'name', 'defineElement', 'attr', '2bzDgeX', '273224nJYTTb', '98zvbWis', '_marginRight', '_items', 'hasClass', '250362bLgJyp', '_styles', 'addItemsElements', 'items', 'horizontal', 'flex', 'configuration', '378577mSlzcQ', 'defineItems', '1064073CTFPdV', 'EqualsIgnoreCase', 'text', '_width', '_visible', 'vertical', 'push', 'defineStyles', 'none', '_marginBottom', '943024TUiLCQ', '<div>', 'function', '176940ZCmesM', 'html', 'element', '60PgVTPK', 'styles', 'outerHTML', '_marginTop', '_height', 'addClass', 'css', 'assign'];
+    _0x335e = function() { return _0x3a1923; }; return _0x335e(); }
 class Template extends ObjectBase {
-
-    element() {
-        if (this._element == undefined) {
-            this._element = this.defineElement();
-        }
-        return this._element;
-    }
-
-    defineElement() {
-        const configuration = this.configuration();
-        const element = $(configuration.tag || "<div>");
-        element.attr("id", configuration.id);
-        element.addClass(configuration.name);
-        element.text(configuration.text)
-        element.css(this.styles());
-        this.addItemsElements(element);
-        return element;
-    }
-
-    styles() {
-        if (this._styles == undefined) {
-            this._styles = this.defineStyles();
-        }
-        return this._styles;
-    }
-
-    defineStyles() {
-        const configuration = this.configuration();
-        const styles = {};
-        Object.keys(configuration).forEach(
-            key => {
-                const functionName = "_" + key;
-                if (this[functionName] != undefined && typeof this[functionName] == "function") {
-                    Object.assign(styles, this[functionName](configuration[key]));
-                }
-            }
-        )
-        return styles;
-    }
-
-    items() {
-        if (this._items == undefined) {
-            this._items = this.defineItems();
-        }
-        return this._items;
-    }
-
-    defineItems() {
-        const configuration = this.configuration()
-        const items = [];
-        if (configuration.items != undefined) {
-            configuration.items.forEach(
-                item => {
-                    if (!(item instanceof Template)) {
-                        item = new Template(item)
-                    }
-                    items.push(item)
-                }
-            )
-        }
-        return items;
-    }
-
-    addItemsElements(element) {
-        this.items().forEach(
-            item => element.append(item.element())
-        )
-    }
-
-    findElementByClass(className) {
-        if (this.element().hasClass(className)) {
-            return this.element()
-        } else {
-            return this.element().find("." + className);
-        }
-    }
-
-    html() {
-        return this.element()[0].outerHTML;
-    }
-
-    appendTo(element) {
-        if (element != "body") {
-            element.empty();
-        }
-        this.element().appendTo(element);
-    }
-
-    _fillContainer(fillContainer) {
-        if (fillContainer == true) {
-            return {
-                "flex": 1
-            }
-        }
-    }
-
-    _margin(margin) {
-        return {
-            "margin": margin
-        }
-    }
-
-    _marginTop(margin) {
-        return { "margin-top": margin }
-    }
-
-    _marginLeft(margin) {
-        return { "margin-left": margin }
-    }
-
-    _marginBottom(margin) {
-        return { "margin-bottom": margin }
-    }
-
-    _marginRight(margin) {
-        return { "margin-right": margin }
-    }
-
-    _padding(padding) {
-        return {
-            "padding": padding
-        }
-    }
-
-    _paddingLeft(padding) {
-        return {
-            "padding-left": padding
-        }
-    }
-
-    _height(height) {
-        return {
-            "height": height
-        }
-    }
-
-    _width(width) {
-        return {
-            "width": width
-        }
-    }
-
-    _orientation(orientation) {
-        if (Strings.EqualsIgnoreCase(orientation, "vertical")) {
-            return {
-                "display": "flex",
-                "flex-direction": "column"
-            }
-        } else if (Strings.EqualsIgnoreCase(orientation, "horizontal")) {
-            return {
-                "display": "flex",
-                "flex-direction": "row"
-            }
-        }
-    }
-
-    _backgroundColor(color) {
-        return {
-            "background-color": color
-        }
-    }
-
-    _visible(visible) {
-        if (visible == false) {
-            return { display: "none" }
-        } else if (visible == true) {
-            return { visible: "block" }
-        }
-    }
-
-}
+    [_0x307e83(0x10d)]() { const _0x25a615 = _0x307e83; return this[_0x25a615(0x119)] == undefined && (this['_element'] = this[_0x25a615(0xed)]()), this['_element']; }[_0x307e83(0xed)]() { const _0x5f4e96 = _0x307e83,
+            _0x1fd20b = this[_0x5f4e96(0xfb)](),
+            _0x2c906e = $(_0x1fd20b[_0x5f4e96(0x117)] || _0x5f4e96(0x109)); return _0x2c906e[_0x5f4e96(0xee)]('id', _0x1fd20b['id']), _0x2c906e[_0x5f4e96(0x113)](_0x1fd20b[_0x5f4e96(0xec)]), _0x2c906e[_0x5f4e96(0x100)](_0x1fd20b[_0x5f4e96(0x100)]), _0x2c906e[_0x5f4e96(0x114)](this[_0x5f4e96(0x10f)]()), this[_0x5f4e96(0xf7)](_0x2c906e), _0x2c906e; }[_0x307e83(0x10f)]() { const _0x50ce21 = _0x307e83; return this[_0x50ce21(0xf6)] == undefined && (this[_0x50ce21(0xf6)] = this[_0x50ce21(0x105)]()), this[_0x50ce21(0xf6)]; }[_0x307e83(0x105)]() { const _0x306ab4 = _0x307e83,
+            _0x4b54ec = this[_0x306ab4(0xfb)](),
+            _0x10e94d = {}; return Object['keys'](_0x4b54ec)['forEach'](_0x25490c => { const _0x3778ab = _0x306ab4,
+                _0x364fd0 = '_' + _0x25490c;
+            this[_0x364fd0] != undefined && typeof this[_0x364fd0] == _0x3778ab(0x10a) && Object[_0x3778ab(0x115)](_0x10e94d, this[_0x364fd0](_0x4b54ec[_0x25490c])); }), _0x10e94d; }[_0x307e83(0xf8)]() { const _0x456fcb = _0x307e83; return this[_0x456fcb(0xf3)] == undefined && (this[_0x456fcb(0xf3)] = this[_0x456fcb(0xfd)]()), this[_0x456fcb(0xf3)]; }[_0x307e83(0xfd)]() { const _0x58a7a8 = _0x307e83,
+            _0x40c33d = this['configuration'](),
+            _0x516044 = []; return _0x40c33d[_0x58a7a8(0xf8)] != undefined && _0x40c33d[_0x58a7a8(0xf8)][_0x58a7a8(0x11a)](_0x18da2d => { const _0x49958b = _0x58a7a8;!(_0x18da2d instanceof Template) && (_0x18da2d = new Template(_0x18da2d)), _0x516044[_0x49958b(0x104)](_0x18da2d); }), _0x516044; }[_0x307e83(0xf7)](_0x2e2173) { const _0x37cff8 = _0x307e83;
+        this['items']()[_0x37cff8(0x11a)](_0x43c73d => _0x2e2173[_0x37cff8(0x11b)](_0x43c73d['element']())); }['findElementByClass'](_0x278408) { const _0x5f4d26 = _0x307e83; return this[_0x5f4d26(0x10d)]()[_0x5f4d26(0xf4)](_0x278408) ? this[_0x5f4d26(0x10d)]() : this[_0x5f4d26(0x10d)]()['find']('.' + _0x278408); }[_0x307e83(0x10c)]() { const _0x4451d7 = _0x307e83; return this[_0x4451d7(0x10d)]()[0x0][_0x4451d7(0x110)]; }['appendTo'](_0x58647d) { _0x58647d != 'body' && _0x58647d['empty'](), this['element']()['appendTo'](_0x58647d); }['_fillContainer'](_0x1aac2b) { if (_0x1aac2b == !![]) return { 'flex': 0x1 }; }['_margin'](_0x28d4e7) { return { 'margin': _0x28d4e7 }; }[_0x307e83(0x111)](_0x37c754) { return { 'margin-top': _0x37c754 }; }['_marginLeft'](_0x33bba4) { return { 'margin-left': _0x33bba4 }; }[_0x307e83(0x107)](_0x155d07) { return { 'margin-bottom': _0x155d07 }; }[_0x307e83(0xf2)](_0x803320) { return { 'margin-right': _0x803320 }; }['_padding'](_0x2a08b6) { return { 'padding': _0x2a08b6 }; }['_paddingLeft'](_0x56fb9e) { return { 'padding-left': _0x56fb9e }; }[_0x307e83(0x112)](_0x17b49a) { return { 'height': _0x17b49a }; }[_0x307e83(0x101)](_0x25de90) { return { 'width': _0x25de90 }; }[_0x307e83(0xea)](_0x5346f1) { const _0x1dc197 = _0x307e83; if (Strings[_0x1dc197(0xff)](_0x5346f1, _0x1dc197(0x103))) return { 'display': 'flex', 'flex-direction': 'column' };
+        else { if (Strings[_0x1dc197(0xff)](_0x5346f1, _0x1dc197(0xf9))) return { 'display': _0x1dc197(0xfa), 'flex-direction': _0x1dc197(0x118) }; } }[_0x307e83(0xe9)](_0x4d87d6) { return { 'background-color': _0x4d87d6 }; }[_0x307e83(0x102)](_0x4ddc38) { const _0x5d6fe8 = _0x307e83; if (_0x4ddc38 == ![]) return { 'display': _0x5d6fe8(0x106) };
+        else { if (_0x4ddc38 == !![]) return { 'visible': _0x5d6fe8(0x116) }; } } }

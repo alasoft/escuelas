@@ -8,6 +8,11 @@ class MateriasCurso extends CursosDetalle {
             components: {
                 filter: {
                     width: 280
+                },
+                list: {
+                    groupPanel: {
+                        visible: false
+                    }
                 }
             }
         }
@@ -80,6 +85,12 @@ class MateriasCurso extends CursosDetalle {
                     onClick: e => this.evaluaciones()
                 }
             }
+        }
+    }
+
+    itemSpace() {
+        return {
+            text: " ".repeat(20)
         }
     }
 
@@ -177,7 +188,7 @@ class MateriasCursoForm extends FormView {
         return {
             title: "Materia del Curso",
             width: 600,
-            height: 450
+            height: 400
         }
     }
 
