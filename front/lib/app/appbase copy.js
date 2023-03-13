@@ -31,8 +31,6 @@ class AppBase {
 
     static TIME_WIDTH = 100;
 
-    static EMAIL_WIDTH = 400;
-
     static POPUP_BACKGROUND_COLOR = "white";
     static POPUP_PREFFIX_ID = "appPopup";
 
@@ -96,7 +94,7 @@ class AppBase {
     }
 
     static Login() {
-        return this.ClearSession()
+        return this.ClearDesktop()
             .then(() =>
                 this.LoginUserView())
             .then(closeData =>
@@ -104,19 +102,15 @@ class AppBase {
     }
 
     static LoginUser(data) {
-        return this.ClearSession()
+        return this.ClearDesktop()
             .then(() =>
                 this.LoginUserRest(data))
             .then(closeData =>
                 this.AfterLogin(closeData))
     }
 
-    static ClearSession() {
-        return Promise.resolve(this.ClearUser())
-            .then(() =>
-                this.ClearDataSources())
-            .then(() =>
-                $("body").empty());
+    static ClearDesktop() {
+        return Promise.resolve($("body").empty());
     }
 
     static LoginUserView() {
@@ -240,22 +234,18 @@ class AppBase {
         return "test"
     }
 
+    static GetToken() {
+        return this.GetUser().token;
+    }
+
     static GetUser() {
         const json = sessionStorage.getItem("user");
         const user = JSON.parse(json);
         return user != null ? user : {};
     }
 
-    static GetToken() {
-        return this.GetUser().token;
-    }
-
     static SetUser(user) {
         sessionStorage.setItem("user", JSON.stringify(user));
-    }
-
-    static ClearUser() {
-        this.SetUser(null);
     }
 
     static ShowMessage(parameters) {
@@ -305,24 +295,6 @@ class AppBase {
 
     static SelectFirstItem() {
         this.View().selectFirstItem();
-    }
-
-    static RegisterDataSource(viewClass, parameters) {
-        const dataSource = Ds(parameters);
-        this.DataSources().set(viewClass, dataSource);
-        return dataSource;
-    }
-
-    static DataSources() {
-        if (this._DataSources == undefined) {
-            this._DataSources = new Map();
-        }
-        return this._DataSources;
-    }
-
-    static ClearDataSources() {
-        this.DataSources().forEach((dataSource, viewClass) =>
-            viewClass.ClearDataSource())
     }
 
 }

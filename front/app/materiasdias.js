@@ -59,10 +59,13 @@ class MateriasDias extends CursosMateriasDetalle {
 
 class MateriasDiasForm extends FormView {
 
-    defineRest() {
-        return new Rest({
-            path: "materias_dias",
-            transformData: (verb, data) => this.transformData(verb, data)
+    transformInsertUpdate(data, verb) {
+        return Utils.ReduceIds({
+            id: data.id,
+            materiacurso: this.materiaCurso(),
+            dia: data.dia,
+            desde: Dates.TimeAsString(data.desde),
+            hasta: Dates.TimeAsString(data.hasta)
         })
     }
 
@@ -73,17 +76,6 @@ class MateriasDiasForm extends FormView {
             height: 400
         }
     }
-
-    transformData(verb, data) {
-        return Utils.ReduceIds({
-            id: data.id,
-            materiacurso: this.materiaCurso(),
-            dia: data.dia,
-            desde: Dates.TimeAsString(data.desde),
-            hasta: Dates.TimeAsString(data.hasta)
-        })
-    }
-
 
     formItems() {
         return [

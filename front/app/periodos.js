@@ -1,9 +1,5 @@
 class Periodos extends AñoLectivoFilterView {
 
-    path() {
-        return "periodos";
-    }
-
     labelText() {
         return "Períodos";
     }
@@ -27,10 +23,14 @@ class Periodos extends AñoLectivoFilterView {
 
     deleteMessage() {
         const data = this.focusedRowData();
-        return this.composeDeleteMessage({
-            title: "este Período",
-            description: data.nombre + ", " + Dates.Format(data.desde) + " al " + Dates.Format(data.hasta)
-        })
+        return Messages.Sections([{
+            title: "Borra el Período ?",
+            detail: data.nombre
+        }, {
+            title: "que va",
+            detail: "Del " + Dates.Format(data.desde) + " Al " + Dates.Format(data.hasta),
+            quotes: false
+        }])
     }
 
     static Descripcion(data) {
@@ -48,10 +48,6 @@ class Periodos extends AñoLectivoFilterView {
 }
 
 class PeriodosFormView extends FormView {
-
-    defineRest() {
-        return new Rest({ path: "periodos" });
-    }
 
     popupConfiguration() {
         return {

@@ -18,9 +18,6 @@ class Errors {
 
     static ErrorObject(err) {
         if (Utils.IsObject(err)) {
-            if (err instanceof TypeError || err instanceof ReferenceError) {
-                return { internal: true, message: err.message, stack: err.stack }
-            }
             if (err.responseJSON != undefined) {
                 return {
                     message: err.responseJSON.message
@@ -36,12 +33,12 @@ class Errors {
                     message: err.code == Errors.FORM_VALIDATION ? null : App.UNIDENTIFIED_ERROR_MESSAGE
                 })
             }
-            return err;
+            return { internal: true, message: err.message, stack: err.stack }
         } else {
             if (Utils.IsString(err)) {
                 return { message: err }
             }
-            return { message: App.UNIDENTIFIED_ERROR_MESSAGE }
+            return { internal: true, message: App.UNIDENTIFIED_ERROR_MESSAGE }
         }
     }
 

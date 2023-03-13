@@ -11,12 +11,10 @@ class ListViewTemplate extends Template {
                     orientation: "vertical",
                     backgroundColor: App.BOX_BACKGROUND_COLOR,
                     items: [{
-                            name: "filter",
-                            padding: App.BOX_PADDING,
-                            orientation: "vertical"
-                        }
-
-                    ]
+                        name: "filter",
+                        padding: App.BOX_PADDING,
+                        orientation: "vertical"
+                    }]
                 },
                 {
                     name: "toolbar",
@@ -29,7 +27,6 @@ class ListViewTemplate extends Template {
                 }, {
                     name: "contextMenu"
                 }
-
             ]
         }
     }

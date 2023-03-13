@@ -1,7 +1,10 @@
 class Materias extends ListView {
 
     static DefineDataSource() {
-        return Ds({ path: "materias", cache: false });
+        return App.RegisterDataSource(this, {
+            path: "materias",
+            cache: true
+        });
     }
 
     labelText() {
@@ -20,7 +23,7 @@ class Materias extends ListView {
     }
 
     deleteMessage() {
-        return this.composeDeleteMessage({ title: "esta Materia", description: this.focusedRowValue("nombre") })
+        return Messages.Section({ title: "Borra la Materia ?", detail: this.focusedRowValue("nombre") })
     }
 
     deleteErrorMessage(err) {
@@ -35,10 +38,6 @@ class Materias extends ListView {
 }
 
 class MateriasForm extends FormView {
-
-    defineRest() {
-        return new Rest({ path: "materias" })
-    }
 
     popupConfiguration() {
         return {

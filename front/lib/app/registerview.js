@@ -31,10 +31,6 @@ class RegisterView extends EntryView {
         ]
     }
 
-    restPath() {
-        return "users";
-    }
-
     okey() {
         this.validate()
             .then(() =>
@@ -51,13 +47,13 @@ class RegisterView extends EntryView {
         return new Promise((resolve, reject) => {
             this.formValidate().then(() => {
                 if (this.email() != this.repeatEmail()) {
-                    reject(this.validationError("Los emails deben coincidir"))
+                    reject(new ValidationException({ message: "Los emails deben coincidir" }))
                 }
                 if (this.password().length < 8) {
-                    reject(this.validationError("El password debe tener al menos 8 caracteres"))
+                    reject(new ValidationException({ message: "El password debe tener al menos 8 caracteres" }))
                 }
                 if (this.password() != this.repeatPassword()) {
-                    reject(this.validationError("Los passwords deben coincidir"))
+                    reject(new ValidationException({ message: "Los passwords deben coincidir" }))
                 }
                 resolve(true)
             }).catch(err =>

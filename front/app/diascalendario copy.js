@@ -78,9 +78,9 @@ class DiasCalendario extends View {
         return Ds({
             path: "materias_dias_all",
             filter: {
-                añolectivo: this.parameters.añoLectivo,
-                curso: this.parameters.curso,
-                materiacurso: this.parameters.materiacurso,
+                añolectivo: this.parameters().añoLectivo,
+                curso: this.parameters().curso,
+                materiacurso: this.parameters().materiacurso,
             },
             transformData: rows => this.transformData(rows),
             onLoaded: rows => this.components().scheduler.instance().repaint()

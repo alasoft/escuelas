@@ -5,7 +5,7 @@ class DiasCalendario extends View {
                 path: "materias_dias_all",
             }).promise({
                 verb: "list",
-                data: { añolectivo: this.parameters.añoLectivo }
+                data: { añolectivo: this.parameters().añoLectivo }
             })
             .then(rows =>
                 this.transformRows(rows))
@@ -106,18 +106,8 @@ class DiasCalendario extends View {
     }
 
     schedulerOnContentReady(e) {
-        let el;
-        el = this.template().findElementByClass("dx-toolbar-items-container");
-        if (el != undefined) {
-            el.css("display", "none")
-        }
-        el = this.template().findElementByClass("dx-scheduler-header");
-        if (el != undefined) {
-            el.css({
-                "height": "0px",
-            })
-        }
-
+        this.template().hideElementByClass("dx-toolbar-items-container");
+        this.template().setElementStyleByClass("dx-scheduler-header", { "height": "0px" })
     }
 
 }

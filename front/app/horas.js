@@ -89,15 +89,7 @@ class HorasForm extends CursosMateriasForm {
         return "materias_dias";
     }
 
-    popupConfiguration() {
-        return {
-            title: "Horario",
-            width: 750,
-            height: 400
-        }
-    }
-
-    transformData(verb, data) {
+    transformInsertUpdate(data, verb) {
         return {
             id: data.id,
             materiacurso: data.materiacurso,

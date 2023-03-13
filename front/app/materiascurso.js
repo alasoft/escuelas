@@ -1,5 +1,9 @@
 class MateriasCurso extends CursosDetalle {
 
+    path() {
+        return "materias_cursos";
+    }
+
     extraConfiguration() {
         return {
             popup: {
@@ -15,10 +19,6 @@ class MateriasCurso extends CursosDetalle {
 
     labelText() {
         return "Materias por Curso"
-    }
-
-    path() {
-        return "materias_cursos";
     }
 
     itemCurso() {
@@ -54,32 +54,6 @@ class MateriasCurso extends CursosDetalle {
         return {
             text: "   ",
             location: "before"
-        }
-    }
-
-    contextMenuItems() {
-        return super.contextMenuItems().concat(this.contextMenuEvaluaciones())
-    }
-
-    contextMenuEvaluaciones() {
-        return {
-            text: "Evaluaciones",
-            onClick: () => this.evaluaciones()
-        }
-    }
-
-    itemEvaluaciones() {
-        if (this.list().hasRows()) {
-            return {
-                widget: "dxButton",
-                location: "before",
-                options: {
-                    text: "Evaluaciones",
-                    //                    stylingMode: "contained",
-                    icon: "edit",
-                    onClick: e => this.evaluaciones()
-                }
-            }
         }
     }
 
@@ -119,16 +93,6 @@ class MateriasCurso extends CursosDetalle {
         new MateriasDias(this.detailData()).render()
     }
 
-    evaluaciones() {
-        return new Evaluaciones({
-            mode: "popup",
-            popup: {
-                title: "Evaluaciones",
-                fullScreen: true
-            }
-        }).render();
-    }
-
     detailData() {
         return {
             masterView: this,
@@ -144,10 +108,10 @@ class MateriasCurso extends CursosDetalle {
     }
 
     deleteMessage() {
-        return this.composeDeleteMessage({ title: "esta Materia", description: this.focusedRowValue("materia") })
-        return "<b>Borra esta Materia ?<br><br>" + Html.Tab() +
-            Strings.SingleQuotes(this.focusedRowValue("materianombre")) +
-            "<br><br>dictada en el Curso:<br><br>" + Html.Tab() + Strings.SingleQuotes(this.filterText("curso"))
+        return Messages.Sections([{ title: "Borra la Materia ?", detail: this.focusedRowValue("materianombre") }, {
+            title: "dictada en el Curso",
+            detail: this.getFilterText("curso")
+        }, { title: "Importante:", detail: "<i>Junto con la Materia se borrarán los horarios de la misma", quotes: false }])
     }
 
     listOnContentReady(e) {
@@ -161,11 +125,7 @@ class MateriasCurso extends CursosDetalle {
 
 class MateriasCursoForm extends FormView {
 
-    defineRest() {
-        return new Rest({ path: "materias_cursos", transformData: (verb, data) => this.transformData(verb, data) })
-    }
-
-    transformData(verb, data) {
+    transformInsertUpdate(data, verb) {
         return Utils.ReduceIds({
             id: data.id,
             curso: data.curso,

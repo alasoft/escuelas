@@ -12,8 +12,8 @@ class Template extends ObjectBase {
         const element = $(configuration.tag || "<div>");
         element.attr("id", configuration.id);
         element.addClass(configuration.name);
-        element.text(configuration.text)
         element.css(this.styles());
+        element.text(configuration.text)
         this.addItemsElements(element);
         return element;
     }
@@ -74,6 +74,17 @@ class Template extends ObjectBase {
         } else {
             return this.element().find("." + className);
         }
+    }
+
+    setElementStyleByClass(className, css) {
+        const element = this.findElementByClass(className);
+        if (element != undefined) {
+            element.css(css);
+        }
+    }
+
+    hideElementByClass(className) {
+        this.setElementStyleByClass(className, { display: "none" })
     }
 
     html() {

@@ -20,7 +20,7 @@ class Popup extends Widget {
         while ($("#" + App.POPUP_PREFFIX_ID + "-" + i).length) {
             i++
         }
-        element = $("<div id='" + App.POPUP_PREFFIX_ID + "-" + i + "'>").dxPopup(this.parameters);
+        element = $("<div id='" + App.POPUP_PREFFIX_ID + "-" + i + "'>").dxPopup(this.parameters());
         $("body").append(element);
         return element;
     }

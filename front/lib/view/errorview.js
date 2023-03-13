@@ -1,7 +1,7 @@
 class ErrorView extends MessageView {
 
     isInternal() {
-        return this.parameters.internal == true;
+        return this.parameters().internal == true;
     }
 
     popupTitleDefault() {
@@ -9,9 +9,9 @@ class ErrorView extends MessageView {
     }
 
     defineMessage() {
-        return (this.isInternal() ? Html.BoldWithStyle("background-color: lightyellow") : Html.Bold()) +
-            this.parameters.message +
-            (this.parameters.stack != undefined ? Html.LineFeed(3) + this.parameters.stack : "");
+        return (this.isInternal() ? '<style="background-color: lightgrey"><i>' : "<b>") +
+            this.parameters().message +
+            (this.parameters().stack != undefined ? Html.LineFeed(3) + this.parameters().stack : "");
     }
 
 }

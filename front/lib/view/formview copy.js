@@ -4,18 +4,6 @@ class FormView extends EntryView {
         return this.listView().path()
     }
 
-    transformData(data, verb) {
-        if (Strings.StringIs(verb, ["insert", "update"])) {
-            return this.transformInsertUpdate(data, verb);
-        } else {
-            return data;
-        }
-    }
-
-    transformInsertUpdate(data, verb) {
-        return data;
-    }
-
     defaultConfiguration() {
         return Utils.Merge(super.defaultConfiguration(), {
             sendAllData: true

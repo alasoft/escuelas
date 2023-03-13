@@ -1,7 +1,11 @@
 class ObjectBase {
 
     constructor(parameters = {}) {
-        this.parameters = parameters;
+        this._parameters = parameters;
+    }
+
+    parameters() {
+        return this._parameters;
     }
 
     configuration() {
@@ -12,7 +16,7 @@ class ObjectBase {
     }
 
     defineConfiguration() {
-        return Utils.Merge(this.defaultConfiguration(), this.extraConfiguration(), this.parameters);
+        return Utils.Merge(this.defaultConfiguration(), this.extraConfiguration(), this.parameters());
     }
 
     defaultConfiguration() {}

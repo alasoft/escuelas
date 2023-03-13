@@ -53,7 +53,7 @@ class CursosMateriasDetalle extends CursosDetalle {
     }
 
     filterAfterRenderData() {
-        return Utils.Merge(super.filterAfterRenderData(), { materiacurso: this.parameters.materiacurso });
+        return Utils.Merge(super.filterAfterRenderData(), { materiacurso: this.parameters().materiacurso });
     }
 
     materiaCurso() {

@@ -1,11 +1,10 @@
-class DataSource {
+class DataSource extends ObjectBase {
 
     constructor(parameters) {
-        this.path = parameters.path;
-        this.loadMode = parameters.cache == true ? "raw" : "processed";
-        this.filter = parameters.filter;
-        this.transformData = parameters.transformData;
-        this.onLoaded = parameters.onLoaded
+        super(parameters);
+        this.keyName = this.parameters().keyName || App.KEY_NAME;
+        this.loadMode = this.parameters().cache == true ? "raw" : "processed";
+        this.description = this.parameters().description;
     }
 
     rest() {
@@ -16,31 +15,32 @@ class DataSource {
     }
 
     defineRest() {
-        return new Rest({ path: this.path })
+        return new Rest({ path: this.parameters().path, })
     }
 
     configuration() {
         return {
-            path: this.path,
-            key: App.KEY_NAME,
+            path: this.parameters().path,
+            key: this.keyName,
             loadMode: this.loadMode,
             load: searchData => {
                 return this.rest().promise({
                     verb: "list",
                     data: this.listData(searchData)
                 }).then(data =>
-                    this.transformData != undefined ? this.transformData(data) : data)
+                    this.transformData(data)
+                )
             },
-            byKey: this.cache == true ? undefined : key =>
+            byKey: this.parameters().cache == true ? undefined : key =>
                 this.rest().promise({
                     verb: "get",
                     data: {
-                        [App.KEY_NAME]: key
+                        [this.keyName]: key
                     }
                 }),
             onLoaded: data => {
-                if (this.onLoaded != undefined) {
-                    this.onLoaded(data)
+                if (this.parameters().onLoaded != undefined) {
+                    this.parameters().onLoaded(data)
                 }
             }
         }
@@ -54,8 +54,16 @@ class DataSource {
             }
         }
 
-        return Utils.Merge({ descripcion: descripcion() }, Utils.Evaluate(this.filter))
+        return Utils.Merge({ descripcion: descripcion() }, Utils.Evaluate(this.parameters().filter))
 
+    }
+
+    transformData(data) {
+        if (this.parameters().transformData != undefined) {
+            return this.parameters().transformData(data);
+        } else {
+            return data;
+        }
     }
 
 }

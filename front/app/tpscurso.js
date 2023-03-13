@@ -1,5 +1,9 @@
 class TpsCurso extends CursosMateriasDetalle {
 
+    path() {
+        return "tps"
+    }
+
     extraConfiguration() {
         return {
             mode: "view",
@@ -36,7 +40,7 @@ class TpsCurso extends CursosMateriasDetalle {
         if (materiacurso != undefined) {
             this.list().setDataSource(
                 Ds({
-                    path: "tps",
+                    path: this.path(),
                     filter: { materiacurso: materiacurso }
                 })
             )
@@ -60,10 +64,16 @@ class TpsCurso extends CursosMateriasDetalle {
     }
 
     deleteMessage() {
-        return "<b>Borra el Trabajo Práctico ?<br><br>" + Html.Tab() +
-            Strings.SingleQuotes(this.focusedRowValue("nombre")) +
-            "<br><br>del Curso:<br><br>" + Html.Tab() + Strings.SingleQuotes(this.getFilterText("curso")) +
-            "<br><br>de la Materia:<br><br>" + Html.Tab() + Strings.SingleQuotes(this.getFilterText("materiacurso"))
+        return Messages.Sections([{
+            title: "Borra el Trabajo Práctico ?",
+            detail: this.focusedRowValue("nombre")
+        }, {
+            title: "de la Materia",
+            detail: this.getFilterText("materiacurso")
+        }, {
+            title: "del Curso",
+            detail: this.getFilterText("curso")
+        }])
     }
 
     deleteErrorMessage(err) {
@@ -73,10 +83,6 @@ class TpsCurso extends CursosMateriasDetalle {
             err: err,
             vinculo: "vinculada"
         })
-    }
-
-    restPath() {
-        return "tps";
     }
 
     itemMateriaCursoOnValueChanged(e) {
@@ -107,10 +113,14 @@ class TpsCurso extends CursosMateriasDetalle {
 
 class TpsCursoForm extends FormView {
 
-    defineRest() {
-        return new Rest({
-            path: "tps",
-            transformData: (verb, data) => this.transformData(verb, data)
+    transformInsertUpdate(data, verb) {
+        return Utils.ReduceIds({
+            id: data.id,
+            materiacurso: this.materiaCurso(),
+            periodo: data.periodo,
+            nombre: data.nombre,
+            desde: data.desde,
+            hasta: data.hasta
         })
     }
 
@@ -120,17 +130,6 @@ class TpsCursoForm extends FormView {
             width: 750,
             height: 500
         }
-    }
-
-    transformData(verb, data) {
-        return Utils.ReduceIds({
-            id: data.id,
-            materiacurso: this.materiaCurso(),
-            periodo: data.periodo,
-            nombre: data.nombre,
-            desde: data.desde,
-            hasta: data.hasta
-        })
     }
 
     formItems() {

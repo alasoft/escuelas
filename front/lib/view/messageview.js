@@ -5,7 +5,7 @@ class MessageView extends DialogView {
 
     popupConfiguration() {
         return {
-            title: this.parameters.title || this.popupTitleDefault(),
+            title: this.parameters().title || this.popupTitleDefault(),
             showCloseButton: false,
             onShowing: e => this.popupOnShowing(e)
         }
@@ -51,7 +51,7 @@ class MessageView extends DialogView {
     }
 
     defineMessage() {
-        return this.parameters.message;
+        return this.parameters().message;
     }
 
 }

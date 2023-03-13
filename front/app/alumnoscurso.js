@@ -1,5 +1,9 @@
 class AlumnosCurso extends CursosDetalle {
 
+    path() {
+        return "alumnos";
+    }
+
     extraConfiguration() {
         return {
             popup: {
@@ -13,22 +17,9 @@ class AlumnosCurso extends CursosDetalle {
         }
     }
 
-    path() {
-        return "alumnos";
-    }
-
     labelText() {
         return "Alumnos por Curso"
     }
-
-    /*    
-        itemAñoLectivo() {
-            return super.itemAñoLectivo({ readOnly: false })
-        }
-
-
-
-*/
 
     itemCurso() {
         return super.itemCurso({ deferRendering: false })
@@ -55,7 +46,7 @@ class AlumnosCurso extends CursosDetalle {
             Column.Id(),
             Column.Text({ dataField: "apellido", width: 250 }),
             Column.Text({ dataField: "nombre" }),
-            Column.Calculated({ formula: row => Generos.GetNombre(row.genero), caption: "Género" })
+            Column.Text({ dataField: "email" })
         ]
     }
 
@@ -72,32 +63,24 @@ class AlumnosCurso extends CursosDetalle {
     }
 
     deleteMessage() {
-        return "<b>Borra " + this.generoArticulo() + " ?<br><br>" + Html.Tab() +
-            Strings.SingleQuotes(this.focusedRowValue("apellido") + " " + this.focusedRowValue("nombre")) +
-            "<br><br>perteneciente al Curso:<br><br>" + Html.Tab() +
-            Strings.SingleQuotes(this.getFilterText("curso"))
+        return Messages.Sections([{
+            title: "Borra " + this.generoArticulo() + " ?",
+            detail: this.focusedRowValue("apellido") + " " + this.focusedRowValue("nombre")
+        }, {
+            title: "perteneciente al Curso:",
+            detail: this.getFilterText("curso")
+        }]);
     }
 
     generoArticulo() {
-        if (this.focusedRowValue("genero") == "M") {
-            return "el Alumno"
-        } else {
-            return "la Alumna";
-        }
+        return "el Alumno"
     }
 
 }
 
 class AlumnosCursoForm extends FormView {
 
-    defineRest() {
-        return new Rest({
-            path: "alumnos",
-            transformData: (verb, data) => this.transformData(verb, data)
-        })
-    }
-
-    transformData(verb, data) {
+    transformInsertUpdate(data, verb) {
         return Utils.ReduceIds({
             id: data.id,
             curso: data.curso,
@@ -106,7 +89,6 @@ class AlumnosCursoForm extends FormView {
             genero: data.genero
         })
     }
-
 
     popupConfiguration() {
         return {
@@ -123,7 +105,7 @@ class AlumnosCursoForm extends FormView {
             Item.ReadOnly({ dataField: "cursodescripcion", label: "Curso" }),
             Item.Text({ dataField: "apellido", required: true, width: 250 }),
             Item.Text({ dataField: "nombre", required: true, width: 250 }),
-            Item.Lookup({ dataField: "genero", required: true, dataSource: Generos.DataSource(), width: 150 })
+            Item.Email({ dataField: "email" })
         ]
     }
 

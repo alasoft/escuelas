@@ -1,7 +1,10 @@
 class Modalidades extends ListView {
 
     static DefineDataSource() {
-        return Ds({ path: "modalidades", cache: false });
+        return App.RegisterDataSource(this, {
+            path: "modalidades",
+            cache: true
+        });
     }
 
     labelText() {
@@ -19,7 +22,7 @@ class Modalidades extends ListView {
     }
 
     deleteMessage() {
-        return this.composeDeleteMessage({ title: "esta Modalidad", description: this.focusedRowValue("nombre") })
+        return Messages.Section({ title: "Borra la Modalidad ?", detail: this.focusedRowValue("nombre") })
     }
 
     deleteErrorMessage(err) {
@@ -35,10 +38,6 @@ class Modalidades extends ListView {
 }
 
 class ModalidadesForm extends FormView {
-
-    defineRest() {
-        return new Rest({ path: "modalidades" });
-    }
 
     popupConfiguration() {
         return {

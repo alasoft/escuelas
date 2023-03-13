@@ -1,19 +1,5 @@
 class Cursos extends AñoLectivoFilterView {
 
-    constructor(parameters) {
-        super(parameters);
-    }
-
-    extraConfiguration() {
-        return {
-            components: {}
-        }
-    }
-
-    path() {
-        return "cursos"
-    }
-
     labelText() {
         return "Cursos";
     }
@@ -21,7 +7,6 @@ class Cursos extends AñoLectivoFilterView {
     toolbarItems() {
         return [this.itemInsert(), this.itemAlumnosCurso(), this.itemMateriasCurso()]
     }
-
 
     itemAlumnosCurso() {
         if (this.list().hasRows()) {
@@ -110,7 +95,7 @@ class Cursos extends AñoLectivoFilterView {
     }
 
     deleteMessage() {
-        return this.composeDeleteMessage({ title: "este Curso", description: this.descripcion() })
+        return Messages.Section({ title: "Borra el Curso ?", detail: this.descripcion() })
     }
 
     descripcion() {
@@ -135,27 +120,7 @@ class Cursos extends AñoLectivoFilterView {
 
 class CursosForm extends FormView {
 
-    defineRest() {
-        return new Rest({
-            path: "cursos",
-            transformData: (verb, data) => this.transformData(verb, data),
-            headers: verb => this.headers(verb)
-        })
-    }
-
-    headers(verb) {
-        if (Strings.StringIs(verb, "insert,update")) {
-            return {
-                [App.CLIENT_DESCRIPTION_HEADER]: this.descripcion()
-            }
-        }
-    }
-
-    descripcion() {
-        return this.concatenateTexts("escuela,modalidad,año+division,turno")
-    }
-
-    transformData(verb, data) {
+    transformInsertUpdate(data, verb) {
         return Utils.ReduceIds({
             id: data.id,
             escuela: data.escuela,

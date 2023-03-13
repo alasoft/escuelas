@@ -42,7 +42,7 @@ class TpsForm extends CursosMateriasForm {
         return "tps";
     }
 
-    transformData(verb, data) {
+    transformInsertUpdate(data, verb) {
         return Utils.ReduceIds({
             id: data.id,
             materiacurso: this.materiaCurso(),

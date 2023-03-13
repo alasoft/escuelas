@@ -1,6 +1,7 @@
-class Rest {
+class Rest extends ObjectBase {
 
     constructor(parameters) {
+        super(parameters);
         this.path = parameters.path;
         this.transformData = parameters.transformData;
     }
@@ -27,34 +28,52 @@ class Rest {
 
     promise(parameters) {
         const url = App.Url(this.path, parameters.verb);
-        const headers = this.headers(parameters.verb);
         const type = "POST";
-        const data = this.data(parameters.data, parameters.verb);
+        const data = this.data(parameters.verb, parameters.data);
+        //        const data = this.dataToString(parameters.verb, parameters.data);
         return new Promise((resolve, reject) => $.ajax({
             url: url,
-            headers: headers,
+            headers: this.headers(parameters.verb),
             type: type,
             data: JSON.stringify(data),
             success: data =>
                 resolve(data),
             error: err => {
+                //                new RestError({ err: err, url: url, type: type, data: data });
                 reject(Errors.ErrorObject(err))
             }
         }))
     }
 
-    data(data, verb) {
+    data(verb, data) {
         if (Utils.IsEmptyObject(data)) {
             return undefined;
         } else {
-            return this.transformData != undefined ? this.transformData(data, verb) : data;
+            let dataTransformed = data;
+            if (this.transformData != undefined && Strings.StringIs(verb, ["insert", "update"])) {
+                dataTransformed = this.transformInsertUpdate(data, verb);
+            }
+            return dataTransformed;
         }
     }
 
-    headers() {
-        return Utils.Merge(this.constructor.Headers, {
-            token: App.GetToken()
-        })
+    dataToString(verb, data) {
+        if (Utils.IsEmptyObject(data)) {
+            return undefined;
+        } else {
+            let dataTransformed = data;
+            if (this.transformData != undefined && Strings.StringIs(verb, ["insert", "update"])) {
+                dataTransformed = this.transformInsertUpdate(data, verb);
+            }
+            return JSON.stringify(dataTransformed);
+        }
+    }
+
+    headers(verb) {
+        return Utils.Merge(this.class().Headers, {
+                token: App.GetToken()
+            },
+            Utils.Evaluate(this.parameters().headers, verb))
     }
 
     static Headers = {

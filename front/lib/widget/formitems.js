@@ -224,6 +224,7 @@ class Item {
             isRequired: p.required || true,
             editorOptions: {
                 mode: "email",
+                width: p.width || App.EMAIL_WIDTH,
                 inputAttr: {
                     autocomplete: "on"
                 }

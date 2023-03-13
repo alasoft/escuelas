@@ -94,8 +94,8 @@ class CursosDetalle extends FilterView {
 
     filterAfterRenderData() {
         return {
-            añolectivo: this.parameters.añolectivo || Dates.ThisYear(),
-            curso: this.parameters.curso
+            añolectivo: this.parameters().añolectivo || Dates.ThisYear(),
+            curso: this.parameters().curso
         }
     }
 

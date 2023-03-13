@@ -40,10 +40,6 @@ class ListView extends View {
 
     labelText() {}
 
-    path() {
-        return this.class().Path();
-    }
-
     listColumns() {}
 
     groupColumns() {
@@ -54,13 +50,13 @@ class ListView extends View {
         if (!this.configuration().operations.includes(operation)) {
             return false;
         }
+        if (Strings.StringIs(operation, ["edit", "delete"]) && !this.isFocusedRowData()) {
+            return false;
+        }
         if (Strings.StringIs(operation, ["insert", "edit"]) && this.formViewClass() == undefined) {
             return false;
         }
         if (Strings.StringIs(operation, ["edit", "delete", "export"]) && !this.list().hasRows()) {
-            return false;
-        }
-        if (Strings.StringIs(operation, ["edit", "delete"]) && !this.isFocusedRowData()) {
             return false;
         }
         return true;
@@ -113,10 +109,6 @@ class ListView extends View {
         }
     }
 
-    deleteMessage() {
-        return Html.Bold() + "Borra este Registro";
-    }
-
     deleteRow(id) {
         this.list().deleteRow({
             path: this.path(),
@@ -134,6 +126,18 @@ class ListView extends View {
         return tableName != undefined ? tableName.trim() : "";
     }
 
+    path() {
+        return this.className().toLowerCase();
+    }
+
+    deleteMessage() {
+        return this.composeDeleteMessage({ title: "este Registro" })
+    }
+
+    composeDeleteMessage(p) {
+        return Html.Bold() + "Borra " + p.title + " ?" + Html.LineFeed(3) + Strings.SingleQuotes(p.description);
+    }
+
     composeDeleteErrorMessasge(p) {
         return Html.Bold() + "No es posible borrar " + p.name + Html.LineFeed(2) +
             Html.Tab() + Strings.SingleQuotes(p.description) + Html.LineFeed(2) +
@@ -142,19 +146,23 @@ class ListView extends View {
 
     }
 
-    rowType() {
-        const row = this.list().focusedRow();
+    getFocusedRow() {
+        return this.list().focusedRow();
+    }
+
+    getRowType() {
+        const row = this.getFocusedRow();
         if (row != undefined) {
             return row.rowType
         }
     }
 
     isFocusedRowGroup() {
-        return this.rowType() == "group";
+        return this.getRowType() == "group";
     }
 
     isFocusedRowData() {
-        return this.rowType() == "data";
+        return this.getRowType() == "data";
     }
 
     focusedRowValue(dataField) {
@@ -183,6 +191,10 @@ class ListView extends View {
 
     contextMenu() {
         return this.components().contextMenu;
+    }
+
+    dataSource() {
+        return this.list().getDataSource();
     }
 
     id() {
@@ -328,9 +340,9 @@ class ListView extends View {
     }
 
     listOnContentReady(e) {
-        this.focus()
         this.refreshToolbar();
         this.refreshContextMenuItems()
+        this.focus()
     }
 
     listOnDisposing(e) {
@@ -412,6 +424,10 @@ class ListView extends View {
         e.cancel = true;
     }
 
+    setDataSource(dataSource) {
+        this.list().setDataSource(dataSource);
+    }
+
     masterView() {
         return this.parameters().masterView;
     }
@@ -429,17 +445,8 @@ class ListView extends View {
 
     static DefineDataSource() {}
 
-    static ClearDataSource() {
-        this._DataSource = undefined;
-    }
-
-    static Path() {
-        return this.ClassName().toLowerCase();
-    }
-
     static Render() {
         this.Instance().render();
     }
-
 
 }

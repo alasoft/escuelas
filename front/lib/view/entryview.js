@@ -89,13 +89,14 @@ class EntryView extends DialogView {
     }
 
     defineRest() {
-        return new Rest({
-            path: this.path(),
-            transformData: (verb, data) => this.transformData(verb, data)
-        })
+        return new Rest({ path: this.path(), transformData: (data, verb) => this.transformData(data, verb) })
     }
 
-    transformData(verb, data) {
+    path() {
+        throw new NotImplementedException({ message: "not implemented method: path()" })
+    }
+
+    transformData(data) {
         return data;
     }
 
@@ -122,26 +123,5 @@ class EntryView extends DialogView {
     getEditorText(dataField) {
         return this.form().getEditorText(dataField);
     }
-
-    concatenateTexts(names, separatorValues = ", ", separatorSubValues = " ") {
-
-        function subValues(view, subNames) {
-            const subValues = subNames.split("+").map(subName =>
-                view.getEditorText(subName));
-            return Strings.Concatenate(subValues, separatorSubValues)
-        }
-
-        const values = names.split(",").map(name => {
-            if (Strings.Contains(name, "+")) {
-                return subValues(this, name)
-            } else {
-                return this.getEditorText(name)
-            }
-        })
-
-        return Strings.Concatenate(values, separatorValues);
-
-    }
-
 
 }

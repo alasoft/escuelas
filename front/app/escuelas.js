@@ -1,9 +1,10 @@
 class Escuelas extends ListView {
 
     static DefineDataSource() {
-        return Ds({
+        return App.RegisterDataSource(this, {
             path: "escuelas",
-        });
+            cache: true
+        })
     }
 
     labelText() {
@@ -21,7 +22,7 @@ class Escuelas extends ListView {
     }
 
     deleteMessage() {
-        return this.composeDeleteMessage({ title: "esta Escuela", description: this.focusedRowValue("nombre") })
+        return Messages.Section({ title: "Borra la Escuela ?", detail: this.focusedRowValue("nombre") })
     }
 
     deleteErrorMessage(err) {
@@ -36,10 +37,6 @@ class Escuelas extends ListView {
 }
 
 class EscuelasFormView extends FormView {
-
-    defineRest() {
-        return new Rest({ path: "escuelas" });
-    }
 
     popupConfiguration() {
         return {
