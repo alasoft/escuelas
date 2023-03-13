@@ -17,7 +17,8 @@ class AlumnosListService extends TableListService {
                 "alu.id",
                 "alu.nombre",
                 "alu.apellido",
-                "alu.genero"
+                "alu.genero",
+                "alu.email"
             ],
             from: "alumnos alu",
             where: this.sqlAnd()

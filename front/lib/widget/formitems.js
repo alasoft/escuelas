@@ -221,7 +221,7 @@ class Item {
     static Email(p = {}) {
         return {
             dataField: p.dataField || "email",
-            isRequired: p.required || true,
+            isRequired: p.required == true,
             editorOptions: {
                 mode: "email",
                 width: p.width || App.EMAIL_WIDTH,
