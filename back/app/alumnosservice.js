@@ -57,7 +57,7 @@ class AlumnosGetService extends TableGetService {
 class AlumnosInsertService extends TableInsertService {
 
     requiredValues() {
-        return "curso,apellido,nombre,genero"
+        return "curso,apellido,nombre"
     }
 
     sqlNotDuplicated() {

@@ -86,7 +86,8 @@ class AlumnosCursoForm extends FormView {
             curso: data.curso,
             apellido: data.apellido,
             nombre: data.nombre,
-            genero: data.genero
+            genero: data.genero,
+            email: data.email
         })
     }
 
