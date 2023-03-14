@@ -203,7 +203,7 @@ class View extends Component {
     }
 
     handleError(err) {
-        Errors.Handle(err);
+        return Errors.Handle(err);
     }
 
 }

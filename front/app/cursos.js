@@ -194,4 +194,8 @@ class CursosForm extends FormView {
         return "escuela";
     }
 
+    duplicatedMessage() {
+        return Messages.Section({ title: "Ya existe un Curso con los datos:", detail: this.listView().descripcion() })
+    }
+
 }

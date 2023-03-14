@@ -69,7 +69,7 @@ class AppView extends AppViewBase {
         })
 
         itemDatos.addChild({
-            text: "Materias",
+            text: "Materias Genéricas",
             onClick: e => new Materias().render()
         })
 

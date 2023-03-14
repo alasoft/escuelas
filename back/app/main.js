@@ -7,14 +7,13 @@ const { SimpleTableRest } = require("../lib/rest/simpletablerest");
 const { Turnos } = require("./turnos");
 const { CursosRest } = require("./cursosrest");
 const { MateriasCursosRest } = require("./materiascursosrest");
-const { MateriasDiasRest } = require("./materiasdiasrest");
-const { MateriasDiasAllRest } = require("./materiasdiasallrest");
+const { MateriasHorasRest } = require("./materiashorasrest");
+const { MateriasHorasAllRest } = require("./materiashorasallrest");
 const { AlumnosRest } = require("./alumnosrest");
 const { PeriodosRest } = require("./periodosrest");
 const { TpsRest } = require("./tpsrest");
 const { TpsAllRest } = require("./tpsallrest");
 const { EvaluacionesRest } = require("./evaluacionesrest");
-const { Messages } = require("../lib/utils/messages");
 
 new App({
     port: 9090,
@@ -43,23 +42,20 @@ function restItems(app) {
         new SimpleTableRest({
             app: app,
             tableName: "escuelas",
-            duplicatedTitle: "Ya existe una Escuela de nombre"
         }),
         new SimpleTableRest({
             app: app,
             tableName: "modalidades",
-            duplicatedTitle: "Ya existe una Modalidad de nombre"
         }),
         new SimpleTableRest({
             app: app,
             tableName: "materias",
-            duplicatedTitle: "Ya existe una Materia de nombre"
         }),
         new PeriodosRest({ app: app }),
         new CursosRest({ app: app }),
         new MateriasCursosRest({ app: app }),
-        new MateriasDiasRest({ app: app }),
-        new MateriasDiasAllRest({ app: app, path: "materias_dias_all" }),
+        new MateriasHorasRest({ app: app }),
+        new MateriasHorasAllRest({ app: app, path: "materias_dias_all" }),
         new AlumnosRest({ app: app }),
         new TpsRest({ app: app }),
         new TpsAllRest({ app: app, path: "tps_all" }),

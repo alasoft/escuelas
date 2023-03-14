@@ -6,9 +6,6 @@ const {
     TableDeleteService
 } = require("../service/tableservice");
 
-const { Strings } = require("../utils/utils");
-const { Messages } = require("../utils/messages");
-
 class SimpleTableListService extends TableListService {
 
     sqlParameters() {
@@ -53,10 +50,6 @@ class SimpleTableInsertService extends TableInsertService {
         return { nombre: this.value("nombre") }
     }
 
-    duplicatedMessage() {
-        return SimpleTableCommonService.DuplicatedMessage(this)
-    }
-
 }
 
 class SimpleTableUpdateService extends TableUpdateService {
@@ -67,10 +60,6 @@ class SimpleTableUpdateService extends TableUpdateService {
 
     sqlValues() {
         return { nombre: this.value("nombre") }
-    }
-
-    duplicatedMessage() {
-        return SimpleTableCommonService.DuplicatedMessage(this)
     }
 
 }
@@ -87,13 +76,6 @@ class SimpleTableCommonService {
             from: service.tableName,
             where: "upper(nombre)=upper(@nombre)",
             parameters: { nombre: service.value("nombre") }
-        })
-    }
-
-    static DuplicatedMessage(service) {
-        return Messages.Section({
-            title: service.duplicatedTitle(),
-            lines: Strings.SingleQuotes(service.value("nombre"))
         })
     }
 

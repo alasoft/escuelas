@@ -6,6 +6,7 @@ const {
     TableDeleteService
 } = require("../lib/service/tableservice");
 const { Utils, Dates } = require("../lib/utils/utils");
+const { Sql } = require("../lib/sql/sql")
 
 class MateriasCursosListService extends TableListService {
 
@@ -104,9 +105,6 @@ class MateriasCursosInsertService extends TableInsertService {
     sqlNotDuplicated() {
         return MateriasCursosCommonService.SqlNotDuplicated(this);
     }
-    duplicatedMessage() {
-        return MateriasCursosCommonService.DuplicatedMessage();
-    }
 
 }
 
@@ -116,13 +114,20 @@ class MateriasCursosUpdateService extends TableUpdateService {
         return MateriasCursosCommonService.SqlNotDuplicated(this);
     }
 
-    duplicatedMessage() {
-        return MateriasCursosCommonService.DuplicatedMessage();
-    }
-
 }
 
 class MateriasCursosDeleteService extends TableDeleteService {
+
+    sql() {
+        return Sql.Transact([this.sqlDeleteHoras(), super.sql()])
+    }
+
+    sqlDeleteHoras() {
+        return this.sqlDeleteWhere({
+            tableName: "materias_horas",
+            where: this.sqlAnd().add("materiacurso=@materiacurso", this.id())
+        })
+    }
 
 }
 
@@ -152,10 +157,6 @@ class MateriasCursosCommonService {
             ]),
             parameters: service.jsonValues("curso,materia")
         })
-    }
-
-    static DuplicatedMessage() {
-        return "Materia duplicada para este Curso";
     }
 
 }

@@ -154,6 +154,11 @@ class MateriasCursoForm extends FormView {
         return "materia";
     }
 
+    duplicatedMessage() {
+        return Messages.Section({ title: "Ya esta asociada la Materia:", detail: this.getEditorText("materia") })
+    }
+
+
     popupOnHidden(e) {
         if (this.masterView() != undefined) {
             this.masterView().focusRowById(this.curso().id);

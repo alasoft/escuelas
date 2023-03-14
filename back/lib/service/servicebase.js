@@ -219,10 +219,6 @@ class ServiceBase extends ObjectBase {
         return this.req.headers.client_description;
     }
 
-    duplicatedTitle() {
-        return this.parameters.duplicatedTitle || "Registro duplicado";
-    }
-
 }
 
 module.exports.ServiceBase = ServiceBase;

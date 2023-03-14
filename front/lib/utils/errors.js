@@ -4,7 +4,21 @@ class Errors {
 
     static FORM_VALIDATION = 2000;
 
-    static Handle(err, afterShowError) {
+    static Handle(err) {
+        if (err.code == Exceptions.INVALID_TOKEN) {
+            App.Login()
+        } else if (err.type == Exceptions.TYPE_INTERNAL && err.side == Exceptions.SERVER_SIDE) {
+            return App.ShowError({ message: this.ServerInternalErrorMessage(err) })
+        } else {
+            return App.ShowError({ message: App.UNIDENTIFIED_ERROR_MESSAGE })
+        }
+    }
+
+    static ServerInternalErrorMessage(err) {
+        return Messages.Sections([{ title: "Ha ocurrido un Error en el Servidor:", detail: err.message }, { title: "datos del error:", detail: err.detail }])
+    }
+
+    static HandleOld(err, afterShowError) {
         const errorObject = this.ErrorObject(err);
         if (errorObject.code == this.INVALID_TOKEN) {
             return App.Login();
@@ -19,9 +33,7 @@ class Errors {
     static ErrorObject(err) {
         if (Utils.IsObject(err)) {
             if (err.responseJSON != undefined) {
-                return {
-                    message: err.responseJSON.message
-                }
+                return err.responseJSON;
             }
             if (err.responseText != undefined) {
                 return {

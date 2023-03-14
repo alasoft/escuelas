@@ -21,7 +21,7 @@ class Postgres {
                     resolve(result.rows);
                 })
                 .catch(err =>
-                    reject(Exceptions.DataBase({ detail: err.message, sql: sql }))
+                    reject(Exceptions.DataBase({ message: err.message, detail: sql }))
                 )
         })
     }

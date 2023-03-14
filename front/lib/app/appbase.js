@@ -47,7 +47,7 @@ class AppBase {
     static ERROR_MESSAGE_TITLE = "Error"
     static INTERNAL_ERROR_MESSAGE_TITLE = "Error Interno"
 
-    static UNIDENTIFIED_ERROR_MESSAGE = "Ha ocurrido un error no identificado";
+    static UNIDENTIFIED_ERROR_MESSAGE = "Ha ocurrido un error";
 
     static ZONA_HORARIA_ARGENTINA = "America/Argentina/Buenos_Aires";
     static BASE_DATE = "1900 01 01";

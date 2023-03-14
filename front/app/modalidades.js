@@ -54,4 +54,9 @@ class ModalidadesForm extends FormView {
         ]
     }
 
+    duplicatedMessage() {
+        return Messages.Section({ title: "Ya existe una Modalidad de nombre:", detail: this.getEditorText("nombre") })
+    }
+
+
 }

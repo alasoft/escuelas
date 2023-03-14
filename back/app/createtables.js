@@ -37,7 +37,7 @@ class CreateTables extends CreateTablesBase {
                 }
             }),
             Sql.Create({
-                tableName: "materias_dias",
+                tableName: "materias_horas",
                 columns: {
                     materiacurso: SqlType.Fk({ references: "materias_cursos" }),
                     dia: SqlType.Integer(),

@@ -7,59 +7,59 @@ const {
     TableDeleteService
 } = require("../lib/service/tableservice");
 
-class MateriasDiasListService extends TableListService {
+class MateriasHorasListService extends TableListService {
 
     sqlParameters() {
         return Utils.Merge(
-            MateriasDiasCommonService.SqlBaseParameters(this),
+            MateriasHorasCommonService.SqlBaseParameters(this),
             this.sqlExtraParameters())
     }
 
     sqlExtraParameters() {
         return {
             where: this.sqlAnd()
-                .add(this.sqlText("md.materiacurso=@materiacurso", { materiacurso: this.value("materiacurso") })),
+                .add(this.sqlText("mh.materiacurso=@materiacurso", { materiacurso: this.value("materiacurso") })),
             order: [
-                "md.dia",
-                "md.desde"
+                "mh.dia",
+                "mh.desde"
             ]
         }
     }
 
 }
 
-class MateriasDiasGetService extends TableGetService {
+class MateriasHorasGetService extends TableGetService {
 
     sqlParameters() {
         return {
             columns: [
-                "md.id",
-                "md.materiacurso",
-                "md.dia",
-                "md.desde",
-                "md.hasta",
+                "mh.id",
+                "mh.materiacurso",
+                "mh.dia",
+                "mh.desde",
+                "mh.hasta",
                 "mat.nombre as materianombre",
                 "cur.id as curso"
             ],
-            from: "materias_dias md",
+            from: "materias_dias mh",
             joins: [
-                { tableName: "materias_cursos", alias: "mc", columnName: "md.materiacurso" },
+                { tableName: "materias_cursos", alias: "mc", columnName: "mh.materiacurso" },
                 { tableName: "cursos", alias: "cur", columnName: "mc.curso" },
                 { tableName: "materias", alias: "mat", columnName: "mc.materia" }
             ],
-            where: "md.id=@id",
+            where: "mh.id=@id",
             parameters: { id: this.id() }
         }
     }
 
 }
 
-class MateriasDiasInsertService extends TableInsertService {
+class MateriasHorasInsertService extends TableInsertService {
 
     validate() {
         return super.validate()
             .then(() =>
-                MateriasDiasCommonService.ValidateDesdeHasta(this))
+                MateriasHorasCommonService.ValidateDesdeHasta(this))
     }
 
     requiredValues() {
@@ -70,33 +70,33 @@ class MateriasDiasInsertService extends TableInsertService {
 
 }
 
-class MateriasDiasUpdateService extends TableUpdateService {
+class MateriasHorasUpdateService extends TableUpdateService {
 
     validate() {
         return super.validate()
             .then(() =>
-                MateriasDiasCommonService.ValidateDesdeHasta(this))
+                MateriasHorasCommonService.ValidateDesdeHasta(this))
     }
 
     validateNotDuplicated() {}
 
 }
 
-class MateriasDiasDeleteService extends TableDeleteService {}
+class MateriasHorasDeleteService extends TableDeleteService {}
 
 
-class MateriasDiasCommonService {
+class MateriasHorasCommonService {
 
     static SqlBaseParameters(service) {
         return {
             columns: [
-                "md.id",
-                "md.materiacurso",
-                "md.dia",
-                "md.desde",
-                "md.hasta",
+                "mh.id",
+                "mh.materiacurso",
+                "mh.dia",
+                "mh.desde",
+                "mh.hasta",
             ],
-            from: "materias_dias md",
+            from: "materias_dias mh",
         }
     }
 
@@ -111,8 +111,8 @@ class MateriasDiasCommonService {
 
 }
 
-module.exports.MateriasDiasListService = MateriasDiasListService;
-module.exports.MateriasDiasGetService = MateriasDiasGetService;
-module.exports.MateriasDiasInsertService = MateriasDiasInsertService;
-module.exports.MateriasDiasUpdateService = MateriasDiasUpdateService;
-module.exports.MateriasDiasDeleteService = MateriasDiasDeleteService;
+module.exports.MateriasHorasListService = MateriasHorasListService;
+module.exports.MateriasHorasGetService = MateriasHorasGetService;
+module.exports.MateriasHorasInsertService = MateriasHorasInsertService;
+module.exports.MateriasHorasUpdateService = MateriasHorasUpdateService;
+module.exports.MateriasHorasDeleteService = MateriasHorasDeleteService;

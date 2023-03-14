@@ -1,6 +1,5 @@
 const { Utils, Strings } = require("../lib/utils/utils");
 const { TableListService, TableGetService, TableInsertService, TableUpdateService, TableDeleteService } = require("../lib/service/tableservice");
-const { Messages } = require("../lib/utils/messages");
 
 class CursosListService extends TableListService {
 
@@ -51,20 +50,12 @@ class CursosInsertService extends TableInsertService {
         return CursosCommonService.SqlNotDuplicated(this);
     }
 
-    duplicatedMessage() {
-        return CursosCommonService.DuplicatedMessage(this);
-    }
-
 }
 
 class CursosUpdateService extends TableUpdateService {
 
     sqlNotDuplicated() {
         return CursosCommonService.SqlNotDuplicated(this);
-    }
-
-    duplicatedMessage() {
-        return CursosCommonService.DuplicatedMessage(this);
     }
 
 }
@@ -112,14 +103,6 @@ class CursosCommonService {
             ]),
             parameters: service.jsonValues("añolectivo,escuela,modalidad,año,division,turno")
         })
-    }
-
-    static DuplicatedMessage(service) {
-        return Messages.Section({ title: "Ya existe un Curso igual a", lines: Strings.SingleQuotes(service.clientDescription()) })
-    }
-
-    static Descripcion(service) {
-        return service.concatenate({ names: "escuelanombre,modalidadnombre,año" });
     }
 
 }

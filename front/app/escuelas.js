@@ -53,4 +53,10 @@ class EscuelasFormView extends FormView {
         ]
     }
 
+    duplicatedMessage() {
+        return Messages.Section({ title: "Ya existe un Escuela de nombre:", detail: this.getEditorText("nombre") })
+    }
+
+
+
 }

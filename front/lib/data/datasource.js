@@ -26,10 +26,14 @@ class DataSource {
             loadMode: this.loadMode,
             load: searchData => {
                 return this.rest().promise({
-                    verb: "list",
-                    data: this.listData(searchData)
-                }).then(data =>
-                    this.transformData != undefined ? this.transformData(data) : data)
+                        verb: "list",
+                        data: this.listData(searchData)
+                    })
+                    .then(data =>
+                        this.transformData != undefined ? this.transformData(data) : data)
+                    .catch(err =>
+                        Errors.Handle(err).then(closeData => { throw err })
+                    )
             },
             byKey: this.cache == true ? undefined : key =>
                 this.rest().promise({

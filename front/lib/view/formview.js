@@ -168,4 +168,16 @@ class FormView extends EntryView {
         }
     }
 
+    handleError(err) {
+        if (err.code == Exceptions.DUPLICATED_ENTITY) {
+            App.ShowError({ message: this.duplicatedMessage() })
+        } else {
+            super.handleError(err)
+        }
+    }
+
+    duplicatedMessage() {
+        return "Registro duplicado"
+    }
+
 }

@@ -1,6 +1,5 @@
 const { Exceptions } = require("../lib/utils/exceptions");
-const { Utils, Strings, Dates } = require("../lib/utils/utils");
-const { Messages } = require("../lib/utils/messages");
+const { Utils, Dates } = require("../lib/utils/utils");
 const {
     TableListService,
     TableGetService,
@@ -66,10 +65,6 @@ class TpsInsertService extends TableInsertService {
         return TpsCommonService.SqlNotDuplicated(this);
     }
 
-    duplicatedMessage() {
-        return TpsCommonService.DuplicatedMessage(this);
-    }
-
 }
 
 class TpsUpdateService extends TableUpdateService {
@@ -82,9 +77,6 @@ class TpsUpdateService extends TableUpdateService {
 
     sqlNotDuplicated() {
         return TpsCommonService.SqlNotDuplicated(this);
-    }
-    duplicatedMessage() {
-        return TpsCommonService.DuplicatedMessage(this);
     }
 
 }
@@ -127,13 +119,6 @@ class TpsCommonService {
         })
     }
 
-    static DuplicatedMessage(service) {
-        return Messages.Section({
-            title: "Ya existe un Trabajo Práctico de nombre",
-            lines: Strings.SingleQuotes(service.value("nombre"))
-        })
-    }
-
     static ValidateDesdeHasta(service) {
         this.ValidateDesdeLowerHasta(service);
         return this.ValidateInPeriodo(service);
@@ -142,8 +127,7 @@ class TpsCommonService {
     static ValidateDesdeLowerHasta(service) {
         if (service.date("hasta") <= service.date("desde")) {
             throw Exceptions.Validation({
-                message: "La Fecha de Inicio debe ser menor a la Fecha de Entrega",
-                detail: this.DetailDesdeHasta(service)
+                code: Exceptions.FECHA_INICIO_DEBE_SER_MENOR_FECHA_ENTREGA,
             })
         }
     }
@@ -153,8 +137,8 @@ class TpsCommonService {
             .then(row => {
                 if (!Dates.Contains(row.desde, row.hasta, service.date("desde"), service.date("hasta"))) {
                     throw Exceptions.Validation({
-                        message: "El trabajo práctico debe estar dentro del " + row.nombre,
-                        detail: this.DetailDesdeHasta(service) + this.PeriodoDesdeHasta(row)
+                        code: Exceptions.DEBE_ESTAR_DENTRO_PERIODO,
+                        detail: row
                     })
                 }
             })
@@ -171,28 +155,6 @@ class TpsCommonService {
             where: "id=@id",
             parameters: { id: service.value("periodo") }
         }))
-    }
-
-    static DetailDesdeHasta(service) {
-
-        return Messages.Section({
-            title: service.value("nombre"),
-            lines: ["Fecha de Inicio = " + Dates.Format(service.date("desde")),
-                "Fecha de Entrega = " + Dates.Format(service.date("hasta"))
-            ]
-        })
-    }
-
-    static PeriodoDesdeHasta(row) {
-
-        return Messages.Section({
-            title: row.nombre,
-            lines: [
-                "Fecha de Inicio = " + Dates.Format(row.desde),
-                "Fecha de Entrega = " + Dates.Format(row.hasta)
-            ]
-        })
-
     }
 
 }

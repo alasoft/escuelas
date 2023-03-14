@@ -6,9 +6,6 @@ const {
     TableDeleteService
 } = require("../lib/service/tableservice");
 
-const { Strings } = require("../lib/utils/utils");
-const { Messages } = require("../lib/utils/messages");
-
 class AlumnosListService extends TableListService {
 
     sqlParameters() {
@@ -65,20 +62,12 @@ class AlumnosInsertService extends TableInsertService {
         return AlumnosCommonService.SqlNotDuplicated(this);
     }
 
-    duplicatedMessage() {
-        return AlumnosCommonService.DuplicatedMessage(this);
-    }
-
 }
 
 class AlumnosUpdateService extends TableUpdateService {
 
     sqlNotDuplicated() {
         return AlumnosCommonService.SqlNotDuplicated(this);
-    }
-
-    duplicatedMessage() {
-        return AlumnosCommonService.DuplicatedMessage(this);
     }
 
 }
@@ -93,19 +82,11 @@ class AlumnosCommonService {
         return service.sqlSelect({
             from: "alumnos",
             where: service.sqlAnd([
+                "curso=@curso",
                 "upper(apellido)=upper(@apellido)",
                 "upper(nombre)=upper(@nombre)"
             ]),
-            parameters: service.jsonValues("apellido,nombre")
-        })
-    }
-
-    static DuplicatedMessage(service) {
-        return Messages.Section({
-            title: "Ya existe un Alumno de nombre",
-            lines: Strings.SingleQuotes(Strings.Concatenate([
-                service.value("apellido"), service.value("nombre")
-            ], ", "))
+            parameters: service.jsonValues("curso,apellido,nombre")
         })
     }
 

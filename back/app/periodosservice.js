@@ -6,7 +6,6 @@ const {
     TableDeleteService
 } = require("../lib/service/tableservice");
 const { Strings, Dates } = require("../lib/utils/utils");
-const { Messages } = require("../lib/utils/messages");
 const { Exceptions } = require("../lib/utils/exceptions.js");
 
 
@@ -71,10 +70,6 @@ class PeriodosInsertService extends TableInsertService {
         return PeriodosCommonService.SqlNotDuplicated(this);
     }
 
-    duplicatedMessage() {
-        return PeriodosCommonService.DuplicatedMessage(this);
-    }
-
 }
 
 class PeriodosUpdateService extends TableUpdateService {
@@ -87,10 +82,6 @@ class PeriodosUpdateService extends TableUpdateService {
 
     sqlNotDuplicated() {
         return PeriodosCommonService.SqlNotDuplicated(this);
-    }
-
-    duplicatedMessage() {
-        return PeriodosCommonService.DuplicatedMessage(this);
     }
 
 }
@@ -111,13 +102,6 @@ class PeriodosCommonService {
         })
     }
 
-    static DuplicatedMessage(service) {
-        return Messages.Section({
-            title: "Ya existe un Período de nombre",
-            lines: Strings.SingleQuotes(service.value("nombre"))
-        });
-    }
-
     static ValidateDesdeHasta(service) {
         this.ValidateDesdeLowerHasta(service);
         this.ValidaDesdeInAñoLectivo(service)
@@ -128,8 +112,7 @@ class PeriodosCommonService {
     static ValidateDesdeLowerHasta(service) {
         if (service.date("hasta") <= service.date("desde")) {
             throw Exceptions.Validation({
-                message: "La fecha desde debe ser menor a la fecha hasta",
-                detail: this.DetailDesdeHasta(service)
+                code: Exceptions.FECHA_DESDE_DEBE_SER_MENOR_FECHA_HASTA
             })
         }
     }
@@ -137,10 +120,7 @@ class PeriodosCommonService {
     static ValidaDesdeInAñoLectivo(service) {
         if (Dates.YearOf(service.date("desde")) != service.value("añolectivo")) {
             throw Exceptions.Validation({
-                message: "La fecha desde debe estar dentro del año lectivo",
-                detail: "<br><br>desde = " +
-                    Dates.Format(service.date("desde")) +
-                    "<br>año lectivo = " + service.value("añolectivo")
+                message: Exceptions.FECHA_DESDE_DEBE_ESTAR_EN_AÑO_LECTIVO,
             })
         }
     }
@@ -148,10 +128,7 @@ class PeriodosCommonService {
     static ValidaHastaInAñoLectivo(service) {
         if (Dates.YearOf(service.date("hasta")) != service.value("añolectivo")) {
             throw Exceptions.Validation({
-                message: "La fecha hasta debe estar dentro del año lectivo",
-                detail: "<br><br>desde = " +
-                    Dates.Format(service.date("desde")) +
-                    "<br>año lectivo = " + service.value("añolectivo")
+                message: Exceptions.FECHA_HASTA_DEBE_ESTAR_EN_AÑO_LECTIVO,
             })
         }
     }
@@ -179,14 +156,14 @@ class PeriodosCommonService {
             rows.forEach(row => {
                 if (Dates.Intersect(service.date("desde"), service.date("hasta"), row.desde, row.hasta)) {
                     throw Exceptions.Validation({
-                        message: "El " + service.value("nombre") + " intersecta el " + row.nombre,
-                        detail: PeriodosCommonService.DetailDesdeHasta(service) + PeriodosCommonService.RowDetailDesdeHasta(row)
+                        code: Exceptions.PERIODO_INTERSECTA_OTRO_PERIODO,
+                        detail: row
                     })
                 }
                 if (Dates.Contains(service.date("desde"), service.date("hasta"), row.desde, row.hasta)) {
                     throw Exceptions.Validation({
-                        message: "El " + service.value("nombre") + " contiene al " + row.nombre,
-                        detail: PeriodosCommonService.DetailDesdeHasta(service) + PeriodosCommonService.RowDetailDesdeHasta(row)
+                        code: Exceptions.PERIODO_CONTIENE_OTRO_PERIODO,
+                        detail: row
                     })
                 }
             })
@@ -195,28 +172,6 @@ class PeriodosCommonService {
         return service.db.select(sql()).then(
             rows => validateRanges(rows)
         )
-
-    }
-
-    static DetailDesdeHasta(service) {
-        return Messages.Section({
-            title: service.value("nombre"),
-            lines: [
-                "Desde = " + service.formatedDate("desde"),
-                "Hasta = " + service.formatedDate("hasta")
-            ]
-        })
-    }
-
-    static RowDetailDesdeHasta(row) {
-
-        return Messages.Section({
-            title: row.nombre,
-            lines: [
-                "Desde = " + Dates.Format(row.desde),
-                "Hasta = " + Dates.Format(row.hasta)
-            ]
-        })
 
     }
 

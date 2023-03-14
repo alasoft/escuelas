@@ -57,8 +57,8 @@ class MateriasForm extends FormView {
         ]
     }
 
-    deleteMessage() {
-        return this.composeDeleteMessage({ title: "esta Materia", description: this.focusedRowValue("nombre") })
+    duplicatedMessage() {
+        return Messages.Section({ title: "Ya existe una Materia de nombre:", detail: this.getEditorText("nombre") })
     }
 
 

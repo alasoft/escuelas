@@ -114,4 +114,9 @@ class AlumnosCursoForm extends FormView {
         return "apellido";
     }
 
+    duplicatedMessage() {
+        return Messages.Section({ title: "Ya existe un Alumno con Apellido y Nombre:", detail: this.getEditorText("apellido") + ", " + this.getEditorText("nombre") })
+    }
+
+
 }
