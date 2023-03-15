@@ -113,12 +113,12 @@ class MateriasCurso extends CursosDetalle {
             detail: this.getFilterText("curso")
         }, this.focusedRowValue("horarios") != "" ? {
             title: "Importante",
-            detail: "<i>Junto con la Materia se borrarán los horarios de la misma<br><br>" + Html.Tab(2) + "( " + this.horarios() + " )",
+            detail: "<i>Junto con la Materia se borrarán los horarios de la misma<br><br>" + Html.Tab(2) + "( " + this.horariosText() + " )",
             quotes: false
         } : undefined])
     }
 
-    horarios() {
+    horariosText() {
         return this.focusedRowValue("horarios").replace("<br><br>", ", ")
     }
 
