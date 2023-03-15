@@ -215,6 +215,10 @@ class SqlDelete extends SqlBaseDelete {
 
 }
 
+class SqlDeleteAll extends SqlBaseDelete {
+
+}
+
 class SqlDeleteWhere extends SqlBaseDelete {
 
     validateRequired() {
@@ -235,3 +239,4 @@ module.exports.SqlUpdate = SqlUdpate;
 module.exports.SqlUpdateWhere = SqlUpdateWhere;
 module.exports.SqlDelete = SqlDelete;
 module.exports.SqlDeleteWhere = SqlDeleteWhere;
+module.exports.SqlDeleteAll = SqlDeleteAll;

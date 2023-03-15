@@ -26,7 +26,7 @@ class CreateTables extends CreateTablesBase {
                     curso: SqlType.Fk({ references: "cursos" }),
                     apellido: SqlType.Apellido(),
                     nombre: SqlType.Nombre(),
-                    genero: SqlType.Char({ size: 1, required: false })
+                    email: SqlType.String({ size: 100, required: false })
                 }
             }),
             Sql.Create({

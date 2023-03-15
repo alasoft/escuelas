@@ -1,4 +1,5 @@
 const { TextBuilder } = require("../utils/textbuilder");
+const { SqlText } = require("./sqltext");
 
 class SqlWhere extends TextBuilder {
 
@@ -19,6 +20,10 @@ class SqlWhere extends TextBuilder {
 }
 
 class SqlAnd extends TextBuilder {
+
+    addSql(sql, parameters) {
+        return this.add(new SqlText({ items: sql, values: parameters }))
+    }
 
     beforeItem(item, i) {
         if (i == 0) {

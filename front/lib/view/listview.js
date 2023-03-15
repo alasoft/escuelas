@@ -17,8 +17,9 @@ class ListView extends View {
                 list: {
                     dataSource: this.class().DataSource(),
                     columns: this.listColumns(),
+                    errorRowEnabled: false,
                     groupPanel: {
-                        visible: this.groupColumns()
+                        visible: true
                     },
                     onContentReady: e => this.listOnContentReady(e),
                     onRowDblClick: e => this.listOnRowDblClick(e),
@@ -45,10 +46,6 @@ class ListView extends View {
     }
 
     listColumns() {}
-
-    groupColumns() {
-        return true;
-    }
 
     allow(operation) {
         if (!this.configuration().operations.includes(operation)) {
@@ -343,7 +340,9 @@ class ListView extends View {
     }
 
     saveState() {
-        Users.SaveState({ module: this.className(), state: this.state() })
+        if (this.dataErrorOcurred != true) {
+            Users.SaveState({ module: this.className(), state: this.state() })
+        }
     }
 
     setState(state) {
@@ -374,10 +373,13 @@ class ListView extends View {
     }
 
     listOnDataErrorOccurred(e) {
+        this.dataErrorOcurred = true;
+        this.list().instance().dispose();
         if (this.isPopup()) {
             this.close({ error: true })
         } else {
-            App.BlankViewElement()
+            App.BlankViewElement();
+            App.SelectFirstItem();
         }
     }
 
