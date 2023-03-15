@@ -41,6 +41,16 @@ class MateriasDias extends CursosMateriasDetalle {
         return "materias_horas";
     }
 
+    deleteMessage() {
+        return Messages.Section({ title: "Borra este horario ?", detail: this.descripcion() })
+    }
+
+    descripcion() {
+        const a = "a";
+        const row = this.focusedRowData();
+        return DiasSemana.GetNombre(row.dia) + ", " + row.desde.substring(0, 5) + " - " + row.hasta.substring(0, 5)
+    }
+
     static ListColumns() {
         return [
             Column.Id(),

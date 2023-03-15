@@ -78,7 +78,7 @@ class ListView extends View {
     formViewRender(formData) {
         this.formView(formData).render().then(closeData => {
             if (closeData != undefined) {
-                this._dataHasChanged = closeData.dataHasChanged;
+                this.dataHasChanged = closeData.dataHasChanged;
             }
         })
     }
@@ -116,10 +116,12 @@ class ListView extends View {
 
     deleteRow(id) {
         this.list().deleteRow({
-            path: this.path(),
-            id: id
-        }).catch(err =>
-            App.ShowError({ message: this.deleteErrorMessage(err) }));
+                path: this.path(),
+                id: id
+            }).then(() =>
+                this.dataHasChanged = true)
+            .catch(err =>
+                App.ShowError({ message: this.deleteErrorMessage(err) }));
     }
 
     deleteErrorMessage(err) {
@@ -420,6 +422,10 @@ class ListView extends View {
 
     hasRows() {
         return this.list().hasRows()
+    }
+
+    closeDataDefault() {
+        return { dataHasChanged: this.dataHasChanged }
     }
 
     static DataSource() {

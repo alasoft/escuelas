@@ -199,7 +199,11 @@ class View extends Component {
     }
 
     popupOnHiding(e) {
-        this.resolveRender(this._closeData || {});
+        this.resolveRender(this._closeData || this.closeDataDefault());
+    }
+
+    closeDataDefault() {
+        return {}
     }
 
     handleError(err) {

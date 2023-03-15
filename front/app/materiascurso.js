@@ -91,6 +91,8 @@ class MateriasCurso extends CursosDetalle {
 
     horarios() {
         new MateriasDias(this.detailData()).render()
+            .then(closeData =>
+                closeData.dataHasChanged ? this.refresh(this.id()) : undefined)
     }
 
     detailData() {
