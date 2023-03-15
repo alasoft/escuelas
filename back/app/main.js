@@ -55,7 +55,7 @@ function restItems(app) {
         new CursosRest({ app: app }),
         new MateriasCursosRest({ app: app }),
         new MateriasHorasRest({ app: app }),
-        new MateriasHorasAllRest({ app: app, path: "materias_dias_all" }),
+        new MateriasHorasAllRest({ app: app, path: "materias_horas_all" }),
         new AlumnosRest({ app: app }),
         new TpsRest({ app: app }),
         new TpsAllRest({ app: app, path: "tps_all" }),

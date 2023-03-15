@@ -223,6 +223,7 @@ class Item {
             dataField: p.dataField || "email",
             isRequired: p.required == true,
             editorOptions: {
+                showClearButton: p.clearButton == true,
                 mode: "email",
                 width: p.width || App.EMAIL_WIDTH,
                 inputAttr: {

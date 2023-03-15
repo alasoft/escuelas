@@ -111,7 +111,15 @@ class MateriasCurso extends CursosDetalle {
         return Messages.Sections([{ title: "Borra la Materia ?", detail: this.focusedRowValue("materianombre") }, {
             title: "dictada en el Curso",
             detail: this.getFilterText("curso")
-        }, { title: "Importante:", detail: "<i>Junto con la Materia se borrarán los horarios de la misma", quotes: false }])
+        }, this.focusedRowValue("horarios") != "" ? {
+            title: "Importante",
+            detail: "<i>Junto con la Materia se borrarán los horarios de la misma<br><br>" + Html.Tab(2) + "( " + this.horarios() + " )",
+            quotes: false
+        } : undefined])
+    }
+
+    horarios() {
+        return this.focusedRowValue("horarios").replace("<br><br>", ", ")
     }
 
     listOnContentReady(e) {

@@ -14,7 +14,7 @@ class MateriasHorasListAllService extends TableListService {
                 "mat.nombre as materianombre",
                 "cur.id as cursoid"
             ].concat(CursosCommonService.ColumnsNoId()),
-            from: "materias_dias mh",
+            from: "materias_horas mh",
             joins: [
                 { tableName: "materias_cursos", alias: "mc", columnName: "mh.materiacurso" },
                 { tableName: "cursos", alias: "cur", columnName: "mc.curso" },

@@ -4,7 +4,7 @@ class DiasCalendario extends View {
 
     afterRender() {
         new Rest({
-                path: "materias_dias_all",
+                path: "materias_horas_all",
             }).promise({
                 verb: "list",
                 data: { añolectivo: 2023 }
@@ -76,7 +76,7 @@ class DiasCalendario extends View {
 
     defineDataSourceOld() {
         return Ds({
-            path: "materias_dias_all",
+            path: "materias_horas_all",
             filter: {
                 añolectivo: this.parameters().añoLectivo,
                 curso: this.parameters().curso,

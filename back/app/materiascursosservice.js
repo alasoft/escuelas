@@ -53,7 +53,7 @@ class MateriasCursosListService extends TableListService {
                 "desde",
                 "hasta"
             ],
-            from: "materias_dias",
+            from: "materias_horas",
             where: this.sqlAnd().addIf(0 < materiasCursos.length, () =>
                 this.sqlIn("materiacurso", materiasCursos))
         })
@@ -125,7 +125,7 @@ class MateriasCursosDeleteService extends TableDeleteService {
     sqlDeleteHoras() {
         return this.sqlDeleteWhere({
             tableName: "materias_horas",
-            where: this.sqlAnd().add("materiacurso=@materiacurso", this.id())
+            where: this.sqlAnd().addSql("materiacurso=@materiacurso", { materiacurso: this.id() })
         })
     }
 

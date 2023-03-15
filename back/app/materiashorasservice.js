@@ -41,7 +41,7 @@ class MateriasHorasGetService extends TableGetService {
                 "mat.nombre as materianombre",
                 "cur.id as curso"
             ],
-            from: "materias_dias mh",
+            from: "materias_horas mh",
             joins: [
                 { tableName: "materias_cursos", alias: "mc", columnName: "mh.materiacurso" },
                 { tableName: "cursos", alias: "cur", columnName: "mc.curso" },
@@ -96,7 +96,7 @@ class MateriasHorasCommonService {
                 "mh.desde",
                 "mh.hasta",
             ],
-            from: "materias_dias mh",
+            from: "materias_horas mh",
         }
     }
 

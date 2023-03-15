@@ -118,6 +118,10 @@ class CursosDetalle extends FilterView {
         return this.filter().getEditorValue("curso");
     }
 
+    cursoDescripcion(withAñoLectivo = true) {
+        return this.filter().getEditorText("curso") + (withAñoLectivo ? " / " + this.filter().getEditorText("añolectivo") : "")
+    }
+
     itemAñoLectivoOnValueChanged(e) {
         this.setCursoDataSource(e.value);
     }

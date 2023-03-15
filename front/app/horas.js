@@ -1,7 +1,7 @@
 class Horas extends AñoLectivoFilterView {
 
     path() {
-        return "materias_dias_all";
+        return "materias_horas_all";
     }
 
     extraConfiguration() {
@@ -86,7 +86,7 @@ class Horas extends AñoLectivoFilterView {
 class HorasForm extends CursosMateriasForm {
 
     path() {
-        return "materias_dias";
+        return "materias_horas";
     }
 
     transformInsertUpdate(data, verb) {

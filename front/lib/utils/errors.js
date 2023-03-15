@@ -10,7 +10,7 @@ class Errors {
         } else if (err.type == Exceptions.TYPE_INTERNAL && err.side == Exceptions.SERVER_SIDE) {
             return App.ShowError({ message: this.ServerInternalErrorMessage(err) })
         } else {
-            return App.ShowError({ message: App.UNIDENTIFIED_ERROR_MESSAGE })
+            return App.ShowError({ message: err.message || App.UNIDENTIFIED_ERROR_MESSAGE })
         }
     }
 

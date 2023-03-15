@@ -7,9 +7,7 @@ const {
     TableDeleteService
 } = require("../lib/service/tableservice");
 const { Sql } = require("../lib/sql/sql");
-const { SqlDelete, SqlDeleteWhere, SqlInsert } = require("../lib/sql/sqloperations");
-const { SqlSelect } = require("../lib/sql/sqlselect");
-const { TextBuilder } = require("../lib/utils/textbuilder");
+const { SqlDelete, SqlInsert } = require("../lib/sql/sqloperations");
 
 class AlumnosListService extends TableListService {
 
@@ -19,7 +17,6 @@ class AlumnosListService extends TableListService {
                 "alu.id",
                 "alu.nombre",
                 "alu.apellido",
-                "alu.genero",
                 "alu.email"
             ],
             from: "alumnos alu",
@@ -47,7 +44,7 @@ class AlumnosGetService extends TableGetService {
                 "alu.id",
                 "alu.nombre",
                 "alu.apellido",
-                "alu.genero"
+                "alu.email"
             ],
             from: "alumnos alu",
             where: "id=@id",

@@ -106,7 +106,7 @@ class AlumnosCursoForm extends FormView {
             Item.ReadOnly({ dataField: "cursodescripcion", label: "Curso" }),
             Item.Text({ dataField: "apellido", required: true, width: 250 }),
             Item.Text({ dataField: "nombre", required: true, width: 250 }),
-            Item.Email({ dataField: "email" })
+            Item.Email({ dataField: "email", clearButton: true })
         ]
     }
 
@@ -115,7 +115,13 @@ class AlumnosCursoForm extends FormView {
     }
 
     duplicatedMessage() {
-        return Messages.Section({ title: "Ya existe un Alumno con Apellido y Nombre:", detail: this.getEditorText("apellido") + ", " + this.getEditorText("nombre") })
+        return Messages.Sections([{
+            title: "Ya existe un Alumno con Apellido y Nombre:",
+            detail: this.getEditorText("apellido") + ", " + this.getEditorText("nombre")
+        }, {
+            title: "en el Curso:",
+            detail: this.listView().cursoDescripcion()
+        }])
     }
 
 

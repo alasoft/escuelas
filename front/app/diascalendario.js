@@ -2,7 +2,7 @@ class DiasCalendario extends View {
 
     beforeRender() {
         return new Rest({
-                path: "materias_dias_all",
+                path: "materias_horas_all",
             }).promise({
                 verb: "list",
                 data: { añolectivo: this.parameters().añoLectivo }

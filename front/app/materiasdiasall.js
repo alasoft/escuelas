@@ -1,7 +1,7 @@
 class MateriasDiasAll extends AñoCursoMateriaFilterView {
 
     path() {
-        return "materias_dias_all";
+        return "materias_horas_all";
     }
 
     labelText() {

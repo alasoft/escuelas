@@ -38,7 +38,7 @@ class MateriasDias extends CursosMateriasDetalle {
     }
 
     path() {
-        return "materias_dias";
+        return "materias_horas";
     }
 
     static ListColumns() {
