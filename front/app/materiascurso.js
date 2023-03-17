@@ -114,7 +114,7 @@ class MateriasCurso extends CursosDetalle {
             title: "dictada en el Curso",
             detail: this.getFilterText("curso")
         }, this.focusedRowValue("horarios") != "" ? {
-            title: "Importante",
+            title: "Importante:",
             detail: "<i>Junto con la Materia se borrarán los horarios de la misma<br><br>" + Html.Tab(2) + "( " + this.horariosText() + " )",
             quotes: false
         } : undefined])

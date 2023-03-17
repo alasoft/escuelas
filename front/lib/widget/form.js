@@ -147,7 +147,7 @@ class Form extends Widget {
             if (validate.isValid) {
                 resolve(true)
             } else {
-                reject({ code: Errors.FORM_VALIDATION })
+                reject(Exceptions.FormValidation())
             }
         })
     }

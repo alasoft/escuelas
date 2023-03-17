@@ -258,8 +258,12 @@ class AppBase {
         this.SetUser(null);
     }
 
-    static ShowMessage(parameters) {
+    static ShowMessageOld(parameters) {
         return new MessageView(parameters).render();
+    }
+
+    static ShowErrorSections(sections) {
+        return new MessageView({ message: Messages.Sections(sections) }).render();
     }
 
     static ShowError(parameters) {

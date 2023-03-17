@@ -6,16 +6,37 @@ class Errors {
 
     static Handle(err) {
         if (err.code == Exceptions.INVALID_TOKEN) {
-            App.Login()
-        } else if (err.type == Exceptions.TYPE_INTERNAL && err.side == Exceptions.SERVER_SIDE) {
-            return App.ShowError({ message: this.ServerInternalErrorMessage(err) })
+            this.HandleInvalidToken()
+        } else if (err.side == Exceptions.SERVER_SIDE && err.type == Exceptions.TYPE_INTERNAL) {
+            this.HandleInternalServer(err)
+        } else if (err.code == Exceptions.FORM_VALIDATION) {
+
         } else {
             return App.ShowError({ message: err.message || App.UNIDENTIFIED_ERROR_MESSAGE })
         }
     }
 
-    static ServerInternalErrorMessage(err) {
-        return Messages.Sections([{ title: "Ha ocurrido un Error en el Servidor:", detail: err.message }, { title: "datos del error:", detail: err.detail }])
+    static HandleInvalidToken() {
+        App.ShowMessage({
+            message: Messages.Sections([{
+                    title: "La sesión del Usuario",
+                    detail: App.UserNombreApellido()
+                }, { title: "ha terminado por tiempo. Por favor vuelva a ingresar con su Usuario y contraseña" }])
+                .then(closeData =>
+                    App.Login())
+        })
+    }
+
+    static HandleInternalServer(err) {
+        return App.ShowError({
+            message: Messages.Sections([{
+                title: "Ha ocurrido un Error en el Servidor:",
+                detail: err.message
+            }, {
+                title: "datos del error:",
+                detail: err.detail
+            }])
+        })
     }
 
     static HandleOld(err, afterShowError) {

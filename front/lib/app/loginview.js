@@ -23,7 +23,7 @@ class LoginView extends EntryView {
         return [
             Item.Group({
                 items: [
-                    Item.Email()
+                    Item.Email({ required: true })
                 ]
             }),
             Item.Group({
@@ -81,7 +81,17 @@ class LoginView extends EntryView {
     }
 
     handleError(err) {
-        Errors.Handle(err, () => this.checkMaxAllowed())
+        if (err.code == Exceptions.INVALID_EMAIL_PASSWORD) {
+            ++this.count;
+            App.ShowErrorSections([{
+                message: "La combinación de Email y Password, no corresponde a ningún Usuario registrado",
+                detail: (this.count < this.maxAllowed ? "Por favor vuelva ingresar sus datos" : undefined),
+                tab: false,
+                quotes: false
+            }]).then(closeData => this.count == this.maxAllowed ? this.closeAboveMaxAllowed() : undefined)
+        } else {
+            super.handleError(err)
+        }
     }
 
     checkMaxAllowed() {
@@ -90,8 +100,8 @@ class LoginView extends EntryView {
         }
     }
 
-    closeDataAboveMaxAllowed() {
-        return { okey: false, aboveMaxAllowed: true };
+    closeAboveMaxAllowed() {
+        this.close({ okey: false, aboveMaxAllowed: true });
     }
 
 }

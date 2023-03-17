@@ -18,6 +18,7 @@ class Exceptions {
     static INVALID_EMAIL_PASSWORD = "invalidEmailPassword"
     static FOREIGN_KEY_REFERENCE_NOT_DEFINED = "foreignKeyReferenceNotDefined"
     static NOT_IMPLEMENTED = "notImplemented"
+    static EMAIL_DUPLICATED = "emailDuplicated"
 
     static FECHA_DESDE_DEBE_SER_MENOR_FECHA_HASTA = "fechaDesdeDebeSerMenorFechaHasta"
     static FECHA_DESDE_DEBE_ESTAR_EN_AÑO_LECTIVO = "fechaDesdeDebeEstarEnAñoLectivo"
@@ -26,5 +27,18 @@ class Exceptions {
     static PERIODO_CONTIENE_OTRO_PERIODO = "periodoContieneOtroPeriodo"
     static FECHA_INICIO_DEBE_SER_MENOR_FECHA_ENTREGA = "fechaInicioDebeSerMenorFechaEntrega"
     static DEBE_ESTAR_DENTRO_PERIODO = "debeEstarDentroPeriodo"
+
+    static FORM_VALIDATION = "formValidation"
+
+    static Validation(p) {
+        return Utils.Merge({
+            side: "client",
+            type: this.TYPE_VALIDATION,
+        }, p)
+    }
+
+    static FormValidation() {
+        return this.Validation({ code: this.FORM_VALIDATION })
+    }
 
 }

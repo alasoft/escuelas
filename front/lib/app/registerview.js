@@ -47,19 +47,30 @@ class RegisterView extends EntryView {
         return new Promise((resolve, reject) => {
             this.formValidate().then(() => {
                 if (this.email() != this.repeatEmail()) {
-                    reject(new ValidationException({ message: "Los emails deben coincidir" }))
+                    reject(Exceptions.Validation({ message: "Los emails deben coincidir" }))
                 }
                 if (this.password().length < 8) {
-                    reject(new ValidationException({ message: "El password debe tener al menos 8 caracteres" }))
+                    reject(Exceptions.Validation({ message: "El password debe tener al menos 8 caracteres" }))
                 }
                 if (this.password() != this.repeatPassword()) {
-                    reject(new ValidationException({ message: "Los passwords deben coincidir" }))
+                    reject(Exceptions.Validation({ message: "El password debe coincidir con su repetición" }))
                 }
                 resolve(true)
             }).catch(err =>
                 reject(err)
             )
         })
+    }
+
+    handleError(err) {
+        if (err.code == Exceptions.EMAIL_DUPLICATED) {
+            App.ShowErrorSections([{
+                message: "Ya existe un Usuario con el correo:",
+                detail: this.email()
+            }, { message: "por favor ingrese otra dirección de correo electrónico" }])
+        } else {
+            super.handleError(err);
+        }
     }
 
     email() {

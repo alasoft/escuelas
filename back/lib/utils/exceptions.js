@@ -21,6 +21,7 @@ class Exceptions {
     static INVALID_EMAIL_PASSWORD = "invalidEmailPassword"
     static FOREIGN_KEY_REFERENCE_NOT_DEFINED = "foreignKeyReferenceNotDefined"
     static NOT_IMPLEMENTED = "notImplemented"
+    static EMAIL_DUPLICATED = "emailDuplicated"
 
     static FECHA_DESDE_DEBE_SER_MENOR_FECHA_HASTA = "fechaDesdeDebeSerMenorFechaHasta"
     static FECHA_DESDE_DEBE_ESTAR_EN_AÑO_LECTIVO = "fechaDesdeDebeEstarEnAñoLectivo"
@@ -102,15 +103,14 @@ class Exceptions {
 
     static DuplicatedEmail(p) {
         return new Exception({
-            type: Exceptions.VALIDATION,
-            message: "Email duplicado",
-            detail: detail,
-        });
+            type: this.TYPE_VALIDATION,
+            code: this.EMAIL_DUPLICATED,
+        }, p);
     }
 
     static InvalidEmailPassword(p) {
         return new Exception({
-            type: this.TYPE_VALIDATION,
+            type: this.TYPE_AUTHENTICATION,
             code: this.INVALID_EMAIL_PASSWORD
         });
     }
