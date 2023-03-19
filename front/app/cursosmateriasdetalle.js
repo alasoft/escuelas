@@ -32,7 +32,7 @@ class CursosMateriasDetalle extends CursosDetalle {
             displayExpr: item =>
                 item != null ? item.materianombre : "",
             width: 250,
-            label: "Materia Dictada",
+            label: "Materia",
             onValueChanged: e =>
                 this.itemMateriaCursoOnValueChanged(e)
         }, p))

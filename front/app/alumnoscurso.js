@@ -17,8 +17,47 @@ class AlumnosCurso extends CursosDetalle {
         }
     }
 
+    toolbarItems() {
+        return [this.itemInsert(), this.itemImport(), this.itemExport()]
+    }
+
     labelText() {
         return "Alumnos por Curso"
+    }
+
+    itemImport() {
+        return {
+            widget: "dxButton",
+            location: "before",
+            options: {
+                icon: "group",
+                text: "Importa de Excel",
+                onClick: e => this.importAlumnos(e)
+            }
+        }
+    }
+
+    importAlumnos() {
+        new ImportAlumnos().render();
+    }
+
+    showMessageImportacion() {
+        return App.ShowMessage([{
+            message: "Este proceso permitirá cargar Alumnos de una Planilla Excel, de acuerdo a las siguientes reglas:",
+            quotes: false,
+            detail: [
+                "1. Deben existir las columnas 'Apellido' y 'Nombre' en la Planilla Excel.",
+                "2. Los alumnos a importar no deben existir previamente en el curso.",
+                "3. Puede existir una columna adicional 'Email'. Si existe el Email no puede repetirse.",
+            ]
+        }, {
+            message: "<i>Importante:",
+            quotes: false,
+            detail: [
+                "- Usted podrá visualizar los datos a importar antes de confirmar la operacion.",
+                "- Los renglones con errores se mostrarán pero no generarán nuevos Alumnos."
+            ]
+        }], { height: 350, width: 650 })
     }
 
     itemCurso() {
@@ -27,18 +66,6 @@ class AlumnosCurso extends CursosDetalle {
 
     cursoLoadFirst() {
         return false;
-    }
-
-    itemImport() {
-        if (this.añoLectivo() == Dates.ThisYear() && this.curso() != undefined) {
-            return {
-                widget: "dxButton",
-                location: "before",
-                options: {
-                    text: "Importar Alumnos de planilla Excel"
-                }
-            }
-        }
     }
 
     listColumns() {
@@ -123,6 +150,5 @@ class AlumnosCursoForm extends FormView {
             detail: this.listView().cursoDescripcion()
         }])
     }
-
 
 }

@@ -23,9 +23,19 @@ class Messages {
     }
 
     static Detail(p) {
-        return Html.LineFeed(Utils.IfNotDefined(p.lineFeed, 2)) +
-            (p.detail != undefined ? Html.Tab(Utils.IfNotDefined(p.tab, 2)) +
-                Strings.SingleQuotes(p.detail, p.quotes) : "");
+
+        function text(d) {
+            return (d != undefined ? Html.Tab(Utils.IfNotDefined(p.tab, 2)) +
+                Strings.SingleQuotes(d, p.quotes) : "");
+        }
+
+        let detail = "";
+
+        Utils.ToArray(p.detail).forEach(d =>
+            detail += (detail != "" ? "<br>" : "") + text(d));
+
+        return Html.LineFeed(Utils.IfNotDefined(p.lineFeed, 2)) + detail;
+
     }
 
     static PorFavorVerifique(lineFeed = 0) {

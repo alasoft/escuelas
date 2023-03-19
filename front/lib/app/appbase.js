@@ -258,8 +258,8 @@ class AppBase {
         this.SetUser(null);
     }
 
-    static ShowMessage(p) {
-        return new MessageView({ message: Messages.Build(p) }).render();
+    static ShowMessage(p1, p2) {
+        return new MessageView(Utils.Merge({ message: Messages.Build(p1) }, p2)).render();
     }
 
     static ShowError(parameters) {

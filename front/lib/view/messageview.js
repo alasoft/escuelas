@@ -6,7 +6,7 @@ class MessageView extends DialogView {
     popupConfiguration() {
         return {
             title: this.parameters().title || this.popupTitleDefault(),
-            showCloseButton: false,
+            showCloseButton: this.parameters().closeButton == true,
             onShowing: e => this.popupOnShowing(e)
         }
     }
@@ -34,11 +34,19 @@ class MessageView extends DialogView {
     }
 
     popupHeight() {
+        return this.parameters().height || this.calculatedHeight()
+    }
+
+    calculatedHeight() {
         return Math.min(600, MessageView.HEIGHT_DEFAULT +
             this.message().length / 2 + 40);
     }
 
     popupWidth() {
+        return this.parameters().width || this.calculatedWidth()
+    }
+
+    calculatedWidth() {
         return Math.min(600, MessageView.WIDTH_DEFAULT +
             this.message().length + 100);
     }
