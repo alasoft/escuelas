@@ -70,12 +70,6 @@ class CursosMateriasDetalle extends CursosDetalle {
 
     itemMateriaCursoOnValueChanged(e) {}
 
-    /*    
-        popupOnHiding(e) {
-            this.resolveRender({ curso: this.curso(), materiacurso: this.materiaCurso() });
-        }
-    */
-
     popupOnHidden(e) {
         if (this.masterView() != undefined) {
             this.masterView().focusRowById(this.materiaCurso());

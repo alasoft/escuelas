@@ -15,11 +15,11 @@ class Messages {
     static BuildSection(p) {
         let section;
         if (p != undefined) {
-            section = "<b>" + p.message + this.Detail(p)
+            section = "<b>" + p.message + this.Detail(p) + Html.LineFeed(Utils.IfNotDefined(p.skipSection, 3))
         } else {
             section = "";
         }
-        return section //+ Html.LineFeed(3);
+        return section;
     }
 
     static Detail(p) {

@@ -1,5 +1,9 @@
 class App extends AppBase {
 
+    static TableNames = new Map()
+        .set("materias_cursos", "Materias Dictadas (de Cursos)")
+        .set("tps", "Trabajos Prácticos")
+
     static DefineViewNormal() {
         return new AppView();
     }
@@ -28,5 +32,14 @@ class App extends AppBase {
         return "http://127.0.0.1:9090"
     }
 
+    static TranslateTableName(name) {
+        let translate = this.TableNames.get(name.trim().toLowerCase());
+        if (translate != undefined) {
+            return translate;
+        } else {
+            return Strings.Capitalize(name);
+        }
+
+    }
 
 }

@@ -65,14 +65,14 @@ class TpsCurso extends CursosMateriasDetalle {
 
     deleteMessage() {
         return Messages.Build([{
-            title: "Borra el Trabajo Práctico ?",
+            message: "Borra el Trabajo Práctico ?",
             detail: this.focusedRowValue("nombre")
         }, {
-            title: "de la Materia",
+            message: "de la Materia",
             detail: this.getFilterText("materiacurso")
         }, {
-            title: "del Curso",
-            detail: this.getFilterText("curso")
+            message: "del Curso",
+            detail: this.cursoDescripcion()
         }])
     }
 
@@ -258,6 +258,23 @@ class TpsCursoForm extends FormView {
         if (this.getEditorValue("hasta") != null) {
             this.blankEditorValue("hasta");
         }
+    }
+
+    duplicatedMessage() {
+        return Messages.Build([{
+            message: "Ya existe un Trabajo Práctico con el nombre:",
+            detail: this.getEditorValue("nombre")
+        }, {
+            message: "para la Materia",
+            detail: this.getEditorValue("nombre")
+        }, {
+            message: "para el Curso",
+            detail: this.cursoDescripcion()
+        }])
+    }
+
+    cursoDescripcion() {
+        return this.getEditorValue("cursodescripcion") + " / " + this.getEditorValue("añolectivo");
     }
 
 }

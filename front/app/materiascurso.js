@@ -110,11 +110,14 @@ class MateriasCurso extends CursosDetalle {
     }
 
     deleteMessage() {
-        return Messages.Build([{ title: "Borra la Materia ?", detail: this.focusedRowValue("materianombre") }, {
-            title: "dictada en el Curso",
-            detail: this.getFilterText("curso")
+        return Messages.Build([{
+            message: "Borra la Materia ?",
+            detail: this.focusedRowValue("materianombre")
+        }, {
+            message: "dictada en el Curso",
+            detail: this.cursoDescripcion()
         }, this.focusedRowValue("horarios") != "" ? {
-            title: "Importante:",
+            message: "Importante:",
             detail: "<i>Junto con la Materia se borrarán los horarios de la misma<br><br>" + Html.Tab(2) + "( " + this.horariosText() + " )",
             quotes: false
         } : undefined])
@@ -122,6 +125,10 @@ class MateriasCurso extends CursosDetalle {
 
     horariosText() {
         return this.focusedRowValue("horarios").replace("<br><br>", ", ")
+    }
+
+    rowDescription() {
+        return this.focusedRowValue("materianombre");
     }
 
     listOnContentReady(e) {
@@ -165,8 +172,12 @@ class MateriasCursoForm extends FormView {
     }
 
     duplicatedMessage() {
-        return Messages.Build({ message: "Ya esta asociada la Materia:", detail: this.getEditorText("materia") })
+        return Messages.Build([{
+            message: "Ya esta asociada la Materia:",
+            detail: this.getEditorText("materia")
+        }, { message: "para el Curso", detail: this.listView().cursoDescripcion() }])
     }
+
 
 
     popupOnHidden(e) {

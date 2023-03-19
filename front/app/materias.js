@@ -26,15 +26,6 @@ class Materias extends ListView {
         return Messages.Build({ message: "Borra la Materia ?", detail: this.focusedRowValue("nombre") })
     }
 
-    deleteErrorMessage(err) {
-        return this.composeDeleteErrorMessasge({
-            name: "esta Materia",
-            description: this.focusedRowValue("nombre"),
-            err: err,
-            vinculo: "vinculada"
-        })
-    }
-
 }
 
 class MateriasForm extends FormView {
@@ -56,10 +47,5 @@ class MateriasForm extends FormView {
             }),
         ]
     }
-
-    duplicatedMessage() {
-        return Messages.Build({ message: "Ya existe una Materia de nombre:", detail: this.getEditorText("nombre") })
-    }
-
 
 }

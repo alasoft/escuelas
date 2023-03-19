@@ -25,16 +25,6 @@ class Modalidades extends ListView {
         return Messages.Build({ message: "Borra la Modalidad ?", detail: this.focusedRowValue("nombre") })
     }
 
-    deleteErrorMessage(err) {
-        return this.composeDeleteErrorMessasge({
-            name: "la Modalidad",
-            description: this.focusedRowValue("nombre"),
-            err: err,
-            vinculo: "vinculada"
-        })
-    }
-
-
 }
 
 class ModalidadesForm extends FormView {

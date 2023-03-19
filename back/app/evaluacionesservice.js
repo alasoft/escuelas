@@ -11,6 +11,8 @@ class EvaluacionesListService extends ServiceBase {
             .then(() =>
                 this.sendOkey(this.data())
             )
+            .catch(err =>
+                this.sendError(err))
     }
 
     requiredValues() {

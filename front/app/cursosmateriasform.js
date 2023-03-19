@@ -8,6 +8,13 @@ class CursosMateriasForm extends FormView {
         return this.getEditorValue("materiacurso");
     }
 
+    itemAñoLectivo() {
+        return Item.ReadOnly({
+            dataField: "añolectivo",
+            width: 100
+        })
+    }
+
     itemCurso() {
         return Item.Lookup({
             dataField: "curso",
@@ -63,6 +70,10 @@ class CursosMateriasForm extends FormView {
     setFirstMateriaCurso() {
         this.setEditorValue("materiacurso", this.firstMateriaCurso);
         this.firstMateriaCurso = undefined;
+    }
+
+    cursoDescripcion() {
+        return this.getEditorText("curso") + " / " + this.getEditorValue("añolectivo");
     }
 
     cursoOnValueChanged(e) {

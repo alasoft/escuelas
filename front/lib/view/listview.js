@@ -121,24 +121,26 @@ class ListView extends View {
             }).then(() =>
                 this.dataHasChanged = true)
             .catch(err =>
-                App.ShowError({ message: this.deleteErrorMessage(err) }));
+                this.deleteErrorMessage(err));
     }
 
     deleteErrorMessage(err) {
-        return "No es posible borrar el registro"
+        App.ShowMessage([{
+            message: "No es posible borrar este registro",
+            detail: this.rowDescription(),
+        }, {
+            message: "Debido a que hay registros vinculados de la Tabla",
+            detail: this.relatedTableName(err)
+        }])
+    }
+
+    rowDescription() {
+        return this.focusedRowValue("nombre");
     }
 
     relatedTableName(err) {
         let tableName = Strings.RemoveChars(Strings.SubstringAfter(err.message, "en la tabla"), ["«", "»"]);
-        return tableName != undefined ? tableName.trim() : "";
-    }
-
-    composeDeleteErrorMessasge(p) {
-        return Html.Bold() + "No es posible borrar " + p.name + Html.LineFeed(2) +
-            Html.Tab() + Strings.SingleQuotes(p.description) + Html.LineFeed(2) +
-            "debido a que está " + p.vinculo + " a registros de " + Html.LineFeed(2) +
-            Html.Tab() + Strings.Capitalize(this.relatedTableName(p.err))
-
+        return tableName != undefined ? App.TranslateTableName(tableName) : "";
     }
 
     rowType() {

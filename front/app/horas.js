@@ -81,6 +81,30 @@ class Horas extends AñoLectivoFilterView {
         new DiasCalendario({ añoLectivo: this.añoLectivo() }).render();
     }
 
+    excelFileName() {
+        return "Horarios " + this.getFilterText("añolectivo");
+    }
+
+    deleteMessage() {
+        const row = this.focusedRowData();
+        return Messages.Build([{
+                message: "Borra el horario ?",
+                detail: DiasSemana.GetNombre(row.dia) + " " + row.desde.substring(0, 5) + " - " + row.hasta.substring(0, 5)
+            },
+            {
+                message: "de la Materia",
+                detail: this.focusedRowValue("materianombre")
+            }, {
+                message: "perteneciente al Curso:",
+                detail: this.cursoDescripcion()
+            }
+        ]);
+    }
+
+    cursoDescripcion() {
+        return Cursos.Descripcion(this.focusedRowData()) + " / " + this.getFilterValue("añolectivo")
+    }
+
 }
 
 class HorasForm extends CursosMateriasForm {
@@ -103,13 +127,22 @@ class HorasForm extends CursosMateriasForm {
         return {
             title: "Horario",
             width: 750,
-            height: 400
+            height: 450
         }
     }
 
     formItems() {
         return [
             Item.Id(),
+            Item.Group({
+                colCount: 2,
+                items: [
+                    Item.ReadOnly({
+                        dataField: "añolectivo",
+                        width: 100
+                    })
+                ]
+            }),
             Item.Group({
                 colCount: 2,
                 items: [

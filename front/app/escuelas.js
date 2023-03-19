@@ -25,15 +25,6 @@ class Escuelas extends ListView {
         return Messages.Build({ message: "Borra la Escuela ?", detail: this.focusedRowValue("nombre") })
     }
 
-    deleteErrorMessage(err) {
-        return this.composeDeleteErrorMessasge({
-            name: "la Escuela",
-            description: this.focusedRowValue("nombre"),
-            err: err,
-            vinculo: "vinculada"
-        })
-    }
-
 }
 
 class EscuelasFormView extends FormView {

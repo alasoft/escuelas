@@ -67,6 +67,12 @@ class TpsForm extends CursosMateriasForm {
             Item.Group({
                 colCount: 2,
                 items: [
+                    this.itemAñoLectivo(),
+                ]
+            }),
+            Item.Group({
+                colCount: 2,
+                items: [
                     this.itemCurso(),
                     this.itemMateriaCurso(),
                     Item.Text({
@@ -165,6 +171,19 @@ class TpsForm extends CursosMateriasForm {
         if (this.getEditorValue("hasta") != null) {
             this.blankEditorValue("hasta");
         }
+    }
+
+    duplicatedMessage() {
+        return Messages.Build([{
+            message: "Ya existe un Trabajo Práctico con el nombre:",
+            detail: this.getEditorValue("nombre")
+        }, {
+            message: "para la Materia",
+            detail: this.getEditorValue("nombre")
+        }, {
+            message: "para el Curso",
+            detail: this.cursoDescripcion()
+        }])
     }
 
 }

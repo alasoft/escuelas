@@ -33,6 +33,11 @@ class Periodos extends AñoLectivoFilterView {
         }])
     }
 
+    excelFileName() {
+        return "Períodos " + this.getFilterText("añolectivo");
+    }
+
+
     static Descripcion(data) {
         if (Utils.IsDefined(data)) {
             return Strings.Concatenate([
@@ -74,6 +79,54 @@ class PeriodosFormView extends FormView {
 
     firstEditor() {
         return "nombre";
+    }
+
+    handleError(err) {
+        if (err.code == Exceptions.FECHA_DESDE_DEBE_SER_MENOR_FECHA_HASTA) {
+            this.handleFechaDesdeDebeSerMenor(err)
+        } else if (err.code == Exceptions.PERIODO_INTERSECTA_OTRO_PERIODO) {
+            this.handlePeriodoIntersecta(err)
+        } else if (err.code == Exceptions.PERIODO_CONTIENE_OTRO_PERIODO) {
+            this.handlePeriodoContiene(err)
+        } else {
+            super.handleError(err);
+        }
+    }
+
+    duplicatedMessage() {
+        return Messages.Build({ message: "Ya existe Período con el nombre:", detail: this.getEditorValue("nombre") })
+    }
+
+    handleFechaDesdeDebeSerMenor(err) {
+        App.ShowMessage([{
+                message: "La fecha desde",
+                detail: this.getDate("desde")
+            },
+            {
+                message: "debe ser menor a la fecha hasta",
+                detail: this.getDate("hasta")
+            }
+        ])
+    }
+
+    handlePeriodoContiene(err) {
+        App.ShowMessage([{
+            message: "El " + this.getEditorValue("nombre"),
+            quotes: false,
+            detail: "Del " + this.getDate("desde") + " al " + this.getDate("hasta")
+        }, { message: "contiene al Período" + err.detail.nombre }])
+    }
+
+    handlePeriodoIntersecta(err) {
+        App.ShowMessage([{
+            message: "El " + this.getEditorValue("nombre"),
+            quotes: false,
+            detail: "Del " + this.getDate("desde") + " al " + this.getDate("hasta")
+        }, {
+            message: "intersecta al " + err.detail.nombre,
+            quotes: false,
+            detail: "Del " + Dates.Format(err.detail.desde) + " al " + Dates.Format(err.detail.hasta)
+        }])
     }
 
 }

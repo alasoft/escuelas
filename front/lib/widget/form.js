@@ -49,6 +49,10 @@ class Form extends Widget {
         return this.instance().getEditor(dataField);
     }
 
+    getDate(dataField) {
+        return Dates.Format(this.getEditorValue(dataField))
+    }
+
     getEditorProperty(dataField, propertyName) {
         return this.getEditor(dataField).option(propertyName);
     }

@@ -1,5 +1,6 @@
 const { TableRest } = require("../lib/rest/tablerest");
 const { TpsListAllService } = require("./tpsallservice");
+const { TpsGetService, TpsDeleteService } = require("./tpsservice");
 
 class TpsAllRest extends TableRest {
 
@@ -8,6 +9,8 @@ class TpsAllRest extends TableRest {
     }
     build() {
         this.buildVerb("list", TpsListAllService);
+        this.buildVerb("get", TpsGetService);
+        this.buildVerb("delete", TpsDeleteService)
     }
 
 }

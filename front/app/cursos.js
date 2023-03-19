@@ -5,7 +5,7 @@ class Cursos extends AñoLectivoFilterView {
     }
 
     toolbarItems() {
-        return [this.itemInsert(), this.itemAlumnosCurso(), this.itemMateriasCurso()]
+        return [this.itemInsert(), this.itemAlumnosCurso(), this.itemMateriasCurso(), this.itemExport()]
     }
 
     itemAlumnosCurso() {
@@ -95,11 +95,21 @@ class Cursos extends AñoLectivoFilterView {
     }
 
     deleteMessage() {
-        return Messages.Build({ message: "Borra el Curso ?", detail: this.descripcion() })
+        return Messages.Build({ message: "Borra el Curso ?", detail: this.cursoDescripcion() })
     }
 
-    descripcion() {
-        return Cursos.Descripcion(this.focusedRowData());
+    deleteErrorMessage(err) {
+        return App.ShowMessage([{
+            message: "No es posible borrar el Curso",
+            detail: this.cursoDescripcion()
+        }, {
+            message: "debido a que esta vinculado a registros de la Tabla",
+            detail: this.relatedTableName(err)
+        }])
+    }
+
+    cursoDescripcion() {
+        return Cursos.Descripcion(this.focusedRowData()) + " / " + this.añoLectivo();
     }
 
     static Descripcion(data) {
@@ -195,7 +205,7 @@ class CursosForm extends FormView {
     }
 
     duplicatedMessage() {
-        return Messages.Build({ message: "Ya existe un Curso con los datos:", detail: this.listView().descripcion() })
+        return Messages.Build({ message: "Ya existe un Curso con los datos:", detail: this.listView().cursoDescripcion() })
     }
 
 }
