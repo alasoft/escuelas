@@ -110,7 +110,7 @@ class MateriasCurso extends CursosDetalle {
     }
 
     deleteMessage() {
-        return Messages.Sections([{ title: "Borra la Materia ?", detail: this.focusedRowValue("materianombre") }, {
+        return Messages.Build([{ title: "Borra la Materia ?", detail: this.focusedRowValue("materianombre") }, {
             title: "dictada en el Curso",
             detail: this.getFilterText("curso")
         }, this.focusedRowValue("horarios") != "" ? {
@@ -165,7 +165,7 @@ class MateriasCursoForm extends FormView {
     }
 
     duplicatedMessage() {
-        return Messages.Section({ title: "Ya esta asociada la Materia:", detail: this.getEditorText("materia") })
+        return Messages.Build({ message: "Ya esta asociada la Materia:", detail: this.getEditorText("materia") })
     }
 
 

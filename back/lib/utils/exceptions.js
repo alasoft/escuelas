@@ -18,9 +18,11 @@ class Exceptions {
     static ID_NOT_DEFINED = "idNotDefined"
     static SQL_WHERE_NOT_DEFINED = "sqlWhereNotDefined"
     static USER_NOT_EXISTS = "userNotExists"
-    static INVALID_EMAIL_PASSWORD = "invalidEmailPassword"
+    static USER_EMAIL_NOT_FOUND = "userEmailNotFound"
+    static USER_INVALID_PASSWORD = "userInvalidPassword"
     static FOREIGN_KEY_REFERENCE_NOT_DEFINED = "foreignKeyReferenceNotDefined"
     static NOT_IMPLEMENTED = "notImplemented"
+    static APELLIDO_NOMBRE_DUPLICATED = "apellidoNombreDuplicated"
     static EMAIL_DUPLICATED = "emailDuplicated"
 
     static FECHA_DESDE_DEBE_SER_MENOR_FECHA_HASTA = "fechaDesdeDebeSerMenorFechaHasta"
@@ -62,8 +64,9 @@ class Exceptions {
     static SqlParameterValueNotFound(p) {
         return new Exception({
             type: this.TYPE_INTERNAL,
-            code: this.SQL_PARAMETER_VALUE_NOT_FOUND
-        })
+            code: this.SQL_PARAMETER_VALUE_NOT_FOUND,
+            message: "No esta definido un parámetro SQL"
+        }, p)
     }
 
     static TenantNotDefined(p) {
@@ -76,14 +79,14 @@ class Exceptions {
     static IdNotDefined(p) {
         return new Exception({
             type: this.TYPE_INTERNAL,
-            message: this.ID_NOT_DEFINED,
+            code: this.ID_NOT_DEFINED,
         });
     }
 
     static WhereNotDefined(p) {
         return new Exception({
             type: this.TYPE_INTERNAL,
-            message: SQL_WHERE_NOT_DEFINED
+            code: SQL_WHERE_NOT_DEFINED
         }, p)
     }
 
@@ -101,6 +104,14 @@ class Exceptions {
         });
     }
 
+    static DuplicatedApellidoNombre(p) {
+        return new Exception({
+            type: this.TYPE_VALIDATION,
+            code: this.APELLIDO_NOMBRE_DUPLICATED,
+        }, p);
+    }
+
+
     static DuplicatedEmail(p) {
         return new Exception({
             type: this.TYPE_VALIDATION,
@@ -108,10 +119,17 @@ class Exceptions {
         }, p);
     }
 
-    static InvalidEmailPassword(p) {
+    static UserEmailNotFound(p) {
         return new Exception({
             type: this.TYPE_AUTHENTICATION,
-            code: this.INVALID_EMAIL_PASSWORD
+            code: this.USER_EMAIL_NOT_FOUND
+        });
+    }
+
+    static UserInvalidPassword(p) {
+        return new Exception({
+            type: this.TYPE_AUTHENTICATION,
+            code: this.USER_INVALID_PASSWORD
         });
     }
 

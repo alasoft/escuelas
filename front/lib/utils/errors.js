@@ -18,10 +18,12 @@ class Errors {
 
     static HandleInvalidToken() {
         App.ShowMessage({
-            message: Messages.Sections([{
-                    title: "La sesión del Usuario",
+            message: Messages.Build([{
+                    message: "La sesión del Usuario",
                     detail: App.UserNombreApellido()
-                }, { title: "ha terminado por tiempo. Por favor vuelva a ingresar con su Usuario y contraseña" }])
+                }, {
+                    message: "ha terminado por tiempo. Por favor vuelva a ingresar con su Usuario y contraseña"
+                }])
                 .then(closeData =>
                     App.Login())
         })
@@ -29,11 +31,11 @@ class Errors {
 
     static HandleInternalServer(err) {
         return App.ShowError({
-            message: Messages.Sections([{
-                title: "Ha ocurrido un Error en el Servidor:",
+            message: Messages.Build([{
+                message: "Ha ocurrido un Error en el Servidor:",
                 detail: err.message
             }, {
-                title: "datos del error:",
+                message: "datos del error:",
                 detail: err.detail
             }])
         })

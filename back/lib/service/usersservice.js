@@ -34,11 +34,21 @@ class UsersRegisterService extends UsersService {
     validate() {
         return this.validateRequiredValues()
             .then(() =>
+                this.checkApellidoNombre())
+            .then(() =>
                 this.checkEmail())
     }
 
     requiredValues() {
         return "nombre,apellido,email,password";
+    }
+
+    checkApellidoNombre() {
+        return this.dbCount(this.sqlCheckApellidoNombre()).then(count => {
+            if (0 < count) {
+                throw Exceptions.DuplicatedApellidoNombre()
+            }
+        })
     }
 
     checkEmail() {
@@ -47,6 +57,20 @@ class UsersRegisterService extends UsersService {
                 throw Exceptions.DuplicatedEmail()
             }
         })
+    }
+
+    sqlCheckApellidoNombre() {
+        return Sql.Count(this.sqlFindApellidoNombreParameters());
+    }
+
+    sqlFindApellidoNombreParameters() {
+        return {
+            filterByTenant: false,
+            from: "users",
+            where: this.sqlAnd()
+                .addSql("upper(apellido)=upper(@apellido)", { apellido: this.value("apellido") })
+                .addSql("upper(nombre)=upper(@nombre)", { nombre: this.value("nombre") })
+        }
     }
 
     sqlCheckEmail() {
@@ -99,8 +123,10 @@ class UsersLoginService extends UsersService {
     }
 
     validateUser(user) {
-        if (Utils.IsNotDefined(user) || Utils.Decrypt(user.password) != this.value("password")) {
-            throw Exceptions.InvalidEmailPassword();
+        if (Utils.IsNotDefined(user)) {
+            throw Exceptions.UserEmailNotFound()
+        } else if (Utils.Decrypt(user.password) != this.value("password")) {
+            throw Exceptions.UserInvalidPassword();
         }
         return user
     }

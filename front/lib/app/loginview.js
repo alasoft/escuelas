@@ -30,7 +30,7 @@ class LoginView extends EntryView {
                 colCount: 2,
                 items: [
                     Item.Password(),
-                    Item.RecoverPassword()
+                    Item.RecoverPassword({ visible: false })
                 ]
             }),
             Item.Group({
@@ -77,21 +77,47 @@ class LoginView extends EntryView {
     }
 
     register(e) {
-        new RegisterView().render();
+        new RegisterView().render()
+            .then(closeData =>
+                this.form().clearData())
+            .then(() =>
+                this.form().focus());
     }
 
     handleError(err) {
-        if (err.code == Exceptions.INVALID_EMAIL_PASSWORD) {
-            ++this.count;
-            App.ShowErrorSections([{
-                message: "La combinación de Email y Password, no corresponde a ningún Usuario registrado",
-                detail: (this.count < this.maxAllowed ? "Por favor vuelva ingresar sus datos" : undefined),
-                tab: false,
-                quotes: false
-            }]).then(closeData => this.count == this.maxAllowed ? this.closeAboveMaxAllowed() : undefined)
+        if (err.code == Exceptions.USER_EMAIL_NOT_FOUND) {
+            this.handleUserEmailNotFound(err)
+        } else if (err.code == Exceptions.USER_INVALID_PASSWORD) {
+            this.handleInvalidPassword(err)
         } else {
             super.handleError(err)
         }
+    }
+
+    handleUserEmailNotFound(err) {
+        ++this.count;
+        App.ShowMessage({
+                message: "<i>" + Messages.EMAIL_INGRESADO_NO_CORRESPONDE,
+                lineFeed: 3,
+                tab: 0,
+                quotes: false,
+                detail: Messages.POR_FAVOR_REGISTRESE
+            })
+            .then(closeData =>
+                this.count == this.maxAllowed ? this.closeAboveMaxAllowed() : undefined)
+    }
+
+    handleInvalidPassword(err) {
+        ++this.count;
+        App.ShowMessage({
+                message: "<i>" + Messages.COMBINACION_EMAIL_PASSWORD_INCORRECTA,
+                detail: Messages.POR_FAVOR_VERIFIQUE,
+                lineFeed: 3,
+                tab: 0,
+                quotes: false
+            })
+            .then(closeData =>
+                this.count == this.maxAllowed ? this.closeAboveMaxAllowed() : undefined)
     }
 
     checkMaxAllowed() {

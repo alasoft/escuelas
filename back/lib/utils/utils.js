@@ -209,6 +209,19 @@ class Dates {
 
 }
 
+class Html {
+
+    static Tab(n = 1) {
+        return "&emsp;".repeat(n);
+    }
+
+    static LineFeed(n = 1) {
+        return "<br>".repeat(n)
+    }
+
+}
+
 module.exports.Strings = Strings;
 module.exports.Utils = Utils;
 module.exports.Dates = Dates;
+module.exports.Html = Html;

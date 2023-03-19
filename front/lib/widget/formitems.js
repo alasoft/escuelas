@@ -239,6 +239,9 @@ class Item {
             isRequired: p.required || true,
             label: {
                 text: p.text || "Repite el Email"
+            },
+            editorOptions: {
+                width: p.width || App.EMAIL_WIDTH,
             }
         }
     }
@@ -285,6 +288,7 @@ class Item {
         return {
             itemType: "button",
             buttonOptions: {
+                visible: p.visible,
                 text: p.text || "Olvidé el password",
             }
         }

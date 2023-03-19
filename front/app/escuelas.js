@@ -22,7 +22,7 @@ class Escuelas extends ListView {
     }
 
     deleteMessage() {
-        return Messages.Section({ title: "Borra la Escuela ?", detail: this.focusedRowValue("nombre") })
+        return Messages.Build({ message: "Borra la Escuela ?", detail: this.focusedRowValue("nombre") })
     }
 
     deleteErrorMessage(err) {
@@ -54,7 +54,7 @@ class EscuelasFormView extends FormView {
     }
 
     duplicatedMessage() {
-        return Messages.Section({ title: "Ya existe un Escuela de nombre:", detail: this.getEditorText("nombre") })
+        return Messages.Build({ message: "Ya existe un Escuela de nombre:", detail: this.getEditorText("nombre") })
     }
 
 

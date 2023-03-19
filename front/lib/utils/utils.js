@@ -8,6 +8,14 @@ class Utils {
         return !this.IsDefined(x);
     }
 
+    static IfNotDefined(x1, x2) {
+        if (this.IsDefined(x1)) {
+            return x1;
+        } else {
+            return x2;
+        }
+    }
+
     static IsString(x) {
         return (typeof x === "string");
     }
@@ -88,6 +96,14 @@ class Utils {
         return this.IsNotDefined(o) || Object.keys(o).length == 0;
     }
 
+    static ToArray(x) {
+        if (this.IsArray(x)) {
+            return x;
+        } else {
+            return [x];
+        }
+    }
+
 }
 
 class Strings {
@@ -118,9 +134,13 @@ class Strings {
         return s1.split(s2).length - 1;
     }
 
-    static SingleQuotes(s) {
+    static SingleQuotes(s, withQuotes = true) {
         if (Utils.IsDefined(s)) {
-            return "'" + s + "'";
+            if (withQuotes) {
+                return "'" + s + "'";
+            } else {
+                return s;
+            }
         } else {
             return "";
         }
@@ -296,8 +316,20 @@ class Html {
         return title + "<br>" + "-".repeat(title.length + plus);
     }
 
-    static Tab(n = 1) {
-        return "&emsp;".repeat(n);
+    static LineFeed(n = 1) {
+        if (0 < n) {
+            return "<br>".repeat(n);
+        } else {
+            return ""
+        }
+    }
+
+    static Tab(n) {
+        if (0 < n) {
+            return "&emsp;".repeat(n);
+        } else {
+            return "";
+        }
     }
 
     static Bold() {
@@ -306,10 +338,6 @@ class Html {
 
     static BoldWithStyle(style) {
         return '<b style="' + style + '">';
-    }
-
-    static LineFeed(n = 1) {
-        return "<br>".repeat(n);
     }
 
     static Italic() {

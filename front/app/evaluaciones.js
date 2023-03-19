@@ -3,6 +3,7 @@ class Evaluaciones extends CursosMateriasDetalle {
     extraConfiguration() {
         return {
             mode: "view",
+            fullScreen: true,
             components: {
                 label: {
                     text: "Calificaciones"

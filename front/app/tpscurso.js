@@ -64,7 +64,7 @@ class TpsCurso extends CursosMateriasDetalle {
     }
 
     deleteMessage() {
-        return Messages.Sections([{
+        return Messages.Build([{
             title: "Borra el Trabajo Práctico ?",
             detail: this.focusedRowValue("nombre")
         }, {

@@ -1,7 +1,7 @@
 const { Exceptions } = require("../utils/exceptions.js");
 const { TextBuilder } = require("../utils/textbuilder");
 const { TextParameters } = require("../utils/textparameters");
-const { Utils } = require("../utils/utils");
+const { Utils, Html } = require("../utils/utils");
 
 class SqlText {
 
@@ -52,7 +52,7 @@ class SqlText {
         if (key != undefined) {
             return this.values[key];
         } else {
-            throw Exceptions.SqlParameterValueNotFound(name)
+            throw Exceptions.SqlParameterValueNotFound({ detail: this.originalText() })
         }
     }
 

@@ -28,6 +28,10 @@ class Form extends Widget {
         this.setProperty("formData", data);
     }
 
+    clearData() {
+        this.setData(null)
+    }
+
     updateData(data) {
         this.instance().updateData(data);
         return data;

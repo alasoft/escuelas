@@ -63,7 +63,7 @@ class AlumnosCurso extends CursosDetalle {
     }
 
     deleteMessage() {
-        return Messages.Sections([{
+        return Messages.Build([{
             title: "Borra " + this.generoArticulo() + " ?",
             detail: this.focusedRowValue("apellido") + " " + this.focusedRowValue("nombre")
         }, {
@@ -115,7 +115,7 @@ class AlumnosCursoForm extends FormView {
     }
 
     duplicatedMessage() {
-        return Messages.Sections([{
+        return Messages.Build([{
             title: "Ya existe un Alumno con Apellido y Nombre:",
             detail: this.getEditorText("apellido") + ", " + this.getEditorText("nombre")
         }, {

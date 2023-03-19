@@ -1,7 +1,8 @@
 class Exceptions {
 
+    // Server Side
+
     static SERVER_SIDE = "server";
-    static CLIENT_SIDE = "client";
 
     static TYPE_AUTHENTICATION = "authentication"
     static TYPE_VALIDATION = "validation";
@@ -14,10 +15,13 @@ class Exceptions {
     static SQL_PARAMETER_VALUE_NOT_FOUND = "sqlParameterValueNotFound"
     static TENANT_NOT_DEFINED = "Tenant no definido"
     static ID_NOT_DEFINED = "idNotDefined"
+    static SQL_WHERE_NOT_DEFINED = "sqlWhereNotDefined"
     static USER_NOT_EXISTS = "userNotExists"
-    static INVALID_EMAIL_PASSWORD = "invalidEmailPassword"
+    static USER_EMAIL_NOT_FOUND = "userEmailNotFound"
+    static USER_INVALID_PASSWORD = "userInvalidPassword"
     static FOREIGN_KEY_REFERENCE_NOT_DEFINED = "foreignKeyReferenceNotDefined"
     static NOT_IMPLEMENTED = "notImplemented"
+    static APELLIDO_NOMBRE_DUPLICATED = "apellidoNombreDuplicated"
     static EMAIL_DUPLICATED = "emailDuplicated"
 
     static FECHA_DESDE_DEBE_SER_MENOR_FECHA_HASTA = "fechaDesdeDebeSerMenorFechaHasta"
@@ -28,7 +32,14 @@ class Exceptions {
     static FECHA_INICIO_DEBE_SER_MENOR_FECHA_ENTREGA = "fechaInicioDebeSerMenorFechaEntrega"
     static DEBE_ESTAR_DENTRO_PERIODO = "debeEstarDentroPeriodo"
 
+    // Client Side 
+
+    static CLIENT_SIDE = "client";
+
     static FORM_VALIDATION = "formValidation"
+    static MAIL_INGRESADO_NO_COINCIDE_CON_REPETICION = "mailIngresadoNoCoincideConRepeticion";
+    static PASSWORD_INGRESADO_TIENE_MENOS_8_CARACTERES = "mailIngresadoTieneMenos8Caracteres";
+    static PASSWORD_INGRESADO_NO_COINCIDE_CON_REPETICION = "passwordIngresadoNoCoincideConRepeticion"
 
     static Validation(p) {
         return Utils.Merge({

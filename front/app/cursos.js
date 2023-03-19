@@ -95,7 +95,7 @@ class Cursos extends AñoLectivoFilterView {
     }
 
     deleteMessage() {
-        return Messages.Section({ title: "Borra el Curso ?", detail: this.descripcion() })
+        return Messages.Build({ message: "Borra el Curso ?", detail: this.descripcion() })
     }
 
     descripcion() {
@@ -195,7 +195,7 @@ class CursosForm extends FormView {
     }
 
     duplicatedMessage() {
-        return Messages.Section({ title: "Ya existe un Curso con los datos:", detail: this.listView().descripcion() })
+        return Messages.Build({ message: "Ya existe un Curso con los datos:", detail: this.listView().descripcion() })
     }
 
 }

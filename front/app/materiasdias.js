@@ -42,7 +42,7 @@ class MateriasDias extends CursosMateriasDetalle {
     }
 
     deleteMessage() {
-        return Messages.Section({ title: "Borra este horario ?", detail: this.descripcion() })
+        return Messages.Build({ message: "Borra este horario ?", detail: this.descripcion() })
     }
 
     descripcion() {

@@ -35,7 +35,7 @@ class AppView extends AppViewBase {
 
         const itemEvaluaciones = new TreeItem({
             id: "2",
-            text: "Evaluaciones"
+            text: "Calificaciones"
         });
 
         const itemDictado = new TreeItem({
@@ -95,7 +95,7 @@ class AppView extends AppViewBase {
 
 
         itemEvaluaciones.addChild({
-            text: "Calificaciones",
+            text: "Puntajes",
             onClick: e => new Evaluaciones().render()
         })
 
