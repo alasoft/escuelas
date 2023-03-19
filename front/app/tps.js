@@ -22,7 +22,7 @@ class Tps extends AñoLectivoFilterView {
         return [
             Column.Id(),
             this.columnCurso(),
-            Column.Text({ dataField: "materianombre", caption: "Materia", width: 180 }),
+            Column.Text({ dataField: "materianombre", caption: "Materia Dictada", width: 180 }),
             Column.Date({ dataField: "desde", width: 180, caption: "Inicio", format: App.DATE_FORMAT_LONG }),
             Column.Date({ dataField: "hasta", caption: "Entrega", width: 180, format: App.DATE_FORMAT_LONG }),
             Column.Text({ dataField: "nombre", width: 250, caption: "Trabajo Práctico" }),
