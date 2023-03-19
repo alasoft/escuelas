@@ -21,7 +21,7 @@ new App({
     dbConnection: dbConnection,
     createTables: CreateTables,
     restItems: restItems,
-    tokenMinutes: 30,
+    tokenMinutes: 120,
     version: "0.9",
     name: "Escuelas",
 }).start()

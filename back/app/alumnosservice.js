@@ -8,6 +8,7 @@ const {
 } = require("../lib/service/tableservice");
 const { Sql } = require("../lib/sql/sql");
 const { SqlDelete, SqlInsert } = require("../lib/sql/sqloperations");
+const { Strings } = require("../lib/utils/utils");
 
 class AlumnosListService extends TableListService {
 
@@ -64,12 +65,20 @@ class AlumnosInsertService extends TableInsertService {
         return AlumnosCommonService.SqlNotDuplicated(this);
     }
 
+    sqlValues() {
+        return AlumnosCommonService.SqlValues(this);
+    }
+
 }
 
 class AlumnosUpdateService extends TableUpdateService {
 
     sqlNotDuplicated() {
         return AlumnosCommonService.SqlNotDuplicated(this);
+    }
+
+    sqlValues() {
+        return AlumnosCommonService.SqlValues(this);
     }
 
 }
@@ -195,6 +204,16 @@ class AlumnosCommonService {
             ]),
             parameters: service.jsonValues("curso,apellido,nombre")
         })
+    }
+
+    static SqlValues(service) {
+        return {
+            id: service.id(),
+            curso: service.value("curso"),
+            apellido: service.trimOneSpace("apellido"),
+            nombre: service.trimOneSpace("nombre"),
+            email: service.trim("email")
+        }
     }
 
 }

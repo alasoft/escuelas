@@ -7,11 +7,20 @@ class AlumnosCurso extends CursosDetalle {
     extraConfiguration() {
         return {
             popup: {
+                fullScreen: true,
                 title: "Alumnos por Curso"
             },
             components: {
                 filter: {
-                    width: 280
+                    width: 380,
+                    height: 50,
+                    labelLocation: "left",
+                },
+                list: {
+                    scrolling: {
+                        mode: "infinite"
+                    },
+                    showBorders: true,
                 }
             }
         }
@@ -29,6 +38,7 @@ class AlumnosCurso extends CursosDetalle {
         return {
             widget: "dxButton",
             location: "before",
+            visible: false,
             options: {
                 icon: "group",
                 text: "Importa de Excel",
@@ -72,7 +82,7 @@ class AlumnosCurso extends CursosDetalle {
         return [
             Column.Id(),
             Column.Text({ dataField: "apellido", width: 250 }),
-            Column.Text({ dataField: "nombre" }),
+            Column.Text({ dataField: "nombre", width: 250 }),
             Column.Text({ dataField: "email" })
         ]
     }

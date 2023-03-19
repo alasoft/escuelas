@@ -50,7 +50,7 @@ class CursosDetalle extends FilterView {
                 dataField: "curso",
                 displayExpr: item =>
                     Cursos.Descripcion(item),
-                width: 400,
+                width: 450,
                 onValueChanged: e =>
                     this.itemCursoOnValueChanged(e)
             }, p))

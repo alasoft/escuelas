@@ -13,6 +13,7 @@ class ListViewTemplate extends Template {
                     items: [{
                         name: "filter",
                         padding: App.BOX_PADDING,
+                        paddingTop: 5,
                         orientation: "vertical"
                     }]
                 },
@@ -23,7 +24,7 @@ class ListViewTemplate extends Template {
                     name: "list",
                     fillContainer: true,
                     orientation: "vertical",
-                    height: 0
+                    height: 1
                 }, {
                     name: "contextMenu"
                 }

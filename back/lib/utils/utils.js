@@ -150,6 +150,14 @@ class Strings {
         return s.charAt(0).toUpperCase() + s.substr(1).toLowerCase();
     }
 
+    static OneSpace(s) {
+        return s.replace(/\s\s+/g, ' ');
+    }
+
+    static TrimOnSpace(s) {
+        return this.OneSpace(s).trim();
+    }
+
 }
 
 class Dates {

@@ -3,12 +3,12 @@ const { MemoryTable } = require("../lib/data/memorytable")
 class Años extends MemoryTable {
 
     addItems() {
-        this.add(1, "Primero")
-            .add(2, "Segundo")
-            .add(3, "Tercero")
-            .add(4, "Cuarto")
-            .add(5, "Quinto")
-            .add(6, "Sexto");
+        this.add(1, "1er")
+            .add(2, "2do")
+            .add(3, "3er")
+            .add(4, "4to")
+            .add(5, "5to")
+            .add(6, "6to");
     }
 
 }

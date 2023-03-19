@@ -65,6 +65,27 @@ class ServiceBase extends ObjectBase {
         }
     }
 
+    oneSpace(name) {
+        const value = this.value(name);
+        if (value != undefined) {
+            return Strings.OneSpace(value)
+        }
+    }
+
+    trimOneSpace(name) {
+        const value = this.oneSpace(name);
+        if (value != undefined) {
+            return value.trim()
+        }
+    }
+
+    trim(name) {
+        const value = this.value(name);
+        if (value != undefined) {
+            return value.trim()
+        }
+    }
+
     formatedDate(name) {
         return Dates.Format(this.date(name));
     }
