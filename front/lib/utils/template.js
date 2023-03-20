@@ -87,6 +87,11 @@ class Template extends ObjectBase {
         this.setElementStyleByClass(className, { display: "none" })
     }
 
+    toggleByClassName(className) {
+        const element = this.findElementByClass(className);
+        Html.ToggleVisibility(element);
+    }
+
     html() {
         return this.element()[0].outerHTML;
     }

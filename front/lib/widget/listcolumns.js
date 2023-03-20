@@ -11,6 +11,7 @@ class Column {
             calculateCellValue: p.formula,
             allowHeaderFiltering: p.filtering != false,
             allowSorting: p.sorting != false,
+            allowEditing: p.editing != false,
             visible: p.visible != false,
             cellTemplate: p.template,
             headerFilter: {

@@ -18,6 +18,15 @@ class TextBuilder {
         return this;
     }
 
+    addIfElse(condition, itemYes, itemNo) {
+        if (condition) {
+            this.add(itemYes)
+        } else {
+            this.add(itemNo)
+        }
+        return this;
+    }
+
     addFirst(item) {
         this.items.unshift(item);
         return this;

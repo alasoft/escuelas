@@ -65,7 +65,7 @@ class CreateTables extends CreateTablesBase {
                 }
             }),
             Sql.Create({
-                tableName: "evaluaciones",
+                tableName: "notas",
                 columns: {
                     alumno: SqlType.Fk({ references: "alumnos" }),
                     tp: SqlType.Fk({ references: "tps" }),

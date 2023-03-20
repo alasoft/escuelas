@@ -95,8 +95,8 @@ class AppView extends AppViewBase {
 
 
         itemEvaluaciones.addChild({
-            text: "Puntajes",
-            onClick: e => new Evaluaciones().render()
+            text: "Notas",
+            onClick: e => new Notas().render()
         })
 
         return [itemDatos, itemDictado, itemEvaluaciones, itemSalida];

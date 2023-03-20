@@ -65,7 +65,10 @@ class List extends Widget {
     }
 
     focusedRowData() {
-        return this.focusedRow().data;
+        const row = this.focusedRow();
+        if (row != undefined) {
+            return row.data;
+        }
     }
 
     focusedRowIsData() {
@@ -78,7 +81,10 @@ class List extends Widget {
     }
 
     id() {
-        return this.focusedRowData().id;
+        const data = this.focusedRowData();
+        if (data != undefined) {
+            return data.id;
+        }
     }
 
     firstId() {

@@ -12,6 +12,9 @@ class MateriasCurso extends CursosDetalle {
             components: {
                 filter: {
                     width: 280
+                },
+                list: {
+                    showBorders: true
                 }
             }
         }

@@ -207,6 +207,7 @@ class SqlJoin {
         this.tableName = parameters.tableName;
         this.alias = parameters.alias;
         this.columnName = parameters.columnName;
+        this.condition = parameters.condition;
     }
 
     text() {
@@ -217,7 +218,10 @@ class SqlJoin {
             .add("(")
             .add(new SqlAnd()
                 .add(this.sqlSelect.baseJoinConditions(this))
-                .add(this.alias + ".id=" + this.columnName)
+                .addIfElse(this.condition != undefined,
+                    this.condition,
+                    this.alias + ".id=" + this.columnName
+                )
             )
             .add(")")
             .text();

@@ -14,7 +14,7 @@ class TpsCurso extends CursosMateriasDetalle {
             components: {
                 filter: {
                     width: 400,
-                    height: 150
+                    height: 150,
                 }
             }
         }

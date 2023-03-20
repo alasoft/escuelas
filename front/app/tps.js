@@ -10,6 +10,11 @@ class Tps extends AñoLectivoFilterView {
             popup: {
                 title: "Trabajos Prácticos de todos los Cursos",
                 fullScreen: true,
+            },
+            components: {
+                list: {
+                    showBorders: true
+                }
             }
         }
     }

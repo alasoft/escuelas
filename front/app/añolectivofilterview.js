@@ -8,7 +8,8 @@ class AñoLectivoFilterView extends FilterView {
                         visible: true
                     },
                     filterPanel: {
-                        visible: true
+                        visible: true,
+                        labelLocation: "left"
                     }
                 }
             }
