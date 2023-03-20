@@ -146,8 +146,9 @@ class Notas extends View {
     tpsColumns() {
         return [
             Column.Id(),
-            Column.Text({ dataField: "nombre", caption: "Trabajo Práctico", editing: false }),
-            Column.Text({ dataField: "nota", caption: "Nota" }),
+            Column.Text({ dataField: "nombre", caption: "Trabajo Práctico", editing: false, width: 350 }),
+            Column.Text({ dataField: "nota", caption: "Nota", width: 130 }),
+            Column.Calculated({ caption: "Inicia - Entrega", formula: row => Dates.Format(row.desde) + "  - " + Dates.Format(row.hasta), width: 250 }),
             Column.Text({ dataField: "periodonombre", caption: "Período", editing: false })
         ]
     }
@@ -275,14 +276,14 @@ class Notas extends View {
         this.refreshFilterValue("añolectivo", Dates.ThisYear())
     }
 
-    saveNote() {
+    saveNote(data) {
         new Rest({ path: "notas" })
             .promise({
                 verb: "update",
                 data: {
                     tp: this.tps().id(),
                     alumno: this.alumno(),
-                    nota: e.newData.nota
+                    nota: data.nota
                 }
             }).then(data =>
                 this.tps().focus()
@@ -309,7 +310,7 @@ class Notas extends View {
     }
 
     tpsOnRowValidating(e) {
-        this.saveNote();
+        this.saveNote(e.newData);
     }
 
 }
