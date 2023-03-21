@@ -28,9 +28,10 @@ class ToolbarItem {
             widget: "dxButton",
             location: "before",
             options: {
-                icon: "plus"
+                icon: "plus",
+                hint: "Agrega",
             }
-        })
+        }, p)
     }
 
     static Cancel(p) {

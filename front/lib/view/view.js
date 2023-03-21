@@ -162,9 +162,11 @@ class View extends Component {
 
     popupTemplate(e) {
         e.parent().css({
-            "background-color": App.POPUP_BACKGROUND_COLOR
+            "background-color": App.POPUP_BACKGROUND_COLOR,
+            "padding-top": "5px"
         });
         e.css({
+            "padding-top": "5px",
             "display": "flex",
             "flex-direction": "column"
         })

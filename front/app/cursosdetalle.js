@@ -136,4 +136,8 @@ class CursosDetalle extends FilterView {
         }
     }
 
+    focus() {
+        this.filter().focusEditor("curso");
+    }
+
 }

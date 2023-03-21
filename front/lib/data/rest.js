@@ -2,7 +2,6 @@ class Rest {
 
     constructor(parameters) {
         this.path = parameters.path;
-        this.transformData = parameters.transformData;
     }
 
     list() {
@@ -29,7 +28,7 @@ class Rest {
         const url = App.Url(this.path, parameters.verb);
         const headers = this.headers(parameters.verb);
         const type = "POST";
-        const data = this.data(parameters.data, parameters.verb);
+        const data = Utils.IsEmptyObject(parameters.data) ? undefined : parameters.data;
         return new Promise((resolve, reject) => $.ajax({
             url: url,
             headers: headers,
@@ -41,14 +40,6 @@ class Rest {
                 reject(Errors.ErrorObject(err))
             }
         }))
-    }
-
-    data(data, verb) {
-        if (Utils.IsEmptyObject(data)) {
-            return undefined;
-        } else {
-            return this.transformData != undefined ? this.transformData(data, verb) : data;
-        }
     }
 
     headers() {

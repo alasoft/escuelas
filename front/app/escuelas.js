@@ -48,6 +48,4 @@ class EscuelasFormView extends FormView {
         return Messages.Build({ message: "Ya existe un Escuela de nombre:", detail: this.getEditorText("nombre") })
     }
 
-
-
 }

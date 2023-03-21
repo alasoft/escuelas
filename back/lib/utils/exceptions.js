@@ -59,7 +59,7 @@ class Exceptions {
         return new Exception({
             type: this.TYPE_VALIDATION,
             code: this.REQUIRED_VALUE
-        })
+        }, p)
     }
 
     static SqlParameterValueNotFound(p) {

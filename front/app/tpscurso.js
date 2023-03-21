@@ -90,7 +90,15 @@ class TpsCurso extends CursosMateriasDetalle {
     }
 
     toolbarItems() {
-        return [this.itemInsert(), this.itemTodos()]
+        return [this.itemInsert(), this.itemTodos(), this.itemExportExcel()]
+    }
+
+    excelFileName() {
+        return "Trabajos Prácticos " + this.cursoDescripcion() + " / " + this.getFilterText("materiacurso");
+    }
+
+    exportExcelDialogWidth() {
+        return 800;
     }
 
     itemTodos() {
@@ -113,15 +121,8 @@ class TpsCurso extends CursosMateriasDetalle {
 
 class TpsCursoForm extends FormView {
 
-    transformInsertUpdate(data, verb) {
-        return Utils.ReduceIds({
-            id: data.id,
-            materiacurso: this.materiaCurso(),
-            periodo: data.periodo,
-            nombre: data.nombre,
-            desde: data.desde,
-            hasta: data.hasta
-        })
+    transformData(data) {
+        return Utils.Merge(Utils.NormalizeData(data, "id,periodo,nombre,desde,hasta"), { materiacurso: this.materiaCurso() })
     }
 
     popupConfiguration() {

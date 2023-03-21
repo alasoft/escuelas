@@ -30,7 +30,7 @@ class Item {
                     width: p.width,
                     value: p.value,
                     placeholder: p.placeholder,
-                    onValueChanged: p.onValueChanged
+                    onValueChanged: p.onValueChanged,
                 }
             }
         }
@@ -155,7 +155,8 @@ class Item {
                     displayExpr: p.displayExpr || App.DISPLAY_EXPR,
                     valueExpr: "id",
                     searchEnabled: p.editable == true,
-                    deferRendering: p.deferRendering
+                    deferRendering: p.deferRendering,
+                    onSelectionChanged: p.onSelectionChanged
                 }
             }
         }

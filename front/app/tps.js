@@ -8,8 +8,9 @@ class Tps extends AñoLectivoFilterView {
         return {
             mode: "popup",
             popup: {
-                title: "Trabajos Prácticos de todos los Cursos",
-                fullScreen: true,
+                title: "Trabajos Prácticos de todas las Materias",
+                height: 650,
+                width: 1300
             },
             components: {
                 list: {
@@ -39,6 +40,10 @@ class Tps extends AñoLectivoFilterView {
         return TpsForm;
     }
 
+    excelFileName() {
+        return "Trabajos Prácticos " + this.getFilterText("añolectivo");
+    }
+
 }
 
 class TpsForm extends CursosMateriasForm {
@@ -47,15 +52,8 @@ class TpsForm extends CursosMateriasForm {
         return "tps";
     }
 
-    transformInsertUpdate(data, verb) {
-        return Utils.ReduceIds({
-            id: data.id,
-            materiacurso: this.materiaCurso(),
-            periodo: data.periodo,
-            nombre: data.nombre,
-            desde: data.desde,
-            hasta: data.hasta
-        })
+    transformData(data) {
+        return Utils.Merge(Utils.NormalizeData(data, "id,periodo,nombre,desde,hasta"), { materiacurso: this.materiaCurso() })
     }
 
     popupConfiguration() {

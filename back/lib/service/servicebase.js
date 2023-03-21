@@ -100,7 +100,7 @@ class ServiceBase extends ObjectBase {
             if (requiredValues != undefined) {
                 for (const name of requiredValues.split(",")) {
                     if (this.value(name) == undefined) {
-                        throw Exceptions.RequiredValue(name)
+                        throw Exceptions.RequiredValue({ message: name })
                     }
                 }
             }

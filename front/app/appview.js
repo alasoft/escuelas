@@ -30,7 +30,7 @@ class AppView extends AppViewBase {
 
         const itemDatos = new TreeItem({
             id: "1",
-            text: "Datos"
+            text: "Datos Generales"
         });
 
         const itemEvaluaciones = new TreeItem({
@@ -40,7 +40,7 @@ class AppView extends AppViewBase {
 
         const itemDictado = new TreeItem({
             id: "3",
-            text: "Dictado",
+            text: "Clases",
         })
 
         const itemSalida = new TreeItem({

@@ -5,15 +5,7 @@ class FormView extends EntryView {
     }
 
     transformData(data, verb) {
-        if (Strings.StringIs(verb, ["insert", "update"])) {
-            return this.transformInsertUpdate(data, verb);
-        } else {
-            return data;
-        }
-    }
-
-    transformInsertUpdate(data, verb) {
-        return data;
+        return Utils.NormalizeData(data);
     }
 
     defaultConfiguration() {
@@ -94,21 +86,22 @@ class FormView extends EntryView {
     }
 
     saveInsert() {
-        return this.rest().insert(this.dataToInsert())
+        return this.rest().insert(this.dataToInsert(), "insert")
             .then(data => {
                 this.close(this.closeDataSaveInsert(data.id));
             });
     }
 
     saveUpdate() {
-        return this.rest().update(this.dataToUpdate())
+        return this.rest().update(this.dataToUpdate(), "update")
             .then(data =>
                 this.close(this.closeDataSaveUpdate())
             );
     }
 
     dataToInsert() {
-        return this.getData();
+        const data = this.getData();
+        return this.transformData(data, "insert")
     }
 
     dataToUpdate() {
@@ -118,7 +111,7 @@ class FormView extends EntryView {
         } else {
             data = Utils.Merge(this.getChangedData(), { id: this.id() });
         }
-        return data;
+        return this.transformData(data, "update")
     }
 
     closeDataSaveInsert(id) {
@@ -169,6 +162,9 @@ class FormView extends EntryView {
     }
 
     handleError(err) {
+        if (err.code == Exceptions.REQUIRED_VALUE) {
+            App.ShowMessage({ message: "Ha ocurrido un error en el Servidor:", detail: "Campo requerido " + Strings.SingleQuotes(err.message), quotes: false })
+        } else
         if (err.code == Exceptions.DUPLICATED_ENTITY) {
             App.ShowError({ message: this.duplicatedMessage() })
         } else {

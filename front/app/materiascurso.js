@@ -11,7 +11,8 @@ class MateriasCurso extends CursosDetalle {
             },
             components: {
                 filter: {
-                    width: 280
+                    width: 250,
+                    height: 70,
                 },
                 list: {
                     showBorders: true
@@ -145,8 +146,8 @@ class MateriasCurso extends CursosDetalle {
 
 class MateriasCursoForm extends FormView {
 
-    transformInsertUpdate(data, verb) {
-        return Utils.ReduceIds({
+    transformData(data) {
+        return Utils.NormalizeData({
             id: data.id,
             curso: data.curso,
             materia: data.materia

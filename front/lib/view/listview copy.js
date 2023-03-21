@@ -50,13 +50,13 @@ class ListView extends View {
         if (!this.configuration().operations.includes(operation)) {
             return false;
         }
-        if (Strings.StringIs(operation, ["edit", "delete"]) && !this.isFocusedRowData()) {
+        if (["edit", "delete"].includes(operation) && !this.isFocusedRowData()) {
             return false;
         }
-        if (Strings.StringIs(operation, ["insert", "edit"]) && this.formViewClass() == undefined) {
+        if (["insert", "edit"].includes(operation) && this.formViewClass() == undefined) {
             return false;
         }
-        if (Strings.StringIs(operation, ["edit", "delete", "export"]) && !this.list().hasRows()) {
+        if (["edit", "delete", "export"].includes(operation) && !this.list().hasRows()) {
             return false;
         }
         return true;
@@ -210,7 +210,7 @@ class ListView extends View {
     }
 
     toolbarItems() {
-        return [this.itemInsert(), this.itemExport()]
+        return [this.itemInsert(), this.itemExportExcel()]
     }
 
     itemInsert() {

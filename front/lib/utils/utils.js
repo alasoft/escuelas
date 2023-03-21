@@ -68,16 +68,27 @@ class Utils {
         })
     }
 
-    static ReduceIds(object) {
-        Object.keys(object).forEach(
-            key => {
-                const value = object[key];
-                if (this.IsObject(value)) {
-                    object[key] = value.id;
-                }
+    static NormalizeData(data, dataFields) {
+        const normalized = {}
+        let keys = Object.keys(data);
+        if (Utils.IsDefined(dataFields)) {
+            if (!Utils.IsArray(dataFields)) {
+                dataFields = dataFields.split(",");
             }
-        )
-        return object;
+            keys = keys.filter(key => dataFields.includes(key))
+        }
+        keys.forEach(key => {
+            let value = data[key];
+            if (key == "id") {
+
+            } else if (Utils.IsString(value)) {
+                value = Strings.TrimOnSpace(value);
+            } else if (Utils.IsObject(value)) {
+                value = value.id
+            }
+            normalized[key] = value;
+        })
+        return normalized;
     }
 
     static ReduceId(x) {
@@ -146,15 +157,17 @@ class Strings {
         }
     }
 
-    static StringIs(string, strings) {
+    /*    
+        static StringIs(string, strings) {
 
-        for (const s of this.ToArray(strings)) {
-            if (this.EqualsIgnoreCase(string, s)) {
-                return true;
+            for (const s of this.ToArray(strings)) {
+                if (this.EqualsIgnoreCase(string, s)) {
+                    return true;
+                }
             }
+            return false;
         }
-        return false;
-    }
+    */
 
     static ToArray(s) {
         if (Utils.IsArray(s)) {
@@ -194,6 +207,14 @@ class Strings {
 
     static ZeroesLeft(n, z) {
         return n.toString().padStart(z, '0');
+    }
+
+    static OneSpace(s) {
+        return s.replace(/\s\s+/g, ' ');
+    }
+
+    static TrimOnSpace(s) {
+        return this.OneSpace(s).trim();
     }
 
 }

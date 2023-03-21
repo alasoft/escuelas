@@ -15,7 +15,7 @@ class Horas extends AñoLectivoFilterView {
     }
 
     toolbarItems() {
-        return [this.itemInsert(), this.itemCalendario(), this.itemExport()]
+        return [this.itemInsert(), this.itemCalendario(), this.itemExportExcel()]
     }
 
     itemCalendario() {
@@ -113,7 +113,7 @@ class HorasForm extends CursosMateriasForm {
         return "materias_horas";
     }
 
-    transformInsertUpdate(data, verb) {
+    transformData(data) {
         return {
             id: data.id,
             materiacurso: data.materiacurso,

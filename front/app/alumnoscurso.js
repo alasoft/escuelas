@@ -7,19 +7,17 @@ class AlumnosCurso extends CursosDetalle {
     extraConfiguration() {
         return {
             popup: {
-                fullScreen: true,
-                title: "Alumnos por Curso"
+                title: "Alumnos por Curso",
+                height: 650,
+                width: 1200
             },
             components: {
                 filter: {
-                    width: 380,
-                    height: 50,
-                    labelLocation: "left",
+                    width: 250,
+                    height: 70,
+                    labelLocation: "top",
                 },
                 list: {
-                    scrolling: {
-                        mode: "infinite"
-                    },
                     showBorders: true,
                 }
             }
@@ -27,7 +25,7 @@ class AlumnosCurso extends CursosDetalle {
     }
 
     toolbarItems() {
-        return [this.itemInsert(), this.itemImport(), this.itemExport()]
+        return [this.itemInsert(), this.itemImport(), this.itemExportExcel()]
     }
 
     labelText() {
@@ -117,15 +115,8 @@ class AlumnosCurso extends CursosDetalle {
 
 class AlumnosCursoForm extends FormView {
 
-    transformInsertUpdate(data, verb) {
-        return Utils.ReduceIds({
-            id: data.id,
-            curso: data.curso,
-            apellido: data.apellido,
-            nombre: data.nombre,
-            genero: data.genero,
-            email: data.email
-        })
+    transformData(data) {
+        return Utils.NormalizeData(data, "id,curso,apellido,nombre,genero,email")
     }
 
     popupConfiguration() {

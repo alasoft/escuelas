@@ -2,25 +2,46 @@ class Notas extends View {
 
     extraConfiguration() {
         return {
-            mode: "popup",
-            popup: {
-                fullScreen: true,
-                title: "Notas por Curso, Materia y Alumno"
-            },
+            mode: "view",
+            fullScreen: true,
             components: {
+                label: {
+                    text: "Notas por Curso y Materia"
+                },
                 filter: {
                     items: this.filterItems(),
-                    labelLocation: "left",
-                    width: 700
+                    labelLocation: "top",
+                    width: 750
                 },
-                toolbar: {},
-                alumnosResizer: {
-                    componentClass: Resizer
+                alumnosLabel: {
+                    componentClass: Label,
+                    text: "Alumnos del Curso",
+                    styles: { "font-size": "small", "padding-left": 5 }
+                },
+                alumnos: {
+                    componentClass: Grid,
+                    columns: this.alumnosColumns(),
+                    showBorders: true,
+                    toolbar: {
+                        items: [this.itemAlumnosView(), "searchPanel"]
+                    },
+                    groupPanel: {
+                        visible: false
+                    },
+                    onFocusedRowChanged: e => this.alumnosOnFocusedRowChanged(e)
+                },
+                tpsLabel: {
+                    componentClass: Label,
+                    text: "Notas",
+                    styles: { "font-size": "small", "padding-left": 5 }
                 },
                 tps: {
                     componentClass: Grid,
                     columns: this.tpsColumns(),
                     showBorders: true,
+                    toolbar: {
+                        items: [this.itemTpsView(), this.itemTpsExcel()]
+                    },
                     editing: {
                         mode: "cell",
                         allowUpdating: true,
@@ -28,17 +49,7 @@ class Notas extends View {
                         selectTextOnEditStart: true
                     },
                     onRowValidating: e => this.tpsOnRowValidating(e),
-                },
-                alumnos: {
-                    componentClass: Grid,
-                    columns: this.alumnosColumns(),
-                    showBorders: true,
-                    groupPanel: {
-                        visible: false
-                    },
-                    onFocusedRowChanged: e => this.alumnosOnFocusedRowChanged(e)
                 }
-
             }
         }
     }
@@ -50,34 +61,21 @@ class Notas extends View {
     filterItems() {
         return [
             Item.Group({
-                colCount: 3,
+                colCount: 6,
                 items: [
                     this.itemAñoLectivo(),
-                    this.itemCurso()
-                ]
-            }),
-            Item.Group({
-                colCount: 3,
-                items: [
+                    this.itemCurso(),
                     this.itemMateriaCurso()
                 ]
             })
         ]
     }
 
-    refreshToolbarItems() {
-        this.toolbar().setItems(this.toolbarItems());
-    }
-
-    toolbarItems() {
-        return [this.itemAlumno()]
-    }
-
     itemAñoLectivo() {
         return Item.Lookup({
             dataField: "añolectivo",
             dataSource: AñosLectivos.DataSource(),
-            width: 130,
+            width: 100,
             label: "Año Lectivo",
             onValueChanged: e =>
                 this.itemAñoLectivoOnValueChanged(e)
@@ -89,10 +87,10 @@ class Notas extends View {
             dataField: "curso",
             label: "Curso",
             deferRendering: false,
+            colSpan: 4,
             displayExpr: item =>
                 Cursos.Descripcion(item),
-            width: 400,
-            colSpan: 2,
+            width: 450,
             onValueChanged: e =>
                 this.itemCursoOnValueChanged(e)
         })
@@ -106,29 +104,11 @@ class Notas extends View {
             displayExpr: item =>
                 item != null ? item.materianombre : "",
             width: 250,
+            onSelectionChanged: e =>
+                this.itemMateriaCursoOnSelectionChanged(e),
             onValueChanged: e =>
                 this.itemMateriaCursoOnValueChanged(e)
         })
-    }
-
-    itemAlumno() {
-        return {
-            widget: "dxButton",
-            location: "before",
-            options: {
-                text: this.alumnoApellidoNombre()
-            }
-        }
-    }
-
-    itemMateriaNombre() {
-        return {
-            widget: "dxButton",
-            location: "before",
-            options: {
-                text: "Notas de: " + this.getFilterText("materiacurso")
-            }
-        }
     }
 
     itemToggleAlumnos() {
@@ -153,6 +133,44 @@ class Notas extends View {
         ]
     }
 
+    itemTpsView() {
+        return {
+            widget: "dxButton",
+            location: "before",
+            options: {
+                icon: "search",
+                text: "Consulta",
+                hint: "Consulta Trabajos Prácticos",
+                onClick: e => new TpsCurso({ mode: "popup" }).render()
+            }
+        }
+    }
+
+    itemTpsExcel() {
+        return {
+            widget: "dxButton",
+            location: "before",
+            options: {
+                icon: "exportxlsx",
+                hint: "Exporta a Excel",
+                onClick: e => this.exportExcelDialog(e)
+            }
+        }
+    }
+
+    itemAlumnosView() {
+        return {
+            widget: "dxButton",
+            location: "before",
+            options: {
+                icon: "search",
+                text: "Consulta",
+                hint: "Consulta Alumnos",
+                onClick: e => new AlumnosCurso({ mode: "popup" }).render()
+            }
+        }
+    }
+
     alumnosColumns() {
         return [
             Column.Id(),
@@ -164,7 +182,7 @@ class Notas extends View {
     alumnoApellidoNombre() {
         const row = this.alumnos().focusedRowData();
         if (row != undefined) {
-            return "Alumno: " + Strings.Concatenate([row.apellido, row.nombre], ", ");
+            return Strings.Concatenate([row.apellido, row.nombre], ", ");
         } else {
             return "";
         }
@@ -186,12 +204,24 @@ class Notas extends View {
         return this.components().tps;
     }
 
+    tpsLabel() {
+        return this.components().tpsLabel
+    }
+
+    alumnosLabel() {
+        return this.components().alumnosLabel
+    }
+
     getFilterValue(dataField) {
         return this.filter().getEditorValue(dataField);
     }
 
     getFilterText(dataField) {
         return this.filter().getEditorText(dataField);
+    }
+
+    getFilterSelectedValue(dataField, name) {
+        return this.filter().getEditorSelectedValue(dataField, name)
     }
 
     refreshFilterValue(dataField, value) {
@@ -273,6 +303,7 @@ class Notas extends View {
     }
 
     afterRender() {
+        super.afterRender();
         this.refreshFilterValue("añolectivo", Dates.ThisYear())
     }
 
@@ -297,7 +328,10 @@ class Notas extends View {
     itemCursoOnValueChanged(e) {
         this.setItemMateriaCursoDataSource();
         this.setAlumnosDataSource();
-        this.refreshToolbarItems();
+    }
+
+    itemMateriaCursoOnSelectionChanged(e) {
+        this.refreshTpsLabel();
     }
 
     itemMateriaCursoOnValueChanged(e) {
@@ -305,8 +339,17 @@ class Notas extends View {
     }
 
     alumnosOnFocusedRowChanged(e) {
-        this.refreshToolbarItems();
+        this.refreshTpsLabel();
         this.setTpsDataSource()
+    }
+
+    refreshTpsLabel() {
+        const notasDe = this.getFilterSelectedValue("materiacurso", "materianombre");
+        const apellidoNombre = this.alumnoApellidoNombre();
+        this.tpsLabel().setHtml(
+            (notasDe ? "Notas de: " + notasDe + Html.Tab(1) + " / " + Html.Tab(1) : "") +
+            (apellidoNombre ? "Alumno: " + apellidoNombre : "")
+        )
     }
 
     tpsOnRowValidating(e) {
@@ -323,39 +366,60 @@ class NotasTemplate extends Template {
             orientation: "vertical",
             items: [{
                 orientation: "vertical",
-                backgroundColor: App.BOX_BACKGROUND_COLOR,
                 items: [{
-                    name: "filter",
-                    padding: App.BOX_PADDING,
-                    paddingTop: 5,
-                    orientation: "vertical"
+                    name: "label",
+                    marginBottom: 5,
                 }, {
-                    name: "toolbar"
-                }]
+                    backgroundColor: App.BOX_BACKGROUND_COLOR,
+                    items: [{
+                        name: "filter",
+                        backgroundColor: App.BOX_BACKGROUND_COLOR,
+                        padding: App.BOX_PADDING,
+                        orientation: "vertical",
+                    }]
+                }],
             }, {
                 fillContainer: true,
                 orientation: "horizontal",
+                backgroundColor: App.BOX_BACKGROUND_COLOR,
+                padding: App.BOX_PADDING,
                 items: [{
-                    name: "alumnosResizer",
-                    width: 500,
-                    orientation: "vertical",
-                    marginRight: 10,
-                    items: [{
-                        name: "alumnos",
                         fillContainer: true,
                         orientation: "vertical",
-                        height: 1
-                    }]
-                }, {
-                    fillContainer: true,
-                    orientation: "vertical",
-                    items: [{
-                        name: "tps",
-                        fillContainer: true,
+                        marginRight: 10,
+                        items: [{
+                                name: "tpsLabel",
+                                marginBottom: 5,
+                            },
+                            {
+                                fillContainer: true,
+                                orientation: "vertical",
+                                items: [{
+                                    fillContainer: true,
+                                    orientation: "vertical",
+                                    name: "tps",
+                                    height: 0
+                                }]
+                            }
+                        ]
+                    },
+                    {
+                        width: 400,
                         orientation: "vertical",
-                        height: 1
-                    }]
-                }]
+                        items: [{
+                                name: "alumnosLabel",
+                                marginBottom: 5,
+                            },
+                            {
+                                name: "alumnos",
+                                fillContainer: true,
+                                orientation: "vertical",
+                                height: 0
+                            }
+                        ]
+                    },
+
+                ]
             }]
         }
     }

@@ -5,7 +5,7 @@ class Cursos extends AñoLectivoFilterView {
     }
 
     toolbarItems() {
-        return [this.itemInsert(), this.itemAlumnosCurso(), this.itemMateriasCurso(), this.itemExport()]
+        return [this.itemInsert(), this.itemAlumnosCurso(), this.itemMateriasCurso(), this.itemExportExcel()]
     }
 
     itemAlumnosCurso() {
@@ -80,7 +80,7 @@ class Cursos extends AñoLectivoFilterView {
             Column.Text({ dataField: "escuelanombre", caption: "Escuela", width: 300, filtering: true }),
             Column.Text({ dataField: "modalidadnombre", caption: "Modalidad" }),
             Column.Invisible({ dataField: "año" }),
-            Column.Calculated({ formula: row => Años.GetNombre(row.año), caption: "Año" }),
+            Column.Calculated({ formula: row => Años.GetNombre(row.año), caption: "Año", width: 50 }),
             Column.Text({ dataField: "division", caption: "División" }),
             Column.Calculated({ formula: row => Turnos.GetNombre(row.turno), caption: "Turno" })
         ]
@@ -130,16 +130,8 @@ class Cursos extends AñoLectivoFilterView {
 
 class CursosForm extends FormView {
 
-    transformInsertUpdate(data, verb) {
-        return Utils.ReduceIds({
-            id: data.id,
-            escuela: data.escuela,
-            modalidad: data.modalidad,
-            añolectivo: data.añolectivo,
-            año: data.año,
-            division: data.division,
-            turno: data.turno
-        })
+    transformData(data) {
+        return Utils.NormalizeData(data, "id,escuela,modalidad,añolectivo,año,division,turno")
     }
 
     popupConfiguration() {

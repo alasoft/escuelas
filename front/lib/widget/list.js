@@ -22,9 +22,6 @@ class List extends Widget {
             searchPanel: {
                 visible: true
             },
-            scrolling: {
-                mode: "standard"
-            },
             editing: {
                 confirmDelete: false,
             },
@@ -212,7 +209,8 @@ class List extends Widget {
     }
 
     setState(state) {
-        return this.instance().state(state)
+        this.instance().state(state);
+        return this;
     }
 
     collapseAll() {
@@ -232,6 +230,10 @@ class List extends Widget {
 
     columns() {
         return this.getProperty("columns");
+    }
+
+    focusFirstRow() {
+        this.setProperty("focusedRowIndex", 0);
     }
 
 }

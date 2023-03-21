@@ -37,7 +37,6 @@ class Periodos extends AñoLectivoFilterView {
         return "Períodos " + this.getFilterText("añolectivo");
     }
 
-
     static Descripcion(data) {
         if (Utils.IsDefined(data)) {
             return Strings.Concatenate([

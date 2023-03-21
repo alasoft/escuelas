@@ -65,6 +65,17 @@ class Form extends Widget {
         return this.getEditorProperty(dataField, "text")
     }
 
+    getEditorSelectedItem(dataField) {
+        return this.getEditorProperty(dataField, "selectedItem");
+    }
+
+    getEditorSelectedValue(dataField, name) {
+        const selectedItem = this.getEditorProperty(dataField, "selectedItem");
+        if (selectedItem != undefined) {
+            return selectedItem[name];
+        }
+    }
+
     setEditorProperty(dataField, propertyName, value) {
         this.getEditor(dataField).option(propertyName, value);
     }

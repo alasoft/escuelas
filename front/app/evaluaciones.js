@@ -53,7 +53,7 @@ class Evaluaciones extends CursosMateriasDetalle {
             return [
                 this.itemAlumnos(),
                 this.itemTps(),
-                this.itemExport(),
+                this.itemExportExcel(),
             ]
         }
     }

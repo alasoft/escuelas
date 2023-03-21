@@ -89,7 +89,7 @@ class EntryView extends DialogView {
     }
 
     defineRest() {
-        return new Rest({ path: this.path(), transformData: (data, verb) => this.transformData(data, verb) })
+        return new Rest({ path: this.path() })
     }
 
     path() {
