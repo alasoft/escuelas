@@ -8,7 +8,7 @@ class BaseMemoryTable extends ObjectBase {
     }
 
     static DefineDataSource() {
-        return DsArray({ data: this.Data() })
+        return DsArray({ rows: this.Data() })
     }
 
     static Get(data) {

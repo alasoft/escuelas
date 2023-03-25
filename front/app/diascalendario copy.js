@@ -56,7 +56,7 @@ class DiasCalendario extends View {
     }
 
     dataSource(rows) {
-        return DsArray({ data: rows })
+        return DsArray({ rows: rows })
     }
 
     dataSourceOld() {
@@ -71,7 +71,7 @@ class DiasCalendario extends View {
     }
 
     defineDataSourceNew() {
-        return DsArray({ data: this.data() })
+        return DsArray({ rows: this.data() })
     }
 
     defineDataSourceOld() {

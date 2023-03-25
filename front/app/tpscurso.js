@@ -10,30 +10,22 @@ class TpsCurso extends CursosMateriasDetalle {
             popup: {
                 title: "Trabajos Prácticos por Curso y Materia",
                 height: 600,
+                width: 1050
             },
             components: {
                 filter: {
-                    width: 400,
-                    height: 150,
+                    width: 750,
                 }
             }
         }
     }
 
+    itemCurso() {
+        return super.itemCurso({ deferRendering: this.parameters().materiacurso != undefined })
+    }
+
     labelText() {
         return "Trabajos Prácticos por Curso y Materia"
-    }
-
-    itemAñoLectivo() {
-        return super.itemAñoLectivo({ readOnly: false })
-    }
-
-    itemCurso() {
-        return super.itemCurso({ deferRendering: false })
-    }
-
-    itemMateriaCurso() {
-        return super.itemMateriaCurso({ deferRendering: false })
     }
 
     setDataSource(materiacurso) {
@@ -102,13 +94,15 @@ class TpsCurso extends CursosMateriasDetalle {
     }
 
     itemTodos() {
-        return {
-            widget: "dxButton",
-            location: "before",
-            options: {
-                text: "Todos los Trabajos Prácticos",
-                icon: "folder",
-                onClick: e => this.todos()
+        if (this.configuration().showTodosButton != false) {
+            return {
+                widget: "dxButton",
+                location: "before",
+                options: {
+                    text: "Todos los Trabajos Prácticos",
+                    icon: "folder",
+                    onClick: e => this.todos()
+                }
             }
         }
     }
@@ -276,6 +270,38 @@ class TpsCursoForm extends FormView {
 
     cursoDescripcion() {
         return this.getEditorValue("cursodescripcion") + " / " + this.getEditorValue("añolectivo");
+    }
+
+    handleError(err) {
+        if (err.code == Exceptions.DEBE_ESTAR_DENTRO_PERIODO) {
+            this.handleDebeEstarDentroPeriodo(err)
+        } else if (err.code = Exceptions.FECHA_INICIO_DEBE_SER_MENOR_FECHA_ENTREGA) {
+            this.handleInicioDebeSerMenorEntrega(err)
+        } else {
+            super.handleError(err);
+        }
+    }
+
+    handleDebeEstarDentroPeriodo(err) {
+        App.ShowMessage([{
+            message: "Las fechas",
+            detail: this.form().getDate("desde") + " / " + this.form().getDate("hasta"),
+            quotes: false,
+        }, {
+            message: "deben estar dentro del Periodo",
+            detail: this.getEditorText("periodo"),
+            quotes: false
+        }])
+    }
+
+    handleInicioDebeSerMenorEntrega(err) {
+        App.ShowMessage([{
+            message: "La fecha de inicio",
+            detail: this.getDate("desde"),
+        }, {
+            message: "debe ser menor a la de Entrega",
+            detail: this.getDate("hasta")
+        }])
     }
 
 }

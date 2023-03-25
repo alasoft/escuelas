@@ -36,7 +36,6 @@ class CursosDetalle extends FilterView {
             Utils.Merge({
                 dataField: "añolectivo",
                 dataSource: AñosLectivos.DataSource(),
-                readOnly: true,
                 width: 100,
                 label: "Año Lectivo",
                 onValueChanged: e =>
@@ -48,9 +47,11 @@ class CursosDetalle extends FilterView {
         return Item.Lookup(
             Utils.Merge({
                 dataField: "curso",
+                readOnly: this.parameters().cursoReadOnly == true,
+                deferRendering: false,
+                width: 450,
                 displayExpr: item =>
                     Cursos.Descripcion(item),
-                width: 450,
                 onValueChanged: e =>
                     this.itemCursoOnValueChanged(e)
             }, p))
@@ -137,7 +138,15 @@ class CursosDetalle extends FilterView {
     }
 
     focus() {
-        this.filter().focusEditor("curso");
+        if (this.parameters().cursoReadOnly == true) {
+            this.list().focus()
+        } else {
+            this.filter().focusEditor("curso");
+        }
+    }
+
+    closeDataDefault() {
+        return Utils.Merge(super.closeDataDefault(), { curso: this.curso() })
     }
 
 }

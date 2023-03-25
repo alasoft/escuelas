@@ -156,6 +156,7 @@ class Item {
                     valueExpr: "id",
                     searchEnabled: p.editable == true,
                     deferRendering: p.deferRendering,
+                    buttons: p.buttons,
                     onSelectionChanged: p.onSelectionChanged
                 }
             }

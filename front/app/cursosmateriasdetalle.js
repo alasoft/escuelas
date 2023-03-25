@@ -3,7 +3,13 @@ class CursosMateriasDetalle extends CursosDetalle {
     defaultConfiguration() {
         return Utils.Merge(super.defaultConfiguration(), {
             popup: {
+                width: 1000,
                 onHidden: e => this.popupOnHidden(e)
+            },
+            components: {
+                filter: {
+                    width: 750
+                }
             }
         })
     }
@@ -11,28 +17,28 @@ class CursosMateriasDetalle extends CursosDetalle {
     filterItems() {
         return [
             Item.Group({
-                colCount: 3,
+                colCount: 6,
                 items: [
                     this.itemAñoLectivo(),
-                    this.itemCurso()
-                ]
-            }),
-            Item.Group({
-                colCount: 2,
-                items: [
+                    this.itemCurso(),
                     this.itemMateriaCurso()
                 ]
-            })
+            }),
         ]
+    }
+
+    itemCurso(p) {
+        return super.itemCurso(Utils.Merge({ colSpan: 4 }, p))
     }
 
     itemMateriaCurso(p) {
         return Item.Lookup(Utils.Merge({
             dataField: "materiacurso",
-            displayExpr: item =>
-                item != null ? item.materianombre : "",
+            deferRendering: false,
             width: 250,
             label: "Materia",
+            displayExpr: item =>
+                item != null ? item.materianombre : "",
             onValueChanged: e =>
                 this.itemMateriaCursoOnValueChanged(e)
         }, p))
@@ -44,7 +50,7 @@ class CursosMateriasDetalle extends CursosDetalle {
                 Ds({
                     path: "materias_cursos",
                     filter: { curso: curso },
-                    onLoaded: this.filter().onLoadedSetFirstValue("materiacurso")
+                    onLoaded: this.materiaCursoOnLoaded()
                 }),
             );
         } else {
@@ -52,8 +58,17 @@ class CursosMateriasDetalle extends CursosDetalle {
         }
     }
 
+    materiaCursoOnLoaded() {
+        if (this.materiaCursoFirstValue == undefined) {
+            return this.filter().onLoadedSetFirstValue("materiacurso");
+        } else {
+            this.materiaCursoFirstValue = undefined;
+        }
+    }
+
     filterAfterRenderData() {
-        return Utils.Merge(super.filterAfterRenderData(), { materiacurso: this.parameters().materiacurso });
+        this.materiaCursoFirstValue = this.parameters().materiacurso;
+        return Utils.Merge(super.filterAfterRenderData(), { materiacurso: this.materiaCursoFirstValue });
     }
 
     materiaCurso() {
@@ -74,6 +89,10 @@ class CursosMateriasDetalle extends CursosDetalle {
         if (this.masterView() != undefined) {
             this.masterView().focusRowById(this.materiaCurso());
         }
+    }
+
+    closeDataDefault() {
+        return { dataHasChanged: this.dataHasChanged, curso: this.curso(), materiaCurso: this.materiaCurso() }
     }
 
 }

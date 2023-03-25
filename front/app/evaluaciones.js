@@ -122,7 +122,7 @@ class Evaluaciones extends CursosMateriasDetalle {
         }
         this.list().resetColumns(this.columns);
         if (Utils.IsDefined(data)) {
-            this.list().setDataSource(DsArray({ data: data.rows }));
+            this.list().setDataSource(DsArray({ rows: data.rows }));
         } else {
             this.list().clearDataSource();
         }

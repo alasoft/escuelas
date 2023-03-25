@@ -73,7 +73,7 @@ function DsArray(parameters) {
         store: {
             type: "array",
             key: App.KEY_NAME,
-            data: parameters.data
+            data: parameters.rows
         }
     })
 }

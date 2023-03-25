@@ -329,9 +329,13 @@ class ListView extends View {
     }
 
     listOnContentReady(e) {
-        this.list().focusFirstRow();
+        this.focusFirstRow();
         this.refreshToolbar();
         this.refreshContextMenuItems()
+    }
+
+    focusFirstRow() {
+        this.list().focusFirstRow();
     }
 
     listOnDisposing(e) {
@@ -429,7 +433,7 @@ class ListView extends View {
     }
 
     closeDataDefault() {
-        return { dataHasChanged: this.dataHasChanged }
+        return { dataHasChanged: this.dataHasChanged, id: this.list().id() }
     }
 
     static DataSource() {

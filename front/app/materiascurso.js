@@ -62,7 +62,7 @@ class MateriasCurso extends CursosDetalle {
     }
 
     itemHorarios() {
-        if (this.list().hasRows()) {
+        if (this.list().hasRows() && this.configuration().showHorarios != false) {
             return {
                 widget: "dxButton",
                 location: "before",
