@@ -145,6 +145,12 @@ class Template extends ObjectBase {
         }
     }
 
+    _paddingRight(padding) {
+        return {
+            "padding-right": padding
+        }
+    }
+
     _height(height) {
         return {
             "height": height
@@ -182,6 +188,12 @@ class Template extends ObjectBase {
             return { display: "none" }
         } else if (visible == true) {
             return { visible: "block" }
+        }
+    }
+
+    _borderRight(attributes) {
+        return {
+            "border-right": attributes
         }
     }
 

@@ -254,8 +254,12 @@ class Dates {
         return this.AddDays(this.Today(), days);
     }
 
-    static Format(date) {
-        return $.format.date(date, "dd MMM yyyy");
+    static Format(date, quotes = false) {
+        let format = $.format.date(date, "dd MMM yyyy");
+        if (quotes == true) {
+            format = Strings.SingleQuotes(format)
+        }
+        return format;
     }
 
     static Between(d1, d2, d3) {

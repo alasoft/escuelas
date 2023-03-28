@@ -15,7 +15,7 @@ class Messages {
     static BuildSection(p) {
         let section;
         if (p != undefined) {
-            section = "<b>" + p.message + this.Detail(p) + Html.LineFeed(Utils.IfNotDefined(p.skipSection, 3))
+            section = "<br><b>" + p.message + this.Detail(p) + Html.LineFeed(Utils.IfNotDefined(p.skipSection, 1))
         } else {
             section = "";
         }

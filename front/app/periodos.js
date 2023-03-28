@@ -24,11 +24,11 @@ class Periodos extends AñoLectivoFilterView {
     deleteMessage() {
         const data = this.focusedRowData();
         return Messages.Build([{
-            title: "Borra el Período ?",
+            message: "Borra el Período ?",
             detail: data.nombre
         }, {
-            title: "que va",
-            detail: "Del " + Dates.Format(data.desde) + " Al " + Dates.Format(data.hasta),
+            message: "Del",
+            detail: Dates.Format(data.desde, true) + " al " + Dates.Format(data.hasta, true),
             quotes: false
         }])
     }

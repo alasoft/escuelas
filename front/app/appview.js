@@ -9,7 +9,7 @@ class AppView extends AppViewBase {
             widget: "dxButton",
             location: "before",
             options: {
-                icon: "rename",
+                icon: "user",
                 text: "Docente: " + App.UserNombreApellido()
             }
         }
@@ -20,7 +20,7 @@ class AppView extends AppViewBase {
             widget: "dxButton",
             location: "after",
             options: {
-                icon: "group",
+                icon: "bell",
                 text: App.ShortName()
             }
         }

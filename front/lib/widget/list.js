@@ -120,8 +120,8 @@ class List extends Widget {
         )
     }
 
-    focusFirstRow() {
-        this.setProperty("focusedRowIndex", 0)
+    focusFirstRow(focus = false) {
+        this.setProperty("focusedRowIndex", 0);
     }
 
     focusRowById(id) {
@@ -222,18 +222,14 @@ class List extends Widget {
     }
 
     hasGroupedColumns() {
-        return this.columns().find(
+        return this.getColumns().find(
             column => this.instance().columnOption(column.dataField, "groupIndex") != undefined
         ) != undefined
 
     }
 
-    columns() {
+    getColumns() {
         return this.getProperty("columns");
-    }
-
-    focusFirstRow() {
-        this.setProperty("focusedRowIndex", 0);
     }
 
 }

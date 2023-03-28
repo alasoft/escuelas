@@ -34,6 +34,7 @@ class CursosMateriasDetalle extends CursosDetalle {
     itemMateriaCurso(p) {
         return Item.Lookup(Utils.Merge({
             dataField: "materiacurso",
+            readOnly: this.parameters().materiaCursoReadOnly == true,
             deferRendering: false,
             width: 250,
             label: "Materia",

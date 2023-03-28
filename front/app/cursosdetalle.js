@@ -35,6 +35,7 @@ class CursosDetalle extends FilterView {
         return Item.Lookup(
             Utils.Merge({
                 dataField: "añolectivo",
+                readOnly: this.parameters().añoLectivoReadOnly == true,
                 dataSource: AñosLectivos.DataSource(),
                 width: 100,
                 label: "Año Lectivo",

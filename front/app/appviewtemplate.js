@@ -59,7 +59,7 @@ class AppViewTemplate extends Template {
 
     appItemsLabel() {
         return {
-            text: "Opciones",
+            text: "Menú",
             marginBottom: App.LABEL_BOTTOM_MARGIN
         }
     }

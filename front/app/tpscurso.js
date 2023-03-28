@@ -15,6 +15,9 @@ class TpsCurso extends CursosMateriasDetalle {
             components: {
                 filter: {
                     width: 750,
+                },
+                list: {
+                    showBorders: true
                 }
             }
         }

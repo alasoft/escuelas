@@ -16,35 +16,27 @@ class NotasListService extends TableListService {
     }
 
     requiredValues() {
-        return "alumno,materiacurso";
+        return "materiacurso";
     }
 
     sql() {
         return this.sqlSelect({
             columns: [
-                "tp.id",
-                "tp.nombre",
-                "tp.desde",
-                "tp.hasta",
-                "tp.periodo",
-                "per.nombre as periodonombre",
-                "per.desde as periododesde",
-                "per.hasta as periodohasta",
+                "nt.id",
+                "nt.alumno",
+                "nt.tp",
                 "nt.nota",
+                "per.id as periodoid",
             ],
-            from: "tps tp",
+            from: "notas nt",
             joins: [
-                { tableName: "periodos", alias: "per", columnName: "tp.periodo" },
-                {
-                    tableName: "notas",
-                    alias: "nt",
-                    condition: this.sqlAnd()
-                        .add("nt.tp=tp.id")
-                        .addSql("nt.alumno=@alumno", { alumno: this.value("alumno") })
-                }
+                { tableName: "tps", alias: "tps", columnName: "nt.tp" },
+                { tableName: "periodos", alias: "per", columnName: "tps.periodo" },
+                { tableName: "materias_cursos", alias: "mc", columnName: "tps.materiacurso" },
+                { tableName: "cursos", alias: "cur", columnName: "mc.curso" }
             ],
             where: this.sqlAnd()
-                .addSql("tp.materiacurso=@materiacurso", { materiacurso: this.value("materiacurso") })
+                .addSql("mc.id=@materiacurso", { materiacurso: this.value("materiacurso") })
         })
     }
 
