@@ -156,7 +156,7 @@ class Item {
                     valueExpr: "id",
                     searchEnabled: p.editable == true,
                     deferRendering: p.deferRendering,
-                    buttons: p.buttons,
+                    buttons: p.extraButton != undefined ? ["dropDown", p.extraButton] : undefined,
                     onSelectionChanged: p.onSelectionChanged
                 }
             }

@@ -146,8 +146,9 @@ class View extends Component {
 
     afterRender() {
         if (this.isFullScreen()) {
-            App.HideItems()
+            App.HideItems();
         }
+        return this.loadState()
     }
 
     endRender() {
@@ -210,6 +211,25 @@ class View extends Component {
 
     handleError(err) {
         return Errors.Handle(err);
+    }
+
+    saveState() {
+        Users.SaveState({ module: this.className(), state: this.getState() })
+    }
+
+    getState() {
+        return { fullScreen: App.ItemsAreHide() }
+    }
+
+    loadState() {
+        return Users.GetState({ module: this.className() }).then(s =>
+            this.setState(s != null ? JSON.parse(s) : { list: null }))
+    }
+
+    setState(state) {
+        if (state.fullScreen == true) {
+            App.HideItems();
+        }
     }
 
 }

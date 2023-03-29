@@ -28,7 +28,9 @@ class Notas extends CursosBaseView {
                     toolbar: {
                         items: [this.itemAlumnosView(), "searchPanel"]
                     },
-                    onFocusedRowChanged: e => this.alumnosOnFocusedRowChanged(e)
+                    onContentReady: e => this.alumnosOnContentReady(e),
+                    onFocusedRowChanged: e => this.alumnosOnFocusedRowChanged(e),
+                    onDisposing: e => this.alumnosOnDisposing(e)
                 },
                 tps: {
                     componentClass: Grid,
@@ -37,8 +39,20 @@ class Notas extends CursosBaseView {
                     showBorders: true,
                     columns: this.tpsColumns(),
                     groupPanel: {
-                        visible: false
-                    }
+                        visible: true
+                    },
+                    editing: {
+                        mode: "cell",
+                        allowUpdating: true,
+                        startEditAction: "click",
+                        selectTextOnEditStart: true
+                    },
+                    onContentReady: e => this.tpsOnContentReady(e),
+                    onRowValidating: e => this.tpsOnRowValidating(e),
+                },
+                tpsContextMenu: {
+                    componentClass: ContextMenu,
+                    target: this.findElementByClass("tps"),
                 }
             }
         }
@@ -55,7 +69,17 @@ class Notas extends CursosBaseView {
                 items: [
                     this.itemAñoLectivo(),
                     this.itemCurso({ colSpan: 4 }),
-                    this.itemMateriaCurso()
+                    this.itemMateriaCurso({
+                        extraButton: {
+                            name: "materiacurso",
+                            options: {
+                                icon: "doc",
+                                hint: "Consulta Materias dictadas en el Curso",
+                                onClick: e => this.materiasCurso()
+                            }
+                        }
+
+                    })
                 ]
             })
         ]
@@ -71,6 +95,10 @@ class Notas extends CursosBaseView {
 
     tps() {
         return this.components().tps;
+    }
+
+    tpsContextMenu() {
+        return this.components().tpsContextMenu;
     }
 
     tpsColumns() {
@@ -108,7 +136,9 @@ class Notas extends CursosBaseView {
 
     afterAlumnosCurso(closeData) {
         if (closeData.dataHasChanged == true) {
-            this.notasAlumnos().refresh()
+            this.notasAlumnos().refresh(true)
+                .then(() =>
+                    this.alumnos().focusRowById(closeData.id))
         } else if (closeData.id != undefined) {
             this.alumnos().focusRowById(closeData.id)
         }
@@ -141,6 +171,16 @@ class Notas extends CursosBaseView {
                 this.afterTpsCurso(closeData))
     }
 
+    afterTpsCurso(closeData) {
+        if (closeData.dataHasChanged == true) {
+            this.notasTps().refresh(true)
+                .then(() =>
+                    this.tps().focusRowById(closeData.id))
+        } else if (closeData.id != undefined) {
+            this.tps().focusRowById(closeData.id)
+        }
+    }
+
     afterRender() {
         super.afterRender()
         return this.loadPeriodos()
@@ -163,7 +203,13 @@ class Notas extends CursosBaseView {
     setItemMateriaCursoDataSource() {
         return super.setItemMateriaCursoDataSource()
             .then(() =>
-                this.notasAlumnos().refresh())
+                this.refreshAll())
+    }
+
+    refreshAll() {
+        this.notasAlumnos().refresh()
+            .then(() =>
+                this.notasTps().refresh())
     }
 
     notasAlumnos() {
@@ -171,6 +217,13 @@ class Notas extends CursosBaseView {
             this._notasAlumnos = new NotasAlumnos(this);
         }
         return this._notasAlumnos;
+    }
+
+    notasTps() {
+        if (this._notasTps == undefined) {
+            this._notasTps = new NotasTps(this);
+        }
+        return this._notasTps;
     }
 
     loadNotas() {
@@ -188,11 +241,88 @@ class Notas extends CursosBaseView {
     }
 
     refreshTpsLabel() {
-        const apellidoNombre = this.alumnos().focusedRowValue("alumno");
-        this.tps().setToolbarItems([{
-            location: "before",
-            text: (apellidoNombre ? apellidoNombre + " / Notas" : "Notas")
-        }, this.itemTpsView()])
+        this.tps().setToolbarItems([this.itemApellidoNombre(), this.itemTpsView()])
+    }
+
+    itemApellidoNombre() {
+        if (this.alumnos().hasRows()) {
+            const apellidoNombre = this.alumnos().focusedRowValue("alumno");
+            return {
+                location: "before",
+                text: (apellidoNombre ? apellidoNombre + " / Notas" : "Notas")
+            }
+        }
+    }
+
+    tpsAgrupaPorPeriodo() {
+        this.tps().setColumnProperties("periodonombre", { groupIndex: 0 }).focus()
+    }
+
+    tpsDesagrupaPeriodo() {
+        this.tps().setColumnProperties("periodonombre", { groupIndex: undefined }).focus()
+    }
+
+    alumno() {
+        return this.alumnos().id()
+    }
+
+    saveNote(p) {
+        new Rest({ path: "notas" })
+            .promise({
+                verb: "update",
+                data: {
+                    tp: p.tp,
+                    alumno: this.alumno(),
+                    nota: p.nota
+                }
+            }).then(data =>
+                this.tps().focus()
+            ).catch(err => {
+                if (err.code == Exceptions.NOTA_OUT_OF_RANGE) {
+                    App.ShowMessage({ message: "La nota debe estar entre 1 y 10" })
+                }
+            })
+    }
+
+    refreshTpsContextMenu() {
+        this.tpsContextMenu().setItems([this.itemTpsAgrupaPeriodo(), this.itemTpsDesagrupaPeriodo()])
+    }
+
+    itemTpsAgrupaPeriodo() {
+        if (!this.tps().hasGroupedColumns()) {
+            return {
+                text: "Agrupa por Período",
+                onClick: e =>
+                    this.tpsAgrupaPorPeriodo()
+            }
+        }
+    }
+
+    itemTpsDesagrupaPeriodo() {
+        if (this.tps().hasGroupedColumns()) {
+            return {
+                text: "Desagrupa Período",
+                onClick: e =>
+                    this.tpsDesagrupaPeriodo()
+            }
+        }
+    }
+
+    getState() {
+        return Utils.Merge(super.getState(), {
+            alumnosResizer: { width: this.alumnosResizer().getWidth() },
+            alumnos: this.alumnos().getState(),
+            tps: this.tps().getState()
+        })
+    }
+
+    setState(state) {
+        super.setState(state);
+        if (state.alumnosResizer != undefined) {
+            this.alumnosResizer().setWidth(state.alumnosResizer.width)
+        }
+        this.alumnos().setState(state.alumnos);
+        this.tps().setState(state.tps)
     }
 
     itemAñoLectivoOnValueChanged(e) {
@@ -205,8 +335,28 @@ class Notas extends CursosBaseView {
         this.setItemMateriaCursoDataSource();
     }
 
+    itemMateriaCursoOnValueChanged(e) {
+        this.notasTps().refresh()
+    }
+
+    alumnosOnContentReady(e) {
+        this.refreshTpsLabel()
+    }
+
     alumnosOnFocusedRowChanged(e) {
         this.refreshTpsLabel();
+    }
+
+    alumnosOnDisposing(e) {
+        this.saveState()
+    }
+
+    tpsOnContentReady(e) {
+        this.refreshTpsContextMenu();
+    }
+
+    tpsOnRowValidating(e) {
+        this.saveNote({ tp: e.oldData.id, nota: e.newData.nota });
     }
 
 }
@@ -246,21 +396,21 @@ class NotasDetail {
 
 class NotasAlumnos extends NotasDetail {
 
-    refresh() {
+    refresh(forceRefresh = false) {
         if (this.alumnos().getColumns() == undefined) {
             this.alumnos().setColumns(this.columns())
         }
-        if (this.curso() != this.cursoAnterior) {
-            this.refreshCurso()
+        if (this.curso() != this.cursoAnterior || forceRefresh == true) {
+            return this.refreshCurso()
         } else if (this.materiaCurso() != this.materiaCursoAnterior) {
-            this.refreshPromedios()
+            return this.refreshPromedios()
         }
     }
 
     refreshCurso() {
         return this.notas.loadNotas()
             .then(() =>
-                this.loadRows())
+                this.loadAlumnos())
             .then(() =>
                 this.cursoAnterior = this.curso())
             .then(() =>
@@ -269,7 +419,7 @@ class NotasAlumnos extends NotasDetail {
                 this.materiaCursoAnterior = this.materiaCurso())
             .then(() =>
                 this.alumnos().setDataSource(DsArray({
-                    rows: this.rows
+                    rows: this.alumnosRows
                 })))
             .then(() =>
                 this.alumnos().focusFirstRow(true))
@@ -281,7 +431,7 @@ class NotasAlumnos extends NotasDetail {
                 this.materiaCursoAnterior = this.materiaCurso())
             .then(() =>
                 this.alumnos().setDataSource(DsArray({
-                    rows: this.rows
+                    rows: this.alumnosRows
                 })))
     }
 
@@ -304,30 +454,34 @@ class NotasAlumnos extends NotasDetail {
         return columns;
     }
 
-    loadRows() {
-        return new Rest({ path: "alumnos" })
-            .promise({ verb: "list", data: { curso: this.curso() } })
-            .then(rows =>
-                this.rows = rows)
-            .then(() =>
-                this.setAlumnos())
+    loadAlumnos() {
+        if (Utils.IsDefined(this.curso())) {
+            return new Rest({ path: "alumnos" })
+                .promise({ verb: "list", data: { curso: this.curso() } })
+                .then(rows =>
+                    this.alumnosRows = rows)
+                .then(() =>
+                    this.setAlumnos())
+        } else {
+            this.alumnosRows = [];
+        }
     }
 
     setAlumnos() {
-        for (const row of this.rows) {
-            row.alumno = row.apellido + ", " + row.nombre
+        for (const alumnoRow of this.alumnosRows) {
+            alumnoRow.alumno = alumnoRow.apellido + ", " + alumnoRow.nombre
         }
     }
 
     setPromedios() {
-        for (const row of this.rows) {
-            this.setPromedio(row);
+        for (const alumnoRow of this.alumnosRows) {
+            this.setPromedio(alumnoRow);
         }
     }
 
-    setPromedio(row) {
+    setPromedio(alumnoRow) {
         for (const periodoRow of this.periodosRows()) {
-            row[periodoRow.id] = this.promedio(row.id, periodoRow.id)
+            alumnoRow[periodoRow.id] = this.promedio(alumnoRow.id, periodoRow.id)
         }
     }
 
@@ -347,9 +501,31 @@ class NotasAlumnos extends NotasDetail {
 
 }
 
-class NotasTps {
+class NotasTps extends NotasDetail {
 
+    refresh(forceRefresh = false) {
+        if (this.materiaCurso() != this.materiaCursoAnterior || forceRefresh == true) {
+            return this.loadTps()
+                .then(() =>
+                    this.tps().setDataSource(DsArray({ rows: this.tpsRows })))
+                .then(() =>
+                    this.materiaCursoAnterior = this.materiaCurso())
+        }
+    }
 
+    loadTps() {
+        if (Utils.IsDefined(this.materiaCurso())) {
+            return new Rest({ path: "tps" })
+                .promise({
+                    verb: "list",
+                    data: { materiacurso: this.materiaCurso() }
+                })
+                .then(rows =>
+                    this.tpsRows = rows)
+        } else {
+            return Promise.resolve(this.tpsRows = []);
+        }
+    }
 
 }
 
@@ -401,7 +577,8 @@ class NotasTemplate extends Template {
             orientation: "horizontal",
             items: [
                 this.alumnosResizer(),
-                this.tps()
+                this.tps(),
+                this.tpsContextMenu()
             ]
         }
     }
@@ -429,9 +606,23 @@ class NotasTemplate extends Template {
 
     tps() {
         return {
-            name: "tps",
             fillContainer: true,
+            width: "70%",
             orientation: "vertical",
+            items: [{
+                    name: "tps",
+                    fillContainer: true,
+                    orientation: "vertical",
+                    height: 1
+                }
+
+            ]
+        }
+    }
+
+    tpsContextMenu() {
+        return {
+            name: "tpsContextMenu"
         }
     }
 

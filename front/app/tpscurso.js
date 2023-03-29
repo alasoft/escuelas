@@ -278,7 +278,7 @@ class TpsCursoForm extends FormView {
     handleError(err) {
         if (err.code == Exceptions.DEBE_ESTAR_DENTRO_PERIODO) {
             this.handleDebeEstarDentroPeriodo(err)
-        } else if (err.code = Exceptions.FECHA_INICIO_DEBE_SER_MENOR_FECHA_ENTREGA) {
+        } else if (err.code == Exceptions.FECHA_INICIO_DEBE_SER_MENOR_FECHA_ENTREGA) {
             this.handleInicioDebeSerMenorEntrega(err)
         } else {
             super.handleError(err);

@@ -48,4 +48,9 @@ class MateriasForm extends FormView {
         ]
     }
 
+    duplicatedMessage() {
+        return Messages.Build({ message: "Ya existe una Materia genérica de nombre:", detail: this.getEditorText("nombre") })
+    }
+
+
 }

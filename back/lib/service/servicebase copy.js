@@ -174,7 +174,7 @@ class ServiceBase extends ObjectBase {
     }
 
     log(sql) {
-        this.app.log(sql, this.req);
+        //        this.app.log(sql, this.req);
     }
 
 }

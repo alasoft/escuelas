@@ -43,4 +43,12 @@ class Widget extends Component {
         return this.instance() != undefined
     }
 
+    getWidth() {
+        return this.getProperty("width")
+    }
+
+    setWidth(width) {
+        this.setProperty("width", width)
+    }
+
 }

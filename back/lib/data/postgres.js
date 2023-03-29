@@ -17,7 +17,7 @@ class Postgres {
         return new Promise((resolve, reject) => {
             this.pool.query(sql)
                 .then(result => {
-                    this.log(sql, service);
+                    //                    this.log(sql, service);
                     resolve(result.rows);
                 })
                 .catch(err =>
@@ -55,7 +55,7 @@ class Postgres {
     }
 
     log(sql, service) {
-        this.app.log(sql, service != undefined ? service.req : undefined)
+        //        this.app.log(sql, service != undefined ? service.req : undefined)
     }
 
 }

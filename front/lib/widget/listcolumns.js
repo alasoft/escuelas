@@ -8,6 +8,7 @@ class Column {
             format: p.format,
             caption: p.caption,
             width: p.width,
+            groupIndex: p.groupIndex,
             calculateCellValue: p.formula,
             allowHeaderFiltering: p.filtering != false,
             allowSorting: p.sorting != false,

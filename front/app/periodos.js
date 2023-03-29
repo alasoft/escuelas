@@ -40,7 +40,7 @@ class Periodos extends AñoLectivoFilterView {
     static Descripcion(data) {
         if (Utils.IsDefined(data)) {
             return Strings.Concatenate([
-                data.nombre + ": del ",
+                data.nombre + ": ",
                 Dates.Format(data.desde) + " al ",
                 Dates.Format(data.hasta)
             ])

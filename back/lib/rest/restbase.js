@@ -13,7 +13,7 @@ class RestBase {
 
     buildVerb(verb, serviceClass) {
         const verbPath = this.verbPath(verb);
-        this.app.log("POST " + verbPath)
+        //        this.app.log("POST " + verbPath)
         this.express.post(verbPath, this.authenticate.bind(this), (req, res) => {
             new serviceClass(this.serviceParameters(req, res)).execute()
         })

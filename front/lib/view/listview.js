@@ -27,7 +27,9 @@ class ListView extends View {
                     onDataErrorOccurred: e => this.listOnDataErrorOccurred(e),
                     onDisposing: e => this.listOnDisposing(e)
                 },
-                contextMenu: {}
+                contextMenu: {
+                    target: this.findElementByClass("list")
+                }
             },
             editable: true,
             operations: ["insert", "edit", "delete", "export"],
@@ -307,17 +309,16 @@ class ListView extends View {
 
 
     afterRender() {
-        super.afterRender();
-        if (this.list().columnCount() == 1) {
-            this.list().setProperty("groupPanel.visible", false);
-        }
-        this.contextMenu().setProperty("target", this.findElementByClass("list"));
-        if (this.isPopup()) {
-            this.label().setVisible(false);
-        } else {
-            this.label().setText(this.labelText());
-        }
-        return this.loadState();
+        return super.afterRender().then(() => {
+            if (this.list().columnCount() == 1) {
+                this.list().setProperty("groupPanel.visible", false);
+            }
+            if (this.isPopup()) {
+                this.label().setVisible(false);
+            } else {
+                this.label().setText(this.labelText());
+            }
+        });
     }
 
     focus() {
@@ -342,28 +343,21 @@ class ListView extends View {
         this.saveState();
     }
 
-    loadState() {
-        return Users.GetState({ module: this.className() }).then(s =>
-            this.setState(s != null ? JSON.parse(s) : { list: null }))
-    }
-
     saveState() {
         if (this.dataErrorOcurred != true) {
-            Users.SaveState({ module: this.className(), state: this.state() })
+            super.saveState();
         }
     }
 
     setState(state) {
-        if (state.fullScreen == true) {
-            App.HideItems();
-        }
+        super.setState(state);
         this.list()
             .setState(state.list)
             .focusFirstRow()
     }
 
-    state() {
-        return { fullScreen: App.ItemsAreHide(), list: this.list().getState() }
+    getState() {
+        return Utils.Merge(super.getState(), { list: this.list().getState() })
     }
 
     listOnRowDblClick(e) {

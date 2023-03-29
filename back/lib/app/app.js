@@ -116,7 +116,7 @@ class App {
     buildIndex() {
         const indexPath = Path.Absolute(App.IndexRelativePath);
         const root = Path.Normalize(this.root);
-        this.log("GET " + root);
+        //        this.log("GET " + root);
         this.express.get(root, (req, res) =>
             res.sendFile(indexPath))
     }
@@ -126,7 +126,7 @@ class App {
         App.StaticRelativePaths.forEach(
             relativePath => {
                 const staticPath = Path.Absolute(App.StaticRelativePath, relativePath);
-                this.log("STATIC " + staticPath);
+                //                this.log("STATIC " + staticPath);
                 this.express.use(staticAliasPath, this.expressFunction.static(staticPath))
             }
         )

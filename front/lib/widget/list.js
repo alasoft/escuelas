@@ -225,11 +225,15 @@ class List extends Widget {
         return this.getColumns().find(
             column => this.instance().columnOption(column.dataField, "groupIndex") != undefined
         ) != undefined
-
     }
 
     getColumns() {
         return this.getProperty("columns");
+    }
+
+    setColumnProperties(dataField, properties) {
+        this.instance().columnOption(dataField, properties);
+        return this;
     }
 
 }

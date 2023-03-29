@@ -19,7 +19,7 @@ class TpsListService extends TableListService {
     sqlExtraParameters() {
         return {
             where: this.sqlAnd()
-                .add(this.sqlText("tp.materiacurso=@materiacurso", { materiacurso: this.value("materiacurso") }))
+                .addIf(this.isDefined("materiacurso"), () => this.sqlText("tp.materiacurso=@materiacurso", { materiacurso: this.value("materiacurso") }))
                 .addIf(this.isDefined("descripcion"), () =>
                     this.sqlText("tp.nombre ilike @nombre", { nombre: this.sqlLike(this.value("descripcion")) })),
             order: [
@@ -96,7 +96,9 @@ class TpsCommonService {
                 "tp.desde",
                 "tp.hasta",
                 "cur.id as curso",
-                "per.nombre as periodonombre"
+                "per.nombre as periodonombre",
+                "per.desde as periododesde",
+                "per.hasta as periodohasta"
             ],
             from: "tps tp",
             joins: [
