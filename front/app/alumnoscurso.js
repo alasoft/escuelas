@@ -9,7 +9,8 @@ class AlumnosCurso extends CursosDetalle {
             popup: {
                 title: "Alumnos por Curso",
                 height: 650,
-                width: 900
+                width: 900,
+                resizeEnabled: true
             },
             components: {
                 filter: {

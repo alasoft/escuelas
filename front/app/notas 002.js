@@ -144,6 +144,20 @@ class Notas extends CursosBaseView {
         }
     }
 
+    materiasCurso() {
+        new MateriasCurso({
+                mode: "popup",
+                curso: this.curso(),
+                añoLectivoReadOnly: true,
+                cursoReadOnly: true,
+                materiaCursoReadOnly: true,
+                materiacurso: this.materiaCurso()
+            }).render()
+            .then(closeData =>
+                this.afterMateriaCurso(closeData))
+    }
+
+
     itemTpsView() {
         return {
             widget: "dxButton",

@@ -349,10 +349,10 @@ class ListView extends View {
         }
     }
 
-    setState(state) {
-        super.setState(state);
+    setState() {
+        super.setState();
         this.list()
-            .setState(state.list)
+            .setState(this.state.list || null)
             .focusFirstRow()
     }
 

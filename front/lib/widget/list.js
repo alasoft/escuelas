@@ -74,7 +74,10 @@ class List extends Widget {
     }
 
     focusedRowValue(dataField) {
-        return this.focusedRowData()[dataField];
+        const data = this.focusedRowData();
+        if (data != undefined) {
+            return data[dataField];
+        }
     }
 
     id() {
@@ -99,6 +102,10 @@ class List extends Widget {
 
     setDataSource(dataSource) {
         this.setProperty("dataSource", dataSource);
+    }
+
+    setArrayDataSource(rows) {
+        this.setDataSource(DsArray({ rows: rows }))
     }
 
     clearDataSource() {

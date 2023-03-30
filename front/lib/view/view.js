@@ -217,19 +217,16 @@ class View extends Component {
         Users.SaveState({ module: this.className(), state: this.getState() })
     }
 
-    getState() {
-        return { fullScreen: App.ItemsAreHide() }
-    }
+    getState() {}
 
     loadState() {
-        return Users.GetState({ module: this.className() }).then(s =>
-            this.setState(s != null ? JSON.parse(s) : { list: null }))
+        return Users.GetState({ module: this.className() })
+            .then(s => {
+                this.state = s != null ? JSON.parse(s) : {};
+                this.setState();
+            })
     }
 
-    setState(state) {
-        if (state.fullScreen == true) {
-            App.HideItems();
-        }
-    }
+    setState() {}
 
 }
