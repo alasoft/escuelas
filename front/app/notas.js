@@ -43,6 +43,7 @@ class Notas extends CursosBaseView {
                     },
                     editing: {
                         mode: "cell",
+                        showEditorAlways: true,
                         allowUpdating: true,
                         startEditAction: "click",
                         selectTextOnEditStart: true
@@ -76,6 +77,10 @@ class Notas extends CursosBaseView {
 
     tps() {
         return this.components().tps;
+    }
+
+    tp(dataField) {
+        return this.tps().focusedRowValue(dataField)
     }
 
     tpsContextMenu() {
@@ -120,7 +125,7 @@ class Notas extends CursosBaseView {
 
     afterMateriasCurso(closeData) {
         if (closeData.dataHasChanged == true) {
-            this.setItemMateriaCursoDataSource(closeData.id)
+            this.loadMateriasCursos(closeData.id)
         } else if (closeData.id != undefined) {
             this.refreshFilterValue("materiacurso", closeData.id)
         }
@@ -183,20 +188,6 @@ class Notas extends CursosBaseView {
         }
     }
 
-    setItemCursoDataSource(id) {
-        super.setItemCursoDataSource(id)
-            .then(() =>
-                this.loadAlumnos())
-    }
-
-    setItemMateriaCursoDataSource() {
-        super.setItemMateriaCursoDataSource()
-            .then(() =>
-                this.loadNotas())
-            .then(() =>
-                this.loadTps())
-    }
-
     loadAlumnos() {
         if (Utils.IsDefined(this.curso())) {
             return new Rest({ path: "alumnos" })
@@ -204,10 +195,33 @@ class Notas extends CursosBaseView {
                     verb: "list",
                     data: { curso: this.curso() }
                 })
-                .then(rows =>
-                    this.alumnos().setArrayDataSource(rows))
+                .then(rows => {
+                    this.alumnos().setArrayDataSource(rows);
+                })
         } else {
             this.alumnos().clearDataSource();
+        }
+    }
+
+    loadTps() {
+        if (this.materiaCurso() != undefined) {
+            return new Rest({ path: "tps" })
+                .promise({
+                    verb: "list",
+                    data: {
+                        materiacurso: this.materiaCurso(),
+                    }
+                })
+                .then(rows =>
+                    this.tpsRows = rows)
+                .then(() =>
+                    this.tpsIsLoaded = true)
+                .then(() =>
+                    this.loadNotas())
+                .then(() =>
+                    this.refreshAlumnoNotas())
+        } else {
+            return this.tps().setDataSource(null);
         }
     }
 
@@ -225,22 +239,12 @@ class Notas extends CursosBaseView {
         }
     }
 
-    loadTps() {
-        if (this.materiaCurso() != undefined) {
-            new Rest({ path: "tps" })
-                .promise({
-                    verb: "list",
-                    data: {
-                        materiacurso: this.materiaCurso(),
-                    }
-                })
-                .then(rows =>
-                    this.tps().setArrayDataSource(rows))
-        } else {
-            this.tps().setDataSource(null);
+    refreshTps() {
+        this.refreshTpsToolbar();
+        if (this.tpsRows != undefined) {
+            this.refreshAlumnoNotas();
         }
     }
-
 
     refreshTpsToolbar() {
         this.tps()
@@ -248,6 +252,39 @@ class Notas extends CursosBaseView {
                 this.itemApellidoNombre(),
                 this.itemTpsCurso()
             ])
+    }
+
+    refreshAlumnoNotas() {
+        for (const tpsRow of this.tpsRows) {
+            tpsRow.nota = this.getNota(tpsRow.id, this.alumno("id"))
+        }
+        return this.tps().setArrayDataSource(this.tpsRows)
+    }
+
+    getNotasRow(tp, alumno) {
+        if (this.notasRows != undefined) {
+            for (const notasRow of this.notasRows) {
+                if (notasRow.tp == tp && notasRow.alumno == alumno) {
+                    return notasRow;
+                }
+            }
+        }
+    }
+
+    getNota(tp, alumno) {
+        const notasRow = this.getNotasRow(tp, alumno);
+        if (notasRow != undefined) {
+            return notasRow.nota;
+        }
+    }
+
+    setNota(notasRow) {
+        const row = this.getNotasRow(notasRow.tp, notasRow.alumno);
+        if (row != undefined) {
+            row.nota = notasRow.nota;
+        } else {
+            this.notasRows.push(notasRow)
+        }
     }
 
     itemApellidoNombre() {
@@ -301,7 +338,7 @@ class Notas extends CursosBaseView {
 
     afterTpsCurso(closeData) {
         if (closeData.dataHasChanged == true) {
-            this.notasTps().refresh(true)
+            this.loadTps()
                 .then(() =>
                     this.tps().focusRowById(closeData.id))
         } else if (closeData.id != undefined) {
@@ -309,35 +346,41 @@ class Notas extends CursosBaseView {
         }
     }
 
-    saveNote(p) {
+    saveNota(p) {
+        const notasRow = {
+            tp: p.tp,
+            alumno: p.alumno,
+            nota: p.nota
+        }
         new Rest({ path: "notas" })
             .promise({
                 verb: "update",
-                data: {
-                    tp: p.tp,
-                    alumno: this.alumno("id"),
-                    nota: p.nota
-                }
-            }).then(data =>
-                this.tps().focus()
-            ).catch(err => {
-                if (err.code == Exceptions.NOTA_OUT_OF_RANGE) {
-                    App.ShowMessage({ message: "La nota debe estar entre 1 y 10" })
-                }
+                data: notasRow
             })
+            .then(() =>
+                this.setNota(notasRow))
+            .catch(err =>
+                this.handleError(err, p))
+    }
+
+    handleError(err, p) {
+        if (err.code == Exceptions.NOTA_OUT_OF_RANGE) {
+            App.ShowMessage({ message: "La nota debe estar entre 1 y 10" })
+                .then(() =>
+                    this.tps().updateRow(this.tp("id"), { nota: p.notaAnterior || null }))
+                .then(() =>
+                    this.tps().focus())
+        }
     }
 
     afterRender() {
         super.afterRender()
             .then(() =>
-                this.refreshFilterValue("añolectivo", this.state.añoLectivo || Dates.ThisYear()));
+                this.refreshFilterValue("añolectivo", Dates.ThisYear()));
     }
 
     getState() {
         return Utils.Merge(super.getState(), {
-            añoLectivo: this.añoLectivo(),
-            curso: this.curso(),
-            materiaCurso: this.materiaCurso(),
             alumnosResizer: { width: this.alumnosResizer().getWidth() },
             alumnos: this.alumnos().getState(),
             tps: this.tps().getState()
@@ -354,21 +397,12 @@ class Notas extends CursosBaseView {
     }
 
     itemAñoLectivoOnValueChanged(e) {
-        if (e.value != undefined) {
-            this.setItemCursoDataSource(this.firstCursoId());
-        }
-    }
-
-    firstCursoId() {
-        this._firstCursoId = this.state.curso;
-        if (this.state.curso != undefined) {
-            this.state.curso = undefined;
-        }
-        return this._firstCursoId;
+        this.loadCursos();
     }
 
     itemCursoOnValueChanged(e) {
-        this.setItemMateriaCursoDataSource();
+        this.loadMateriasCursos();
+        this.loadAlumnos();
     }
 
     itemMateriaCursoOnValueChanged(e) {
@@ -376,11 +410,12 @@ class Notas extends CursosBaseView {
     }
 
     alumnosOnContentReady(e) {
-        this.refreshTpsToolbar()
+        this.alumnos().focusFirstRow();
+        this.refreshTpsToolbar();
     }
 
     alumnosOnFocusedRowChanged(e) {
-        this.refreshTpsToolbar()
+        this.refreshTps();
     }
 
     alumnosOnDisposing(e) {
@@ -388,13 +423,23 @@ class Notas extends CursosBaseView {
     }
 
     tpsOnContentReady(e) {
-        //        this.refreshTpsContextMenu();
+        if (this.tpsIsLoaded == true) {
+            try {
+                this.tps().focusFirstRow()
+            } finally {
+                this.tpsIsLoaded = false;
+            }
+        }
     }
 
     tpsOnRowValidating(e) {
-        this.saveNote({ tp: e.oldData.id, nota: e.newData.nota });
+        this.saveNota({
+            tp: e.oldData.id,
+            alumno: this.alumno("id"),
+            nota: e.newData.nota,
+            notaAnterior: e.oldData.nota
+        });
     }
-
 
 }
 

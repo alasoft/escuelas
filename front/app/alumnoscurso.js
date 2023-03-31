@@ -10,7 +10,6 @@ class AlumnosCurso extends CursosDetalle {
                 title: "Alumnos por Curso",
                 height: 650,
                 width: 900,
-                resizeEnabled: true
             },
             components: {
                 filter: {

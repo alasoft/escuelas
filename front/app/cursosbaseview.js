@@ -78,27 +78,27 @@ class CursosBaseView extends View {
         this.filter().refreshEditorValue(dataField, value)
     }
 
-    setItemCursoDataSource(id) {
+    loadCursos() {
         if (this.añoLectivo() != undefined) {
             return new Rest({ path: "cursos" })
                 .promise({
                     verb: "list",
                     data: { añolectivo: this.añoLectivo() }
                 }).then(rows =>
-                    this.filter().setArrayDataSource("curso", rows, id))
+                    this.filter().setArrayDataSource("curso", rows))
         } else {
             return Promise.resolve(this.filter().clearEditorDataSource("curso"));
         }
     }
 
-    setItemMateriaCursoDataSource(id) {
+    loadMateriasCursos() {
         if (this.curso() != undefined) {
             return new Rest({ path: "materias_cursos" })
                 .promise({
                     verb: "list",
                     data: { curso: this.curso() }
                 }).then(rows => {
-                    this.filter().setArrayDataSource("materiacurso", rows, id);
+                    this.filter().setArrayDataSource("materiacurso", rows);
                 })
         } else {
             return Promise.resolve(this.filter().clearEditorDataSource("materiacurso"));

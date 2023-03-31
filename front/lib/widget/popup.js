@@ -6,7 +6,6 @@ class Popup extends Widget {
 
     defaultConfiguration() {
         return Utils.Merge(super.defaultConfiguration(), {
-            resizeEnabled: true,
             showCloseButton: true,
             backgroundColor: App.POPUP_BACKGROUND_COLOR,
             shading: true,

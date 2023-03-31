@@ -86,7 +86,9 @@ class NotasUpdateService extends ServiceBase {
                         return this.sqlDeleteNota()
                     }
                 } else {
-                    return this.sqlInsertNota();
+                    if (this.isDefined("nota")) {
+                        return this.sqlInsertNota();
+                    }
                 }
             })
     }

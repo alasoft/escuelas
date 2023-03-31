@@ -243,4 +243,20 @@ class List extends Widget {
         return this;
     }
 
+    updateRow(id, data) {
+        var rowIndex = this.rowIndexById(id);
+        this.beginUpdate();
+        try {
+            Object.keys(data).forEach(
+                key => this.instance().cellValue(rowIndex, key, data[key])
+            )
+        } finally {
+            this.endUpdate();
+        }
+    }
+
+    rowIndexById(id) {
+        return this.instance().getRowIndexByKey(id);
+    }
+
 }

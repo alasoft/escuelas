@@ -158,10 +158,10 @@ class Exception {
         this.code = parameters.code;
         this.message = parameters.message;
         this.detail = parameters.detail;
-        this.status = this.status();
+        this.status = Exception.Status(this.type);
     }
 
-    status(type) {
+    static Status(type) {
         if (type == Exceptions.TYPE_AUTHENTICATION) {
             return Http.Unauthorized;
         }
