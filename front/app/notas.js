@@ -26,6 +26,7 @@ class Notas extends View {
                         visible: false
                     },
                     onCellPrepared: e => this.listOnCellPrepared(e),
+                    onKeyDown: e => this.listOnKeyDown(e),
                     onRowDblClick: e => this.listOnRowDblClick(e),
                 }
             }
@@ -133,7 +134,7 @@ class Notas extends View {
 
     data() {
         if (this._data == undefined) {
-            this._data = new NotasData(this.materiaCurso())
+            this._data = new NotasData()
         }
         return this._data;
     }
@@ -327,6 +328,12 @@ class Notas extends View {
 
     listOnRowDblClick(e) {
         this.alumnoNotas();
+    }
+
+    listOnKeyDown(e) {
+        if (e.event.key == "Enter" && this.list().hasRows()) {
+            this.alumnoNotas()
+        }
     }
 
 }

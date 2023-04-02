@@ -1,6 +1,6 @@
 class MessageView extends DialogView {
 
-    static HEIGHT_DEFAULT = 200;
+    static HEIGHT_DEFAULT = 150;
     static WIDTH_DEFAULT = 250;
 
     popupConfiguration() {
@@ -38,8 +38,7 @@ class MessageView extends DialogView {
     }
 
     calculatedHeight() {
-        return Math.min(600, MessageView.HEIGHT_DEFAULT +
-            this.message().length / 2 + 40);
+        return Math.min(600, this.message().length + 130);
     }
 
     popupWidth() {

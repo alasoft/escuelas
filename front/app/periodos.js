@@ -113,7 +113,10 @@ class PeriodosFormView extends FormView {
             message: "El " + this.getEditorValue("nombre"),
             quotes: false,
             detail: "Del " + this.getDate("desde") + " al " + this.getDate("hasta")
-        }, { message: "contiene al Período" + err.detail.nombre }])
+        }, {
+            message: "contiene al Período",
+            detail: err.detail.nombre
+        }])
     }
 
     handlePeriodoIntersecta(err) {

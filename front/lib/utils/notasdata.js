@@ -14,7 +14,7 @@ class NotasData {
                 .then(() =>
                     this.setPeriodosData())
         } else {
-            this.cleanData();
+            this.setData(this.emptyData());
             return Promise.resolve()
         }
     }
@@ -29,13 +29,16 @@ class NotasData {
         this._planillaRows = undefined;
     }
 
-    cleanData() {
-        this.valoraciones = [];
-        this.periodos = [];
-        this.alumnos = [];
-        this.notas = [];
-        this.tps = [];
-        this._planillaRows = undefined;
+    emptyData() {
+        return {
+            rows: {
+                valoraciones: [],
+                periodos: [],
+                alumnos: [],
+                notas: [],
+                tps: [],
+            }
+        }
     }
 
     setPeriodosData() {
@@ -72,8 +75,11 @@ class NotasData {
                 visible: false
             },
             { dataField: "apellido", width: 150 },
-            { dataField: "nombre", width: 150 }
+            { dataField: "nombre", width: 0 < this.periodosRows.length ? 150 : undefined }
         ]
+        if (this.periodosRows.length == 0) {
+            return columnas;
+        }
         for (const row of this.periodosRows) {
             columnas.push({
                 dataField: "periodo_" + row.id,
@@ -95,6 +101,10 @@ class NotasData {
             calculateCellValue: r => this.getLastPeriodo().pasado ? r["anual"].promedio : "",
             futuro: this.getLastPeriodo().futuro,
             width: 150
+        })
+        columnas.push({
+            dataField: "relleno",
+            caption: " "
         })
         return columnas;
     }
