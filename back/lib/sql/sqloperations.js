@@ -1,3 +1,4 @@
+const { te } = require("date-fns/locale");
 const { DbStates } = require("../data/dbstates");
 const { Exceptions } = require("../utils/exceptions");
 const { TextBuilder } = require("../utils/textbuilder");
@@ -10,6 +11,7 @@ class SqlCreate {
     constructor(parameters) {
         this.tableName = parameters.tableName;
         this.columns = parameters.columns;
+        this.unique = parameters.unique;
         this.addDefaults();
     }
 
@@ -21,6 +23,22 @@ class SqlCreate {
         this.columns.tenant = SqlType.Tenant();
     }
 
+    sqlUnique() {
+        const textBuilder = new TextBuilder();
+        Utils.ToArray(this.unique).forEach(
+            (unique, i) => {
+                textBuilder
+                    .add(", ")
+                    .add("unique (")
+                    .add(unique)
+                    .add(")")
+            }
+        )
+        return textBuilder
+            .text();
+    }
+
+
     text() {
         const textBuilder = new TextBuilder()
             .add("create table")
@@ -31,6 +49,7 @@ class SqlCreate {
             (key, i) => textBuilder.add((0 < i ? ", " : "") + Strings.DoubleQuotes(key) + " " + this.columns[key])
         )
         return textBuilder
+            .addIf(this.unique != undefined, () => this.sqlUnique())
             .add(")")
             .text();
     }

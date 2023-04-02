@@ -222,7 +222,7 @@ class ListView extends View {
         if (this.allow("export")) {
             return {
                 widget: "dxButton",
-                location: "before",
+                location: "after",
                 options: {
                     icon: "exportxlsx",
                     hint: "Exporta a Excel",

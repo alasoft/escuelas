@@ -25,6 +25,7 @@ class Exceptions {
     static APELLIDO_NOMBRE_DUPLICATED = "apellidoNombreDuplicated"
     static EMAIL_DUPLICATED = "emailDuplicated"
     static NOTA_OUT_OF_RANGE = "notaOutOfRange"
+    static MATERIA_CURSO_NOT_FOUND = "materiaCursoNotFound"
 
     static FECHA_DESDE_DEBE_SER_MENOR_FECHA_HASTA = "fechaDesdeDebeSerMenorFechaHasta"
     static FECHA_DESDE_DEBE_ESTAR_EN_AÑO_LECTIVO = "fechaDesdeDebeEstarEnAñoLectivo"

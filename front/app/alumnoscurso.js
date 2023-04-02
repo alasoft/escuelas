@@ -81,7 +81,7 @@ class AlumnosCurso extends CursosDetalle {
             Column.Id(),
             Column.Text({ dataField: "apellido", width: 250 }),
             Column.Text({ dataField: "nombre", width: 250 }),
-            Column.Text({ dataField: "email" })
+            Column.Text({ dataField: "email" }),
         ]
     }
 

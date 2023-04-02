@@ -1,4 +1,4 @@
-class Notas extends CursosBaseView {
+class Notas extends View {
 
     extraConfiguration() {
         return {
@@ -12,79 +12,28 @@ class Notas extends CursosBaseView {
                     labelLocation: "top",
                     width: 750
                 },
-                alumnosResizer: {
-                    componentClass: Resizer,
-                    handles: "right"
-                },
-                alumnos: {
-                    componentClass: Grid,
+                list: {
                     keyExpr: "id",
-                    columns: this.alumnosColumns(),
+                    focusedRowEnabled: false,
                     dataSource: [],
+                    toolbar: {
+                        items: this.listToolbarItems()
+                    },
+                    columns: this.columns(),
                     showBorders: true,
+                    wordWrapEnabled: true,
                     groupPanel: {
                         visible: false
                     },
-                    toolbar: {
-                        items: [this.itemAlumnosCurso(), this.itemPlanilla(), "searchPanel"]
-                    },
-                    onContentReady: e => this.alumnosOnContentReady(e),
-                    onFocusedRowChanged: e => this.alumnosOnFocusedRowChanged(e),
-                    onDisposing: e => this.alumnosOnDisposing(e)
-                },
-                tps: {
-                    componentClass: Grid,
-                    keyExpr: "id",
-                    dataSource: [],
-                    columns: this.tpsColumns(),
-                    showBorders: true,
-                    groupPanel: {
-                        visible: true
-                    },
-                    editing: {
-                        mode: "cell",
-                        showEditorAlways: true,
-                        allowUpdating: true,
-                        startEditAction: "click",
-                        selectTextOnEditStart: true
-                    },
-                    onContentReady: e => this.tpsOnContentReady(e),
-                    onRowValidating: e => this.tpsOnRowValidating(e),
-                },
-                tpsContextMenu: {
-                    componentClass: ContextMenu,
-                    target: this.findElementByClass("tps"),
+                    onCellPrepared: e => this.listOnCellPrepared(e),
+                    onRowDblClick: e => this.listOnRowDblClick(e),
                 }
             }
         }
     }
 
     defineTemplate() {
-        return new NotasTemplate()
-    }
-
-    alumnosResizer() {
-        return this.components().alumnosResizer;
-    }
-
-    alumnos() {
-        return this.components().alumnos;
-    }
-
-    alumno(dataField) {
-        return this.alumnos().focusedRowValue(dataField)
-    }
-
-    tps() {
-        return this.components().tps;
-    }
-
-    tp(dataField) {
-        return this.tps().focusedRowValue(dataField)
-    }
-
-    tpsContextMenu() {
-        return this.components().tpsContextMenu;
+        return new NotasTemplate();
     }
 
     filterItems() {
@@ -93,211 +42,153 @@ class Notas extends CursosBaseView {
                 colCount: 6,
                 items: [
                     this.itemAñoLectivo(),
-                    this.itemCurso({ colSpan: 4 }),
-                    this.itemMateriaCurso({
-                        extraButton: {
-                            name: "materiacurso",
-                            options: {
-                                icon: "copy",
-                                hint: "Consulta Materias dictadas en el Curso",
-                                onClick: e => this.materiasCurso()
-                            }
-                        }
-
-                    })
+                    this.itemCurso(),
+                    this.itemMateriaCurso()
                 ]
             })
         ]
     }
 
-    materiasCurso() {
-        new MateriasCurso({
-                mode: "popup",
-                curso: this.curso(),
-                añoLectivoReadOnly: true,
-                cursoReadOnly: true,
-                materiaCursoReadOnly: true,
-                materiacurso: this.materiaCurso()
-            }).render()
-            .then(closeData =>
-                this.afterMateriasCurso(closeData))
-    }
-
-    afterMateriasCurso(closeData) {
-        if (closeData.dataHasChanged == true) {
-            this.loadMateriasCursos(closeData.id)
-        } else if (closeData.id != undefined) {
-            this.refreshFilterValue("materiacurso", closeData.id)
-        }
-    }
-
-    alumnosColumns() {
+    columns() {
         return [
             Column.Id(),
-            Column.Text({ dataField: "apellido" }),
-            Column.Text({ dataField: "nombre" }),
+            Column.Text({ dataField: "apellido", width: 200 }),
+            Column.Text({ dataField: "nombre", width: 200 })
         ]
     }
 
-    itemAlumnosCurso() {
+    itemAñoLectivo() {
+        return Item.Lookup({
+            dataField: "añolectivo",
+            dataSource: AñosLectivos.DataSource(),
+            width: 100,
+            label: "Año Lectivo",
+            onValueChanged: e =>
+                this.itemAñoLectivoOnValueChanged(e)
+        })
+    }
+
+    itemCurso(p) {
+        return Item.Lookup({
+            dataField: "curso",
+            deferRendering: false,
+            width: 450,
+            colSpan: 4,
+            displayExpr: item =>
+                Cursos.Descripcion(item),
+            onValueChanged: e =>
+                this.itemCursoOnValueChanged(e)
+        })
+    }
+
+    itemMateriaCurso(p) {
+        return Item.Lookup({
+            dataField: "materiacurso",
+            deferRendering: false,
+            width: 250,
+            label: "Materia",
+            displayExpr: item =>
+                item != null ? item.materianombre : "",
+            onValueChanged: e =>
+                this.itemMateriaCursoOnValueChanged(e)
+        })
+    }
+
+    loadCursos() {
+        if (this.añoLectivo() != undefined) {
+            new Rest({ path: "cursos" })
+                .promise({
+                    verb: "list",
+                    data: { añolectivo: this.añoLectivo() }
+                }).then(rows =>
+                    this.filter().setArrayDataSource("curso", rows))
+        } else {
+            this.filter().clearEditorDataSource("curso");
+        }
+    }
+
+    loadMateriasCursos() {
+        if (this.curso() != undefined) {
+            new Rest({ path: "materias_cursos" })
+                .promise({
+                    verb: "list",
+                    data: { curso: this.curso() }
+                }).then(rows => {
+                    this.filter().setArrayDataSource("materiacurso", rows);
+                })
+        } else {
+            this.filter().clearEditorDataSource("materiacurso");
+        }
+    }
+
+    refresh() {
+        return this.data().refresh(this.materiaCurso())
+            .then(() =>
+                this.list().resetColumns(this.data().planillaColumns()))
+            .then(() =>
+                this.list().setArrayDataSource(this.data().planillaRows()))
+            .then(() =>
+                this.list().focus())
+    }
+
+    data() {
+        if (this._data == undefined) {
+            this._data = new NotasData(this.materiaCurso())
+        }
+        return this._data;
+    }
+
+    filter() {
+        return this.components().filter;
+    }
+
+    list() {
+        return this.components().list;
+    }
+
+    listToolbarItems() {
+        return [this.itemAlumnos(), this.itemTps(), this.itemExcel(), "searchPanel"]
+    }
+
+    itemAlumnos() {
         return {
             widget: "dxButton",
             location: "before",
             options: {
                 icon: "group",
                 text: "Alumnos",
-                hint: "Consulta Alumnos",
-                onClick: e => this.alumnosCurso()
+                hint: "Consulta Alumnos del Curso",
+                onClick: e => this.alumnos()
             }
         }
     }
 
-    itemPlanilla() {
+    itemTps() {
         return {
             widget: "dxButton",
             location: "before",
             options: {
-                icon: "print",
-                text: "Planilla",
-                hint: "Planilla de Calificaciones por Período",
-                onClick: e => this.planillaCalificaciones()
+                icon: "background",
+                text: "Trabajos Prácticos",
+                hint: "Consulta Trabajos Prácticos de la Materia",
+                onClick: e => this.tps()
             }
         }
     }
 
-    tpsColumns() {
-        return [
-            Column.Id(),
-            Column.Text({ dataField: "nombre", caption: "Trabajo Práctico", editing: false, width: 350 }),
-            Column.Text({ dataField: "nota", caption: "Nota", width: 100, dataType: "number", format: "##" }),
-            Column.Calculated({ caption: "Inicia - Entrega", formula: row => Dates.Format(row.desde) + "  - " + Dates.Format(row.hasta), width: 250 }),
-            Column.Text({ dataField: "periodonombre", caption: "Período", editing: false }),
-        ]
-    }
-
-    itemTpsCurso() {
+    itemExcel() {
         return {
             widget: "dxButton",
             location: "after",
             options: {
-                icon: "background",
-                text: "Trabajos Prácticos",
-                hint: "Consulta Trabajos Prácticos",
-                onClick: e => this.tpsCurso()
+                icon: "exportxlsx",
+                hint: "Exporta a Excel",
+                onClick: e => this.exportExcelDialog(e)
             }
         }
     }
 
-    loadAlumnos() {
-        if (Utils.IsDefined(this.curso())) {
-            return new Rest({ path: "alumnos" })
-                .promise({
-                    verb: "list",
-                    data: { curso: this.curso() }
-                })
-                .then(rows => {
-                    this.alumnos().setArrayDataSource(rows);
-                })
-        } else {
-            this.alumnos().clearDataSource();
-        }
-    }
-
-    loadTps() {
-        if (this.materiaCurso() != undefined) {
-            return new Rest({ path: "tps" })
-                .promise({
-                    verb: "list",
-                    data: {
-                        materiacurso: this.materiaCurso(),
-                    }
-                })
-                .then(rows =>
-                    this.tpsRows = rows)
-                .then(() =>
-                    this.tpsIsLoaded = true)
-                .then(() =>
-                    this.loadNotas())
-                .then(() =>
-                    this.refreshAlumnoNotas())
-        } else {
-            return this.tps().setDataSource(null);
-        }
-    }
-
-    loadNotas() {
-        if (this.materiaCurso() != undefined) {
-            return new Rest({ path: "notas" })
-                .promise({
-                    verb: "list",
-                    data: { materiacurso: this.materiaCurso() }
-                })
-                .then(rows =>
-                    this.notasRows = rows)
-        } else {
-            return Promise.resolve(this.notasRows = [])
-        }
-    }
-
-    refreshTps() {
-        this.refreshTpsToolbar();
-        if (this.tpsRows != undefined) {
-            this.refreshAlumnoNotas();
-        }
-    }
-
-    refreshTpsToolbar() {
-        this.tps()
-            .setToolbarItems([
-                this.itemApellidoNombre(),
-                this.itemTpsCurso()
-            ])
-    }
-
-    refreshAlumnoNotas() {
-        for (const tpsRow of this.tpsRows) {
-            tpsRow.nota = this.getNota(tpsRow.id, this.alumno("id"))
-        }
-        return this.tps().setArrayDataSource(this.tpsRows)
-    }
-
-    getNotasRow(tp, alumno) {
-        if (this.notasRows != undefined) {
-            for (const notasRow of this.notasRows) {
-                if (notasRow.tp == tp && notasRow.alumno == alumno) {
-                    return notasRow;
-                }
-            }
-        }
-    }
-
-    getNota(tp, alumno) {
-        const notasRow = this.getNotasRow(tp, alumno);
-        if (notasRow != undefined) {
-            return notasRow.nota;
-        }
-    }
-
-    setNota(notasRow) {
-        const row = this.getNotasRow(notasRow.tp, notasRow.alumno);
-        if (row != undefined) {
-            row.nota = notasRow.nota;
-        } else {
-            this.notasRows.push(notasRow)
-        }
-    }
-
-    itemApellidoNombre() {
-        if (this.alumnos().hasRows()) {
-            const apellidoNombre = this.alumno("apellido") + ", " + this.alumno("nombre");
-            return {
-                location: "before",
-                text: (apellidoNombre ? apellidoNombre + " / Notas" : "Notas")
-            }
-        }
-    }
-
-    alumnosCurso() {
+    alumnos() {
         new AlumnosCurso({
                 mode: "popup",
                 curso: this.curso(),
@@ -305,24 +196,20 @@ class Notas extends CursosBaseView {
                 cursoReadOnly: true
             })
             .render().then(closeData =>
-                this.afterAlumnosCurso(closeData))
+                this.afterAlumnos(closeData))
     }
 
-    afterAlumnosCurso(closeData) {
+    afterAlumnos(closeData) {
         if (closeData.dataHasChanged == true) {
-            this.loadAlumnos()
+            this.refresh()
                 .then(() =>
-                    this.alumnos().focusRowById(closeData.id))
+                    this.list().focusRowById(closeData.id))
         } else if (closeData.id != undefined) {
-            this.alumnos().focusRowById(closeData.id)
+            this.list().focusRowById(closeData.id)
         }
     }
 
-    planillaCalificaciones() {
-
-    }
-
-    tpsCurso() {
+    tps() {
         new TpsCurso({
                 mode: "popup",
                 showTodosButton: false,
@@ -333,44 +220,37 @@ class Notas extends CursosBaseView {
                 materiacurso: this.materiaCurso()
             }).render()
             .then(closeData =>
-                this.afterTpsCurso(closeData))
+                this.afterTps(closeData))
     }
 
-    afterTpsCurso(closeData) {
+    afterTps(closeData) {
         if (closeData.dataHasChanged == true) {
-            this.loadTps()
-                .then(() =>
-                    this.tps().focusRowById(closeData.id))
-        } else if (closeData.id != undefined) {
-            this.tps().focusRowById(closeData.id)
+            this.refresh()
         }
     }
 
-    saveNota(p) {
-        const notasRow = {
-            tp: p.tp,
-            alumno: p.alumno,
-            nota: p.nota
-        }
-        new Rest({ path: "notas" })
-            .promise({
-                verb: "update",
-                data: notasRow
-            })
-            .then(() =>
-                this.setNota(notasRow))
-            .catch(err =>
-                this.handleError(err, p))
+    getFilterValue(dataField) {
+        return this.filter().getValue(dataField);
     }
 
-    handleError(err, p) {
-        if (err.code == Exceptions.NOTA_OUT_OF_RANGE) {
-            App.ShowMessage({ message: "La nota debe estar entre 1 y 10" })
-                .then(() =>
-                    this.tps().updateRow(this.tp("id"), { nota: p.notaAnterior || null }))
-                .then(() =>
-                    this.tps().focus())
-        }
+    getFilterText(dataField) {
+        return this.filter().getEditorText(dataField);
+    }
+
+    refreshFilterValue(dataField, value) {
+        this.filter().refreshEditorValue(dataField, value);
+    }
+
+    añoLectivo() {
+        return this.getFilterValue("añolectivo");
+    }
+
+    curso() {
+        return this.getFilterValue("curso")
+    }
+
+    materiaCurso() {
+        return this.getFilterValue("materiacurso")
     }
 
     afterRender() {
@@ -379,21 +259,47 @@ class Notas extends CursosBaseView {
                 this.refreshFilterValue("añolectivo", Dates.ThisYear()));
     }
 
-    getState() {
-        return Utils.Merge(super.getState(), {
-            alumnosResizer: { width: this.alumnosResizer().getWidth() },
-            alumnos: this.alumnos().getState(),
-            tps: this.tps().getState()
-        })
+    alumnoNotas() {
+        new AlumnoNotas({
+                listView: this
+            }).render()
+            .then(closeData => {
+                if (closeData.dataHasChanged) {
+                    this.refresh()
+                }
+            })
     }
 
-    setState() {
-        super.setState();
-        if (this.state.alumnosResizer != undefined) {
-            this.alumnosResizer().setWidth(this.state.alumnosResizer.width)
-        }
-        this.alumnos().setState(this.state.alumnos);
-        this.tps().setState(this.state.tps)
+    cursoDescripcion() {
+        return this.getFilterText("curso") + " / " + this.getFilterValue("añolectivo")
+    }
+
+    materiaDescripcion() {
+        return this.getFilterText("materiacurso")
+    }
+
+    alumnoDescripcion() {
+        return this.row("apellido") + ", " + this.row("nombre")
+    }
+
+    alumnoStatus() {
+        return this.data().alumnoStatusPresente(this.alumno("id"))
+    }
+
+    row(dataField) {
+        return this.list().focusedRowValue(dataField)
+    }
+
+    alumno() {
+        return this.row("id")
+    }
+
+    anterior() {
+        return this.list().focusPriorRow();
+    }
+
+    siguiente() {
+        return this.list().focusNextRow()
     }
 
     itemAñoLectivoOnValueChanged(e) {
@@ -402,43 +308,25 @@ class Notas extends CursosBaseView {
 
     itemCursoOnValueChanged(e) {
         this.loadMateriasCursos();
-        this.loadAlumnos();
     }
 
     itemMateriaCursoOnValueChanged(e) {
-        this.loadTps()
+        this.refresh()
     }
 
-    alumnosOnContentReady(e) {
-        this.alumnos().focusFirstRow();
-        this.refreshTpsToolbar();
-    }
-
-    alumnosOnFocusedRowChanged(e) {
-        this.refreshTps();
-    }
-
-    alumnosOnDisposing(e) {
-        this.saveState()
-    }
-
-    tpsOnContentReady(e) {
-        if (this.tpsIsLoaded == true) {
-            try {
-                this.tps().focusFirstRow()
-            } finally {
-                this.tpsIsLoaded = false;
+    listOnCellPrepared(e) {
+        if (e.rowType == "data") {
+            if (e.column.futuro == true) {
+                e.cellElement.css({
+                    "color": "black",
+                    "background-color": "lightcyan"
+                })
             }
         }
     }
 
-    tpsOnRowValidating(e) {
-        this.saveNota({
-            tp: e.oldData.id,
-            alumno: this.alumno("id"),
-            nota: e.newData.nota,
-            notaAnterior: e.oldData.nota
-        });
+    listOnRowDblClick(e) {
+        this.alumnoNotas();
     }
 
 }
@@ -451,7 +339,7 @@ class NotasTemplate extends Template {
             orientation: "vertical",
             items: [
                 this.label(),
-                this.body()
+                this.body(),
             ]
         }
     }
@@ -471,7 +359,7 @@ class NotasTemplate extends Template {
             backgroundColor: App.BOX_BACKGROUND_COLOR,
             items: [
                 this.filter(),
-                this.detail()
+                this.list()
             ]
         }
     }
@@ -484,58 +372,12 @@ class NotasTemplate extends Template {
         }
     }
 
-    detail() {
+    list() {
         return {
-            fillContainer: true,
-            orientation: "horizontal",
-            items: [
-                this.alumnosResizer(),
-                this.tps(),
-                this.tpsContextMenu()
-            ]
-        }
-    }
-
-    alumnosResizer() {
-        return {
-            name: "alumnosResizer",
-            orientation: "vertical",
-            width: 450,
-            marginRight: App.BOX_MARGIN,
-            items: [
-                this.alumnos()
-            ]
-        }
-    }
-
-    alumnos() {
-        return {
-            name: "alumnos",
+            name: "list",
             fillContainer: true,
             orientation: "vertical",
             height: 1
-        }
-    }
-
-    tps() {
-        return {
-            fillContainer: true,
-            width: "70%",
-            orientation: "vertical",
-            items: [{
-                    name: "tps",
-                    fillContainer: true,
-                    orientation: "vertical",
-                    height: 1
-                }
-
-            ]
-        }
-    }
-
-    tpsContextMenu() {
-        return {
-            name: "tpsContextMenu"
         }
     }
 

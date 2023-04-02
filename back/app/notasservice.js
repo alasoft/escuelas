@@ -48,8 +48,11 @@ class NotasUpdateService extends ServiceBase {
         this.validate()
             .then(() =>
                 this.defineSql())
-            .then(sql =>
-                this.dbExecute(sql))
+            .then(sql => {
+                if (sql != undefined) {
+                    return this.dbExecute(sql)
+                }
+            })
             .then(() =>
                 this.sendOkey(this.values()))
             .catch(err =>

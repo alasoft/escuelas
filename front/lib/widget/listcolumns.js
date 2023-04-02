@@ -13,6 +13,7 @@ class Column {
             allowHeaderFiltering: p.filtering != false,
             allowSorting: p.sorting != false,
             allowEditing: p.editing != false,
+            allowGrouping: true,
             visible: p.visible != false,
             cellTemplate: p.template,
             headerFilter: {

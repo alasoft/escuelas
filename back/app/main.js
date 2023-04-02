@@ -14,6 +14,7 @@ const { PeriodosRest } = require("./periodosrest");
 const { TpsRest } = require("./tpsrest");
 const { TpsAllRest } = require("./tpsallrest");
 const { NotasRest } = require("./notasrest");
+const { NotasDataRest } = require("./notasdatarest");
 
 new App({
     port: 9090,
@@ -59,6 +60,8 @@ function restItems(app) {
         new AlumnosRest({ app: app }),
         new TpsRest({ app: app }),
         new TpsAllRest({ app: app, path: "tps_all" }),
-        new NotasRest({ app: app })
+        new NotasRest({ app: app }),
+        new NotasDataRest({ app: app })
+
     ]
 }

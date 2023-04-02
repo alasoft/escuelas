@@ -259,4 +259,36 @@ class List extends Widget {
         return this.instance().getRowIndexByKey(id);
     }
 
+    focusNextRow() {
+        if (this.hasNextRow()) {
+            this.focusRowByIndex(this.focusedRowIndex() + 1);
+            return true;
+        }
+        return false;
+    }
+
+    focusPriorRow() {
+        if (this.hasPriorRow()) {
+            this.focusRowByIndex(this.focusedRowIndex() - 1);
+            return true;
+        }
+        return false;
+    }
+
+    hasNextRow() {
+        return this.focusedRowIndex() < this.rowCount() - 1;
+    }
+
+    hasPriorRow() {
+        return (0 < this.focusedRowIndex());
+    }
+
+    focusRowByIndex(rowIndex) {
+        this.setProperty("focusedRowIndex", rowIndex);
+    }
+
+    hasNextRow() {
+        return this.focusedRowIndex() < this.rowCount() - 1;
+    }
+
 }

@@ -8,6 +8,12 @@ class Utils {
         return !this.IsDefined(x);
     }
 
+    static IfDefined(x1, x2) {
+        if (this.IsDefined(x1)) {
+            return x2;
+        }
+    }
+
     static IfNotDefined(x1, x2) {
         if (this.IsDefined(x1)) {
             return x1;

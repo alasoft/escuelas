@@ -20,6 +20,12 @@ body {
     background-color: lightcyan;
 }
 
+.read-only {
+    font-weight: 500;
+    font-weight: bold;
+    background-color: white
+}
+
 .font-small {
     font-size: x-small;
 }

@@ -105,10 +105,10 @@ class Form extends Widget {
         this.setEditorProperty(dataField, "dataSource", dataSource)
     }
 
-    setArrayDataSource(dataField, rows, id) {
+    setArrayDataSource(dataField, rows) {
         this.setEditorDataSource(dataField, DsArray({ rows: rows }));
         if (rows != undefined && 0 < rows.length) {
-            this.setEditorValue(dataField, id || rows[0].id)
+            this.setEditorValue(dataField, rows[0].id)
         }
     }
 
