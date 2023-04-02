@@ -130,4 +130,8 @@ class LoginView extends EntryView {
         this.close({ okey: false, aboveMaxAllowed: true });
     }
 
+    loadState() {
+
+    }
+
 }
