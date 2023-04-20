@@ -6,6 +6,7 @@ class AlumnoNotas extends View {
             popup: {
                 title: this.title(),
                 fullScreen: false,
+                width: 1100
             },
             components: {
                 form: {
@@ -76,10 +77,11 @@ class AlumnoNotas extends View {
     columns() {
         return [
             Column.Id(),
-            Column.Text({ dataField: "nombre", caption: "Trabajo Práctico", editing: false, width: 350 }),
-            Column.Text({ dataField: "nota", caption: "Nota", width: 130, dataType: "number", format: "##" }),
-            Column.Text({ dataField: "periodoNombre", caption: "Período", editing: false, width: 350 }),
-            Column.Calculated({ caption: "Inicia", formula: row => Dates.Format(row.desde) }),
+            Column.Calculated({ caption: "Tipo", formula: row => EvaluacionesTipos.GetNombre(row.tipo), width: 150 }),
+            Column.Text({ dataField: "nombre", caption: "Nombre", editing: false, width: 270 }),
+            Column.Text({ dataField: "nota", caption: "Nota", dataType: "number", format: "##", width: 100 }),
+            Column.Text({ dataField: "periodoNombre", caption: "Período", editing: false, width: 250 }),
+            Column.Calculated({ caption: "Inicia", formula: row => Dates.Format(row.desde), width: 150 }),
             Column.Calculated({ caption: "Entrega", formula: row => Dates.Format(row.hasta) }),
         ]
     }
@@ -162,7 +164,7 @@ class AlumnoNotas extends View {
 
     saveNota(p) {
         const notasRow = {
-            tp: p.tp,
+            evaluacion: p.evaluacion,
             alumno: p.alumno,
             nota: p.nota
         }
@@ -184,6 +186,8 @@ class AlumnoNotas extends View {
                     this.list().updateRow(this.row("id"), { nota: p.notaAnterior || null }))
                 .then(() =>
                     this.list().focus())
+        } else {
+            super.handleError(err)
         }
     }
 
@@ -201,7 +205,7 @@ class AlumnoNotas extends View {
 
     onRowValidating(e) {
         this.saveNota({
-            tp: e.oldData.id,
+            evaluacion: e.oldData.id,
             alumno: this.alumno(),
             nota: e.newData.nota,
             notaAnterior: e.oldData.nota

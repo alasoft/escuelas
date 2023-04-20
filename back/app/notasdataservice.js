@@ -33,9 +33,9 @@ class NotasDataListService extends ServiceBase {
             .then(rows =>
                 this.notas = rows)
             .then(() =>
-                this.dbSelect(this.sqlTps()))
+                this.dbSelect(this.sqlevaluaciones()))
             .then(rows =>
-                this.tps = rows)
+                this.evaluaciones = rows)
             .then(() =>
                 this.sendOkey(this.dataToSend()))
             .catch(err =>
@@ -54,7 +54,7 @@ class NotasDataListService extends ServiceBase {
                 periodos: this.periodos,
                 alumnos: this.alumnos,
                 notas: this.notas,
-                tps: this.tps
+                evaluaciones: this.evaluaciones
             }
         }
     }
@@ -120,15 +120,15 @@ class NotasDataListService extends ServiceBase {
     sqlNotas() {
         return this.sqlSelect({
             columns: [
-                "nts.id",
-                "nts.alumno",
-                "nts.tp",
-                "nts.nota",
+                "nt.id",
+                "nt.alumno",
+                "nt.evaluacion",
+                "nt.nota",
                 "eva.periodo"
             ],
-            from: "notas nts",
+            from: "notas nt",
             joins: [
-                { tableName: "evaluaciones", alias: "eva", columnName: "nts.evaluacion" },
+                { tableName: "evaluaciones", alias: "eva", columnName: "nt.evaluacion" },
             ],
             where: this.sqlAnd().addSql("eva.materiacurso=@materiacurso", {
                 materiacurso: this.materiaCurso.id
@@ -136,10 +136,11 @@ class NotasDataListService extends ServiceBase {
         })
     }
 
-    sqlTps() {
+    sqlevaluaciones() {
         return this.sqlSelect({
             columns: [
                 "eva.id",
+                "eva.tipo",
                 "eva.nombre",
                 "eva.desde",
                 "eva.hasta",

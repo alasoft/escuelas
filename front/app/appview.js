@@ -93,7 +93,6 @@ class AppView extends AppViewBase {
             onClick: e => new TpsCurso().render()
         })
 
-
         itemEvaluaciones.addChild({
             text: "Notas",
             onClick: e => new Notas().render()

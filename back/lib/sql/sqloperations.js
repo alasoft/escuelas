@@ -38,7 +38,6 @@ class SqlCreate {
             .text();
     }
 
-
     text() {
         const textBuilder = new TextBuilder()
             .add("create table")

@@ -32,7 +32,7 @@ class Exceptions {
     static FECHA_HASTA_DEBE_ESTAR_EN_AÑO_LECTIVO = "fechaHastaDebeEstarEnAñoLectivo"
     static PERIODO_INTERSECTA_OTRO_PERIODO = "periodoIntersectaOtroPeriodo"
     static PERIODO_CONTIENE_OTRO_PERIODO = "periodoContieneOtroPeriodo"
-    static FECHA_INICIO_DEBE_SER_MENOR_FECHA_ENTREGA = "fechaInicioDebeSerMenorFechaEntrega"
+    static FECHA_ENTREGA_DEBER_SER_MAYOR_IGUAL_INICIO = "fechaEntregaDebeSerMayorIgualInicio"
     static DEBE_ESTAR_DENTRO_PERIODO = "debeEstarDentroPeriodo"
 
     static InvalidToken(p) {

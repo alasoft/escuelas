@@ -1,7 +1,7 @@
 class TpsCurso extends CursosMateriasDetalle {
 
     path() {
-        return "tps"
+        return "evaluaciones"
     }
 
     extraConfiguration() {
@@ -48,6 +48,7 @@ class TpsCurso extends CursosMateriasDetalle {
         return [
             Column.Id(),
             Column.Text({ dataField: "periodonombre", caption: "Período", filtering: true }),
+            Column.Calculated({ caption: "Tipo", formula: row => EvaluacionesTipos.GetNombre(row.tipo) }),
             Column.Text({ dataField: "nombre" }),
             Column.Date({ dataField: "desde", width: 200, caption: "Fecha de Inicio", format: App.DATE_FORMAT_LONG }),
             Column.Date({ dataField: "hasta", caption: "Fecha de Entrega", width: 200, format: App.DATE_FORMAT_LONG })
@@ -60,7 +61,7 @@ class TpsCurso extends CursosMateriasDetalle {
 
     deleteMessage() {
         return Messages.Build([{
-            message: "Borra el Trabajo Práctico ?",
+            message: "Borra la Evaluación ?",
             detail: this.focusedRowValue("nombre")
         }, {
             message: "de la Materia",
@@ -89,7 +90,7 @@ class TpsCurso extends CursosMateriasDetalle {
     }
 
     excelFileName() {
-        return "Trabajos Prácticos " + this.cursoDescripcion() + " / " + this.getFilterText("materiacurso");
+        return "Evaluaciones " + this.cursoDescripcion() + " / " + this.getFilterText("materiacurso");
     }
 
     exportExcelDialogWidth() {
@@ -120,12 +121,12 @@ class TpsCurso extends CursosMateriasDetalle {
 class TpsCursoForm extends FormView {
 
     transformData(data) {
-        return Utils.Merge(Utils.NormalizeData(data, "id,periodo,nombre,desde,hasta"), { materiacurso: this.materiaCurso() })
+        return Utils.Merge(Utils.NormalizeData(data, "id,periodo,tipo,nombre,desde,hasta"), { materiacurso: this.materiaCurso() })
     }
 
     popupConfiguration() {
         return {
-            title: () => "Trabajo Práctico de " + this.materiaNombre(),
+            title: () => "Evaluación de " + this.materiaNombre(),
             width: 750,
             height: 500
         }
@@ -150,10 +151,17 @@ class TpsCursoForm extends FormView {
                         width: 200,
                         label: "Materia"
                     }),
+                    Item.Lookup({
+                        dataField: "tipo",
+                        dataSource: EvaluacionesTipos.DataSource(),
+                        required: true,
+                        width: 150,
+                        onValueChanged: e => this.evaluacionesTiposOnValueChanged(e)
+                    }),
                     Item.Text({
                         dataField: "nombre",
                         required: true,
-                        placeholder: "Ingrese el Nombre del Trabajo Práctico"
+                        placeholder: "Ingrese el Nombre de la Evaluación"
                     }),
                     Item.Lookup({
                         dataField: "periodo",
@@ -170,7 +178,8 @@ class TpsCursoForm extends FormView {
                                 dataField: "desde",
                                 required: true,
                                 label: "Fecha de Inicio",
-                                format: App.DATE_FORMAT_LONG
+                                format: App.DATE_FORMAT_LONG,
+                                onValueChanged: e => this.desdeOnValueChanged(e)
                             }),
                             Item.DateLong({
                                 dataField: "hasta",
@@ -194,7 +203,7 @@ class TpsCursoForm extends FormView {
     }
 
     firstEditor() {
-        return "nombre";
+        return "tipo";
     }
 
     beforeRender() {
@@ -250,6 +259,14 @@ class TpsCursoForm extends FormView {
         return desde;
     }
 
+    evaluacionesTiposOnValueChanged(e) {
+        const evaluacionTipo = EvaluacionesTipos.Get(e.value);
+        this.setEditorProperty("hasta", "readOnly", evaluacionTipo != undefined && evaluacionTipo.fechaHasta == false)
+        if (evaluacionTipo != undefined && evaluacionTipo.fechaHasta == false) {
+            this.setEditorValue("hasta", this.getEditorValue("desde"))
+        }
+    }
+
     periodoOnValueChanged(e) {
         if (this.getEditorValue("desde") != null) {
             this.blankEditorValue("desde");
@@ -259,9 +276,16 @@ class TpsCursoForm extends FormView {
         }
     }
 
+    desdeOnValueChanged(e) {
+        const evaluacionTipo = EvaluacionesTipos.Get(this.getEditorValue("tipo"));
+        if (evaluacionTipo != undefined && evaluacionTipo.fechaHasta == false) {
+            this.setEditorValue("hasta", this.getEditorValue("desde"))
+        }
+    }
+
     duplicatedMessage() {
         return Messages.Build([{
-            message: "Ya existe un Trabajo Práctico con el nombre:",
+            message: "Ya existe una Evaluación con el nombre:",
             detail: this.getEditorValue("nombre")
         }, {
             message: "para la Materia",
@@ -279,8 +303,8 @@ class TpsCursoForm extends FormView {
     handleError(err) {
         if (err.code == Exceptions.DEBE_ESTAR_DENTRO_PERIODO) {
             this.handleDebeEstarDentroPeriodo(err)
-        } else if (err.code == Exceptions.FECHA_INICIO_DEBE_SER_MENOR_FECHA_ENTREGA) {
-            this.handleInicioDebeSerMenorEntrega(err)
+        } else if (err.code == Exceptions.FECHA_ENTREGA_DEBER_SER_MAYOR_IGUAL_INICIO) {
+            this.handleEntragaDebeSerMayorIgualInicio(err)
         } else {
             super.handleError(err);
         }
@@ -298,12 +322,12 @@ class TpsCursoForm extends FormView {
         }])
     }
 
-    handleInicioDebeSerMenorEntrega(err) {
+    handleEntragaDebeSerMayorIgualInicio(err) {
         App.ShowMessage([{
             message: "La fecha de inicio",
             detail: this.getDate("desde"),
         }, {
-            message: "debe ser menor a la de Entrega",
+            message: "debe ser menor o igual a la de Entrega",
             detail: this.getDate("hasta")
         }])
     }

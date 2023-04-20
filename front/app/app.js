@@ -17,6 +17,9 @@ class App extends AppBase {
             .then(() =>
                 Turnos.Load()
             )
+            .then(() =>
+                EvaluacionesTipos.Load()
+            )
     }
 
     static Name() {

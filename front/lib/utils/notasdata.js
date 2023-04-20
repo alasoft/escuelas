@@ -25,7 +25,7 @@ class NotasData {
         this.periodosRows = rows.periodos;
         this.alumnosRows = rows.alumnos;
         this.notasRows = rows.notas;
-        this.tpsRows = rows.tps;
+        this.evaluacionesRows = rows.evaluaciones;
         this._planillaRows = undefined;
     }
 
@@ -36,14 +36,14 @@ class NotasData {
                 periodos: [],
                 alumnos: [],
                 notas: [],
-                tps: [],
+                evaluaciones: [],
             }
         }
     }
 
     setPeriodosData() {
         for (const row of this.periodosRows) {
-            row.tpsCantidad = this.tpsCantidadPorPeriodo(row.id);
+            row.evaCantidad = this.evaCantidadPorPeriodo(row.id);
             row.desde = new Date(row.desde);
             row.hasta = new Date(row.hasta);
             row.pasado = row.hasta < Dates.Today()
@@ -52,9 +52,9 @@ class NotasData {
         }
     }
 
-    tpsCantidadPorPeriodo(periodo) {
+    evaCantidadPorPeriodo(periodo) {
         let cantidad = 0
-        for (const row of this.tpsRows) {
+        for (const row of this.evaluacionesRows) {
             if (row.periodo == periodo) {
                 ++cantidad;
             }
@@ -184,14 +184,14 @@ class NotasData {
     }
 
     alumnoStatus(periodo, cantidad) {
-        const tpsCantidad = this.getPeriodo(periodo).tpsCantidad;
+        const evaCantidad = this.getPeriodo(periodo).evaCantidad;
         if (cantidad == 0) {
             return "No hay notas cargadas"
         }
-        if (cantidad < tpsCantidad) {
-            const diferencia = (tpsCantidad - cantidad);
+        if (cantidad < evaCantidad) {
+            const diferencia = (evaCantidad - cantidad);
             if (1 < diferencia) {
-                return "Faltan cargar " + (tpsCantidad - cantidad) + " notas";
+                return "Faltan cargar " + (evaCantidad - cantidad) + " notas";
             } else {
                 return "Falta cargar " + diferencia + " nota";
             }
@@ -245,9 +245,10 @@ class NotasData {
 
     alumnoRows(alumno) {
         const rows = []
-        for (const row of this.tpsRows) {
+        for (const row of this.evaluacionesRows) {
             rows.push({
                 id: row.id,
+                tipo: row.tipo,
                 nombre: row.nombre,
                 desde: row.desde,
                 hasta: row.hasta,
@@ -260,16 +261,16 @@ class NotasData {
         return rows;
     }
 
-    getNota(alumno, tp) {
-        const row = this.getNotasRow(alumno, tp);
+    getNota(alumno, evaluacion) {
+        const row = this.getNotasRow(alumno, evaluacion);
         if (row != undefined) {
             return row.nota
         }
     }
 
-    getNotasRow(alumno, tp) {
+    getNotasRow(alumno, evaluacion) {
         for (const row of this.notasRows) {
-            if (row.alumno == alumno && row.tp == tp) {
+            if (row.alumno == alumno && row.evaluacion == evaluacion) {
                 return row
             }
         }

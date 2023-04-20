@@ -3,11 +3,10 @@ const { MemoryTable } = require("../lib/data/memorytable");
 class EvaluacionesTipos extends MemoryTable {
 
     addItems() {
-        this.add("E", "Escrita")
-            .add("O", "Oral")
-            .add("T", "Trabajo Práctico")
+        this.addItem({ id: "T", nombre: "Trabajo Práctico", fechaHasta: true })
+            .addItem({ id: "O", nombre: "Evaluación Oral", fechaHasta: true })
+            .addItem({ id: "E", nombre: "Examen escrito", fechaHasta: false })
     }
-
 
 }
 

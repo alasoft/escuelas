@@ -112,6 +112,10 @@ class EntryView extends DialogView {
         this.form().setEditorValue(dataField, value);
     }
 
+    setEditorProperty(dataField, propertyName, value) {
+        this.form().setEditorProperty(dataField, propertyName, value);
+    }
+
     blankEditorValue(dataField) {
         this.form().blankEditorValue(dataField);
     }

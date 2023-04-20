@@ -30,7 +30,7 @@ class Errors {
 
     static Handle(err) {
         if (err instanceof TypeError) {
-            App.ShowMessage([{ message: "Ha ocurrido un error inesperado:", detail: err.message }, { message: "Detalle:", detail: err.stack }])
+            return App.ShowMessage([{ message: "Ha ocurrido un error inesperado:", detail: err.message }, { message: "Detalle:", detail: err.stack }])
         } else
         if (err.code == Exceptions.INVALID_TOKEN) {
             this.HandleInvalidToken()

@@ -128,9 +128,9 @@ class TpsCommonService {
     }
 
     static ValidateDesdeLowerHasta(service) {
-        if (service.date("hasta") <= service.date("desde")) {
+        if (service.date("hasta") < service.date("desde")) {
             throw Exceptions.Validation({
-                code: Exceptions.FECHA_INICIO_DEBE_SER_MENOR_FECHA_ENTREGA,
+                code: Exceptions.FECHA_ENTREGA_DEBER_SER_MAYOR_IGUAL_INICIO,
             })
         }
     }

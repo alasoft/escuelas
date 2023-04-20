@@ -1,0 +1,1 @@
+class EvaluacionesTipos extends RestMemoryTable {}

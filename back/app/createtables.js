@@ -52,7 +52,6 @@ class CreateTables extends CreateTablesBase {
                     nombre: SqlType.String(),
                     desde: SqlType.Date(),
                     hasta: SqlType.Date(),
-                    estado: SqlType.String({ size: 1 })
                 },
                 unique: ["nombre"]
             }),

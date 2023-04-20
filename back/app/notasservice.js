@@ -24,15 +24,15 @@ class NotasListService extends TableListService {
             columns: [
                 "nt.id",
                 "nt.alumno",
-                "nt.tp",
+                "nt.evaluacion",
                 "nt.nota",
                 "per.id as periodoid",
             ],
             from: "notas nt",
             joins: [
-                { tableName: "tps", alias: "tps", columnName: "nt.tp" },
-                { tableName: "periodos", alias: "per", columnName: "tps.periodo" },
-                { tableName: "materias_cursos", alias: "mc", columnName: "tps.materiacurso" },
+                { tableName: "evaluaciones", alias: "eva", columnName: "nt.tp" },
+                { tableName: "periodos", alias: "per", columnName: "eva.periodo" },
+                { tableName: "materias_cursos", alias: "mc", columnName: "eva.materiacurso" },
                 { tableName: "cursos", alias: "cur", columnName: "mc.curso" }
             ],
             where: this.sqlAnd()
@@ -66,7 +66,7 @@ class NotasUpdateService extends ServiceBase {
     }
 
     requiredValues() {
-        return "alumno,tp";
+        return "alumno,evaluacion";
     }
 
     validateNota() {
@@ -104,15 +104,15 @@ class NotasUpdateService extends ServiceBase {
             from: "notas",
             where: this.sqlAnd()
                 .add("alumno=@alumno")
-                .add("tp=@tp"),
-            parameters: this.jsonValues("alumno,tp")
+                .add("evaluacion=@evaluacion"),
+            parameters: this.jsonValues("alumno,evaluacion")
         })
     }
 
     sqlInsertNota() {
         return this.sqlInsert({
             tableName: "notas",
-            values: this.jsonValues("alumno,tp,nota")
+            values: this.jsonValues("alumno,evaluacion,nota")
         })
     }
 

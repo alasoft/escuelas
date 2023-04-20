@@ -1,7 +1,7 @@
 class Tps extends AñoLectivoFilterView {
 
     path() {
-        return "tps_all";
+        return "evaluaciones_all";
     }
 
     extraConfiguration() {
