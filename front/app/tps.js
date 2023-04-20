@@ -8,7 +8,7 @@ class Tps extends AñoLectivoFilterView {
         return {
             mode: "popup",
             popup: {
-                title: "Trabajos Prácticos de todas las Materias",
+                title: "Evaluaciones de todas las Materias",
                 height: 650,
                 width: 1300
             },

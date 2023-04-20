@@ -197,4 +197,10 @@ class Template extends ObjectBase {
         }
     }
 
+    _fontSize(fontSize) {
+        return {
+            "font-size": fontSize
+        }
+    }
+
 }

@@ -82,31 +82,45 @@ class NotasData {
         }
         for (const row of this.periodosRows) {
             columnas.push({
-                dataField: "periodo_" + row.id,
                 caption: row.nombre,
-                calculateCellValue: r => row.presente ? r["periodo_" + row.id].promedio : "",
+                alignment: "center",
                 futuro: row.futuro,
-                width: 150
-            });
-            columnas.push({
-                dataField: "periodo_status_" + row.id,
-                caption: "Status",
-                calculateCellValue: r => row.presente ? r["periodo_" + row.id].status : "",
-                visible: row.presente,
-                width: 150
+                columns: row.presente ? this.promedioColumns(row) : undefined
             })
         }
         columnas.push({
             dataField: "anual",
             calculateCellValue: r => this.getLastPeriodo().pasado ? r["anual"].promedio : "",
             futuro: this.getLastPeriodo().futuro,
-            width: 150
-        })
-        columnas.push({
-            dataField: "relleno",
-            caption: " "
         })
         return columnas;
+    }
+
+    promedioColumns(row) {
+        return [{
+                dataField: "promedio_" + row.id,
+                caption: "Promedio",
+                calculateCellValue: r => row.presente ? r["periodo_" + row.id].promedio : "",
+                futuro: row.futuro,
+                width: 100
+            },
+            {
+                dataField: "valoracion_" + row.id,
+                caption: "Valoración",
+                calculateCellValue: r => row.presente ? r["periodo_" + row.id].valoracion : "",
+                futuro: row.futuro,
+                width: 100
+            },
+            {
+                dataField: "status_" + row.id,
+                caption: "Status",
+                futuro: row.futuro,
+                calculateCellValue: r => row.presente ? r["periodo_" + row.id].status : "",
+                visible: true,
+                width: 150
+            }
+        ]
+
     }
 
     cellAnualDisplay(value) {
@@ -159,10 +173,20 @@ class NotasData {
         }
     }
 
+    valoracion(promedio) {
+        if (promedio != undefined) {
+            for (const row of this.valoracionesRows) {
+                if (row.desde <= promedio && promedio <= row.hasta) {
+                    return row.sigla
+                }
+            }
+        }
+    }
+
     alumnoStatus(periodo, cantidad) {
         const tpsCantidad = this.getPeriodo(periodo).tpsCantidad;
         if (cantidad == 0) {
-            return "No hay notas"
+            return "No hay notas cargadas"
         }
         if (cantidad < tpsCantidad) {
             const diferencia = (tpsCantidad - cantidad);
@@ -217,16 +241,6 @@ class NotasData {
         const promedioAnual = 0 < cantidad ? Math.round(suma / cantidad) : undefined;
         const valoracionAnual = this.valoracion(promedioAnual);
         return { anual: { promedio: promedioAnual, valoracion: valoracionAnual } };
-    }
-
-    valoracion(promedio) {
-        if (promedio != undefined) {
-            for (const row of this.valoracionesRows) {
-                if (row.desde <= promedio && promedio <= row.hasta) {
-                    return row.sigla
-                }
-            }
-        }
     }
 
     alumnoRows(alumno) {

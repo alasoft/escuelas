@@ -8,7 +8,7 @@ class TpsCurso extends CursosMateriasDetalle {
         return {
             mode: "view",
             popup: {
-                title: "Trabajos Prácticos por Curso y Materia",
+                title: "Evaluaciones por Curso y Materia",
                 height: 600,
                 width: 1050
             },
@@ -28,7 +28,7 @@ class TpsCurso extends CursosMateriasDetalle {
     }
 
     labelText() {
-        return "Trabajos Prácticos por Curso y Materia"
+        return "Evaluaciones por Curso y Materia"
     }
 
     setDataSource(materiacurso) {
@@ -101,6 +101,7 @@ class TpsCurso extends CursosMateriasDetalle {
             return {
                 widget: "dxButton",
                 location: "before",
+                visible: false,
                 options: {
                     text: "Todos los Trabajos Prácticos",
                     icon: "folder",

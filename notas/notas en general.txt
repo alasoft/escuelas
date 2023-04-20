@@ -1,0 +1,28 @@
+Curso
+ 
+CantidadAlumnos(Curso) = Ka
+CantidadNotas(PeriodoActivo, Tps.hasta <=Hoy) = Kn
+CantidadTps(PeriodoActivo, Tps.hasta<=Hoy) = Ktp
+
+Ktp = 0		=> no hay Trabajos Practicos
+Kn = 0		=> No hay notas cargadas
+Ka * Ktp < Kn 	=> Hay notas pendientes de cargar
+Ka * Ktp = Kn 	=> Notas al dia
+
+Tp
+	fecha Inicio
+	fecha Entrega
+
+
+Año
+2023
+
+Periodo Activo
+Primer Cuatrimestre
+
+Status
+Falta cargar notas
+
+curso,					materia,	Primer Cuatrimestre	Segundo Cuatrimestre	
+San Clemente, polimodal, 4 A, tarde	Matematica	Cerrado			Notas al Dia
+San Clemente, polimodal, 1 A, mañana 	Fisica		Cerrado			Falta cargar notas

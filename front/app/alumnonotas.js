@@ -5,7 +5,7 @@ class AlumnoNotas extends View {
             mode: "popup",
             popup: {
                 title: this.title(),
-                height: 650
+                fullScreen: false,
             },
             components: {
                 form: {
@@ -18,6 +18,7 @@ class AlumnoNotas extends View {
                     columns: this.columns(),
                     showBorders: true,
                     focusedRowEnabled: false,
+                    hoverStateEnabled: true,
                     editing: {
                         mode: "cell",
                         allowUpdating: true,
@@ -78,7 +79,8 @@ class AlumnoNotas extends View {
             Column.Text({ dataField: "nombre", caption: "Trabajo Práctico", editing: false, width: 350 }),
             Column.Text({ dataField: "nota", caption: "Nota", width: 130, dataType: "number", format: "##" }),
             Column.Text({ dataField: "periodoNombre", caption: "Período", editing: false, width: 350 }),
-            Column.Calculated({ caption: "Inicia - Entrega", formula: row => Dates.Format(row.desde) + "  - " + Dates.Format(row.hasta) }),
+            Column.Calculated({ caption: "Inicia", formula: row => Dates.Format(row.desde) }),
+            Column.Calculated({ caption: "Entrega", formula: row => Dates.Format(row.hasta) }),
         ]
     }
 
@@ -89,7 +91,7 @@ class AlumnoNotas extends View {
     itemAnterior() {
         return {
             widget: "dxButton",
-            location: "before",
+            location: "after",
             options: {
                 icon: "arrowleft",
                 text: "Anterior",
@@ -101,7 +103,7 @@ class AlumnoNotas extends View {
     itemSiguiente() {
         return {
             widget: "dxButton",
-            location: "before",
+            location: "after",
             options: {
                 icon: "arrowright",
                 text: "Siguiente",
@@ -211,7 +213,7 @@ class AlumnoNotas extends View {
             if (e.data.futuro == true) {
                 e.cellElement.css({
                     "color": "black",
-                    "background-color": "lightcyan"
+                    "background-color": "rgb(246,240,239)"
                 })
             }
         }
@@ -253,7 +255,8 @@ class AlumnoNotasTemplate extends Template {
 
     toolbar() {
         return {
-            name: "toolbar"
+            name: "toolbar",
+            marginTop: 10,
         }
     }
 

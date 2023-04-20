@@ -124,13 +124,13 @@ class NotasDataListService extends ServiceBase {
                 "nts.alumno",
                 "nts.tp",
                 "nts.nota",
-                "tps.periodo"
+                "eva.periodo"
             ],
             from: "notas nts",
             joins: [
-                { tableName: "tps", alias: "tps", columnName: "nts.tp" },
+                { tableName: "evaluaciones", alias: "eva", columnName: "nts.evaluacion" },
             ],
-            where: this.sqlAnd().addSql("tps.materiacurso=@materiacurso", {
+            where: this.sqlAnd().addSql("eva.materiacurso=@materiacurso", {
                 materiacurso: this.materiaCurso.id
             })
         })
@@ -139,21 +139,21 @@ class NotasDataListService extends ServiceBase {
     sqlTps() {
         return this.sqlSelect({
             columns: [
-                "tps.id",
-                "tps.nombre",
-                "tps.desde",
-                "tps.hasta",
-                "tps.periodo",
+                "eva.id",
+                "eva.nombre",
+                "eva.desde",
+                "eva.hasta",
+                "eva.periodo",
                 "per.nombre as periodonombre"
             ],
-            from: "tps tps",
+            from: "evaluaciones eva",
             joins: [
-                { tableName: "periodos", alias: "per", columnName: "tps.periodo" }
+                { tableName: "periodos", alias: "per", columnName: "eva.periodo" }
             ],
-            where: this.sqlAnd().addSql("tps.materiacurso=@materiacurso", {
+            where: this.sqlAnd().addSql("eva.materiacurso=@materiacurso", {
                 materiacurso: this.materiaCurso.id
             }),
-            order: "per.desde,tps.desde"
+            order: "per.desde,eva.desde"
         })
     }
 

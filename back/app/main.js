@@ -15,6 +15,7 @@ const { TpsRest } = require("./tpsrest");
 const { TpsAllRest } = require("./tpsallrest");
 const { NotasRest } = require("./notasrest");
 const { NotasDataRest } = require("./notasdatarest");
+const { EvaluacionesTipos } = require("./evaluacionestipos");
 
 new App({
     port: 9090,
@@ -40,6 +41,7 @@ function restItems(app) {
     return [
         new MemoryTableRest({ app: app, tableClass: Años }),
         new MemoryTableRest({ app: app, tableClass: Turnos }),
+        new MemoryTableRest({ app: app, tableClass: EvaluacionesTipos }),
         new SimpleTableRest({
             app: app,
             tableName: "escuelas",
@@ -59,7 +61,7 @@ function restItems(app) {
         new MateriasHorasAllRest({ app: app, path: "materias_horas_all" }),
         new AlumnosRest({ app: app }),
         new TpsRest({ app: app }),
-        new TpsAllRest({ app: app, path: "tps_all" }),
+        new TpsAllRest({ app: app, path: "evaluaciones_all" }),
         new NotasRest({ app: app }),
         new NotasDataRest({ app: app })
 

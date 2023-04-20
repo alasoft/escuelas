@@ -10,7 +10,7 @@ const { TableRest } = require("../lib/rest/tablerest");
 class TpsRest extends TableRest {
 
     getTableName() {
-        return "tps";
+        return "evaluaciones";
     }
 
     build() {

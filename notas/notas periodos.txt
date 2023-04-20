@@ -1,0 +1,29 @@
+Año cerrado
+
+Año 
+	2023
+
+Periodo Activo
+	Primer Cuatrimestre
+
+Status
+	Hay 
+
+curso, materia 
+	faltan cargar notas
+
+	curso, materia
+		alumno,
+		alumno,
+
+año
+curso
+materiaCurso
+	alumnosCantidad(curso)
+	tpsCantidad(periodoActivo)
+	notasCantidad(periodoActivo)
+
+	alumnosCantidad * tpsCantidad <= notasCantidad
+
+
+	

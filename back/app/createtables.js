@@ -52,15 +52,17 @@ class CreateTables extends CreateTablesBase {
                     nombre: SqlType.String(),
                     desde: SqlType.Date(),
                     hasta: SqlType.Date(),
+                    estado: SqlType.String({ size: 1 })
                 },
                 unique: ["nombre"]
             }),
             Sql.Create({
-                tableName: "tps",
+                tableName: "evaluaciones",
                 columns: {
                     materiacurso: SqlType.Fk({ references: "materias_cursos" }),
                     periodo: SqlType.Fk({ references: "periodos" }),
                     nombre: SqlType.String(),
+                    tipo: SqlType.Char({ size: 1 }),
                     desde: SqlType.Date(),
                     hasta: SqlType.Date(),
                 },
@@ -70,10 +72,10 @@ class CreateTables extends CreateTablesBase {
                 tableName: "notas",
                 columns: {
                     alumno: SqlType.Fk({ references: "alumnos" }),
-                    tp: SqlType.Fk({ references: "tps" }),
+                    evaluacion: SqlType.Fk({ references: "evaluaciones" }),
                     nota: SqlType.Integer()
                 },
-                unique: ["alumno,tp"]
+                unique: ["alumno,evaluacion"]
             }),
             Sql.Create({
                 tableName: "valoraciones",

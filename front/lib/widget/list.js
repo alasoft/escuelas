@@ -4,6 +4,7 @@ class List extends Widget {
         return Utils.Merge(super.defaultConfiguration(), {
             focusedRowEnabled: true,
             focusedRowIndex: 0,
+            hoverStateEnabled: true,
             allowColumnResizing: true,
             allowColumnReordering: true,
             columnsAutoWidth: true,

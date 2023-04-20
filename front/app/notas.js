@@ -2,7 +2,7 @@ class Notas extends View {
 
     extraConfiguration() {
         return {
-            fullScreen: true,
+            fullScreen: false,
             components: {
                 label: {
                     text: "Notas por Curso y Materia"
@@ -22,12 +22,14 @@ class Notas extends View {
                     columns: this.columns(),
                     showBorders: true,
                     wordWrapEnabled: true,
+                    hoverStateEnabled: true,
                     groupPanel: {
                         visible: false
                     },
                     onCellPrepared: e => this.listOnCellPrepared(e),
                     onKeyDown: e => this.listOnKeyDown(e),
                     onRowDblClick: e => this.listOnRowDblClick(e),
+                    onFocusedRowChanging: e => this.listOnFocusedRowChanging(e)
                 }
             }
         }
@@ -180,7 +182,7 @@ class Notas extends View {
     itemExcel() {
         return {
             widget: "dxButton",
-            location: "after",
+            location: "before",
             options: {
                 icon: "exportxlsx",
                 hint: "Exporta a Excel",
@@ -316,13 +318,10 @@ class Notas extends View {
     }
 
     listOnCellPrepared(e) {
-        if (e.rowType == "data") {
-            if (e.column.futuro == true) {
-                e.cellElement.css({
-                    "color": "black",
-                    "background-color": "lightcyan"
-                })
-            }
+        if (e.column.futuro == true) {
+            e.cellElement.css({
+                "background-color": "rgb(246,240,239)"
+            })
         }
     }
 
@@ -333,6 +332,13 @@ class Notas extends View {
     listOnKeyDown(e) {
         if (e.event.key == "Enter" && this.list().hasRows()) {
             this.alumnoNotas()
+        }
+    }
+
+    listOnFocusedRowChanging(e) {
+        return;
+        if (e) {
+            e.rowElement[0].style.backgroundColor = "green"
         }
     }
 

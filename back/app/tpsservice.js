@@ -19,13 +19,13 @@ class TpsListService extends TableListService {
     sqlExtraParameters() {
         return {
             where: this.sqlAnd()
-                .addIf(this.isDefined("materiacurso"), () => this.sqlText("tp.materiacurso=@materiacurso", { materiacurso: this.value("materiacurso") }))
+                .addIf(this.isDefined("materiacurso"), () => this.sqlText("eva.materiacurso=@materiacurso", { materiacurso: this.value("materiacurso") }))
                 .addIf(this.isDefined("descripcion"), () =>
-                    this.sqlText("tp.nombre ilike @nombre", { nombre: this.sqlLike(this.value("descripcion")) })),
+                    this.sqlText("eva.nombre ilike @nombre", { nombre: this.sqlLike(this.value("descripcion")) })),
             order: [
                 "per.desde",
-                "tp.desde",
-                "tp.nombre"
+                "eva.desde",
+                "eva.nombre"
             ]
         }
     }
@@ -42,7 +42,7 @@ class TpsGetService extends TableGetService {
 
     sqlExtraParameters() {
         return {
-            where: "tp.id=@id",
+            where: "eva.id=@id",
             parameters: { id: this.id() }
         }
     }
@@ -89,29 +89,30 @@ class TpsCommonService {
     static SqlBaseParameters(service) {
         return {
             columns: [
-                "tp.id",
-                "tp.materiacurso",
-                "tp.periodo",
-                "tp.nombre",
-                "tp.desde",
-                "tp.hasta",
+                "eva.id",
+                "eva.materiacurso",
+                "eva.periodo",
+                "eva.nombre",
+                "eva.tipo",
+                "eva.desde",
+                "eva.hasta",
                 "cur.id as curso",
                 "per.nombre as periodonombre",
                 "per.desde as periododesde",
                 "per.hasta as periodohasta"
             ],
-            from: "tps tp",
+            from: "evaluaciones eva",
             joins: [
-                { tableName: "materias_cursos", alias: "mc", columnName: "tp.materiacurso" },
+                { tableName: "materias_cursos", alias: "mc", columnName: "eva.materiacurso" },
                 { tableName: "cursos", alias: "cur", columnName: "mc.curso" },
-                { tableName: "periodos", alias: "per", columnName: "tp.periodo" },
+                { tableName: "periodos", alias: "per", columnName: "eva.periodo" },
             ],
         }
     }
 
     static SqlNotDuplicated(service) {
         return service.sqlSelect({
-            from: "tps",
+            from: "evaluaciones",
             where: service.sqlAnd([
                 "materiacurso=@materiacurso",
                 "periodo=@periodo",
