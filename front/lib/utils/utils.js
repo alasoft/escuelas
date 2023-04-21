@@ -227,6 +227,10 @@ class Strings {
 
 class Dates {
 
+    static PASADO = 1;
+    static PRESENTE = 2;
+    static FUTURO = 3;
+
     static New(date) {
         if (date) {
             return new Date(date);
@@ -297,6 +301,18 @@ class Dates {
             newDate.setHours(-24 * (day - 1));
         }
         return newDate;
+    }
+
+    static Temporalidad(desde, hasta) {
+        if (hasta < Dates.Today()) {
+            return Dates.PASADO;
+        }
+        if (Dates.Between(Dates.Today(), desde, hasta)) {
+            return Dates.PRESENTE;
+        }
+        if (Dates.Today() < row.desde) {
+            return Dates.FUTURO;
+        }
     }
 
 }

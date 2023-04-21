@@ -19,7 +19,6 @@ class Notas extends View {
                     toolbar: {
                         items: this.listToolbarItems()
                     },
-                    columns: this.columns(),
                     showBorders: true,
                     wordWrapEnabled: true,
                     hoverStateEnabled: true,
@@ -29,7 +28,6 @@ class Notas extends View {
                     onCellPrepared: e => this.listOnCellPrepared(e),
                     onKeyDown: e => this.listOnKeyDown(e),
                     onRowDblClick: e => this.listOnRowDblClick(e),
-                    onFocusedRowChanging: e => this.listOnFocusedRowChanging(e)
                 }
             }
         }
@@ -49,14 +47,6 @@ class Notas extends View {
                     this.itemMateriaCurso()
                 ]
             })
-        ]
-    }
-
-    columns() {
-        return [
-            Column.Id(),
-            Column.Text({ dataField: "apellido", width: 200 }),
-            Column.Text({ dataField: "nombre", width: 200 })
         ]
     }
 
@@ -125,20 +115,28 @@ class Notas extends View {
     }
 
     refresh() {
-        return this.data().refresh(this.materiaCurso())
+        return this.notasData().refresh(this.materiaCurso())
             .then(() =>
-                this.list().resetColumns(this.data().planillaColumns()))
+                this.list().resetColumns(this.columns()))
             .then(() =>
-                this.list().setArrayDataSource(this.data().planillaRows()))
+                this.list().setArrayDataSource(this.rows()))
             .then(() =>
                 this.list().focus())
     }
 
-    data() {
-        if (this._data == undefined) {
-            this._data = new NotasData()
+    columns() {
+        return new NotasColumns(this).columns();
+    }
+
+    rows() {
+        return new NotasRows(this).rows()
+    }
+
+    notasData() {
+        if (this._notasData == undefined) {
+            this._notasData = new NotasData()
         }
-        return this._data;
+        return this._notasData;
     }
 
     filter() {
@@ -170,6 +168,7 @@ class Notas extends View {
         return {
             widget: "dxButton",
             location: "before",
+            visible: false,
             options: {
                 icon: "background",
                 text: "Trabajos Prácticos",
@@ -182,7 +181,7 @@ class Notas extends View {
     itemExcel() {
         return {
             widget: "dxButton",
-            location: "before",
+            location: "after",
             options: {
                 icon: "exportxlsx",
                 hint: "Exporta a Excel",
@@ -262,8 +261,8 @@ class Notas extends View {
                 this.refreshFilterValue("añolectivo", Dates.ThisYear()));
     }
 
-    alumnoNotas() {
-        new AlumnoNotas({
+    notasAlumno() {
+        new NotasAlumno({
                 listView: this
             }).render()
             .then(closeData => {
@@ -286,7 +285,7 @@ class Notas extends View {
     }
 
     alumnoStatus() {
-        return this.data().alumnoStatusPresente(this.alumno("id"))
+        return this.notasData().alumnoStatusPresente(this.alumno("id"))
     }
 
     row(dataField) {
@@ -318,28 +317,124 @@ class Notas extends View {
     }
 
     listOnCellPrepared(e) {
-        if (e.column.futuro == true) {
+        if (e.column.temporalidad == Dates.PASADO) {
             e.cellElement.css({
-                "background-color": "rgb(246,240,239)"
+                "background-color": "rgb(248, 250, 250)"
+            })
+        } else if (e.column.temporalidad == Dates.PRESENTE) {
+            e.cellElement.css({
+                "background-color": "rgb(227, 248, 250)"
             })
         }
     }
 
     listOnRowDblClick(e) {
-        this.alumnoNotas();
+        this.notasAlumno();
     }
 
     listOnKeyDown(e) {
         if (e.event.key == "Enter" && this.list().hasRows()) {
-            this.alumnoNotas()
+            this.notasAlumno()
         }
     }
 
-    listOnFocusedRowChanging(e) {
-        return;
-        if (e) {
-            e.rowElement[0].style.backgroundColor = "green"
+}
+
+class NotasColumns {
+
+    constructor(notas) {
+        this.notas = notas;
+        this.notasData = this.notas.notasData();
+        this.periodosRows = this.notasData.periodosRows;
+    }
+
+    columns() {
+        return this.alumnoColumns().concat(this.periodosColumns(), this.emptyColumn());
+    }
+
+    alumnoColumns() {
+        return [{
+                dataField: "id",
+                visible: false
+            },
+            { dataField: "apellido", width: 120 },
+            { dataField: "nombre", width: 0 < this.periodosRows.length ? 120 : undefined }
+        ]
+    }
+
+    periodosColumns() {
+        const columns = []
+        for (const row of this.periodosRows) {
+            columns.push({
+                caption: row.nombre,
+                hint: "pepe",
+                alignment: "center",
+                temporalidad: row.temporalidad,
+                columns: row.temporalidad != Dates.FUTURO ? this.periodoColumns(row) : undefined
+            })
         }
+        return columns;
+    }
+
+    periodoColumns(row) {
+        return [{
+                dataField: "promedio_" + row.id,
+                caption: "Promedio",
+                temporalidad: row.temporalidad,
+                width: 80,
+                calculateCellValue: r => row.temporalidad != Dates.FUTURO ? r["periodo_" + row.id].promedio : ""
+            },
+            {
+                dataField: "valoracion_" + row.id,
+                caption: "Valoración",
+                temporalidad: row.temporalidad,
+                width: 90,
+                calculateCellValue: r => row.temporalidad != Dates.FUTURO ? r["periodo_" + row.id].valoracion : ""
+            },
+            {
+                dataField: "status_" + row.id,
+                caption: "Status",
+                temporalidad: row.temporalidad,
+                visible: true,
+                width: 150,
+                calculateCellValue: r => row.temporalidad != Dates.FUTURO ? r["periodo_" + row.id].status : ""
+            }
+        ]
+    }
+
+    anualColumns() {
+        return [{
+            dataField: "anual",
+            calculateCellValue: r => this.notasData.getLastPeriodo().pasado ? r["anual"].promedio : "",
+            temporalidad: this.notasData.getLastPeriodo().temporalidad,
+        }]
+    }
+
+    emptyColumn() {
+        return [{
+
+        }]
+    }
+
+}
+
+class NotasRows {
+
+    constructor(notas) {
+        this.notas = notas;
+        this.notasData = this.notas.notasData();
+        this.alumnosRows = this.notasData.alumnosRows;
+    }
+
+    rows() {
+        const rows = [];
+        for (const row of this.alumnosRows) {
+            const alumno = { id: row.id, apellido: row.apellido, nombre: row.nombre };
+            const promedios = this.notasData.alumnoPromedios(row.id)
+            const anual = this.notasData.promedioTotal(promedios)
+            rows.push(Object.assign({}, alumno, promedios, anual))
+        }
+        return rows;
     }
 
 }

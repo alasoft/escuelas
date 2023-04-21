@@ -17,6 +17,9 @@ class ListView extends View {
                 list: {
                     dataSource: this.class().DataSource(),
                     columns: this.listColumns(),
+                    toolbar: {
+                        items: ["groupPanel", this.itemExportExcel(), "searchPanel"]
+                    },
                     errorRowEnabled: false,
                     groupPanel: {
                         visible: true
@@ -201,7 +204,7 @@ class ListView extends View {
     }
 
     toolbarItems() {
-        return [this.itemInsert(), this.itemExportExcel()]
+        return [this.itemInsert()]
     }
 
     itemInsert() {
@@ -219,17 +222,17 @@ class ListView extends View {
     }
 
     itemExportExcel() {
-        if (this.allow("export")) {
-            return {
-                widget: "dxButton",
-                location: "before",
-                options: {
-                    icon: "exportxlsx",
-                    hint: "Exporta a Excel",
-                    onClick: e => this.exportExcelDialog(e)
-                }
+        //        if (this.allow("export")) {
+        return {
+            widget: "dxButton",
+            location: "after",
+            options: {
+                icon: "exportxlsx",
+                hint: "Exporta a Excel",
+                onClick: e => this.exportExcelDialog(e)
             }
         }
+        //        }
     }
 
     itemSearchPanel() {

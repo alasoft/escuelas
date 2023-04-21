@@ -13,6 +13,7 @@ class Item {
             return {
                 dataField: p.dataField,
                 isRequired: p.required == true,
+                visible: p.visible,
                 colSpan: p.colSpan,
                 label: {
                     text: p.label,

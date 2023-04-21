@@ -30,7 +30,7 @@ class NotasListService extends TableListService {
             ],
             from: "notas nt",
             joins: [
-                { tableName: "evaluaciones", alias: "eva", columnName: "nt.tp" },
+                { tableName: "evaluaciones", alias: "eva", columnName: "nt.evaluacion" },
                 { tableName: "periodos", alias: "per", columnName: "eva.periodo" },
                 { tableName: "materias_cursos", alias: "mc", columnName: "eva.materiacurso" },
                 { tableName: "cursos", alias: "cur", columnName: "mc.curso" }
@@ -120,24 +120,24 @@ class NotasUpdateService extends ServiceBase {
         return this.sqlUpdateWhere({
             tableName: "notas",
             values: this.jsonValues("nota"),
-            where: this.whereAlumnoTp()
+            where: this.whereAlumnoEvaluacion()
         })
     }
 
     sqlDeleteNota() {
         return this.sqlDeleteWhere({
             tableName: "notas",
-            where: this.whereAlumnoTp()
+            where: this.whereAlumnoEvaluacion()
         })
     }
 
-    whereAlumnoTp() {
+    whereAlumnoEvaluacion() {
         return this.sqlAnd()
             .addSql("alumno=@alumno", {
                 alumno: this.value("alumno")
             })
-            .addSql("tp=@tp", {
-                tp: this.value("tp")
+            .addSql("evaluacion=@evaluacion", {
+                evaluacion: this.value("evaluacion")
             })
     }
 

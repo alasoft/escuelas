@@ -26,7 +26,6 @@ class NotasData {
         this.alumnosRows = rows.alumnos;
         this.notasRows = rows.notas;
         this.evaluacionesRows = rows.evaluaciones;
-        this._planillaRows = undefined;
     }
 
     emptyData() {
@@ -46,9 +45,7 @@ class NotasData {
             row.evaCantidad = this.evaCantidadPorPeriodo(row.id);
             row.desde = new Date(row.desde);
             row.hasta = new Date(row.hasta);
-            row.pasado = row.hasta < Dates.Today()
-            row.presente = Dates.Between(Dates.Today(), row.desde, row.hasta)
-            row.futuro = Dates.Today() < row.desde
+            row.temporalidad = Dates.Temporalidad(row.desde, row.hasta)
         }
     }
 
@@ -62,60 +59,26 @@ class NotasData {
         return cantidad;
     }
 
-    planillaRows() {
-        if (this._planillaRows == undefined) {
-            this._planillaRows = this.definePlanillaRows();
-        }
-        return this._planillaRows;
-    }
-
-    planillaColumns() {
-        const columnas = [{
-                dataField: "id",
-                visible: false
-            },
-            { dataField: "apellido", width: 150 },
-            { dataField: "nombre", width: 0 < this.periodosRows.length ? 150 : undefined }
-        ]
-        if (this.periodosRows.length == 0) {
-            return columnas;
-        }
-        for (const row of this.periodosRows) {
-            columnas.push({
-                caption: row.nombre,
-                alignment: "center",
-                futuro: row.futuro,
-                columns: row.presente ? this.promedioColumns(row) : undefined
-            })
-        }
-        columnas.push({
-            dataField: "anual",
-            calculateCellValue: r => this.getLastPeriodo().pasado ? r["anual"].promedio : "",
-            futuro: this.getLastPeriodo().futuro,
-        })
-        return columnas;
-    }
-
     promedioColumns(row) {
         return [{
                 dataField: "promedio_" + row.id,
                 caption: "Promedio",
-                calculateCellValue: r => row.presente ? r["periodo_" + row.id].promedio : "",
-                futuro: row.futuro,
+                calculateCellValue: r => row.temporalidad != Dates.FUTURO ? r["periodo_" + row.id].promedio : "",
+                temporalidad: row.temporalidad,
                 width: 100
             },
             {
                 dataField: "valoracion_" + row.id,
                 caption: "Valoración",
-                calculateCellValue: r => row.presente ? r["periodo_" + row.id].valoracion : "",
-                futuro: row.futuro,
+                calculateCellValue: r => row.temporalidad != Dates.FUTURO ? r["periodo_" + row.id].valoracion : "",
+                temporalidad: row.temporalidad,
                 width: 100
             },
             {
                 dataField: "status_" + row.id,
                 caption: "Status",
-                futuro: row.futuro,
-                calculateCellValue: r => row.presente ? r["periodo_" + row.id].status : "",
+                temporalidad: row.temporalidad,
+                calculateCellValue: r => row.temporalidad != Dates.FUTURO ? r["periodo_" + row.id].status : "",
                 visible: true,
                 width: 150
             }
@@ -124,7 +87,7 @@ class NotasData {
     }
 
     cellAnualDisplay(value) {
-        if (this.getLastPeriodo().pasado) {
+        if (this.getLastPeriodo().temporalidad = Dates.PASADO) {
             return value;
         } else {
             return "";
@@ -133,17 +96,6 @@ class NotasData {
 
     getLastPeriodo() {
         return this.periodosRows[this.periodosRows.length - 1];
-    }
-
-    definePlanillaRows() {
-        const rows = [];
-        for (const row of this.alumnosRows) {
-            const alumno = { id: row.id, apellido: row.apellido, nombre: row.nombre };
-            const promedios = this.alumnoPromedios(row.id)
-            const anual = this.promedioAnual(promedios)
-            rows.push(Object.assign({}, alumno, promedios, anual))
-        }
-        return rows;
     }
 
     alumnoPromedios(alumno) {
@@ -205,6 +157,7 @@ class NotasData {
     }
 
     getAlumnoFromPlanilla(id) {
+        return;
         for (const row of this.planillaRows()) {
             if (row.id == id) {
                 return row;
@@ -222,13 +175,13 @@ class NotasData {
 
     getPeriodoPresente() {
         for (const row of this.periodosRows) {
-            if (row.presente == true) {
+            if (row.temporalidad = Dates.PRESENTE) {
                 return row;
             }
         }
     }
 
-    promedioAnual(promedios) {
+    promedioTotal(promedios) {
         let suma = 0;
         let cantidad = 0;
         Object.keys(promedios).forEach((key, i) => {
@@ -255,7 +208,7 @@ class NotasData {
                 periodo: row.periodo,
                 periodoNombre: row.periodonombre,
                 nota: this.getNota(alumno, row.id),
-                futuro: this.getPeriodo(row.periodo).futuro
+                temporalidad: this.getPeriodo(row.periodo).temporalidad
             })
         }
         return rows;

@@ -1,4 +1,4 @@
-class AlumnoNotas extends View {
+class NotasAlumno extends View {
 
     extraConfiguration() {
         return {
@@ -38,7 +38,7 @@ class AlumnoNotas extends View {
     }
 
     defineTemplate() {
-        return new AlumnoNotasTemplate()
+        return new NotasAlumnoTemplate()
     }
 
     form() {
@@ -50,7 +50,7 @@ class AlumnoNotas extends View {
     }
 
     title() {
-        return "Notas del Alumno:  " + this.listView().alumnoDescripcion()
+        return this.listView().alumnoDescripcion()
     }
 
     formItems() {
@@ -65,8 +65,8 @@ class AlumnoNotas extends View {
             Item.Group({
                 colCount: 6,
                 items: [
-                    Item.ReadOnly({ dataField: "alumno", width: 300, colSpan: 2 }),
-                    Item.ReadOnly({ dataField: "status", width: 300, cssInput: "read-only" })
+                    Item.ReadOnly({ dataField: "alumno", width: 300, colSpan: 2, cssInput: "read-only", visible: false }),
+                    Item.ReadOnly({ dataField: "status", width: 200, cssInput: "read-only", visible: false })
                 ]
 
             })
@@ -130,15 +130,15 @@ class AlumnoNotas extends View {
         return this.parameters().listView;
     }
 
-    data() {
-        return this.listView().data()
+    notasData() {
+        return this.listView().notasData()
     }
 
     alumno() {
         return this.listView().alumno();
     }
     rows() {
-        return this.data().alumnoRows(this.alumno())
+        return this.notasData().alumnoRows(this.alumno())
     }
 
     refresh() {
@@ -153,7 +153,7 @@ class AlumnoNotas extends View {
             curso: this.listView().cursoDescripcion(),
             materia: this.listView().materiaDescripcion(),
             alumno: this.listView().alumnoDescripcion(),
-            status: this.listView().alumnoStatus()
+            //            status: this.listView().alumnoStatus()
         })
     }
 
@@ -226,7 +226,7 @@ class AlumnoNotas extends View {
 
 }
 
-class AlumnoNotasTemplate extends Template {
+class NotasAlumnoTemplate extends Template {
 
     extraConfiguration() {
         return {
@@ -244,7 +244,8 @@ class AlumnoNotasTemplate extends Template {
         return {
             name: "form",
             orientation: "vertical",
-            height: 100
+            marginTop: 15,
+            height: 80
         }
     }
 

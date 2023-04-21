@@ -5,7 +5,7 @@ class Cursos extends AñoLectivoFilterView {
     }
 
     toolbarItems() {
-        return [this.itemInsert(), this.itemAlumnosCurso(), this.itemMateriasCurso(), this.itemExportExcel()]
+        return [this.itemInsert(), this.itemAlumnosCurso(), this.itemMateriasCurso()]
     }
 
     itemAlumnosCurso() {
