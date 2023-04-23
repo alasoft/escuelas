@@ -103,8 +103,8 @@ class ValoracionesCommonService {
     }
 
     static ValidateDesdeHasta(service) {
-        this.ValidateDesdeLowerHasta(service);
-        return this.ValidateNoDateCollision(service);
+        //        this.ValidateDesdeLowerHasta(service);
+        //        return this.ValidateNoDateCollision(service);
     }
 
     static ValidateDesdeLowerHasta(service) {

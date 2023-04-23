@@ -6,15 +6,18 @@ class Valoraciones extends AñoLectivoFilterView {
 
     listColumns() {
         return [
+            Column.Id(),
             Column.Text({ dataField: "nombre", width: 300 }),
-            Column.Text({ dataField: "sigla", width: 300 }),
+            Column.Text({ dataField: "sigla", width: 100 }),
             Column.Text({
                 dataField: "desde",
-                width: 300,
+                width: 100
             }),
             Column.Text({
-                dataField: "hasta"
+                dataField: "hasta",
+                width: 100
             }),
+            Column.Space()
         ]
     }
 
@@ -64,26 +67,34 @@ class ValoracionesFormView extends FormView {
 
     formItems() {
         return [
-            Item.ReadOnly({ dataField: "añolectivo", width: 100 }),
-            Item.Text({ dataField: "nombre", required: true }),
-            Item.Text({ dataField: "sigla", required: true, width: 100, case: "upper" }),
-            Item.Number({
-                dataField: "desde",
-                required: true,
-                spin: true,
-                min: 1,
-                max: 10,
-                width: 70,
-                value: undefined
+            Item.Group({
+                colCount: 1,
+                items: [Item.ReadOnly({ dataField: "añolectivo", width: 100 }),
+                    Item.Text({ dataField: "nombre", required: true }),
+                    Item.Text({ dataField: "sigla", required: true, width: 100, case: "upper" }),
+                ]
             }),
-            Item.Number({
-                dataField: "hasta",
-                required: true,
-                spin: true,
-                min: 1,
-                max: 10,
-                width: 70,
-                value: undefined
+            Item.Group({
+                colCount: 2,
+                items: [Item.Number({
+                        dataField: "desde",
+                        required: true,
+                        spin: true,
+                        min: 1,
+                        max: 10,
+                        width: 70,
+                        value: undefined
+                    }),
+                    Item.Number({
+                        dataField: "hasta",
+                        required: true,
+                        spin: true,
+                        min: 1,
+                        max: 10,
+                        width: 70,
+                        value: undefined
+                    })
+                ]
             })
         ]
     }
