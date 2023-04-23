@@ -30,7 +30,6 @@ class NotasAlumno extends View {
                     onCellPrepared: e => this.listOnCellPrepared(e),
                     onEditingStart: e => this.listOnEditingStart(e),
                     onRowUpdating: e => this.onRowUpdating(e),
-                    onDisposing: e => this.listOnDisposing(e)
                 },
                 toolbar: {
                     items: this.toolbarItems()
@@ -254,10 +253,6 @@ class NotasAlumno extends View {
         });
     }
 
-    listOnDisposing(e) {
-        this.saveState();
-    }
-
     getState() {
         return Utils.Merge(super.getState(), { list: this.list().getState() })
     }
@@ -287,6 +282,12 @@ class NotasAlumno extends View {
         } else if (e.rowType == "data" && e.column.caption == "Nota") {
             this.estiloNota(e)
         }
+    }
+
+    popupOnHiding(e) {
+        this.saveState().then(() =>
+            super.popupOnHiding(e)
+        );
     }
 
     esFuturo(e) {

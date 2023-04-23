@@ -29,6 +29,7 @@ class Notas extends View {
                     onKeyDown: e => this.listOnKeyDown(e),
                     onRowDblClick: e => this.listOnRowDblClick(e),
                     onContentReady: e => this.listOnContentReady(e),
+                    onDisposing: e => this.listOnDisposing(e)
                 },
                 contextMenu: {
                     target: this.findElementByClass("list")
@@ -142,6 +143,8 @@ class Notas extends View {
             .then(() =>
                 this.list().setArrayDataSource(this.rows()))
             .then(() =>
+                this.loadState())
+            .then(() =>
                 this.list().focus())
     }
 
@@ -191,6 +194,17 @@ class Notas extends View {
                 onClick: e => this.alumnos()
             }
         }
+    }
+
+    getState() {
+        return Utils.Merge(super.getState(), { list: this.list().getState() })
+    }
+
+    setState() {
+        super.setState();
+        this.list()
+            .setState(this.state.list || null)
+            .focusFirstRow()
     }
 
     itemExamenes() {
@@ -284,9 +298,10 @@ class Notas extends View {
     }
 
     afterRender() {
-        super.afterRender()
-            .then(() =>
-                this.refreshFilterValue("añolectivo", Dates.ThisYear()));
+        if (this.isFullScreen()) {
+            App.HideItems();
+        }
+        this.refreshFilterValue("añolectivo", Dates.ThisYear());
     }
 
     notasAlumno() {
@@ -356,6 +371,10 @@ class Notas extends View {
         }
     }
 
+    listOnDisposing(e) {
+        this.saveState();
+    }
+
     listOnContentReady(e) {
         this.refreshContextMenuItems()
     }
@@ -389,8 +408,8 @@ class NotasColumns {
                 dataField: "id",
                 visible: false
             },
-            { dataField: "apellido", width: 120 },
-            { dataField: "nombre", width: 0 < this.periodosRows.length ? 120 : undefined }
+            { dataField: "apellido", width: 120, allowReordering: false },
+            { dataField: "nombre", width: 0 < this.periodosRows.length ? 120 : undefined, allowReordering: false }
         ]
     }
 
@@ -402,7 +421,9 @@ class NotasColumns {
                 hint: "pepe",
                 alignment: "center",
                 temporalidad: row.temporalidad,
-                columns: this.periodoColumns(row)
+                columns: this.periodoColumns(row),
+                allowReordering: false,
+                allowResizing: true
             })
         }
         return columns;
@@ -471,7 +492,9 @@ class NotasColumns {
     }
 
     emptyColumn() {
-        return {}
+        return {
+            allowResizing: true
+        }
     }
 
 }
