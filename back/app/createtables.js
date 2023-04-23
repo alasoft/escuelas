@@ -56,6 +56,17 @@ class CreateTables extends CreateTablesBase {
                 unique: ["nombre"]
             }),
             Sql.Create({
+                tableName: "valoraciones",
+                columns: {
+                    añolectivo: SqlType.Integer(),
+                    nombre: SqlType.String(),
+                    sigla: SqlType.String({ size: 10 }),
+                    desde: SqlType.Integer(),
+                    hasta: SqlType.Integer(),
+                },
+                unique: ["nombre", "sigla"]
+            }),
+            Sql.Create({
                 tableName: "examenes",
                 columns: {
                     materiacurso: SqlType.Fk({ references: "materias_cursos" }),
@@ -75,16 +86,6 @@ class CreateTables extends CreateTablesBase {
                     nota: SqlType.Integer()
                 },
                 unique: ["examen,alumno"]
-            }),
-            Sql.Create({
-                tableName: "valoraciones",
-                columns: {
-                    nombre: SqlType.String(),
-                    desde: SqlType.Integer(),
-                    hasta: SqlType.Integer(),
-                    sigla: SqlType.String({ size: 10 }),
-                },
-                unique: ["nombre", "sigla"]
             })
         ]
     }

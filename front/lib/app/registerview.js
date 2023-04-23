@@ -130,4 +130,8 @@ class RegisterView extends EntryView {
         return App.ShowMessage({ message: "La registración ha sido exitosa" })
     }
 
+    loadState() {
+
+    }
+
 }

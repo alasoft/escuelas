@@ -23,6 +23,20 @@ class ExamenesCurso extends CursosMateriasDetalle {
         }
     }
 
+    itemInsert() {
+        if (this.getFilterValue("curso") != undefined) {
+            return {
+                widget: "dxButton",
+                location: "before",
+                options: {
+                    icon: "add",
+                    hint: "Agrega",
+                    onClick: e => this.insert()
+                }
+            }
+        }
+    }
+
     itemCurso() {
         return super.itemCurso({ deferRendering: this.parameters().materiacurso != undefined })
     }

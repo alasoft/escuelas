@@ -89,6 +89,11 @@ class AppView extends AppViewBase {
         })
 
         itemCalificaciones.addChild({
+            text: "Valoraciones Pedagógicas",
+            onClick: e => new Valoraciones().render()
+        })
+
+        itemCalificaciones.addChild({
             text: "Examenes",
             onClick: e => new ExamenesCurso().render()
         })

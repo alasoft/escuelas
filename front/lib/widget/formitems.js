@@ -86,6 +86,9 @@ class Item {
                 editorOptions: {
                     format: p.format || App.NUMBER_FORMAT,
                     width: p.width || App.NUMBER_WIDTH,
+                    min: p.min,
+                    max: p.max,
+                    showSpinButtons: p.spin == true,
                     inputAttr: {
                         style: "text-align: right"
                     }

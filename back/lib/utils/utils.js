@@ -207,6 +207,7 @@ class Dates {
     static Contains(d1, d2, d3, d4) {
         return d1 <= d3 && d2 >= d4
     }
+
     static Contained(d1, d2, d3, d4) {
         return d1 >= d3 && d2 <= d4
     }
@@ -229,7 +230,21 @@ class Html {
 
 }
 
+class Number {
+
+    static Contains(n1, n2, n3, n4) {
+        return n1 <= n3 && n2 >= n4
+    }
+
+    static Intersect(n1, n2, n3, n4) {
+        return (n1 >= n3 && n1 <= n4) || (n2 >= n3 && n2 <= n4);
+    }
+
+
+}
+
 module.exports.Strings = Strings;
 module.exports.Utils = Utils;
 module.exports.Dates = Dates;
+module.exports.Number = Number;
 module.exports.Html = Html;

@@ -5,7 +5,7 @@ const {
     TableUpdateService,
     TableDeleteService
 } = require("../lib/service/tableservice");
-const { Strings, Dates } = require("../lib/utils/utils");
+const { Dates } = require("../lib/utils/utils");
 const { Exceptions } = require("../lib/utils/exceptions.js");
 const { ServiceBase } = require("../lib/service/servicebase");
 

@@ -16,6 +16,7 @@ const { ExamenesAllRest } = require("./examenesallrest");
 const { ExamenesTipos } = require("./examenestipos");
 const { NotasRest } = require("./notasrest");
 const { NotasDataRest } = require("./notasdatarest");
+const { ValoracionesRest } = require("./valoracionesrest");
 
 new App({
     port: 9090,
@@ -46,6 +47,7 @@ function restItems(app) {
         new SimpleTableRest({ app: app, tableName: "modalidades", }),
         new SimpleTableRest({ app: app, tableName: "materias", }),
         new PeriodosRest({ app: app }),
+        new ValoracionesRest({ app: app }),
         new CursosRest({ app: app }),
         new MateriasCursosRest({ app: app }),
         new MateriasHorasRest({ app: app }),
@@ -55,6 +57,5 @@ function restItems(app) {
         new ExamenesAllRest({ app: app, path: "Examenes_all" }),
         new NotasRest({ app: app }),
         new NotasDataRest({ app: app })
-
     ]
 }

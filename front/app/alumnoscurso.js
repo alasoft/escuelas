@@ -20,16 +20,33 @@ class AlumnosCurso extends CursosDetalle {
                     visible: false
                 },
                 list: {
-                    toolbar: {
-                        items: [this.itemInsert(), this.itemExportExcel(), "searchPanel"]
-                    },
                     showBorders: true,
                 }
             }
         }
     }
 
-    refreshToolbar() {}
+    refreshListToolbar() {
+        this.list().setToolbarItems(this.listToolbarItems())
+    }
+
+    listToolbarItems() {
+        return [this.itemInsert(), this.itemExportExcel(), "searchPanel"]
+    }
+
+    itemInsert() {
+        if (this.getFilterValue("curso") != undefined) {
+            return {
+                widget: "dxButton",
+                location: "before",
+                options: {
+                    icon: "add",
+                    hint: "Agrega",
+                    onClick: e => this.insert()
+                }
+            }
+        }
+    }
 
     labelText() {
         return "Alumnos por Curso"
@@ -112,6 +129,12 @@ class AlumnosCurso extends CursosDetalle {
 
     generoArticulo() {
         return "el Alumno"
+    }
+
+    listOnContentReady(e) {
+        this.focusFirstRow();
+        this.refreshListToolbar();
+        this.refreshContextMenuItems()
     }
 
 }

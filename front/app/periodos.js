@@ -70,12 +70,6 @@ class PeriodosFormView extends FormView {
         ]
     }
 
-    validateDesdeHasta(e, message) {
-        let desde = this.form().getEditorValue("desde");
-        let hasta = this.form().getEditorValue("hasta");
-        return Dates.Compare(desde, hasta) <= 1
-    }
-
     firstEditor() {
         return "nombre";
     }

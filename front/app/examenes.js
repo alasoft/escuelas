@@ -37,7 +37,7 @@ class Examenes extends AñoLectivoFilterView {
     }
 
     formViewClass() {
-        return ExamenesForm;
+        return TpsForm;
     }
 
     excelFileName() {
@@ -46,7 +46,7 @@ class Examenes extends AñoLectivoFilterView {
 
 }
 
-class ExamenesForm extends CursosMateriasForm {
+class TpsForm extends CursosMateriasForm {
 
     path() {
         return "examenes";
