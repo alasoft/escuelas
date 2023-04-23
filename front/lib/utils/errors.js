@@ -39,7 +39,9 @@ class Errors {
         } else if (err.code == Exceptions.FORM_VALIDATION) {
 
         } else {
-            return App.ShowError({ message: err.message || App.UNIDENTIFIED_ERROR_MESSAGE })
+            return App.ShowError({ message: err.message || App.UNIDENTIFIED_ERROR_MESSAGE }).then(closeData => {
+                console.log(err.stack)
+            })
         }
     }
 

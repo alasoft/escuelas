@@ -14,11 +14,22 @@ class MateriasCurso extends CursosDetalle {
                     width: 250,
                     height: 70,
                 },
+                toolbar: {
+                    visible: false
+                },
                 list: {
                     showBorders: true
                 }
             }
         }
+    }
+
+    refreshListToolbar() {
+        this.list().setToolbarItems(this.listToolbarItems())
+    }
+
+    listToolbarItems() {
+        return [this.itemInsert(), this.itemHorarios(), this.itemExportExcel(), "searchPanel"]
     }
 
     labelText() {
@@ -50,10 +61,6 @@ class MateriasCurso extends CursosDetalle {
         ]
     }
 
-    toolbarItems() {
-        return [this.itemInsert(), this.itemHorarios()];
-    }
-
     itemSpace() {
         return {
             text: "   ",
@@ -75,7 +82,7 @@ class MateriasCurso extends CursosDetalle {
         }
     }
 
-    itemTps() {
+    itemExamenes() {
         if (this.list().hasRows()) {
             return {
                 widget: "dxButton",
@@ -83,18 +90,18 @@ class MateriasCurso extends CursosDetalle {
                 options: {
                     text: "Trabajos Prácticos",
                     icon: "file",
-                    onClick: e => this.tps()
+                    onClick: e => this.examenes()
                 }
             }
         }
     }
 
-    tps() {
-        new TpsCurso(this.detailData()).render();
+    examenes() {
+        new ExamenesCurso(this.detailData()).render();
     }
 
     horarios() {
-        new MateriasDias(this.detailData()).render()
+        new MateriasHorasCurso(this.detailData()).render()
             .then(closeData =>
                 closeData.dataHasChanged ? this.refresh(this.id()) : undefined)
     }
@@ -136,10 +143,9 @@ class MateriasCurso extends CursosDetalle {
     }
 
     listOnContentReady(e) {
-        super.listOnContentReady(e);
-        if (this.toolbar().isReady()) {
-            this.toolbar().setItems(this.toolbarItems());
-        }
+        this.focusFirstRow();
+        this.refreshListToolbar();
+        this.refreshContextMenuItems()
     }
 
 }
@@ -181,8 +187,6 @@ class MateriasCursoForm extends FormView {
             detail: this.getEditorText("materia")
         }, { message: "para el Curso", detail: this.listView().cursoDescripcion() }])
     }
-
-
 
     popupOnHidden(e) {
         if (this.masterView() != undefined) {

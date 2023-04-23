@@ -11,11 +11,11 @@ const { MateriasHorasRest } = require("./materiashorasrest");
 const { MateriasHorasAllRest } = require("./materiashorasallrest");
 const { AlumnosRest } = require("./alumnosrest");
 const { PeriodosRest } = require("./periodosrest");
-const { TpsRest } = require("./tpsrest");
-const { TpsAllRest } = require("./tpsallrest");
+const { ExamenesRest } = require("./examenesrest");
+const { ExamenesAllRest } = require("./examenesallrest");
+const { ExamenesTipos } = require("./examenestipos");
 const { NotasRest } = require("./notasrest");
 const { NotasDataRest } = require("./notasdatarest");
-const { EvaluacionesTipos } = require("./evaluacionestipos");
 
 new App({
     port: 9090,
@@ -41,27 +41,18 @@ function restItems(app) {
     return [
         new MemoryTableRest({ app: app, tableClass: Años }),
         new MemoryTableRest({ app: app, tableClass: Turnos }),
-        new MemoryTableRest({ app: app, tableClass: EvaluacionesTipos }),
-        new SimpleTableRest({
-            app: app,
-            tableName: "escuelas",
-        }),
-        new SimpleTableRest({
-            app: app,
-            tableName: "modalidades",
-        }),
-        new SimpleTableRest({
-            app: app,
-            tableName: "materias",
-        }),
+        new MemoryTableRest({ app: app, tableClass: ExamenesTipos }),
+        new SimpleTableRest({ app: app, tableName: "escuelas", }),
+        new SimpleTableRest({ app: app, tableName: "modalidades", }),
+        new SimpleTableRest({ app: app, tableName: "materias", }),
         new PeriodosRest({ app: app }),
         new CursosRest({ app: app }),
         new MateriasCursosRest({ app: app }),
         new MateriasHorasRest({ app: app }),
         new MateriasHorasAllRest({ app: app, path: "materias_horas_all" }),
         new AlumnosRest({ app: app }),
-        new TpsRest({ app: app }),
-        new TpsAllRest({ app: app, path: "evaluaciones_all" }),
+        new ExamenesRest({ app: app }),
+        new ExamenesAllRest({ app: app, path: "Examenes_all" }),
         new NotasRest({ app: app }),
         new NotasDataRest({ app: app })
 

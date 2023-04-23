@@ -7,7 +7,24 @@ const {
 } = require("../lib/service/tableservice");
 const { Strings, Dates } = require("../lib/utils/utils");
 const { Exceptions } = require("../lib/utils/exceptions.js");
+const { ServiceBase } = require("../lib/service/servicebase");
 
+class PeriodosServiceBase extends ServiceBase {
+
+    static sqlList() {
+        return {
+            columns: [
+                "per.id",
+                "per.añolectivo",
+                "per.nombre",
+                "per.desde",
+                "per.hasta"
+            ],
+            from: "periodos per"
+        }
+    }
+
+}
 
 class PeriodosListService extends TableListService {
 
@@ -177,6 +194,7 @@ class PeriodosCommonService {
 
 }
 
+module.exports.PeriodosServiceBase = PeriodosServiceBase;
 module.exports.PeriodosListService = PeriodosListService;
 module.exports.PeriodosGetService = PeriodosGetService
 module.exports.PeriodosInsertService = PeriodosInsertService;

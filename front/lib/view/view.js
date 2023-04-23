@@ -202,7 +202,7 @@ class View extends Component {
     }
 
     popupOnHiding(e) {
-        this.resolveRender(this._closeData || this.closeDataDefault());
+        this.resolveRender(this._closeData || this.closeDataDefault())
     }
 
     closeDataDefault() {
@@ -214,7 +214,7 @@ class View extends Component {
     }
 
     saveState() {
-        Users.SaveState({ module: this.className(), state: this.getState() })
+        return Users.SaveState({ module: this.className(), state: this.getState() })
     }
 
     getState() {}

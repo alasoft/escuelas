@@ -8,53 +8,53 @@ const {
     TableDeleteService
 } = require("../lib/service/tableservice");
 
-class TpsListService extends TableListService {
+class ExamenesListService extends TableListService {
 
     sqlParameters() {
         return Utils.Merge(
-            TpsCommonService.SqlBaseParameters(this),
+            ExamenesCommonService.SqlBaseParameters(this),
             this.sqlExtraParameters())
     }
 
     sqlExtraParameters() {
         return {
             where: this.sqlAnd()
-                .addIf(this.isDefined("materiacurso"), () => this.sqlText("eva.materiacurso=@materiacurso", { materiacurso: this.value("materiacurso") }))
+                .addIf(this.isDefined("materiacurso"), () => this.sqlText("exa.materiacurso=@materiacurso", { materiacurso: this.value("materiacurso") }))
                 .addIf(this.isDefined("descripcion"), () =>
-                    this.sqlText("eva.nombre ilike @nombre", { nombre: this.sqlLike(this.value("descripcion")) })),
+                    this.sqlText("exa.nombre ilike @nombre", { nombre: this.sqlLike(this.value("descripcion")) })),
             order: [
                 "per.desde",
-                "eva.desde",
-                "eva.nombre"
+                "exa.desde",
+                "exa.nombre"
             ]
         }
     }
 
 }
 
-class TpsGetService extends TableGetService {
+class ExamenesGetService extends TableGetService {
 
     sqlParameters() {
         return Utils.Merge(
-            TpsCommonService.SqlBaseParameters(this),
+            ExamenesCommonService.SqlBaseParameters(this),
             this.sqlExtraParameters())
     }
 
     sqlExtraParameters() {
         return {
-            where: "eva.id=@id",
+            where: "exa.id=@id",
             parameters: { id: this.id() }
         }
     }
 
 }
 
-class TpsInsertService extends TableInsertService {
+class ExamenesInsertService extends TableInsertService {
 
     validate() {
         return super.validate()
             .then(() =>
-                TpsCommonService.ValidateDesdeHasta(this))
+                ExamenesCommonService.ValidateDesdeHasta(this))
     }
 
     requiredValues() {
@@ -62,57 +62,57 @@ class TpsInsertService extends TableInsertService {
     }
 
     sqlNotDuplicated() {
-        return TpsCommonService.SqlNotDuplicated(this);
+        return ExamenesCommonService.SqlNotDuplicated(this);
     }
 
 }
 
-class TpsUpdateService extends TableUpdateService {
+class ExamenesUpdateService extends TableUpdateService {
 
     validate() {
         return super.validate()
             .then(() =>
-                TpsCommonService.ValidateDesdeHasta(this))
+                ExamenesCommonService.ValidateDesdeHasta(this))
     }
 
     sqlNotDuplicated() {
-        return TpsCommonService.SqlNotDuplicated(this);
+        return ExamenesCommonService.SqlNotDuplicated(this);
     }
 
 }
 
-class TpsDeleteService extends TableDeleteService {}
+class ExamenesDeleteService extends TableDeleteService {}
 
 
-class TpsCommonService {
+class ExamenesCommonService {
 
     static SqlBaseParameters(service) {
         return {
             columns: [
-                "eva.id",
-                "eva.materiacurso",
-                "eva.periodo",
-                "eva.nombre",
-                "eva.tipo",
-                "eva.desde",
-                "eva.hasta",
+                "exa.id",
+                "exa.materiacurso",
+                "exa.periodo",
+                "exa.nombre",
+                "exa.tipo",
+                "exa.desde",
+                "exa.hasta",
                 "cur.id as curso",
                 "per.nombre as periodonombre",
                 "per.desde as periododesde",
                 "per.hasta as periodohasta"
             ],
-            from: "evaluaciones eva",
+            from: "examenes exa",
             joins: [
-                { tableName: "materias_cursos", alias: "mc", columnName: "eva.materiacurso" },
+                { tableName: "materias_cursos", alias: "mc", columnName: "exa.materiacurso" },
                 { tableName: "cursos", alias: "cur", columnName: "mc.curso" },
-                { tableName: "periodos", alias: "per", columnName: "eva.periodo" },
+                { tableName: "periodos", alias: "per", columnName: "exa.periodo" },
             ],
         }
     }
 
     static SqlNotDuplicated(service) {
         return service.sqlSelect({
-            from: "evaluaciones",
+            from: "examenes",
             where: service.sqlAnd([
                 "materiacurso=@materiacurso",
                 "periodo=@periodo",
@@ -162,8 +162,8 @@ class TpsCommonService {
 
 }
 
-module.exports.TpsListService = TpsListService;
-module.exports.TpsGetService = TpsGetService;
-module.exports.TpsInsertService = TpsInsertService;
-module.exports.TpsUpdateService = TpsUpdateService;
-module.exports.TpsDeleteService = TpsDeleteService;
+module.exports.ExamenesListService = ExamenesListService;
+module.exports.ExamenesGetService = ExamenesGetService;
+module.exports.ExamenesInsertService = ExamenesInsertService;
+module.exports.ExamenesUpdateService = ExamenesUpdateService;
+module.exports.ExamenesDeleteService = ExamenesDeleteService;

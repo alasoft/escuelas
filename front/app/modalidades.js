@@ -1,4 +1,4 @@
-class Modalidades extends ListView {
+class Modalidades extends SimpleListView {
 
     static DefineDataSource() {
         return App.RegisterDataSource(this, {

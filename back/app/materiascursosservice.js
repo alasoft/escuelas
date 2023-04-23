@@ -6,7 +6,45 @@ const {
     TableDeleteService
 } = require("../lib/service/tableservice");
 const { Utils, Dates } = require("../lib/utils/utils");
-const { Sql } = require("../lib/sql/sql")
+const { Sql } = require("../lib/sql/sql");
+const { ServiceBase } = require("../lib/service/servicebase");
+const { CursosServiceBase } = require("./cursosservice");
+
+class MateriasCursosServiceBase extends ServiceBase {
+
+    static columns() {
+        return [
+            "mc.id",
+            "mc.curso",
+            "mc.materia",
+            "mat.nombre as materianombre"
+        ]
+    }
+
+    static joins() {
+        return [
+            { tableName: "materias", alias: "mat", columnName: "mc.materia" },
+        ]
+    }
+
+    static sqlList() {
+        return {
+            columns: this.columns(),
+            from: "materias_cursos mc",
+            joins: this.joins()
+        }
+    }
+
+    static sqlListAll() {
+        return {
+            columns: this.columns()
+                .concat(CursosServiceBase.columns()),
+            joins: this.joins()
+                .concat(CursosServiceBase.joins())
+        }
+    }
+
+}
 
 class MateriasCursosListService extends TableListService {
 
@@ -161,6 +199,7 @@ class MateriasCursosCommonService {
 
 }
 
+module.exports.MateriasCursosServiceBase = MateriasCursosServiceBase;
 module.exports.MateriasCursosListService = MateriasCursosListService;
 module.exports.MateriasCursosGetService = MateriasCursosGetService
 module.exports.MateriasCursosInsertService = MateriasCursosInsertService;

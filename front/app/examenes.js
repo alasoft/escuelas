@@ -1,14 +1,14 @@
-class Tps extends AñoLectivoFilterView {
+class Examenes extends AñoLectivoFilterView {
 
     path() {
-        return "evaluaciones_all";
+        return "examenes_all";
     }
 
     extraConfiguration() {
         return {
             mode: "popup",
             popup: {
-                title: "Evaluaciones de todas las Materias",
+                title: "Examenes de todas las Materias",
                 height: 650,
                 width: 1300
             },
@@ -37,7 +37,7 @@ class Tps extends AñoLectivoFilterView {
     }
 
     formViewClass() {
-        return TpsForm;
+        return ExamenesForm;
     }
 
     excelFileName() {
@@ -46,10 +46,10 @@ class Tps extends AñoLectivoFilterView {
 
 }
 
-class TpsForm extends CursosMateriasForm {
+class ExamenesForm extends CursosMateriasForm {
 
     path() {
-        return "tps";
+        return "examenes";
     }
 
     transformData(data) {

@@ -134,7 +134,7 @@ class ListView extends View {
             message: "No es posible borrar este registro",
             detail: this.rowDescription(),
         }, {
-            message: "Debido a que hay registros vinculados de la Tabla",
+            message: "Debido a que hay registros vinculados con la Tabla",
             detail: this.relatedTableName(err)
         }])
     }
@@ -208,15 +208,13 @@ class ListView extends View {
     }
 
     itemInsert() {
-        if (this.allow("insert") && this.list().getDataSource() != undefined) {
-            return {
-                widget: "dxButton",
-                location: "before",
-                options: {
-                    icon: "add",
-                    hint: "Agrega",
-                    onClick: e => this.insert()
-                }
+        return {
+            widget: "dxButton",
+            location: "before",
+            options: {
+                icon: "add",
+                hint: "Agrega",
+                onClick: e => this.insert()
             }
         }
     }
@@ -313,9 +311,6 @@ class ListView extends View {
 
     afterRender() {
         return super.afterRender().then(() => {
-            if (this.list().columnCount() == 1) {
-                this.list().setProperty("groupPanel.visible", false);
-            }
             if (this.isPopup()) {
                 this.label().setVisible(false);
             } else {
@@ -343,12 +338,16 @@ class ListView extends View {
     }
 
     listOnDisposing(e) {
-        this.saveState();
+        if (!this.isPopup()) {
+            this.saveState();
+        }
     }
 
     saveState() {
         if (this.dataErrorOcurred != true) {
-            super.saveState();
+            return super.saveState();
+        } else {
+            return Promise.resolve()
         }
     }
 
@@ -433,6 +432,12 @@ class ListView extends View {
         return { dataHasChanged: this.dataHasChanged, id: this.list().id() }
     }
 
+    popupOnHiding(e) {
+        this.saveState().then(() =>
+            super.popupOnHiding(e)
+        );
+    }
+
     static DataSource() {
         if (this._DataSource == undefined) {
             this._DataSource = this.DefineDataSource();
@@ -454,5 +459,40 @@ class ListView extends View {
         this.Instance().render();
     }
 
+}
+
+class ListViewTemplate extends Template {
+
+    extraConfiguration() {
+        return {
+            fillContainer: true,
+            orientation: "vertical",
+            items: [{
+                    name: "label",
+                    marginBottom: App.LABEL_BOTTOM_MARGIN
+                }, {
+                    orientation: "vertical",
+                    backgroundColor: App.BOX_BACKGROUND_COLOR,
+                    items: [{
+                        name: "filter",
+                        padding: App.BOX_PADDING,
+                        paddingTop: 5,
+                        orientation: "vertical"
+                    }]
+                },
+                {
+                    name: "toolbar",
+                    backgroundColor: App.BOX_BACKGROUND_COLOR,
+                }, {
+                    name: "list",
+                    fillContainer: true,
+                    orientation: "vertical",
+                    height: 1
+                }, {
+                    name: "contextMenu"
+                }
+            ]
+        }
+    }
 
 }

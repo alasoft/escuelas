@@ -15,18 +15,21 @@ class AlumnosCurso extends CursosDetalle {
                 filter: {
                     width: 250,
                     height: 70,
-                    labelLocation: "top",
+                },
+                toolbar: {
+                    visible: false
                 },
                 list: {
+                    toolbar: {
+                        items: [this.itemInsert(), this.itemExportExcel(), "searchPanel"]
+                    },
                     showBorders: true,
                 }
             }
         }
     }
 
-    toolbarItems() {
-        return [this.itemInsert(), this.itemImport(), this.itemExportExcel()]
-    }
+    refreshToolbar() {}
 
     labelText() {
         return "Alumnos por Curso"

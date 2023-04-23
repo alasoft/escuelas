@@ -24,15 +24,15 @@ class NotasListService extends TableListService {
             columns: [
                 "nt.id",
                 "nt.alumno",
-                "nt.evaluacion",
+                "nt.examen",
                 "nt.nota",
                 "per.id as periodoid",
             ],
             from: "notas nt",
             joins: [
-                { tableName: "evaluaciones", alias: "eva", columnName: "nt.evaluacion" },
-                { tableName: "periodos", alias: "per", columnName: "eva.periodo" },
-                { tableName: "materias_cursos", alias: "mc", columnName: "eva.materiacurso" },
+                { tableName: "examenes", alias: "exa", columnName: "nt.examen" },
+                { tableName: "periodos", alias: "per", columnName: "exa.periodo" },
+                { tableName: "materias_cursos", alias: "mc", columnName: "exa.materiacurso" },
                 { tableName: "cursos", alias: "cur", columnName: "mc.curso" }
             ],
             where: this.sqlAnd()
@@ -66,7 +66,7 @@ class NotasUpdateService extends ServiceBase {
     }
 
     requiredValues() {
-        return "alumno,evaluacion";
+        return "alumno,examen";
     }
 
     validateNota() {
@@ -104,15 +104,15 @@ class NotasUpdateService extends ServiceBase {
             from: "notas",
             where: this.sqlAnd()
                 .add("alumno=@alumno")
-                .add("evaluacion=@evaluacion"),
-            parameters: this.jsonValues("alumno,evaluacion")
+                .add("examen=@examen"),
+            parameters: this.jsonValues("alumno,examen")
         })
     }
 
     sqlInsertNota() {
         return this.sqlInsert({
             tableName: "notas",
-            values: this.jsonValues("alumno,evaluacion,nota")
+            values: this.jsonValues("alumno,examen,nota")
         })
     }
 
@@ -136,8 +136,8 @@ class NotasUpdateService extends ServiceBase {
             .addSql("alumno=@alumno", {
                 alumno: this.value("alumno")
             })
-            .addSql("evaluacion=@evaluacion", {
-                evaluacion: this.value("evaluacion")
+            .addSql("examen=@examen", {
+                examen: this.value("examen")
             })
     }
 

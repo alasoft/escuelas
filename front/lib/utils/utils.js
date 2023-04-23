@@ -310,7 +310,7 @@ class Dates {
         if (Dates.Between(Dates.Today(), desde, hasta)) {
             return Dates.PRESENTE;
         }
-        if (Dates.Today() < row.desde) {
+        if (Dates.Today() < desde) {
             return Dates.FUTURO;
         }
     }

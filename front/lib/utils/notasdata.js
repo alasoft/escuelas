@@ -20,38 +20,35 @@ class NotasData {
     }
 
     setData(data) {
-        const rows = data.rows;
-        this.valoracionesRows = rows.valoraciones;
-        this.periodosRows = rows.periodos;
-        this.alumnosRows = rows.alumnos;
-        this.notasRows = rows.notas;
-        this.evaluacionesRows = rows.evaluaciones;
+        this.valoracionesRows = data.valoracionesRows;
+        this.periodosRows = data.periodosRows;
+        this.alumnosRows = data.alumnosRows;
+        this.notasRows = data.notasRows;
+        this.examenesRows = data.examenesRows;
     }
 
     emptyData() {
         return {
-            rows: {
-                valoraciones: [],
-                periodos: [],
-                alumnos: [],
-                notas: [],
-                evaluaciones: [],
-            }
+            valoracionesRows: [],
+            periodosRows: [],
+            alumnosRows: [],
+            examenesRows: [],
+            notasRows: []
         }
     }
 
     setPeriodosData() {
         for (const row of this.periodosRows) {
-            row.evaCantidad = this.evaCantidadPorPeriodo(row.id);
+            row.examenesCantidad = this.examenesCantidadPorPeriodo(row.id);
             row.desde = new Date(row.desde);
             row.hasta = new Date(row.hasta);
             row.temporalidad = Dates.Temporalidad(row.desde, row.hasta)
         }
     }
 
-    evaCantidadPorPeriodo(periodo) {
+    examenesCantidadPorPeriodo(periodo) {
         let cantidad = 0
-        for (const row of this.evaluacionesRows) {
+        for (const row of this.examenesRows) {
             if (row.periodo == periodo) {
                 ++cantidad;
             }
@@ -59,43 +56,14 @@ class NotasData {
         return cantidad;
     }
 
-    promedioColumns(row) {
-        return [{
-                dataField: "promedio_" + row.id,
-                caption: "Promedio",
-                calculateCellValue: r => row.temporalidad != Dates.FUTURO ? r["periodo_" + row.id].promedio : "",
-                temporalidad: row.temporalidad,
-                width: 100
-            },
-            {
-                dataField: "valoracion_" + row.id,
-                caption: "Valoración",
-                calculateCellValue: r => row.temporalidad != Dates.FUTURO ? r["periodo_" + row.id].valoracion : "",
-                temporalidad: row.temporalidad,
-                width: 100
-            },
-            {
-                dataField: "status_" + row.id,
-                caption: "Status",
-                temporalidad: row.temporalidad,
-                calculateCellValue: r => row.temporalidad != Dates.FUTURO ? r["periodo_" + row.id].status : "",
-                visible: true,
-                width: 150
-            }
-        ]
-
-    }
-
-    cellAnualDisplay(value) {
-        if (this.getLastPeriodo().temporalidad = Dates.PASADO) {
-            return value;
-        } else {
-            return "";
-        }
+    hasLastPeriodo() {
+        return 0 < this.periodosRows.length
     }
 
     getLastPeriodo() {
-        return this.periodosRows[this.periodosRows.length - 1];
+        if (this.hasLastPeriodo()) {
+            return this.periodosRows[this.periodosRows.length - 1];
+        }
     }
 
     alumnoPromedios(alumno) {
@@ -112,7 +80,7 @@ class NotasData {
         let cantidad = 0;
         for (const row of this.notasRows) {
             if (row.alumno == alumno && row.periodo == periodo) {
-                suma += row.nota;
+                suma += Utils.IsDefined(row.nota) ? row.nota : 0;
                 cantidad += 1;
             }
         }
@@ -136,14 +104,18 @@ class NotasData {
     }
 
     alumnoStatus(periodo, cantidad) {
-        const evaCantidad = this.getPeriodo(periodo).evaCantidad;
+        if (this.examenesRows.length == 0) {
+            return "No hay exámenes cargados"
+        }
+        const periodoRow = this.getPeriodoRow(periodo);
+        const examenesCantidad = periodoRow.examenesCantidad;
         if (cantidad == 0) {
             return "No hay notas cargadas"
         }
-        if (cantidad < evaCantidad) {
-            const diferencia = (evaCantidad - cantidad);
+        if (cantidad < examenesCantidad) {
+            const diferencia = (examenesCantidad - cantidad);
             if (1 < diferencia) {
-                return "Faltan cargar " + (evaCantidad - cantidad) + " notas";
+                return "Faltan cargar " + (examenesCantidad - cantidad) + " notas";
             } else {
                 return "Falta cargar " + diferencia + " nota";
             }
@@ -151,29 +123,7 @@ class NotasData {
         return "Completo"
     }
 
-    alumnoStatusPresente(alumno) {
-        const periodoPresente = this.getPeriodoPresente()
-        return this.getAlumnoFromPlanilla(alumno)["periodo_" + periodoPresente.id].status;
-    }
-
-    getAlumnoFromPlanilla(id) {
-        return;
-        for (const row of this.planillaRows()) {
-            if (row.id == id) {
-                return row;
-            }
-        }
-    }
-
-    getPeriodo(id) {
-        for (const row of this.periodosRows) {
-            if (row.id == id) {
-                return row;
-            }
-        }
-    }
-
-    getPeriodoPresente() {
+    getPeriodoPresenteRow() {
         for (const row of this.periodosRows) {
             if (row.temporalidad = Dates.PRESENTE) {
                 return row;
@@ -196,37 +146,73 @@ class NotasData {
         return { anual: { promedio: promedioAnual, valoracion: valoracionAnual } };
     }
 
-    alumnoRows(alumno) {
-        const rows = []
-        for (const row of this.evaluacionesRows) {
-            rows.push({
-                id: row.id,
-                tipo: row.tipo,
-                nombre: row.nombre,
-                desde: row.desde,
-                hasta: row.hasta,
-                periodo: row.periodo,
-                periodoNombre: row.periodonombre,
-                nota: this.getNota(alumno, row.id),
-                temporalidad: this.getPeriodo(row.periodo).temporalidad
-            })
-        }
-        return rows;
-    }
-
-    getNota(alumno, evaluacion) {
-        const row = this.getNotasRow(alumno, evaluacion);
+    getNota(examen, alumno) {
+        const row = this.getNotasRow(examen, alumno);
         if (row != undefined) {
             return row.nota
         }
     }
 
-    getNotasRow(alumno, evaluacion) {
+    saveNota(examen, alumno, nota) {
+        const row = this.getNotasRow(examen, alumno);
+        if (row != undefined) {
+            if (Utils.IsDefined(nota)) {
+                row.nota = nota
+            } else {
+                this.notasRows = this.notasRows.filter(row =>
+                    !(row.examen == examen && row.alumno == alumno))
+            }
+        } else {
+            if (Utils.IsDefined(nota)) {
+                this.notasRows.push({
+                    examen: examen,
+                    alumno: alumno,
+                    nota: nota,
+                    periodo: this.getExamenRow(examen).periodo
+                })
+            }
+        }
+    }
+
+    getAlumnoRow(id) {
+        for (const row of this.alumnosRows) {
+            if (row.id == id) {
+                return row;
+            }
+        }
+    }
+
+    getPeriodoRow(id) {
+        for (const row of this.periodosRows) {
+            if (row.id == id) {
+                return row;
+            }
+        }
+    }
+
+    getPeriodoRowByName(nombre) {
+        for (const row of this.periodosRows) {
+            if (Strings.EqualsIgnoreCase(row.nombre, nombre)) {
+                return row;
+            }
+        }
+    }
+
+    getExamenRow(id) {
+        for (const row of this.examenesRows) {
+            if (row.id == id) {
+                return row;
+            }
+        }
+    }
+
+    getNotasRow(examen, alumno) {
         for (const row of this.notasRows) {
-            if (row.alumno == alumno && row.evaluacion == evaluacion) {
+            if (row.examen == examen && row.alumno == alumno) {
                 return row
             }
         }
     }
+
 
 }

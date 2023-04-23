@@ -19,23 +19,23 @@ class NotasDataListService extends ServiceBase {
             .then(() =>
                 this.dbSelect(this.sqlValoraciones()))
             .then(rows =>
-                this.valoraciones = rows)
+                this.valoracionesRows = rows)
             .then(() =>
                 this.dbSelect(this.sqlPeriodos()))
             .then(rows =>
-                this.periodos = rows)
+                this.periodosRows = rows)
             .then(() =>
                 this.dbSelect(this.sqlAlumnos()))
             .then(rows =>
-                this.alumnos = rows)
+                this.alumnosRows = rows)
             .then(() =>
                 this.dbSelect(this.sqlNotas()))
             .then(rows =>
-                this.notas = rows)
+                this.notasRows = rows)
             .then(() =>
-                this.dbSelect(this.sqlevaluaciones()))
+                this.dbSelect(this.sqlExamenes()))
             .then(rows =>
-                this.evaluaciones = rows)
+                this.examenesRows = rows)
             .then(() =>
                 this.sendOkey(this.dataToSend()))
             .catch(err =>
@@ -49,13 +49,11 @@ class NotasDataListService extends ServiceBase {
 
     dataToSend() {
         return {
-            rows: {
-                valoraciones: this.valoraciones,
-                periodos: this.periodos,
-                alumnos: this.alumnos,
-                notas: this.notas,
-                evaluaciones: this.evaluaciones
-            }
+            valoracionesRows: this.valoracionesRows,
+            periodosRows: this.periodosRows,
+            alumnosRows: this.alumnosRows,
+            notasRows: this.notasRows,
+            examenesRows: this.examenesRows
         }
     }
 
@@ -122,39 +120,39 @@ class NotasDataListService extends ServiceBase {
             columns: [
                 "nt.id",
                 "nt.alumno",
-                "nt.evaluacion",
+                "nt.examen",
                 "nt.nota",
-                "eva.periodo"
+                "exa.periodo"
             ],
             from: "notas nt",
             joins: [
-                { tableName: "evaluaciones", alias: "eva", columnName: "nt.evaluacion" },
+                { tableName: "examenes", alias: "exa", columnName: "nt.examen" },
             ],
-            where: this.sqlAnd().addSql("eva.materiacurso=@materiacurso", {
+            where: this.sqlAnd().addSql("exa.materiacurso=@materiacurso", {
                 materiacurso: this.materiaCurso.id
             })
         })
     }
 
-    sqlevaluaciones() {
+    sqlExamenes() {
         return this.sqlSelect({
             columns: [
-                "eva.id",
-                "eva.tipo",
-                "eva.nombre",
-                "eva.desde",
-                "eva.hasta",
-                "eva.periodo",
+                "exa.id",
+                "exa.tipo",
+                "exa.nombre",
+                "exa.desde",
+                "exa.hasta",
+                "exa.periodo",
                 "per.nombre as periodonombre"
             ],
-            from: "evaluaciones eva",
+            from: "examenes exa",
             joins: [
-                { tableName: "periodos", alias: "per", columnName: "eva.periodo" }
+                { tableName: "periodos", alias: "per", columnName: "exa.periodo" }
             ],
-            where: this.sqlAnd().addSql("eva.materiacurso=@materiacurso", {
+            where: this.sqlAnd().addSql("exa.materiacurso=@materiacurso", {
                 materiacurso: this.materiaCurso.id
             }),
-            order: "per.desde,eva.desde"
+            order: "per.desde,exa.desde"
         })
     }
 

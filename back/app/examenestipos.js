@@ -1,13 +1,13 @@
 const { MemoryTable } = require("../lib/data/memorytable");
 
-class EvaluacionesTipos extends MemoryTable {
+class ExamenesTipos extends MemoryTable {
 
     addItems() {
         this.addItem({ id: "T", nombre: "Trabajo Práctico", fechaHasta: true })
             .addItem({ id: "O", nombre: "Evaluación Oral", fechaHasta: true })
-            .addItem({ id: "E", nombre: "Examen escrito", fechaHasta: false })
+            .addItem({ id: "E", nombre: "Examen Escrito", fechaHasta: false })
     }
 
 }
 
-module.exports.EvaluacionesTipos = EvaluacionesTipos;
+module.exports.ExamenesTipos = ExamenesTipos;

@@ -292,4 +292,16 @@ class List extends Widget {
         return this.focusedRowIndex() < this.rowCount() - 1;
     }
 
+    isEditing() {
+        return this.instance().hasEditData();
+    }
+
+    saveEdit() {
+        return this.instance().saveEditData();
+    }
+
+    cancelEdit() {
+        return this.instance().cancelEditData();
+    }
+
 }

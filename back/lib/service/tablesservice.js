@@ -13,7 +13,7 @@ class TablesService extends ServiceBase {
         "materias_cursos",
         "materias_horas",
         "periodos",
-        "tps",
+        "examenes",
         "notas"
     ];
 }

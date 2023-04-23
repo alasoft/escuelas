@@ -16,6 +16,7 @@ class Column {
             allowGrouping: true,
             visible: p.visible != false,
             cellTemplate: p.template,
+            editCellTemplate: p.editor,
             headerFilter: {
                 width: p.filterWidth
             },
@@ -56,6 +57,10 @@ class Column {
         return this.BaseColumn(Utils.Merge({
             visible: false
         }, p))
+    }
+
+    static Space() {
+        return {}
     }
 
 }

@@ -1,4 +1,4 @@
-class Horas extends AñoLectivoFilterView {
+class MateriasHoras extends AñoLectivoFilterView {
 
     path() {
         return "materias_horas_all";
@@ -6,7 +6,9 @@ class Horas extends AñoLectivoFilterView {
 
     extraConfiguration() {
         return {
-            fullScreen: false,
+            popup: {
+                title: "Horarios"
+            }
         }
     }
 
@@ -15,7 +17,7 @@ class Horas extends AñoLectivoFilterView {
     }
 
     toolbarItems() {
-        return [this.itemInsert(), this.itemCalendario(), this.itemExportExcel()]
+        return [this.itemInsert()]
     }
 
     itemCalendario() {
@@ -74,7 +76,7 @@ class Horas extends AñoLectivoFilterView {
     }
 
     formViewClass() {
-        return HorasForm;
+        return MateriasHorasForm;
     }
 
     calendario() {
@@ -107,7 +109,7 @@ class Horas extends AñoLectivoFilterView {
 
 }
 
-class HorasForm extends CursosMateriasForm {
+class MateriasHorasForm extends CursosMateriasForm {
 
     path() {
         return "materias_horas";

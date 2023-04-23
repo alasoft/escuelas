@@ -1,0 +1,33 @@
+escuelas
+modalidades
+materias
+cursos
+materias_cursos
+	curso
+	materia
+materias_cursos_horas
+	materiaCurso
+	dia
+	desde
+	hasta
+alumnos
+	curso
+	apellido
+	nombre
+	email
+periodos
+	nombre
+	desde
+	hasta
+evaluaciones
+	periodo
+	materia_curso
+	tipo
+	nombre
+	desde
+	hasta
+notas
+	alumno
+	evaluacion
+	nota
+

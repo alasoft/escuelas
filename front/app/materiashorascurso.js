@@ -1,4 +1,4 @@
-class MateriasDias extends CursosMateriasDetalle {
+class MateriasHorasCurso extends CursosMateriasDetalle {
 
     extraConfiguration() {
         return {
@@ -30,7 +30,7 @@ class MateriasDias extends CursosMateriasDetalle {
     }
 
     formViewClass() {
-        return MateriasDiasForm;
+        return MateriasHorasCursoForm;
     }
 
     itemMateriaCursoOnValueChanged(e) {
@@ -72,13 +72,14 @@ class MateriasDias extends CursosMateriasDetalle {
                 formula: row => DiasSemana.GetNombre(row.dia)
             }),
             Column.Date({ dataField: "desde", width: 200, caption: "Hora Desde", format: App.TIME_FORMAT_SHORT }),
-            Column.Date({ dataField: "hasta", caption: "Hora Hasta", width: 200, format: App.TIME_FORMAT_SHORT })
+            Column.Date({ dataField: "hasta", caption: "Hora Hasta", format: App.TIME_FORMAT_SHORT }),
+            Column.Space()
         ]
     }
 
 }
 
-class MateriasDiasForm extends FormView {
+class MateriasHorasCursoForm extends FormView {
 
     transformInsertUpdate(data, verb) {
         return Utils.ReduceIds({

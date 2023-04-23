@@ -1,4 +1,4 @@
-class Evaluaciones extends CursosMateriasDetalle {
+class Examenes extends CursosMateriasDetalle {
 
     extraConfiguration() {
         return {
@@ -6,7 +6,7 @@ class Evaluaciones extends CursosMateriasDetalle {
             fullScreen: true,
             components: {
                 label: {
-                    text: "Calificaciones"
+                    text: "Examenes"
                 },
                 list: {
                     key: "id",
@@ -225,7 +225,7 @@ class Evaluaciones extends CursosMateriasDetalle {
     refresh(id) {
         let promise;
         if (this.materiaCurso() != undefined) {
-            promise = Rest.Promise({ path: "evaluaciones/list", data: { materiacurso: this.materiaCurso() } })
+            promise = Rest.Promise({ path: "examenes/list", data: { materiacurso: this.materiaCurso() } })
                 .then(data =>
                     this.setRowsAndColumns(data))
         } else if (Utils.IsDefined(this.curso())) {
@@ -259,7 +259,7 @@ class Evaluaciones extends CursosMateriasDetalle {
     onRowValidating(e) {
         const tpNota = this.tpNota(e.newData);
         e.promise = Rest.Promise({
-                path: "evaluaciones/update",
+                path: "examenes/update",
                 data: {
                     alumno: e.oldData.id,
                     tp: tpNota.tp,
@@ -281,7 +281,7 @@ class Evaluaciones extends CursosMateriasDetalle {
     }
 
     excelFileName() {
-        return "Evaluaciones de  " +
+        return "Examenes de  " +
             this.getFilterText("curso") + " / " +
             this.getFilterText("materiacurso") + " / " +
             this.getFilterText("añolectivo");

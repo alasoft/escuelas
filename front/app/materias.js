@@ -1,4 +1,4 @@
-class Materias extends ListView {
+class Materias extends SimpleListView {
 
     static DefineDataSource() {
         return App.RegisterDataSource(this, {

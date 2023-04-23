@@ -1,4 +1,4 @@
-class MateriasDiasAll extends AñoCursoMateriaFilterView {
+class MateriasHorasAll extends AñoCursoMateriaFilterView {
 
     path() {
         return "materias_horas_all";
@@ -9,7 +9,7 @@ class MateriasDiasAll extends AñoCursoMateriaFilterView {
     }
 
     listToolbarItems() {
-        return [this.itemInsert(), this.itemCalendario(), this.itemExportExcel(), this.itemSearchPanel()]
+        return [this.itemSearchPanel()]
     }
 
     itemCalendario() {
@@ -46,7 +46,7 @@ class MateriasDiasAll extends AñoCursoMateriaFilterView {
     }
 
     formViewClass() {
-        return MateriasDiasAllForm;
+        return MateriasHorasAllForm;
     }
 
     calendario() {
@@ -55,7 +55,7 @@ class MateriasDiasAll extends AñoCursoMateriaFilterView {
 
 }
 
-class MateriasDiasAllForm extends MateriasDiasForm {
+class MateriasHorasAllForm extends MateriasHorasForm {
 
     popupConfiguration() {
         return {

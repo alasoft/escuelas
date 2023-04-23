@@ -1,14 +1,14 @@
-class TpsCurso extends CursosMateriasDetalle {
+class ExamenesCurso extends CursosMateriasDetalle {
 
     path() {
-        return "evaluaciones"
+        return "examenes"
     }
 
     extraConfiguration() {
         return {
             mode: "view",
             popup: {
-                title: "Evaluaciones por Curso y Materia",
+                title: "Examenes por Curso y Materia",
                 height: 600,
                 width: 1050
             },
@@ -28,7 +28,7 @@ class TpsCurso extends CursosMateriasDetalle {
     }
 
     labelText() {
-        return "Evaluaciones por Curso y Materia"
+        return "Examenes por Curso y Materia"
     }
 
     setDataSource(materiacurso) {
@@ -48,7 +48,7 @@ class TpsCurso extends CursosMateriasDetalle {
         return [
             Column.Id(),
             Column.Text({ dataField: "periodonombre", caption: "Período", filtering: true }),
-            Column.Calculated({ caption: "Tipo", formula: row => EvaluacionesTipos.GetNombre(row.tipo) }),
+            Column.Calculated({ caption: "Tipo", formula: row => ExamenesTipos.GetNombre(row.tipo) }),
             Column.Text({ dataField: "nombre" }),
             Column.Date({ dataField: "desde", width: 200, caption: "Fecha de Inicio", format: App.DATE_FORMAT_LONG }),
             Column.Date({ dataField: "hasta", caption: "Fecha de Entrega", width: 200, format: App.DATE_FORMAT_LONG })
@@ -56,12 +56,12 @@ class TpsCurso extends CursosMateriasDetalle {
     }
 
     formViewClass() {
-        return TpsCursoForm;
+        return ExamenesCursoForm;
     }
 
     deleteMessage() {
         return Messages.Build([{
-            message: "Borra la Evaluación ?",
+            message: "Borra el Examen ?",
             detail: this.focusedRowValue("nombre")
         }, {
             message: "de la Materia",
@@ -72,25 +72,12 @@ class TpsCurso extends CursosMateriasDetalle {
         }])
     }
 
-    deleteErrorMessage(err) {
-        return this.composeDeleteErrorMessasge({
-            name: "esta Materia",
-            description: this.focusedRowValue("nombre"),
-            err: err,
-            vinculo: "vinculada"
-        })
-    }
-
     itemMateriaCursoOnValueChanged(e) {
         this.setDataSource(e.value);
     }
 
-    toolbarItems() {
-        return [this.itemInsert(), this.itemTodos(), this.itemExportExcel()]
-    }
-
     excelFileName() {
-        return "Evaluaciones " + this.cursoDescripcion() + " / " + this.getFilterText("materiacurso");
+        return "Examenes " + this.cursoDescripcion() + " / " + this.getFilterText("materiacurso");
     }
 
     exportExcelDialogWidth() {
@@ -113,12 +100,12 @@ class TpsCurso extends CursosMateriasDetalle {
     }
 
     todos() {
-        new Tps().render()
+        new Examenes().render()
     }
 
 }
 
-class TpsCursoForm extends FormView {
+class ExamenesCursoForm extends FormView {
 
     transformData(data) {
         return Utils.Merge(Utils.NormalizeData(data, "id,periodo,tipo,nombre,desde,hasta"), { materiacurso: this.materiaCurso() })
@@ -126,7 +113,7 @@ class TpsCursoForm extends FormView {
 
     popupConfiguration() {
         return {
-            title: () => "Evaluación de " + this.materiaNombre(),
+            title: () => "Examen de " + this.materiaNombre(),
             width: 750,
             height: 500
         }
@@ -153,15 +140,15 @@ class TpsCursoForm extends FormView {
                     }),
                     Item.Lookup({
                         dataField: "tipo",
-                        dataSource: EvaluacionesTipos.DataSource(),
+                        dataSource: ExamenesTipos.DataSource(),
                         required: true,
                         width: 150,
-                        onValueChanged: e => this.evaluacionesTiposOnValueChanged(e)
+                        onValueChanged: e => this.examenesTiposOnValueChanged(e)
                     }),
                     Item.Text({
                         dataField: "nombre",
                         required: true,
-                        placeholder: "Ingrese el Nombre de la Evaluación"
+                        placeholder: "Ingrese el Nombre de la Examen"
                     }),
                     Item.Lookup({
                         dataField: "periodo",
@@ -259,10 +246,10 @@ class TpsCursoForm extends FormView {
         return desde;
     }
 
-    evaluacionesTiposOnValueChanged(e) {
-        const evaluacionTipo = EvaluacionesTipos.Get(e.value);
-        this.setEditorProperty("hasta", "readOnly", evaluacionTipo != undefined && evaluacionTipo.fechaHasta == false)
-        if (evaluacionTipo != undefined && evaluacionTipo.fechaHasta == false) {
+    examenesTiposOnValueChanged(e) {
+        const examenTipo = ExamenesTipos.Get(e.value);
+        this.setEditorProperty("hasta", "readOnly", examenTipo != undefined && examenTipo.fechaHasta == false)
+        if (examenTipo != undefined && examenTipo.fechaHasta == false) {
             this.setEditorValue("hasta", this.getEditorValue("desde"))
         }
     }
@@ -277,15 +264,15 @@ class TpsCursoForm extends FormView {
     }
 
     desdeOnValueChanged(e) {
-        const evaluacionTipo = EvaluacionesTipos.Get(this.getEditorValue("tipo"));
-        if (evaluacionTipo != undefined && evaluacionTipo.fechaHasta == false) {
+        const examenTipo = ExamenesTipos.Get(this.getEditorValue("tipo"));
+        if (examenTipo != undefined && examenTipo.fechaHasta == false) {
             this.setEditorValue("hasta", this.getEditorValue("desde"))
         }
     }
 
     duplicatedMessage() {
         return Messages.Build([{
-            message: "Ya existe una Evaluación con el nombre:",
+            message: "Ya existe una Examen con el nombre:",
             detail: this.getEditorValue("nombre")
         }, {
             message: "para la Materia",

@@ -33,7 +33,7 @@ class AppView extends AppViewBase {
             text: "Datos Generales"
         });
 
-        const itemEvaluaciones = new TreeItem({
+        const itemCalificaciones = new TreeItem({
             id: "2",
             text: "Calificaciones"
         });
@@ -80,25 +80,25 @@ class AppView extends AppViewBase {
 
         itemDictado.addChild({
             text: "Horarios",
-            onClick: e => new Horas().render()
+            onClick: e => new MateriasHoras().render()
         })
 
-        itemEvaluaciones.addChild({
+        itemCalificaciones.addChild({
             text: "Períodos",
             onClick: e => new Periodos().render()
         })
 
-        itemEvaluaciones.addChild({
-            text: "Evaluaciones",
-            onClick: e => new TpsCurso().render()
+        itemCalificaciones.addChild({
+            text: "Examenes",
+            onClick: e => new ExamenesCurso().render()
         })
 
-        itemEvaluaciones.addChild({
+        itemCalificaciones.addChild({
             text: "Notas",
             onClick: e => new Notas().render()
         })
 
-        return [itemDatos, itemDictado, itemEvaluaciones, itemSalida];
+        return [itemDatos, itemDictado, itemCalificaciones, itemSalida];
 
     }
 

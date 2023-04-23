@@ -1,0 +1,1 @@
+class ExamenesTipos extends RestMemoryTable {}

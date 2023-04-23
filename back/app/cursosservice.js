@@ -1,5 +1,30 @@
-const { Utils, Strings } = require("../lib/utils/utils");
+const { Utils } = require("../lib/utils/utils");
 const { TableListService, TableGetService, TableInsertService, TableUpdateService, TableDeleteService } = require("../lib/service/tableservice");
+const { ServiceBase } = require("../lib/service/servicebase");
+
+class CursosServiceBase extends ServiceBase {
+
+    static columns() {
+        return [
+            "cur.añolectivo",
+            "cur.escuela",
+            "cur.modalidad",
+            "cur.año",
+            "cur.division",
+            "cur.turno",
+            "esc.nombre as escuelanombre",
+            "mdl.nombre as modalidadnombre"
+        ]
+    }
+
+    static joins() {
+        return [
+            { tableName: "escuelas", alias: "esc", columnName: "cur.escuela" },
+            { tableName: "modalidades", alias: "mdl", columnName: "cur.modalidad" },
+        ]
+    }
+
+}
 
 class CursosListService extends TableListService {
 
@@ -107,6 +132,7 @@ class CursosCommonService {
 
 }
 
+module.exports.CursosServiceBase = CursosServiceBase;
 module.exports.CursosListService = CursosListService;
 module.exports.CursosGetService = CursosGetService
 module.exports.CursosInsertService = CursosInsertService;

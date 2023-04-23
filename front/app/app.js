@@ -2,7 +2,7 @@ class App extends AppBase {
 
     static TableNames = new Map()
         .set("materias_cursos", "Materias Dictadas (de Cursos)")
-        .set("tps", "Trabajos Prácticos")
+        .set("examenes", "Examenes")
 
     static DefineViewNormal() {
         return new AppView();
@@ -18,7 +18,7 @@ class App extends AppBase {
                 Turnos.Load()
             )
             .then(() =>
-                EvaluacionesTipos.Load()
+                ExamenesTipos.Load()
             )
     }
 

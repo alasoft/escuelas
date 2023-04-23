@@ -36,7 +36,7 @@ class Cursos extends AñoLectivoFilterView {
         }
     }
 
-    itemTps() {
+    itemExamenes() {
         if (this.list().hasRows()) {
             return {
                 widget: "dxButton",
@@ -44,7 +44,7 @@ class Cursos extends AñoLectivoFilterView {
                 options: {
                     icon: "background",
                     text: "Trabajos Prácticos",
-                    onClick: e => this.tps()
+                    onClick: e => this.examenes()
                 }
             }
         }
@@ -66,8 +66,8 @@ class Cursos extends AñoLectivoFilterView {
         }).render()
     }
 
-    tps() {
-        new TpsCurso({
+    examenes() {
+        new ExamenesCurso({
             masterView: this,
             añolectivo: this.añoLectivo(),
             curso: this.id(),

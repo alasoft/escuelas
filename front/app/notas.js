@@ -28,6 +28,10 @@ class Notas extends View {
                     onCellPrepared: e => this.listOnCellPrepared(e),
                     onKeyDown: e => this.listOnKeyDown(e),
                     onRowDblClick: e => this.listOnRowDblClick(e),
+                    onContentReady: e => this.listOnContentReady(e),
+                },
+                contextMenu: {
+                    target: this.findElementByClass("list")
                 }
             }
         }
@@ -114,6 +118,23 @@ class Notas extends View {
         }
     }
 
+    refreshContextMenuItems() {
+        if (this.contextMenu() != undefined && this.contextMenu().instance() != undefined) {
+            this.contextMenu().setItems(this.contextMenuItems());
+        }
+    }
+
+    contextMenuItems() {
+        return [this.itemNotasAlumno()]
+    }
+
+    itemNotasAlumno() {
+        return {
+            text: "Notas del Alumno",
+            onClick: e => this.notasAlumno(),
+        }
+    }
+
     refresh() {
         return this.notasData().refresh(this.materiaCurso())
             .then(() =>
@@ -122,6 +143,10 @@ class Notas extends View {
                 this.list().setArrayDataSource(this.rows()))
             .then(() =>
                 this.list().focus())
+    }
+
+    refreshRows() {
+        this.list().setArrayDataSource(this.rows())
     }
 
     columns() {
@@ -147,8 +172,12 @@ class Notas extends View {
         return this.components().list;
     }
 
+    contextMenu() {
+        return this.components().contextMenu;
+    }
+
     listToolbarItems() {
-        return [this.itemAlumnos(), this.itemTps(), this.itemExcel(), "searchPanel"]
+        return [this.itemAlumnos(), this.itemExamenes(), this.itemExcel(), "searchPanel"]
     }
 
     itemAlumnos() {
@@ -164,16 +193,15 @@ class Notas extends View {
         }
     }
 
-    itemTps() {
+    itemExamenes() {
         return {
             widget: "dxButton",
             location: "before",
-            visible: false,
             options: {
                 icon: "background",
-                text: "Trabajos Prácticos",
-                hint: "Consulta Trabajos Prácticos de la Materia",
-                onClick: e => this.tps()
+                text: "Examenes",
+                hint: "Consulta Examenes de la Materia",
+                onClick: e => this.examenes()
             }
         }
     }
@@ -211,8 +239,8 @@ class Notas extends View {
         }
     }
 
-    tps() {
-        new TpsCurso({
+    examenes() {
+        new ExamenesCurso({
                 mode: "popup",
                 showTodosButton: false,
                 curso: this.curso(),
@@ -222,10 +250,10 @@ class Notas extends View {
                 materiacurso: this.materiaCurso()
             }).render()
             .then(closeData =>
-                this.afterTps(closeData))
+                this.afterExamenes(closeData))
     }
 
-    afterTps(closeData) {
+    afterExamenes(closeData) {
         if (closeData.dataHasChanged == true) {
             this.refresh()
         }
@@ -267,7 +295,7 @@ class Notas extends View {
             }).render()
             .then(closeData => {
                 if (closeData.dataHasChanged) {
-                    this.refresh()
+                    this.refreshRows()
                 }
             })
     }
@@ -285,7 +313,7 @@ class Notas extends View {
     }
 
     alumnoStatus() {
-        return this.notasData().alumnoStatusPresente(this.alumno("id"))
+        //        return this.notasData().alumnoStatusPresente(this.alumno("id"))
     }
 
     row(dataField) {
@@ -317,15 +345,19 @@ class Notas extends View {
     }
 
     listOnCellPrepared(e) {
-        if (e.column.temporalidad == Dates.PASADO) {
+        if (e.column.temporalidad == Dates.FUTURO) {
             e.cellElement.css({
-                "background-color": "rgb(248, 250, 250)"
+                "background-color": "rgb(240, 243, 243)"
             })
         } else if (e.column.temporalidad == Dates.PRESENTE) {
             e.cellElement.css({
                 "background-color": "rgb(227, 248, 250)"
             })
         }
+    }
+
+    listOnContentReady(e) {
+        this.refreshContextMenuItems()
     }
 
     listOnRowDblClick(e) {
@@ -370,7 +402,7 @@ class NotasColumns {
                 hint: "pepe",
                 alignment: "center",
                 temporalidad: row.temporalidad,
-                columns: row.temporalidad != Dates.FUTURO ? this.periodoColumns(row) : undefined
+                columns: this.periodoColumns(row)
             })
         }
         return columns;
@@ -402,18 +434,44 @@ class NotasColumns {
         ]
     }
 
-    anualColumns() {
+    anualColumn() {
         return [{
             dataField: "anual",
-            calculateCellValue: r => this.notasData.getLastPeriodo().pasado ? r["anual"].promedio : "",
-            temporalidad: this.notasData.getLastPeriodo().temporalidad,
+            temporalidad: Dates.FUTURO,
+            alignment: "center",
+            columns: []
         }]
     }
 
-    emptyColumn() {
+    anualColumns() {
         return [{
+                dataField: "promedio_" + row.id,
+                caption: "Promedio",
+                temporalidad: row.temporalidad,
+                width: 80,
+                calculateCellValue: r => row.temporalidad != Dates.FUTURO ? r["periodo_" + row.id].promedio : ""
+            },
+            {
+                dataField: "valoracion_" + row.id,
+                caption: "Valoración",
+                temporalidad: row.temporalidad,
+                width: 90,
+                calculateCellValue: r => row.temporalidad != Dates.FUTURO ? r["periodo_" + row.id].valoracion : ""
+            },
+            {
+                dataField: "status_" + row.id,
+                caption: "Status",
+                temporalidad: row.temporalidad,
+                visible: true,
+                width: 150,
+                calculateCellValue: r => row.temporalidad != Dates.FUTURO ? r["periodo_" + row.id].status : ""
+            }
+        ]
 
-        }]
+    }
+
+    emptyColumn() {
+        return {}
     }
 
 }
@@ -467,7 +525,8 @@ class NotasTemplate extends Template {
             backgroundColor: App.BOX_BACKGROUND_COLOR,
             items: [
                 this.filter(),
-                this.list()
+                this.list(),
+                this.contextMenu()
             ]
         }
     }
@@ -486,6 +545,12 @@ class NotasTemplate extends Template {
             fillContainer: true,
             orientation: "vertical",
             height: 1
+        }
+    }
+
+    contextMenu() {
+        return {
+            name: "contextMenu"
         }
     }
 
