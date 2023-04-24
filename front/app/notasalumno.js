@@ -82,7 +82,7 @@ class NotasAlumno extends View {
             Column.Text({ dataField: "nota", caption: "Nota", dataType: "number", format: "##", width: 100, editor: this.notaEditor }),
             Column.Text({ dataField: "periodoNombre", caption: "Período", editing: false, width: 250 }),
             Column.Calculated({ caption: "Inicia", formula: row => Dates.Format(row.desde), width: 150 }),
-            Column.Calculated({ caption: "Entrega", formula: row => Dates.Format(row.hasta) }),
+            Column.Calculated({ caption: "Cierre", formula: row => Dates.Format(row.hasta) }),
         ]
     }
 
@@ -268,10 +268,13 @@ class NotasAlumno extends View {
         if (e.data.temporalidad == Dates.FUTURO) {
             e.cancel = true;
             App.ShowMessage([{
-                message: "No es posible ingresar una nota en el Período",
-                detail: e.data.periodoNombre
+                message: "No es posible ingresar una nota para el Examen",
+                detail: e.data.nombre
             }, {
-                message: "ya que no está vigente."
+                message: "ya que su fecha de inicio",
+                detail: Dates.Format(e.data.desde)
+            }, {
+                message: "es posterior a hoy."
             }])
         }
     }
@@ -338,7 +341,7 @@ class NotasAlumnosRows {
                 periodo: row.periodo,
                 periodoNombre: row.periodonombre,
                 nota: this.notasData.getNota(row.id, this.notasAlumnos.alumno()),
-                temporalidad: this.notasData.getPeriodoRow(row.periodo).temporalidad
+                temporalidad: this.notasData.getExamenRow(row.id).temporalidad
             })
         }
         return rows;

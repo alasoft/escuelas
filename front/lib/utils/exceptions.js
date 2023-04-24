@@ -33,6 +33,11 @@ class Exceptions {
     static FECHA_ENTREGA_DEBER_SER_MAYOR_IGUAL_INICIO = "fechaEntregaDebeSerMayorIgualInicio"
     static DEBE_ESTAR_DENTRO_PERIODO = "debeEstarDentroPeriodo"
 
+    static NOTA_DESDE_DEBE_SER_MENOR_IGUAL_NOTA_HASTA = "notaDesdeDebeSerMenorIgualNotaHasta"
+    static RANGO_NOTAS_INTERSECTA_OTRO_RANGO = "rangoNotasIntersectaOtroRango"
+    static RANGO_NOTAS_CONTIENE_OTRO_RANGO = "rangoNotasContieneOtroRango"
+    static SIGLA_DUPLICATED = "siglaDuplicated"
+
     // Client Side 
 
     static CLIENT_SIDE = "client";

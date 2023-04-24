@@ -31,8 +31,8 @@ class Valoraciones extends AñoLectivoFilterView {
             message: "Borra la Valoración ?",
             detail: data.nombre
         }, {
-            message: "Del",
-            detail: Dates.Format(data.desde, true) + " al " + Dates.Format(data.hasta, true),
+            message: "para el rango",
+            detail: data.desde + " / " + data.hasta,
             quotes: false
         }])
     }
@@ -69,13 +69,14 @@ class ValoracionesFormView extends FormView {
         return [
             Item.Group({
                 colCount: 1,
-                items: [Item.ReadOnly({ dataField: "añolectivo", width: 100 }),
+                items: [
+                    Item.ReadOnly({ dataField: "añolectivo", width: 100 }),
                     Item.Text({ dataField: "nombre", required: true }),
                     Item.Text({ dataField: "sigla", required: true, width: 100, case: "upper" }),
                 ]
             }),
             Item.Group({
-                colCount: 2,
+                colCount: 3,
                 items: [Item.Number({
                         dataField: "desde",
                         required: true,
@@ -110,6 +111,9 @@ class ValoracionesFormView extends FormView {
     }
 
     handleError(err) {
+        if (err.code == Exceptions.SIGLA_DUPLICATED) {
+            this.handleSiglaDuplicatedMessage(err)
+        }
         if (err.code == Exceptions.NOTA_DESDE_DEBE_SER_MENOR_IGUAL_NOTA_HASTA) {
             this.handleNotaDesdeDebeSerMenorHasta(err)
         } else if (err.code == Exceptions.RANGO_NOTAS_INTERSECTA_OTRO_RANGO) {
@@ -125,38 +129,43 @@ class ValoracionesFormView extends FormView {
         return Messages.Build({ message: "Ya existe una Valoración con el nombre:", detail: this.getEditorValue("nombre") })
     }
 
+    handleSiglaDuplicatedMessage(err) {
+        return Messages.Build({ message: "Ya existe una Valoración con la sigla:", detail: this.getEditorValue("sigla") })
+    }
+
     handleNotaDesdeDebeSerMenorHasta(err) {
         App.ShowMessage([{
                 message: "La nota desde",
-                detail: this.getDate("desde")
+                detail: this.getValue("desde")
             },
             {
                 message: "debe ser menor a la nota hasta",
-                detail: this.getDate("hasta")
+                detail: this.getValue("hasta")
             }
         ])
     }
 
     handleNotasIntersecta(err) {
         App.ShowMessage([{
-            message: "El " + this.getEditorValue("nombre"),
+            message: "La valoración " + this.getSingleQuotes("sigla"),
             quotes: false,
-            detail: "Del " + this.getDate("desde") + " al " + this.getDate("hasta")
+            detail: this.getValue("desde") + " - " + this.getValue("hasta")
         }, {
-            message: "intersecta al " + err.detail.nombre,
+            message: "intersecta a la valoración " + Strings.SingleQuotes(err.detail.sigla),
             quotes: false,
-            detail: "Del " + Dates.Format(err.detail.desde) + " al " + Dates.Format(err.detail.hasta)
+            detail: err.detail.desde + " - " + err.detail.hasta
         }])
     }
 
     handleNotasContiene(err) {
         App.ShowMessage([{
-            message: "El " + this.getEditorValue("nombre"),
+            message: "La valoración " + this.getSingleQuotes("nombre"),
             quotes: false,
-            detail: "Del " + this.getDate("desde") + " al " + this.getDate("hasta")
+            detail: "Del " + this.getValue("desde") + " - " + this.getValue("hasta")
         }, {
-            message: "contiene la Valoración",
-            detail: err.detail.nombre
+            message: "contiene a la Valoración " + Strings.SingleQuotes(err.detail.sigla),
+            quotes: false,
+            detail: err.detail.desde + " - " + err.detail.hasta
         }])
     }
 

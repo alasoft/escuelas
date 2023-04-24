@@ -87,7 +87,7 @@ class PeriodosFormView extends FormView {
     }
 
     duplicatedMessage() {
-        return Messages.Build({ message: "Ya existe Período con el nombre:", detail: this.getEditorValue("nombre") })
+        return Messages.Build({ message: "Ya existe un Período con el nombre:", detail: this.getEditorValue("nombre") })
     }
 
     handleFechaDesdeDebeSerMenor(err) {

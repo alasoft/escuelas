@@ -22,6 +22,7 @@ class Notas extends View {
                     showBorders: true,
                     wordWrapEnabled: true,
                     hoverStateEnabled: true,
+                    //                    columnAutoWidth: true,
                     groupPanel: {
                         visible: false
                     },
@@ -232,6 +233,39 @@ class Notas extends View {
         }
     }
 
+    exportExcelDialog(e) {
+        new ExportExcelDialog({ fileName: this.excelFileName(), width: 700 }).render()
+            .then(data => {
+                if (data.okey) {
+                    this.exportExcel(e, this.excelFileName())
+                }
+            })
+    }
+
+    excelFileName() {
+        return "Notas " + this.getFilterText("curso") +
+            " - " +
+            this.getFilterText("materiacurso") +
+            " / " +
+            this.getFilterText("añolectivo")
+    }
+
+    exportExcel(e, fileName) {
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet(fileName);
+
+        DevExpress.excelExporter.exportDataGrid({
+            component: this.list().instance(),
+            worksheet,
+            autoFilterEnabled: true,
+        }).then(() => {
+            workbook.xlsx.writeBuffer().then((buffer) => {
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), fileName + '.xlsx');
+            });
+        });
+        e.cancel = true;
+    }
+
     alumnos() {
         new AlumnosCurso({
                 mode: "popup",
@@ -400,7 +434,8 @@ class NotasColumns {
     }
 
     columns() {
-        return this.alumnoColumns().concat(this.periodosColumns(), this.emptyColumn());
+        const columns = this.alumnoColumns().concat(this.periodosColumns(), this.anualColumn(), this.emptyColumn());
+        return columns;
     }
 
     alumnoColumns() {
@@ -457,35 +492,24 @@ class NotasColumns {
 
     anualColumn() {
         return [{
-            dataField: "anual",
-            temporalidad: Dates.FUTURO,
+            caption: "Anual",
             alignment: "center",
-            columns: []
+            columns: this.anualColumns()
         }]
     }
 
     anualColumns() {
         return [{
-                dataField: "promedio_" + row.id,
+                dataField: "promedio_anual",
                 caption: "Promedio",
-                temporalidad: row.temporalidad,
                 width: 80,
-                calculateCellValue: r => row.temporalidad != Dates.FUTURO ? r["periodo_" + row.id].promedio : ""
+                calculateCellValue: r => r.anual.promedio
             },
             {
-                dataField: "valoracion_" + row.id,
+                dataField: "valoracion_anual",
                 caption: "Valoración",
-                temporalidad: row.temporalidad,
                 width: 90,
-                calculateCellValue: r => row.temporalidad != Dates.FUTURO ? r["periodo_" + row.id].valoracion : ""
-            },
-            {
-                dataField: "status_" + row.id,
-                caption: "Status",
-                temporalidad: row.temporalidad,
-                visible: true,
-                width: 150,
-                calculateCellValue: r => row.temporalidad != Dates.FUTURO ? r["periodo_" + row.id].status : ""
+                calculateCellValue: r => r.anual.valoracion
             }
         ]
 
@@ -493,7 +517,7 @@ class NotasColumns {
 
     emptyColumn() {
         return {
-            allowResizing: true
+            //allowResizing: true
         }
     }
 
@@ -512,7 +536,7 @@ class NotasRows {
         for (const row of this.alumnosRows) {
             const alumno = { id: row.id, apellido: row.apellido, nombre: row.nombre };
             const promedios = this.notasData.alumnoPromedios(row.id)
-            const anual = this.notasData.promedioTotal(promedios)
+            const anual = this.notasData.alumnoPromedioAnual(promedios)
             rows.push(Object.assign({}, alumno, promedios, anual))
         }
         return rows;

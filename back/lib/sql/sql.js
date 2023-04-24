@@ -95,7 +95,8 @@ class Sql {
             tableName: tableName,
             columns: {
                 nombre: SqlType.String()
-            }
+            },
+            unique: "nombre"
         })
     }
 

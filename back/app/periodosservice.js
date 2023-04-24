@@ -111,6 +111,7 @@ class PeriodosCommonService {
 
     static SqlNotDuplicated(service) {
         return service.sqlSelect({
+            columns: "id",
             from: "Periodos",
             where: service.sqlAnd([
                 "upper(nombre)=upper(@nombre)"

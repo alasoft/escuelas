@@ -31,6 +31,7 @@ class App {
         this.port = parameters.port;
         this.root = parameters.root;
         this.tokenMinutes = parameters.tokenMinutes || App.TOKEN_MINUTES_DEFAULT;
+        this.logSql = parameters.logSql;
     }
 
     init() {

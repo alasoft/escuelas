@@ -38,6 +38,7 @@ class Exceptions {
     static NOTA_DESDE_DEBE_SER_MENOR_IGUAL_NOTA_HASTA = "notaDesdeDebeSerMenorIgualNotaHasta"
     static RANGO_NOTAS_INTERSECTA_OTRO_RANGO = "rangoNotasIntersectaOtroRango"
     static RANGO_NOTAS_CONTIENE_OTRO_RANGO = "rangoNotasContieneOtroRango"
+    static SIGLA_DUPLICATED = "siglaDuplicated"
 
     static InvalidToken(p) {
         return new Exception({

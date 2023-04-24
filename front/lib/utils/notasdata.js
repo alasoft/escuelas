@@ -12,6 +12,8 @@ class NotasData {
                 .then(data =>
                     this.setData(data))
                 .then(() =>
+                    this.setExamenesData())
+                .then(() =>
                     this.setPeriodosData())
         } else {
             this.setData(this.emptyData());
@@ -34,6 +36,14 @@ class NotasData {
             alumnosRows: [],
             examenesRows: [],
             notasRows: []
+        }
+    }
+
+    setExamenesData() {
+        for (const row of this.examenesRows) {
+            row.desde = new Date(row.desde);
+            row.hasta = new Date(row.hasta);
+            row.temporalidad = Dates.Temporalidad(row.desde, row.hasta)
         }
     }
 
@@ -69,13 +79,13 @@ class NotasData {
     alumnoPromedios(alumno) {
         const promedios = {};
         for (const row of this.periodosRows) {
-            const promedio = this.alumnoPromedio(alumno, row.id);
+            const promedio = this.alumnoPromedioPeriodo(alumno, row.id);
             promedios["periodo_" + row.id] = promedio;
         }
         return promedios;
     }
 
-    alumnoPromedio(alumno, periodo) {
+    alumnoPromedioPeriodo(alumno, periodo) {
         let suma = 0;
         let cantidad = 0;
         for (const row of this.notasRows) {
@@ -91,6 +101,21 @@ class NotasData {
             valoracion: valoracion,
             status: this.alumnoStatus(periodo, cantidad)
         }
+    }
+
+    alumnoPromedioAnual(promedios) {
+        let suma = 0;
+        let cantidad = 0;
+        Object.keys(promedios).forEach((key, i) => {
+            const promedio = promedios[key].promedio;
+            if (promedio != undefined) {
+                suma += promedios[key].promedio;
+                cantidad += 1;
+            }
+        })
+        const promedioAnual = 0 < cantidad ? Math.round(suma / cantidad) : undefined;
+        const valoracionAnual = this.valoracion(promedioAnual);
+        return { anual: { promedio: promedioAnual, valoracion: valoracionAnual } };
     }
 
     valoracion(promedio) {
@@ -129,21 +154,6 @@ class NotasData {
                 return row;
             }
         }
-    }
-
-    promedioTotal(promedios) {
-        let suma = 0;
-        let cantidad = 0;
-        Object.keys(promedios).forEach((key, i) => {
-            const promedio = promedios[key].promedio;
-            if (promedio != undefined) {
-                suma += promedios[key].promedio;
-                cantidad += 1;
-            }
-        })
-        const promedioAnual = 0 < cantidad ? Math.round(suma / cantidad) : undefined;
-        const valoracionAnual = this.valoracion(promedioAnual);
-        return { anual: { promedio: promedioAnual, valoracion: valoracionAnual } };
     }
 
     getNota(examen, alumno) {

@@ -230,7 +230,7 @@ class Html {
 
 }
 
-class Number {
+class Numbers {
 
     static Contains(n1, n2, n3, n4) {
         return n1 <= n3 && n2 >= n4
@@ -246,5 +246,5 @@ class Number {
 module.exports.Strings = Strings;
 module.exports.Utils = Utils;
 module.exports.Dates = Dates;
-module.exports.Number = Number;
+module.exports.Numbers = Numbers;
 module.exports.Html = Html;

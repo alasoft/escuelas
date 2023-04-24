@@ -210,6 +210,10 @@ class Item {
         return ({ itemType: "empty" })
     }
 
+    static Blank() {
+        return this.Space()
+    }
+
     static Apellido(p = {}) {
         return this.Text(Utils.Merge({
             dataField: "apellido",

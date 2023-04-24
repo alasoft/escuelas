@@ -53,6 +53,10 @@ class Form extends Widget {
         return Dates.Format(this.getEditorValue(dataField))
     }
 
+    getSingleQuotes(dataField) {
+        return Strings.SingleQuotes(this.getEditorValue(dataField))
+    }
+
     getEditorProperty(dataField, propertyName) {
         return this.getEditor(dataField).option(propertyName);
     }

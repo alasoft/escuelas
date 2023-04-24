@@ -56,7 +56,9 @@ class UsersCreateTable {
                 email: SqlType.UserEmail(),
                 password: SqlType.UserPassword(),
                 rol: SqlType.UserRol()
-            }
+            },
+            unique: ["apellido,nombre", "email"],
+            uniqueNoTenant: true
         });
     }
 
@@ -97,7 +99,8 @@ class UsersCreateTable {
                 user: SqlType.Fk({ references: "users" }),
                 module: SqlType.String({ size: 100 }),
                 state: SqlType.String({ size: 3000 })
-            }
+            },
+            unique: "user,module"
         })
     }
 

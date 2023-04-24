@@ -128,6 +128,14 @@ class EntryView extends DialogView {
         return this.form().getDate(dataField);
     }
 
+    getValue(dataField) {
+        return this.form().getValue(dataField);
+    }
+
+    getSingleQuotes(dataField) {
+        return this.form().getSingleQuotes(dataField)
+    }
+
     getEditorText(dataField) {
         return this.form().getEditorText(dataField);
     }

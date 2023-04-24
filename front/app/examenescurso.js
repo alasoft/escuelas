@@ -65,7 +65,7 @@ class ExamenesCurso extends CursosMateriasDetalle {
             Column.Calculated({ caption: "Tipo", formula: row => ExamenesTipos.GetNombre(row.tipo) }),
             Column.Text({ dataField: "nombre" }),
             Column.Date({ dataField: "desde", width: 200, caption: "Fecha de Inicio", format: App.DATE_FORMAT_LONG }),
-            Column.Date({ dataField: "hasta", caption: "Fecha de Entrega", width: 200, format: App.DATE_FORMAT_LONG })
+            Column.Date({ dataField: "hasta", caption: "Fecha de Cierre", width: 200, format: App.DATE_FORMAT_LONG })
         ]
     }
 
@@ -185,7 +185,7 @@ class ExamenesCursoForm extends FormView {
                             Item.DateLong({
                                 dataField: "hasta",
                                 required: true,
-                                label: "Fecha de Entrega",
+                                label: "Fecha de Cierre",
                                 format: App.DATE_FORMAT_LONG
                             })
                         ]
@@ -328,7 +328,7 @@ class ExamenesCursoForm extends FormView {
             message: "La fecha de inicio",
             detail: this.getDate("desde"),
         }, {
-            message: "debe ser menor o igual a la de Entrega",
+            message: "debe ser menor o igual a la de Cierre",
             detail: this.getDate("hasta")
         }])
     }

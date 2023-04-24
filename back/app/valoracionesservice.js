@@ -6,6 +6,7 @@ const {
     TableDeleteService
 } = require("../lib/service/tableservice");
 const { Exceptions } = require("../lib/utils/exceptions.js");
+const { Numbers } = require("../lib/utils/utils");
 
 class ValoracionesListService extends TableListService {
 
@@ -59,6 +60,8 @@ class ValoracionesInsertService extends TableInsertService {
     validate() {
         return super.validate()
             .then(() =>
+                ValoracionesCommonService.ValidateSiglaNotDuplicated(this))
+            .then(() =>
                 ValoracionesCommonService.ValidateDesdeHasta(this))
     }
 
@@ -76,6 +79,8 @@ class ValoracionesUpdateService extends TableUpdateService {
 
     validate() {
         return super.validate()
+            .then(() =>
+                ValoracionesCommonService.ValidateSiglaNotDuplicated(this))
             .then(() =>
                 ValoracionesCommonService.ValidateDesdeHasta(this))
     }
@@ -102,25 +107,44 @@ class ValoracionesCommonService {
         })
     }
 
+    static ValidateSiglaNotDuplicated(service) {
+        return service.dbSelect(this.SqlSiglaNotDuplicated(service)).then(rows => {
+            if (1 < rows.length || (rows.length == 1 && rows[0].id != service.id())) {
+                throw Exceptions.Validation({ code: Exceptions.SIGLA_DUPLICATED })
+            }
+        })
+    }
+
+    static SqlSiglaNotDuplicated(service) {
+        return service.sqlSelect({
+            from: "Valoraciones",
+            where: service.sqlAnd([
+                "upper(sigla)=upper(@sigla)"
+            ]),
+            parameters: service.jsonValues("sigla")
+        })
+    }
+
     static ValidateDesdeHasta(service) {
-        //        this.ValidateDesdeLowerHasta(service);
-        //        return this.ValidateNoDateCollision(service);
+        this.ValidateDesdeLowerHasta(service);
+        return this.ValidateNoRangeCollision(service);
     }
 
     static ValidateDesdeLowerHasta(service) {
-        if (service.date("hasta") < service.date("desde")) {
+        if (service.value("hasta") < service.value("desde")) {
             throw Exceptions.Validation({
                 code: Exceptions.NOTA_DESDE_DEBE_SER_MENOR_IGUAL_NOTA_HASTA
             })
         }
     }
 
-    static ValidateNoNotaCollision(service) {
+    static ValidateNoRangeCollision(service) {
 
         function sql() {
             return service.sqlSelect({
                 columns: [
                     "vlr.id",
+                    "vlr.sigla",
                     "vlr.desde",
                     "vlr.hasta"
                 ],
@@ -135,13 +159,13 @@ class ValoracionesCommonService {
 
         function validateRanges(rows) {
             rows.forEach(row => {
-                if (Number.Intersect(service.date("desde"), service.date("hasta"), row.desde, row.hasta)) {
+                if (Numbers.Intersect(service.value("desde"), service.value("hasta"), row.desde, row.hasta)) {
                     throw Exceptions.Validation({
                         code: Exceptions.RANGO_NOTAS_INTERSECTA_OTRO_RANGO,
                         detail: row
                     })
                 }
-                if (Number.Contains(service.date("desde"), service.date("hasta"), row.desde, row.hasta)) {
+                if (Numbers.Contains(service.value("desde"), service.value("hasta"), row.desde, row.hasta)) {
                     throw Exceptions.Validation({
                         code: Exceptions.RANGO_NOTAS_CONTIENE_OTRO_RANGO,
                         detail: row

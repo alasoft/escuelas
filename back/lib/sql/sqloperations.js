@@ -12,6 +12,7 @@ class SqlCreate {
         this.tableName = parameters.tableName;
         this.columns = parameters.columns;
         this.unique = parameters.unique;
+        this.uniqueNoTenant = parameters.uniqueNoTenant;
         this.addDefaults();
     }
 
@@ -29,13 +30,17 @@ class SqlCreate {
             (unique, i) => {
                 textBuilder
                     .add(", ")
-                    .add("unique (")
-                    .add(unique)
+                    .add("unique (" + (this.uniqueNoTenant != true ? "tenant," : ""))
+                    .add(this.uniqueValues(unique))
                     .add(")")
             }
         )
         return textBuilder
             .text();
+    }
+
+    uniqueValues(unique) {
+        return unique.split(",").map(column => Strings.DoubleQuotes(column)).join(",");
     }
 
     text() {
