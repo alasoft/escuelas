@@ -9,6 +9,12 @@ body {
     background-color: lightgrey;
 }
 
+.font-label {
+    font-family: Roboto, RobotoFallback, "Noto Kufi Arabic", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    font-style: italic
+}
+
 .font-input {
     font-weight: 500;
     background-color: white;

@@ -151,6 +151,12 @@ class Template extends ObjectBase {
         }
     }
 
+    _paddingBottom(padding) {
+        return {
+            "padding-bottom": padding
+        }
+    }
+
     _height(height) {
         return {
             "height": height

@@ -103,7 +103,11 @@ class NotasData {
         }
     }
 
-    alumnoPromedioAnual(promedios) {
+    alumnoPromedioAnual(alumno) {
+        return this.promedioTotal(this.alumnoPromedios(alumno))
+    }
+
+    promedioTotal(promedios) {
         let suma = 0;
         let cantidad = 0;
         Object.keys(promedios).forEach((key, i) => {
@@ -222,6 +226,19 @@ class NotasData {
                 return row
             }
         }
+    }
+
+    hayNotas() {
+        return 0 < this.notasRows.length;
+    }
+
+    hayNotasAlumno(alumno) {
+        for (const row of this.notasRows) {
+            if (row.alumno == alumno && Utils.IsDefined(row.nota)) {
+                return true;
+            }
+        }
+        return false
     }
 
 

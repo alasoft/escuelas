@@ -304,4 +304,8 @@ class List extends Widget {
         return this.instance().cancelEditData();
     }
 
+    showSummary(show = true) {
+        this.setProperty("summary.visible", false)
+    }
+
 }

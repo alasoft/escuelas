@@ -536,7 +536,7 @@ class NotasRows {
         for (const row of this.alumnosRows) {
             const alumno = { id: row.id, apellido: row.apellido, nombre: row.nombre };
             const promedios = this.notasData.alumnoPromedios(row.id)
-            const anual = this.notasData.alumnoPromedioAnual(promedios)
+            const anual = this.notasData.promedioTotal(promedios)
             rows.push(Object.assign({}, alumno, promedios, anual))
         }
         return rows;

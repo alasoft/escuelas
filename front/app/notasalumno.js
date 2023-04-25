@@ -4,7 +4,7 @@ class NotasAlumno extends View {
         return {
             mode: "popup",
             popup: {
-                title: this.title(),
+                title: "Notas por Alumno",
                 fullScreen: false,
                 width: 1100
             },
@@ -26,6 +26,19 @@ class NotasAlumno extends View {
                         startEditAction: "click",
                         selectTextOnEditStart: true
                     },
+                    summary: {
+                        groupItems: [{
+                            column: "nota",
+                            summaryType: "avg",
+                            alignment: "left",
+                            showInColumn: "periodoNombre",
+                            customizeText: (data) => {
+                                const promedio = Math.round(data.value);
+                                return promedio + " / " + this.notasData().valoracion(Math.round(data.value))
+                            }
+                        }],
+                        calculateCustomSummary: (options) => this.calculateCustomSummary(options)
+                    },
                     onContentReady: e => this.listOnContentReady(e),
                     onCellPrepared: e => this.listOnCellPrepared(e),
                     onEditingStart: e => this.listOnEditingStart(e),
@@ -34,6 +47,14 @@ class NotasAlumno extends View {
                 toolbar: {
                     items: this.toolbarItems()
                 }
+            }
+        }
+    }
+
+    calculateCustomSummary(options) {
+        if (options.name == "total") {
+            if (options.summaryProcess == "calculate") {
+                options.totalValue = this.notasData().alumnoPromedioAnual(this.alumno()).anual.promedio;
             }
         }
     }
@@ -50,10 +71,6 @@ class NotasAlumno extends View {
         return this.components().list;
     }
 
-    title() {
-        return this.listView().alumnoDescripcion()
-    }
-
     formItems() {
         return [
             Item.Group({
@@ -66,12 +83,29 @@ class NotasAlumno extends View {
             Item.Group({
                 colCount: 6,
                 items: [
-                    Item.ReadOnly({ dataField: "alumno", width: 300, colSpan: 2, cssInput: "read-only", visible: false }),
-                    Item.ReadOnly({ dataField: "status", width: 200, cssInput: "read-only", visible: false })
+                    Item.ReadOnly({ dataField: "alumno", width: 300, colSpan: 2, template: () => this.alumnoTemplate() }),
+                    Item.ReadOnly({ dataField: "status", width: 200, template: () => this.estadoTemplate() })
                 ]
-
             })
         ]
+    }
+
+    alumnoTemplate() {
+        this._alumnoTemplate = $("<div>").addClass("font-label");
+        return this._alumnoTemplate;
+    }
+
+    estadoTemplate() {
+        this._alumnoEstado = $("<div>").addClass("font-label");
+        return this._alumnoEstado;
+    }
+
+    refreshAlumnoTemplate() {
+        this._alumnoTemplate.text(this.listView().alumnoDescripcion())
+    }
+
+    refreshAlumnoEstado() {
+        //        this._alumnoEstado.text(this.notasData().alumnoStatus())
     }
 
     columns() {
@@ -181,24 +215,53 @@ class NotasAlumno extends View {
     }
 
     refresh() {
-        this.popup().setTitle(this.title());
         this.refreshForm();
         this.list().setArrayDataSource(this.rows())
+        this.refreshSummaries()
         this.list().focus()
     }
 
     refreshForm() {
+        this.refreshFormData();
+        this.refreshAlumnoTemplate()
+        this.refreshAlumnoEstado()
+    }
+
+    refreshFormData() {
         this.form().setData({
             curso: this.listView().cursoDescripcion(),
             materia: this.listView().materiaDescripcion(),
-            alumno: this.listView().alumnoDescripcion(),
-            //            status: this.listView().alumnoStatus()
         })
+    }
+
+    refreshSummaries() {
+        this.list().setProperty("summary.totalItems", this.summaryTotalItems())
+    }
+
+    summaryTotalItems() {
+        if (this.notasData().hayNotasAlumno(this.alumno())) {
+            return [{
+                column: "nota",
+                summaryType: "custom",
+                name: "total",
+                alignment: "left",
+                customizeText: (data) => {
+                    const promedio = Math.round(data.value);
+                    return promedio + " / " + this.notasData().valoracion(Math.round(data.value))
+                }
+            }]
+        } else {
+            return null
+        }
+
     }
 
     afterRender() {
         super.afterRender()
-            .then(() => this.refreshForm())
+            .then(() => {
+                this.refreshForm();
+                this.refreshSummaries()
+            })
     }
 
     saveNota(p) {
@@ -363,12 +426,13 @@ class NotasAlumnoTemplate extends Template {
         }
     }
 
+
     form() {
         return {
             name: "form",
             orientation: "vertical",
             marginTop: 15,
-            height: 80
+            height: 100
         }
     }
 
@@ -392,6 +456,5 @@ class NotasAlumnoTemplate extends Template {
             marginTop: 10,
         }
     }
-
 
 }
