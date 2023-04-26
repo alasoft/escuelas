@@ -394,7 +394,7 @@ class Notas extends View {
     }
 
     listOnCellPrepared(e) {
-        if (e.column.temporalidad == Dates.FUTURO) {
+        if (e.column.temporalidad == Dates.PASADO || e.column.temporalidad == Dates.FUTURO) {
             e.cellElement.css({
                 "background-color": "rgb(240, 243, 243)"
             })
@@ -449,11 +449,19 @@ class NotasColumns {
     }
 
     periodosColumns() {
+
+        function temporalidadDescripcion(t) {
+            if (t == Dates.PASADO) {
+                return " / Cerrado"
+            } else if (t == Dates.PRESENTE) {
+                return " / Vigente"
+            }
+        }
+
         const columns = []
         for (const row of this.periodosRows) {
             columns.push({
-                caption: row.nombre,
-                hint: "pepe",
+                headerCellTemplate: row.nombre + temporalidadDescripcion(row.temporalidad) + "<small><br>" + Dates.DesdeHasta(row.desde, row.hasta),
                 alignment: "center",
                 temporalidad: row.temporalidad,
                 columns: this.periodoColumns(row),

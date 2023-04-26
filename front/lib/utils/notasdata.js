@@ -241,5 +241,4 @@ class NotasData {
         return false
     }
 
-
 }

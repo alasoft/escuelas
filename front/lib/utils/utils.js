@@ -315,6 +315,10 @@ class Dates {
         }
     }
 
+    static DesdeHasta(desde, hasta) {
+        return Dates.Format(desde) + " - " + Dates.Format(hasta)
+    }
+
 }
 
 class Arrays {

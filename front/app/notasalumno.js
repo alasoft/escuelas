@@ -6,7 +6,8 @@ class NotasAlumno extends View {
             popup: {
                 title: "Notas por Alumno",
                 fullScreen: false,
-                width: 1100
+                width: 1100,
+                height: 650
             },
             components: {
                 form: {
@@ -35,20 +36,34 @@ class NotasAlumno extends View {
                             customizeText: (data) => {
                                 const promedio = Math.round(data.value);
                                 return promedio + " / " + this.notasData().valoracion(Math.round(data.value))
-                            }
+                            },
                         }],
-                        calculateCustomSummary: (options) => this.calculateCustomSummary(options)
+                        totalItems: this.totalItems()
+                            //                        calculateCustomSummary: (options) => this.calculateCustomSummary(options)
                     },
                     onContentReady: e => this.listOnContentReady(e),
                     onCellPrepared: e => this.listOnCellPrepared(e),
                     onEditingStart: e => this.listOnEditingStart(e),
                     onRowUpdating: e => this.onRowUpdating(e),
-                },
-                toolbar: {
-                    items: this.toolbarItems()
+                    onSaved: e => {
+                        const totalItems = this.list().getProperty("summary.totalItems");
+                        this.list().setProperty("summary.totalItems", totalItems != null ? null : this.totalItems());
+                    },
+                    toolbar: {
+                        items: this.toolbarItems()
+                    }
                 }
             }
         }
+    }
+
+    totalItems() {
+        return [{
+            summaryType: "sum",
+            name: "avg",
+            alignment: "left",
+            column: "nota"
+        }]
     }
 
     calculateCustomSummary(options) {
@@ -211,13 +226,13 @@ class NotasAlumno extends View {
         return this.listView().alumno();
     }
     rows() {
-        return new NotasAlumnosRows(this).rows();
+        this.rows = new NotasAlumnosRows(this).rows();
+        return this.rows;
     }
 
     refresh() {
         this.refreshForm();
         this.list().setArrayDataSource(this.rows())
-        this.refreshSummaries()
         this.list().focus()
     }
 
@@ -234,33 +249,10 @@ class NotasAlumno extends View {
         })
     }
 
-    refreshSummaries() {
-        this.list().setProperty("summary.totalItems", this.summaryTotalItems())
-    }
-
-    summaryTotalItems() {
-        if (this.notasData().hayNotasAlumno(this.alumno())) {
-            return [{
-                column: "nota",
-                summaryType: "custom",
-                name: "total",
-                alignment: "left",
-                customizeText: (data) => {
-                    const promedio = Math.round(data.value);
-                    return promedio + " / " + this.notasData().valoracion(Math.round(data.value))
-                }
-            }]
-        } else {
-            return null
-        }
-
-    }
-
     afterRender() {
         super.afterRender()
             .then(() => {
                 this.refreshForm();
-                this.refreshSummaries()
             })
     }
 
@@ -380,6 +372,28 @@ class NotasAlumno extends View {
         e.cellElement.css({
             "background-color": "rgb(229, 250, 250)"
         })
+    }
+
+}
+
+class NotasAlumnosData {
+
+    constructor(notasAlumnos) {
+        this.notasAlumnos = notasAlumnos;
+        this.rows = this.notasAlumnos.rows;
+        this.map = new Map()
+    }
+
+    refresh() {
+        for (const row of this.rows) {
+            let total = this.map.get(row.periodo);
+            if (total == undefined) {
+                total = { cantidad: 0, suma: 0 };
+            }
+            total.cantidad += 1;
+            total.suma += row.nota;
+            this.map.set(row.periodo, total)
+        }
     }
 
 }
