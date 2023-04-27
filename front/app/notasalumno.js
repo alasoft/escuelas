@@ -33,21 +33,16 @@ class NotasAlumno extends View {
                             summaryType: "avg",
                             alignment: "left",
                             showInColumn: "periodoNombre",
-                            customizeText: data => {
-                                const promedio = Math.round(data.value);
-                                return promedio + " / " + this.notasData().valoracion(Math.round(data.value))
-                            },
+                            customizeText: data =>
+                                this.customizeTextPromedio(data)
                         }],
                         totalItems: [{
                             summaryType: "custom",
                             name: "total",
                             alignment: "left",
                             column: "nota",
-                            customizeText: data => {
-                                const promedio = Math.round(data.value);
-                                return promedio + " / " + this.notasData().valoracion(Math.round(data.value))
-                            }
-
+                            customizeText: data =>
+                                this.customizeTextPromedio(data)
                         }],
                         calculateCustomSummary: options =>
                             this.calculateCustomSummary(options)
@@ -64,11 +59,13 @@ class NotasAlumno extends View {
         }
     }
 
-    notasAlumnoData() {
-        if (this._notasAlumnoData == undefined) {
-            this._notasAlumnoData = new NotasAlumnoData(this).refresh();
+    customizeTextPromedio(data) {
+        if (data.value != undefined) {
+            const promedio = Math.round(data.value);
+            return promedio + " / " + this.notasData().valoracion(Math.round(data.value))
+        } else {
+            return "";
         }
-        return this._notasAlumnoData;
     }
 
     calculateCustomSummary(options) {
@@ -385,64 +382,6 @@ class NotasAlumno extends View {
         e.cellElement.css({
             "background-color": "rgb(181, 238, 220)"
         })
-    }
-
-}
-
-class NotasAlumnoData {
-
-    constructor(notasAlumnos) {
-        this.notasAlumnos = notasAlumnos;
-        this.notasData = this.notasAlumnos.notasData();
-        this.rows = this.notasAlumnos.list().dataSource();
-    }
-
-    map() {
-        if (this._map == undefined) {
-            this._map = this.defineMap()
-        }
-        return this._map;
-    }
-
-    defineMap() {
-        const map = new Map();
-        for (const row of this.rows) {
-            if (map.get(row.periodo) == undefined) {
-                map.set({ cantidad: 0, suma: 0, promedio: null, valoracion: null })
-            }
-        }
-        return map;
-    }
-
-    refresh() {
-        for (const row of this.rows) {
-            const total = this.map().get(row.periodo);
-            if (Utils.IsDefined(row.nota)) {
-                ++total.cantidad;
-                total.suma += row.nota;
-            }
-        }
-        this.map().forEach(total => {
-            if (0 < total.cantidad) {
-                total.promedio = Math(total.suma / total.cantidad);
-                total.valoracion = this.notasData.valoracion(total.promedio)
-            } else {
-                total.promedio = undefined;
-                total.valoracion = undefined;
-            }
-        })
-        return this;
-    }
-
-
-
-    hayNotas() {
-        for (const [key, value] of this.map().entries()) {
-            if (0 < value.suma) {
-                return true;
-            }
-        }
-        return false;
     }
 
 }
