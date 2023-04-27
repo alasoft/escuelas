@@ -339,7 +339,7 @@ class NotasAlumno extends View {
                 message: "ya que su fecha de inicio",
                 detail: Dates.Format(e.data.desde)
             }, {
-                message: "es posterior a hoy."
+                message: "es futura"
             }])
         }
     }

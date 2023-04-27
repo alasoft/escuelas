@@ -455,6 +455,8 @@ class NotasColumns {
                 return " / Cerrado"
             } else if (t == Dates.PRESENTE) {
                 return " / Vigente"
+            } else {
+                return ""
             }
         }
 
