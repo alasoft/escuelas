@@ -396,11 +396,11 @@ class Notas extends View {
     listOnCellPrepared(e) {
         if (e.column.temporalidad == Dates.PASADO || e.column.temporalidad == Dates.FUTURO) {
             e.cellElement.css({
-                "background-color": "rgb(240, 243, 243)"
+                "background-color": "rgb(225, 228, 228)"
             })
         } else if (e.column.temporalidad == Dates.PRESENTE) {
             e.cellElement.css({
-                "background-color": "rgb(227, 248, 250)"
+                "background-color": "rgb(181, 238, 220)"
             })
         }
     }
@@ -511,13 +511,13 @@ class NotasColumns {
                 dataField: "promedio_anual",
                 caption: "Promedio",
                 width: 80,
-                calculateCellValue: r => r.anual.promedio
+                calculateCellValue: r => r.total.promedio
             },
             {
                 dataField: "valoracion_anual",
                 caption: "Valoración",
                 width: 90,
-                calculateCellValue: r => r.anual.valoracion
+                calculateCellValue: r => r.total.valoracion
             }
         ]
 

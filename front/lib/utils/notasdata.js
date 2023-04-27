@@ -89,9 +89,9 @@ class NotasData {
         let suma = 0;
         let cantidad = 0;
         for (const row of this.notasRows) {
-            if (row.alumno == alumno && row.periodo == periodo) {
-                suma += Utils.IsDefined(row.nota) ? row.nota : 0;
-                cantidad += 1;
+            if (row.alumno == alumno && row.periodo == periodo && Utils.IsDefined(row.nota)) {
+                suma += row.nota;
+                ++cantidad;
             }
         }
         const promedio = 0 < cantidad ? Math.round(suma / cantidad) : undefined;
@@ -117,9 +117,9 @@ class NotasData {
                 cantidad += 1;
             }
         })
-        const promedioAnual = 0 < cantidad ? Math.round(suma / cantidad) : undefined;
-        const valoracionAnual = this.valoracion(promedioAnual);
-        return { anual: { promedio: promedioAnual, valoracion: valoracionAnual } };
+        const promedioTotal = 0 < cantidad ? Math.round(suma / cantidad) : undefined;
+        const valoracionTotal = this.valoracion(promedioTotal);
+        return { total: { promedio: promedioTotal, valoracion: valoracionTotal } };
     }
 
     valoracion(promedio) {
@@ -186,6 +186,7 @@ class NotasData {
                 })
             }
         }
+        return Promise.resolve()
     }
 
     getAlumnoRow(id) {

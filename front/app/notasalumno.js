@@ -33,43 +33,48 @@ class NotasAlumno extends View {
                             summaryType: "avg",
                             alignment: "left",
                             showInColumn: "periodoNombre",
-                            customizeText: (data) => {
+                            customizeText: data => {
                                 const promedio = Math.round(data.value);
                                 return promedio + " / " + this.notasData().valoracion(Math.round(data.value))
                             },
                         }],
-                        totalItems: this.totalItems()
-                            //                        calculateCustomSummary: (options) => this.calculateCustomSummary(options)
+                        totalItems: [{
+                            summaryType: "custom",
+                            name: "total",
+                            alignment: "left",
+                            column: "nota",
+                            customizeText: data => {
+                                const promedio = Math.round(data.value);
+                                return promedio + " / " + this.notasData().valoracion(Math.round(data.value))
+                            }
+
+                        }],
+                        calculateCustomSummary: options =>
+                            this.calculateCustomSummary(options)
                     },
                     onContentReady: e => this.listOnContentReady(e),
                     onCellPrepared: e => this.listOnCellPrepared(e),
                     onEditingStart: e => this.listOnEditingStart(e),
-                    onRowUpdating: e => this.onRowUpdating(e),
-                    onSaved: e => {
-                        const totalItems = this.list().getProperty("summary.totalItems");
-                        this.list().setProperty("summary.totalItems", totalItems != null ? null : this.totalItems());
-                    },
-                    toolbar: {
-                        items: this.toolbarItems()
-                    }
+                    onRowUpdating: e => this.listOnRowUpdating(e),
+                },
+                toolbar: {
+                    items: this.toolbarItems()
                 }
             }
         }
     }
 
-    totalItems() {
-        return [{
-            summaryType: "sum",
-            name: "avg",
-            alignment: "left",
-            column: "nota"
-        }]
+    notasAlumnoData() {
+        if (this._notasAlumnoData == undefined) {
+            this._notasAlumnoData = new NotasAlumnoData(this).refresh();
+        }
+        return this._notasAlumnoData;
     }
 
     calculateCustomSummary(options) {
         if (options.name == "total") {
             if (options.summaryProcess == "calculate") {
-                options.totalValue = this.notasData().alumnoPromedioAnual(this.alumno()).anual.promedio;
+                options.totalValue = this.alumnoPromedioAnual.total.promedio
             }
         }
     }
@@ -99,7 +104,7 @@ class NotasAlumno extends View {
                 colCount: 6,
                 items: [
                     Item.ReadOnly({ dataField: "alumno", width: 300, colSpan: 2, template: () => this.alumnoTemplate() }),
-                    Item.ReadOnly({ dataField: "status", width: 200, template: () => this.estadoTemplate() })
+                    Item.ReadOnly({ dataField: "status", width: 200, template: () => this.estadoTemplate(), visible: false })
                 ]
             })
         ]
@@ -117,10 +122,6 @@ class NotasAlumno extends View {
 
     refreshAlumnoTemplate() {
         this._alumnoTemplate.text(this.listView().alumnoDescripcion())
-    }
-
-    refreshAlumnoEstado() {
-        //        this._alumnoEstado.text(this.notasData().alumnoStatus())
     }
 
     columns() {
@@ -225,21 +226,33 @@ class NotasAlumno extends View {
     alumno() {
         return this.listView().alumno();
     }
-    rows() {
-        this.rows = new NotasAlumnosRows(this).rows();
-        return this.rows;
+
+    rows(forceRefresh = false) {
+        if (this._rows == undefined || forceRefresh) {
+            this._rows = this.defineRows()
+        }
+        return this._rows;
+    }
+
+    defineRows() {
+        this.refreshPromedioAnual();
+        return new NotasAlumnosRows(this).rows();
+    }
+
+    refreshPromedioAnual() {
+        this.alumnoPromedioAnual = this.notasData().alumnoPromedioAnual(this.alumno())
     }
 
     refresh() {
         this.refreshForm();
-        this.list().setArrayDataSource(this.rows())
+        this.refreshPromedioAnual();
+        this.list().setArrayDataSource(this.rows(true))
         this.list().focus()
     }
 
     refreshForm() {
         this.refreshFormData();
         this.refreshAlumnoTemplate()
-        this.refreshAlumnoEstado()
     }
 
     refreshFormData() {
@@ -257,18 +270,18 @@ class NotasAlumno extends View {
     }
 
     saveNota(p) {
-        const notasRow = {
-            examen: p.examen,
-            alumno: p.alumno,
-            nota: p.nota
-        }
-        return new Rest({ path: "notas" })
-            .promise({
-                verb: "update",
-                data: notasRow
-            })
+        Promise.resolve(this.notasData().saveNota(p.examen, p.alumno, p.nota))
             .then(() =>
-                this.notasData().saveNota(p.examen, p.alumno, p.nota))
+                this.alumnoPromedioAnual = this.notasData().alumnoPromedioAnual(p.alumno))
+            .then(() =>
+                new Rest({ path: "notas" }).promise({
+                    verb: "update",
+                    data: {
+                        examen: p.examen,
+                        alumno: p.alumno,
+                        nota: p.nota
+                    }
+                }))
             .then(() =>
                 this.dataHasChanged = true)
             .catch(err =>
@@ -299,7 +312,7 @@ class NotasAlumno extends View {
         this.list().focus()
     }
 
-    onRowUpdating(e) {
+    listOnRowUpdating(e) {
         this.saveNota({
             examen: e.oldData.id,
             alumno: this.alumno(),
@@ -370,30 +383,66 @@ class NotasAlumno extends View {
 
     estiloNota(e) {
         e.cellElement.css({
-            "background-color": "rgb(229, 250, 250)"
+            "background-color": "rgb(181, 238, 220)"
         })
     }
 
 }
 
-class NotasAlumnosData {
+class NotasAlumnoData {
 
     constructor(notasAlumnos) {
         this.notasAlumnos = notasAlumnos;
-        this.rows = this.notasAlumnos.rows;
-        this.map = new Map()
+        this.notasData = this.notasAlumnos.notasData();
+        this.rows = this.notasAlumnos.list().dataSource();
+    }
+
+    map() {
+        if (this._map == undefined) {
+            this._map = this.defineMap()
+        }
+        return this._map;
+    }
+
+    defineMap() {
+        const map = new Map();
+        for (const row of this.rows) {
+            if (map.get(row.periodo) == undefined) {
+                map.set({ cantidad: 0, suma: 0, promedio: null, valoracion: null })
+            }
+        }
+        return map;
     }
 
     refresh() {
         for (const row of this.rows) {
-            let total = this.map.get(row.periodo);
-            if (total == undefined) {
-                total = { cantidad: 0, suma: 0 };
+            const total = this.map().get(row.periodo);
+            if (Utils.IsDefined(row.nota)) {
+                ++total.cantidad;
+                total.suma += row.nota;
             }
-            total.cantidad += 1;
-            total.suma += row.nota;
-            this.map.set(row.periodo, total)
         }
+        this.map().forEach(total => {
+            if (0 < total.cantidad) {
+                total.promedio = Math(total.suma / total.cantidad);
+                total.valoracion = this.notasData.valoracion(total.promedio)
+            } else {
+                total.promedio = undefined;
+                total.valoracion = undefined;
+            }
+        })
+        return this;
+    }
+
+
+
+    hayNotas() {
+        for (const [key, value] of this.map().entries()) {
+            if (0 < value.suma) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
@@ -435,7 +484,7 @@ class NotasAlumnoTemplate extends Template {
             items: [
                 this.form(),
                 this.list(),
-                this.toolbar()
+                this.toolbar(),
             ]
         }
     }
@@ -452,15 +501,10 @@ class NotasAlumnoTemplate extends Template {
 
     list() {
         return {
+            name: "list",
             fillContainer: true,
             orientation: "vertical",
-            items: [{
-                name: "list",
-                fillContainer: true,
-                orientation: "vertical",
-                height: 1
-            }]
-
+            height: 1
         }
     }
 
