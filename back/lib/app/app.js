@@ -6,13 +6,16 @@ const { UserStateRest } = require("../rest/userstaterest");
 const { Utils, Dates } = require("../utils/utils");
 const { Exception } = require("../utils/exceptions");
 const { Path } = require("../utils/path");
+const { Obfuscate } = require("./obfuscate");
 
 class App {
 
     static IndexRelativePath = "../../../front/app/index.htm";
+    static IndexObfRelativePath = "../../../obfuscated/index.htm";
 
     static StaticAlias = "static";
     static StaticRelativePath = "../../../front"
+    static StaticRelativeObfPath = "../../../obfuscated"
     static StaticRelativePaths = [
         "app",
         "lib/app",
@@ -32,27 +35,7 @@ class App {
         this.root = parameters.root;
         this.tokenMinutes = parameters.tokenMinutes || App.TOKEN_MINUTES_DEFAULT;
         this.logSql = parameters.logSql;
-    }
-
-    init() {
-
-        return new Promise((resolve, reject) => {
-
-            this.expressFunction = require("express");
-            this.express = this.expressFunction();
-            this.cors = require("cors");
-            this.bodyParser = require("body-parser");
-
-            this.express.use(this.cors());
-            this.express.use(this.bodyParser.json({ limit: "50mb" }));
-            this.express.use(this.bodyParser.urlencoded({ extended: true, limit: "50mb" }));
-
-            this.usersLogged = new UsersLogged({ app: this });
-
-            resolve(true)
-
-        })
-
+        this.obfuscated = parameters.obfuscated;
     }
 
     start() {
@@ -80,6 +63,35 @@ class App {
             .catch(err =>
                 this.terminate(err)
             )
+    }
+
+    init() {
+
+        return new Promise((resolve, reject) => {
+
+            this.expressFunction = require("express");
+            this.express = this.expressFunction();
+            this.cors = require("cors");
+            this.bodyParser = require("body-parser");
+
+            this.express.use(this.cors());
+            this.express.use(this.bodyParser.json({ limit: "50mb" }));
+            this.express.use(this.bodyParser.urlencoded({ extended: true, limit: "50mb" }));
+
+            this.usersLogged = new UsersLogged({ app: this });
+
+            if (this.obfuscated == true) {
+                this.obfuscate()
+            }
+
+            resolve(true)
+
+        })
+
+    }
+
+    obfuscate() {
+        Obfuscate.Execute(this.root + ".js")
     }
 
     dbConnect() {
@@ -115,14 +127,34 @@ class App {
     }
 
     buildIndex() {
+        this.buildIndexObf()
+    }
+
+    buildIndexObf() {
+        const indexPath = Path.Absolute(App.IndexObfRelativePath);
+        const root = Path.Normalize(this.root);
+        this.express.get(root, (req, res) =>
+            res.sendFile(indexPath))
+    }
+
+    buildIndexPlain() {
         const indexPath = Path.Absolute(App.IndexRelativePath);
         const root = Path.Normalize(this.root);
-        //        this.log("GET " + root);
         this.express.get(root, (req, res) =>
             res.sendFile(indexPath))
     }
 
     useStatic() {
+        this.useStaticObf();
+    }
+
+    useStaticObf() {
+        const staticAliasPath = Path.Concatenate(this.root, App.StaticAlias);
+        const staticPath = Path.Absolute(App.StaticRelativeObfPath)
+        this.express.use(staticAliasPath, this.expressFunction.static(staticPath));
+    }
+
+    useStaticPlain() {
         var staticAliasPath = Path.Concatenate(this.root, App.StaticAlias);
         App.StaticRelativePaths.forEach(
             relativePath => {
