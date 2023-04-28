@@ -14,7 +14,9 @@ class Obfuscate {
         if (!fs.existsSync(this.obfuscatedFolder)) {
             fs.mkdirSync(this.obfuscatedFolder);
         }
-        fs.unlinkSync(obfuscatedFile);
+        if (fs.existsSync(obfuscatedFile)) {
+            fs.unlinkSync(obfuscatedFile);
+        }
         const filesPath = Files.getFilesPath(this.frontFolder, ".js");
         for (const filePath of filesPath) {
             fs.appendFileSync(obfuscatedFile, fs.readFileSync(filePath).toString() + Strings.LineFeed(2))

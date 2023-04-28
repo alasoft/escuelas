@@ -27,7 +27,8 @@ new App({
     tokenMinutes: 120,
     version: "0.9",
     name: "Escuelas",
-    logSql: true
+    logSql: true,
+    obfuscated: true
 }).start()
 
 function dbConnection(app) {

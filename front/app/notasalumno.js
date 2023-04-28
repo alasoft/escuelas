@@ -108,7 +108,7 @@ class NotasAlumno extends View {
     }
 
     alumnoTemplate() {
-        this._alumnoTemplate = $("<div>").addClass("font-label");
+        this._alumnoTemplate = $("<div>").css({ "font-style": "italic", "font-weight": "bold", "font-size": "14px" });
         return this._alumnoTemplate;
     }
 

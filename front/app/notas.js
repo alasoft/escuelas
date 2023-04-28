@@ -22,7 +22,7 @@ class Notas extends View {
                     showBorders: true,
                     wordWrapEnabled: true,
                     hoverStateEnabled: true,
-                    //                    columnAutoWidth: true,
+                    columnAutoWidth: true,
                     groupPanel: {
                         visible: false
                     },
