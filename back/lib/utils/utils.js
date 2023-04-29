@@ -307,7 +307,7 @@ class Files {
     }
 
     static DeleteFolder(folder, parameters) {
-        fs.rmdirSync(folder, parameters);
+        fs.rmSync(folder, parameters);
     }
 
 }
