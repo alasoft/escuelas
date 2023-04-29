@@ -35,23 +35,4 @@ class Obfuscate {
 
 }
 
-class Files {
-
-    static getFilesPath(folder, extension) {
-        let list = [];
-        const files = fs.readdirSync(folder);
-        for (const file of files) {
-            const subPath = path.join(folder, file);
-            if (fs.statSync(subPath).isDirectory()) {
-                list = list.concat(this.getFilesPath(subPath, extension))
-            } else if (path.extname(subPath) == extension) {
-                list.
-                push(subPath);
-            }
-        }
-        return list;
-    }
-
-}
-
 module.exports.Obfuscate = Obfuscate;

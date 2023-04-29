@@ -39,6 +39,14 @@ class Exceptions {
     static RANGO_NOTAS_INTERSECTA_OTRO_RANGO = "rangoNotasIntersectaOtroRango"
     static RANGO_NOTAS_CONTIENE_OTRO_RANGO = "rangoNotasContieneOtroRango"
     static SIGLA_DUPLICATED = "siglaDuplicated"
+    static FILE_NOT_FOUND = "fileNotFound"
+
+    static FileNotFound() {
+        return new Exception({
+            type: this.TYPE_INTERNAL,
+            code: this.FILE_NOT_FOUND
+        }, p)
+    }
 
     static InvalidToken(p) {
         return new Exception({

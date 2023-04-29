@@ -1,8 +1,12 @@
 const { _ } = require("lodash");
 const cuid = require("cuid");
 const simpleEncryptor = require("simple-encryptor");
+const fs = require("fs");
+const path = require('path');
+
 const format = require('date-fns/format');
 const es = require('date-fns/locale/es');
+
 
 class Utils {
 
@@ -158,6 +162,14 @@ class Strings {
         return this.OneSpace(s).trim();
     }
 
+    static EqualsIgnoreCase(s1, s2) {
+        return s1.toLowerCase() == s2.toLowerCase()
+    }
+
+    static Contains(s1, s2) {
+        return s1.includes(s2);
+    }
+
 }
 
 class Dates {
@@ -243,8 +255,66 @@ class Numbers {
 
 }
 
+class Files {
+
+    static getFilesPath(folder, extension) {
+        let list = [];
+        const files = fs.readdirSync(folder);
+        for (const file of files) {
+            const subPath = path.join(folder, file);
+            if (fs.statSync(subPath).isDirectory()) {
+                list = list.concat(this.getFilesPath(subPath, extension))
+            } else if (path.extname(subPath) == extension) {
+                list.push(subPath);
+            }
+        }
+        return list;
+    }
+
+    static Copy(origin, destination) {
+        fs.copyFileSync(origin, destination)
+    }
+
+    static Content(filePath) {
+        return fs.readFileSync(filePath).toString();
+    }
+
+    static Append(filePath, content) {
+        fs.appendFileSync(filePath, content)
+    }
+
+    static CreateFolder(folder) {
+        if (!fs.existsSync(folder)) {
+            fs.mkdirSync(folder);
+        }
+    }
+
+    static RecreateFolder(folder) {
+        if (fs.existsSync(folder)) {
+            this.DeleteFolder(folder, { recursive: true, force: true });
+        }
+        fs.mkdirSync(folder);
+    }
+
+    static DeleteFile(filePath) {
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+        }
+    }
+
+    static FileName(filePath) {
+        return path.basename(filePath)
+    }
+
+    static DeleteFolder(folder, parameters) {
+        fs.rmdirSync(folder, parameters);
+    }
+
+}
+
 module.exports.Strings = Strings;
 module.exports.Utils = Utils;
 module.exports.Dates = Dates;
 module.exports.Numbers = Numbers;
 module.exports.Html = Html;
+module.exports.Files = Files;

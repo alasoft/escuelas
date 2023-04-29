@@ -28,7 +28,7 @@ new App({
     version: "0.9",
     name: "Escuelas",
     logSql: true,
-    obfuscated: true
+    //    obfuscated: true
 }).start()
 
 function dbConnection(app) {

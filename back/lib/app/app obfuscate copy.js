@@ -6,7 +6,7 @@ const { UserStateRest } = require("../rest/userstaterest");
 const { Utils, Dates } = require("../utils/utils");
 const { Exception } = require("../utils/exceptions");
 const { Path } = require("../utils/path");
-const { Obfuscate } = require("../utils/obfuscate");
+const { Obfuscate } = require("../utils/obfuscatecompact");
 
 class App {
 
@@ -92,11 +92,88 @@ class App {
 
     obfuscate() {
         new Obfuscate({
+            fileNames: [
+                "utils",
+                "errors",
+                "exceptions",
+                "messages",
+                "objectbase",
+                "component",
+                "rest",
+                "datasource",
+                "memorytable",
+                "widget",
+                "list",
+                "grid",
+                "treeitems",
+                "form",
+                "toolbar",
+                "resizer",
+                "popup",
+                "contextmenu",
+                "button",
+                "label",
+                "scheduler",
+                "listcolumns",
+                "formitems",
+                "template",
+                "view",
+                "listview",
+                "simplelistview",
+                "filterview",
+                "dialogview",
+                "entryview",
+                "formview",
+                "messageview",
+                "errorview",
+                "yesnoview",
+                "appbase",
+                "appviewbase",
+                "appview",
+                "appviewtest",
+                "appviewtemplate",
+                "exportexceldialog",
+                "app",
+                "loginview",
+                "registerview",
+                "users",
+                "escuelas",
+                "materias",
+                "generos",
+                "añoslectivos",
+                "diassemana",
+                "añolectivofilterview",
+                "periodos",
+                "cursos",
+                "modalidades",
+                "años",
+                "turnos",
+                "examenestipos",
+                "cursosdetalle",
+                "cursosmateriasdetalle",
+                "alumnoscurso",
+                "importalumnos",
+                "materiascurso",
+                "materiascursotemplate",
+                "cursosbaseview",
+                "notasdata",
+                "notas",
+                "notasalumno",
+                "añocursomateriafilterview",
+                "cursosmateriasform",
+                "examenescurso",
+                "examenes",
+                "materiashorascurso",
+                "materiashoras",
+                "valoraciones",
+                "diascalendario"
+            ],
+            destinationFile: "escuelas.js",
             relativePaths: {
                 front: "../../../front",
-                index: "../../../front/app",
                 styles: "../../../front/styles",
-                destination: "../../../obfuscated"
+                destination: "../../../obfuscated",
+                index: "../../../front/app"
             }
         }).execute()
     }
@@ -174,6 +251,7 @@ class App {
         App.StaticRelativePaths.forEach(
             relativePath => {
                 const staticPath = Path.Absolute(App.StaticRelativePath, relativePath);
+                //                this.log("STATIC " + staticPath);
                 this.express.use(staticAliasPath, this.expressFunction.static(staticPath))
             }
         )
