@@ -37,7 +37,7 @@ class Obfuscate {
 
     obfuscateConfiguration() {}
 
-    obfuscateConfigurationOld() {
+    obfuscateConfigurationStrong() {
         return {
             compact: false,
             controlFlowFlattening: true,

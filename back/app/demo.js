@@ -19,7 +19,7 @@ const { NotasDataRest } = require("./notasdatarest");
 const { ValoracionesRest } = require("./valoracionesrest");
 
 new App({
-    port: 9090,
+    port: 9091,
     root: "escuelas",
     dbConnection: dbConnection,
     createTables: CreateTables,
@@ -36,7 +36,7 @@ function dbConnection(app) {
         app: app,
         user: "postgres",
         password: "postgres",
-        database: "alasoft_escuelas"
+        database: "alasoft_escuelas_demo"
     })
 }
 
