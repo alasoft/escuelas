@@ -1,4 +1,4 @@
-class Valoraciones extends AñoLectivoFilterView {
+class Valoraciones extends AñoLectivoView {
 
     labelText() {
         return "Valoraciones Pedagógicas";

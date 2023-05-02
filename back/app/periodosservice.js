@@ -18,7 +18,8 @@ class PeriodosServiceBase extends ServiceBase {
                 "per.añolectivo",
                 "per.nombre",
                 "per.desde",
-                "per.hasta"
+                "per.hasta",
+                "per.preliminar"
             ],
             from: "periodos per"
         }
@@ -34,7 +35,8 @@ class PeriodosListService extends TableListService {
                 "per.id",
                 "per.nombre",
                 "per.desde",
-                "per.hasta"
+                "per.hasta",
+                "per.preliminar"
             ],
             from: "periodos per",
             where: this.sqlAnd()
@@ -61,7 +63,8 @@ class PeriodosGetService extends TableGetService {
                 "per.id",
                 "per.nombre",
                 "per.desde",
-                "per.hasta"
+                "per.hasta",
+                "per.preliminar"
             ],
             from: "periodos per",
             where: "id=@id",
@@ -124,7 +127,8 @@ class PeriodosCommonService {
         this.ValidateDesdeLowerHasta(service);
         this.ValidaDesdeInAñoLectivo(service)
         this.ValidaHastaInAñoLectivo(service)
-        return this.ValidateNoDateCollision(service);
+        this.ValidateNoDateCollision(service);
+        this.ValidatePreliminar(service)
     }
 
     static ValidateDesdeLowerHasta(service) {
@@ -159,7 +163,7 @@ class PeriodosCommonService {
                     "per.id",
                     "per.nombre",
                     "per.desde",
-                    "per.hasta"
+                    "per.hasta",
                 ],
                 from: "periodos per",
                 where: service.sqlAnd()
@@ -187,11 +191,24 @@ class PeriodosCommonService {
             })
         }
 
-        return service.db.select(sql()).then(
+        service.db.select(sql()).then(
             rows => validateRanges(rows)
         )
 
     }
+
+    static ValidatePreliminar(service) {
+        if (service.isDefined("preliminar")) {
+            if (!Dates.Between(service.date("preliminar"), service.date("desde"), service.date("hasta"))) {
+                throw Exceptions.Validation({
+                    code: Exceptions.PRELIMINAR_DEBE_ESTAR_ENTRE_DESDE_HASTA,
+                    detail: row
+                })
+            }
+        }
+    }
+
+
 
 }
 

@@ -1,4 +1,4 @@
-class Cursos extends AñoLectivoFilterView {
+class Cursos extends AñoLectivoView {
 
     labelText() {
         return "Cursos";

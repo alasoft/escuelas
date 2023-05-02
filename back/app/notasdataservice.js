@@ -91,7 +91,8 @@ class NotasDataListService extends ServiceBase {
                 "per.id",
                 "per.nombre",
                 "per.desde",
-                "per.hasta"
+                "per.hasta",
+                "per.preliminar"
             ],
             from: "periodos per",
             where: this.sqlAnd().addSql("añolectivo=@añolectivo", {
@@ -122,6 +123,8 @@ class NotasDataListService extends ServiceBase {
                 "nt.alumno",
                 "nt.examen",
                 "nt.nota",
+                "nt._created",
+                "nt._updated",
                 "exa.periodo"
             ],
             from: "notas nt",

@@ -1,4 +1,13 @@
-class Periodos extends AñoLectivoFilterView {
+class Periodos extends AñoLectivoView {
+
+    extraConfiguration() {
+        return {
+            popup: {
+                title: "Períodos",
+                width: 1100
+            }
+        }
+    }
 
     labelText() {
         return "Períodos";
@@ -9,11 +18,16 @@ class Periodos extends AñoLectivoFilterView {
             Column.Text({ dataField: "nombre", caption: "Nombre", width: 300 }),
             Column.Date({
                 dataField: "desde",
-                width: 300,
+                width: 200,
             }),
             Column.Date({
-                dataField: "hasta"
+                dataField: "hasta",
+                width: 200,
             }),
+            Column.Date({
+                dataField: "preliminar",
+                catpion: "Informe Preliminar"
+            })
         ]
     }
 
@@ -63,10 +77,22 @@ class PeriodosFormView extends FormView {
 
     formItems() {
         return [
-            Item.ReadOnly({ dataField: "añolectivo", width: 100 }),
-            Item.Text({ dataField: "nombre", required: true }),
-            Item.Date({ dataField: "desde", required: true, }),
-            Item.Date({ dataField: "hasta", required: true, })
+            Item.Group({
+                colCount: 1,
+                items: [
+                    Item.ReadOnly({ dataField: "añolectivo", width: 100 }),
+                    Item.Text({ dataField: "nombre", required: true }),
+                ]
+            }),
+            Item.Group({
+                colCount: 2,
+                items: [
+                    Item.Date({ dataField: "desde", required: true }),
+                    Item.Date({ dataField: "hasta", required: true }),
+                    Item.Date({ dataField: "preliminar", label: "Informe Preliminar", clearButton: true })
+                ]
+            })
+
         ]
     }
 
@@ -81,6 +107,8 @@ class PeriodosFormView extends FormView {
             this.handlePeriodoIntersecta(err)
         } else if (err.code == Exceptions.PERIODO_CONTIENE_OTRO_PERIODO) {
             this.handlePeriodoContiene(err)
+        } else if (err.code = Exceptions.PRELIMINAR_DEBE_ESTAR_ENTRE_DESDE_HASTA) {
+            this.handlePreliminarDesdeHasta(err)
         } else {
             super.handleError(err);
         }
@@ -122,6 +150,18 @@ class PeriodosFormView extends FormView {
             message: "intersecta al " + err.detail.nombre,
             quotes: false,
             detail: "Del " + Dates.Format(err.detail.desde) + " al " + Dates.Format(err.detail.hasta)
+        }])
+    }
+
+    handlePreliminarDesdeHasta(err) {
+        App.ShowMessage([{
+            message: "La fecha del Informe Preliminar",
+            detail: this.getDate("preliminar"),
+            quotes: false,
+        }, {
+            message: "debe estar entre la fecha Desde y Hasta",
+            quotes: false,
+            detail: this.getDate("desde") + "  -  " + this.getDate("hasta")
         }])
     }
 

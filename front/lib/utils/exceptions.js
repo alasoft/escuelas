@@ -32,6 +32,7 @@ class Exceptions {
     static PERIODO_CONTIENE_OTRO_PERIODO = "periodoContieneOtroPeriodo"
     static FECHA_ENTREGA_DEBER_SER_MAYOR_IGUAL_INICIO = "fechaEntregaDebeSerMayorIgualInicio"
     static DEBE_ESTAR_DENTRO_PERIODO = "debeEstarDentroPeriodo"
+    static PRELIMINAR_DEBE_ESTAR_ENTRE_DESDE_HASTA = "preliminarDebeEsterEntreDesdeHasta"
 
     static NOTA_DESDE_DEBE_SER_MENOR_IGUAL_NOTA_HASTA = "notaDesdeDebeSerMenorIgualNotaHasta"
     static RANGO_NOTAS_INTERSECTA_OTRO_RANGO = "rangoNotasIntersectaOtroRango"

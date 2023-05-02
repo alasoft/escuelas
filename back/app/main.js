@@ -25,10 +25,10 @@ new App({
     createTables: CreateTables,
     restItems: restItems,
     tokenMinutes: 120,
-    version: "0.9",
+    version: "0.9.1",
     name: "Escuelas",
-    logSql: true,
-    obfuscated: true
+    logSql: false,
+    obfuscated: false
 }).start()
 
 function dbConnection(app) {

@@ -55,6 +55,7 @@ class CreateTables extends CreateTablesBase {
                     nombre: SqlType.String(),
                     desde: SqlType.Date(),
                     hasta: SqlType.Date(),
+                    preliminar: SqlType.Date()
                 },
                 unique: "añolectivo,nombre"
             }),

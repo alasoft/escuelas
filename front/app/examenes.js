@@ -1,4 +1,4 @@
-class Examenes extends AñoLectivoFilterView {
+class Examenes extends AñoLectivoView {
 
     path() {
         return "examenes_all";

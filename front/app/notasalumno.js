@@ -108,7 +108,11 @@ class NotasAlumno extends View {
     }
 
     alumnoTemplate() {
-        this._alumnoTemplate = $("<div>").css({ "font-style": "italic", "font-size": "14px" });
+        this._alumnoTemplate = $("<div>").css({
+            "font-style": "italic",
+            "font-size": "15px",
+            "font-weight": 400
+        });
         return this._alumnoTemplate;
     }
 
@@ -339,7 +343,7 @@ class NotasAlumno extends View {
                 message: "ya que su fecha de inicio",
                 detail: Dates.Format(e.data.desde)
             }, {
-                message: "es futura"
+                message: "aún no aconteció"
             }])
         }
     }
@@ -374,7 +378,7 @@ class NotasAlumno extends View {
 
     estiloFuturo(e) {
         e.cellElement.css({
-            "background-color": "rgb(236, 243, 243)"
+            "background-color": "rgb(225, 228, 228)"
         })
     }
 

@@ -1,4 +1,4 @@
-class MateriasHoras extends AñoLectivoFilterView {
+class MateriasHoras extends AñoLectivoView {
 
     path() {
         return "materias_horas_all";

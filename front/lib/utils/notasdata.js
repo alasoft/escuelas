@@ -52,6 +52,7 @@ class NotasData {
             row.examenesCantidad = this.examenesCantidadPorPeriodo(row.id);
             row.desde = new Date(row.desde);
             row.hasta = new Date(row.hasta);
+            row.preliminar = Utils.IsDefined(row.preliminar) ? new Date(row.preliminar) : undefined;
             row.temporalidad = Dates.Temporalidad(row.desde, row.hasta)
         }
     }
@@ -66,21 +67,53 @@ class NotasData {
         return cantidad;
     }
 
-    hasLastPeriodo() {
+    hayPeriodos() {
         return 0 < this.periodosRows.length
     }
 
     getLastPeriodo() {
-        if (this.hasLastPeriodo()) {
+        if (this.hayPeriodos()) {
             return this.periodosRows[this.periodosRows.length - 1];
         }
+    }
+
+    alumnoPromedioAnual(alumno) {
+        return this.promedioTotal(this.alumnoPromedios(alumno))
+    }
+
+    alumnoPreliminares(alumno) {
+        const preliminares = {}
+        for (const row of this.periodosRows) {
+            const preliminar = this.alumnoPreliminarPeriodo(alumno, row.id);
+            preliminares["preliminar_" + row.id] = preliminar;
+        }
+        return preliminares;
+    }
+
+    alumnoPreliminarPeriodo(alumno, periodo) {
+        const periodoRow = this.getPeriodoRow(periodo)
+        if (!Utils.IsDefined(periodoRow.preliminar)) {
+            return {};
+        }
+        let suma = 0;
+        let cantidad = 0;
+        for (const row of this.notasRows) {
+            if (row.alumno == alumno && row.periodo == periodo) {
+                const examenRow = this.getExamenRow(row.examen);
+                if (examenRow.hasta <= periodoRow.preliminar) {
+                    suma += row.nota;
+                    ++cantidad;
+                }
+            }
+        }
+        return this.promedioValoracion(suma, cantidad);
     }
 
     alumnoPromedios(alumno) {
         const promedios = {};
         for (const row of this.periodosRows) {
             const promedio = this.alumnoPromedioPeriodo(alumno, row.id);
-            promedios["periodo_" + row.id] = promedio;
+            promedios["promedio_" + row.id] = promedio;
         }
         return promedios;
     }
@@ -94,17 +127,51 @@ class NotasData {
                 ++cantidad;
             }
         }
+        return this.promedioValoracion(suma, cantidad);
+    }
+
+    promedioValoracion(suma, cantidad) {
         const promedio = 0 < cantidad ? Math.round(suma / cantidad) : undefined;
         const valoracion = this.valoracion(promedio);
         return {
+            suma: suma,
+            cantidad: cantidad,
             promedio: promedio,
             valoracion: valoracion,
-            status: this.alumnoStatus(periodo, cantidad)
         }
     }
 
-    alumnoPromedioAnual(alumno) {
-        return this.promedioTotal(this.alumnoPromedios(alumno))
+    alumnoStatus(alumno, promedios) {
+        const status = {};
+        for (const row of this.periodosRows) {
+            const statusPeriodo = this.alumnoStatusPeriodo(alumno, row, promedios["promedio_" + row.id]);
+            status["status_" + row.id] = { descripcion: statusPeriodo };
+        }
+        return status;
+    }
+
+    alumnoStatusPeriodo(alumno, periodoRow, promedio) {
+        const examenesCantidad = periodoRow.examenesCantidad;
+        const cantidad = promedio.cantidad;
+        if (periodoRow.temporalidad == Dates.FUTURO) {
+            return ""
+        }
+        if (this.examenesRows.length == 0) {
+            return "No hay exámenes cargados"
+        }
+        if (cantidad < examenesCantidad) {
+            const diferencia = (examenesCantidad - cantidad);
+            if (1 < diferencia) {
+                return "Faltan cargar " + (examenesCantidad - cantidad) + " notas";
+            } else {
+                return "Falta cargar " + diferencia + " nota";
+            }
+        }
+        if (periodoRow.temporalidad = Dates.PASADO) {
+            return "Completo"
+        } {
+            return "Notas al dia"
+        }
     }
 
     promedioTotal(promedios) {
@@ -130,26 +197,6 @@ class NotasData {
                 }
             }
         }
-    }
-
-    alumnoStatus(periodo, cantidad) {
-        if (this.examenesRows.length == 0) {
-            return "No hay exámenes cargados"
-        }
-        const periodoRow = this.getPeriodoRow(periodo);
-        const examenesCantidad = periodoRow.examenesCantidad;
-        if (cantidad == 0) {
-            return "No hay notas cargadas"
-        }
-        if (cantidad < examenesCantidad) {
-            const diferencia = (examenesCantidad - cantidad);
-            if (1 < diferencia) {
-                return "Faltan cargar " + (examenesCantidad - cantidad) + " notas";
-            } else {
-                return "Falta cargar " + diferencia + " nota";
-            }
-        }
-        return "Completo"
     }
 
     getPeriodoPresenteRow() {

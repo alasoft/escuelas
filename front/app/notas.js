@@ -181,7 +181,7 @@ class Notas extends View {
     }
 
     listToolbarItems() {
-        return [this.itemAlumnos(), this.itemExamenes(), this.itemExcel(), "searchPanel"]
+        return [this.itemAlumnos(), this.itemExamenes(), this.itemPeriodos(), this.itemVisualiza(), this.itemExcel(), "searchPanel"]
     }
 
     itemAlumnos() {
@@ -193,6 +193,32 @@ class Notas extends View {
                 text: "Alumnos",
                 hint: "Consulta Alumnos del Curso",
                 onClick: e => this.alumnos()
+            }
+        }
+    }
+
+    itemVisualiza() {
+        return {
+            widget: "dxButton",
+            location: "before",
+            options: {
+                icon: "search",
+                text: "Visualiza",
+                hint: "Selecciona las columnas a visualizar de la Planilla",
+                onClick: e => this.alumnos()
+            }
+        }
+    }
+
+    itemPeriodos() {
+        return {
+            widget: "dxButton",
+            location: "before",
+            options: {
+                icon: "search",
+                text: "Períodos",
+                hint: "Consulta los Períodos",
+                onClick: e => this.periodos()
             }
         }
     }
@@ -277,6 +303,16 @@ class Notas extends View {
                 this.afterAlumnos(closeData))
     }
 
+    periodos() {
+        new Periodos({
+                mode: "popup",
+                añoLectivoReadOnly: true,
+                cursoReadOnly: true
+            })
+            .render().then(closeData =>
+                this.afterPeriodos(closeData))
+    }
+
     afterAlumnos(closeData) {
         if (closeData.dataHasChanged == true) {
             this.refresh()
@@ -284,6 +320,12 @@ class Notas extends View {
                     this.list().focusRowById(closeData.id))
         } else if (closeData.id != undefined) {
             this.list().focusRowById(closeData.id)
+        }
+    }
+
+    afterPeriodos(closeData) {
+        if (closeData.dataHasChanged == true) {
+            this.refresh()
         }
     }
 
@@ -396,11 +438,11 @@ class Notas extends View {
     listOnCellPrepared(e) {
         if (e.column.temporalidad == Dates.PASADO || e.column.temporalidad == Dates.FUTURO) {
             e.cellElement.css({
-                "background-color": "rgb(225, 228, 228)"
+                "background-color": "rgb(229, 238, 235)"
             })
         } else if (e.column.temporalidad == Dates.PRESENTE) {
             e.cellElement.css({
-                "background-color": "rgb(181, 238, 220)"
+                "background-color": "rgb(196, 250, 233 )"
             })
         }
     }
@@ -427,6 +469,9 @@ class Notas extends View {
 
 class NotasColumns {
 
+    static PROMEDIO_WIDTH = 95;
+    static VALORACION_WIDTH = 95;
+
     constructor(notas) {
         this.notas = notas;
         this.notasData = this.notas.notasData();
@@ -443,8 +488,8 @@ class NotasColumns {
                 dataField: "id",
                 visible: false
             },
-            { dataField: "apellido", width: 120, allowReordering: false },
-            { dataField: "nombre", width: 0 < this.periodosRows.length ? 120 : undefined, allowReordering: false }
+            { dataField: "apellido", width: 150, allowReordering: false },
+            { dataField: "nombre", width: (0 < this.periodosRows.length ? 150 : undefined), allowReordering: false }
         ]
     }
 
@@ -475,36 +520,71 @@ class NotasColumns {
     }
 
     periodoColumns(row) {
-        return [{
-                dataField: "promedio_" + row.id,
-                caption: "Promedio",
-                temporalidad: row.temporalidad,
-                width: 80,
-                calculateCellValue: r => row.temporalidad != Dates.FUTURO ? r["periodo_" + row.id].promedio : ""
-            },
-            {
-                dataField: "valoracion_" + row.id,
-                caption: "Valoración",
-                temporalidad: row.temporalidad,
-                width: 90,
-                calculateCellValue: r => row.temporalidad != Dates.FUTURO ? r["periodo_" + row.id].valoracion : ""
-            },
-            {
-                dataField: "status_" + row.id,
-                caption: "Status",
-                temporalidad: row.temporalidad,
-                visible: true,
-                width: 150,
-                calculateCellValue: r => row.temporalidad != Dates.FUTURO ? r["periodo_" + row.id].status : ""
-            }
+        return [this.grupoPromedioValoracion({
+                row: row,
+                name: "preliminar",
+                headerTemplate: "Informe Preliminar" + "<small><br>" + (Utils.IsDefined(row.preliminar) ? Dates.Format(row.preliminar) : "<i>fecha no definida"),
+            }),
+            this.grupoPromedioValoracion({
+                row: row,
+                name: "promedio",
+                caption: row.temporalidad == Dates.PASADO ? "Final" : "Proyectado",
+            }),
+            this.grupoStatus({
+                row: row
+            })
         ]
+    }
+
+    grupoPromedioValoracion(p) {
+        return {
+            name: p.name + "_" + p.row.id,
+            caption: p.headerTemplate == undefined ? (p.caption || Strings.Capitalize(p.name)) : undefined,
+            headerCellTemplate: p.headerTemplate,
+            alignment: "center",
+            temporalidad: p.row.temporalidad,
+            visible: Utils.IsDefined(p.visible) ? p.visible : true,
+            columns: [{
+                    caption: "Promedio",
+                    alignment: "center",
+                    width: p.width || NotasColumns.PROMEDIO_WIDTH,
+                    temporalidad: p.row.temporalidad,
+                    calculateCellValue: r => p.row.temporalidad != Dates.FUTURO ? r[p.name + "_" + p.row.id].promedio : ""
+                },
+                {
+                    caption: "Valoración",
+                    alignment: "center",
+                    width: p.width || NotasColumns.VALORACION_WIDTH,
+                    temporalidad: p.row.temporalidad,
+                    calculateCellValue: r => p.row.temporalidad != Dates.FUTURO ? r[p.name + "_" + p.row.id].valoracion : ""
+                }
+            ]
+        }
+    }
+
+    grupoStatus(p) {
+        return {
+            dataField: "status_" + p.row.id,
+            caption: "Status",
+            temporalidad: p.row.temporalidad,
+            alignment: "center",
+            visible: true,
+            columns: [{
+                caption: "",
+                temporalidad: p.row.temporalidad,
+                alignment: "center",
+                width: 150,
+                calculateCellValue: r => p.row.temporalidad != Dates.FUTURO ? r["status_" + p.row.id].descripcion : ""
+            }]
+        }
     }
 
     anualColumn() {
         return [{
             caption: "Anual",
             alignment: "center",
-            columns: this.anualColumns()
+            visible: false,
+            columns: this.anualColumns(),
         }]
     }
 
@@ -545,9 +625,11 @@ class NotasRows {
         const rows = [];
         for (const row of this.alumnosRows) {
             const alumno = { id: row.id, apellido: row.apellido, nombre: row.nombre };
+            const preliminares = this.notasData.alumnoPreliminares(row.id)
             const promedios = this.notasData.alumnoPromedios(row.id)
+            const status = this.notasData.alumnoStatus(row.id, promedios);
             const anual = this.notasData.promedioTotal(promedios)
-            rows.push(Object.assign({}, alumno, promedios, anual))
+            rows.push(Object.assign({}, alumno, preliminares, promedios, status, anual))
         }
         return rows;
     }

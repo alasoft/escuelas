@@ -4,6 +4,19 @@ const obfuscator = require('javascript-obfuscator');
 
 class Obfuscate {
 
+    static Soft = {}
+
+    static Hard = {
+        compact: false,
+        controlFlowFlattening: true,
+        controlFlowFlatteningThreshold: 1,
+        numbersToExpressions: true,
+        simplify: true,
+        stringArrayShuffle: true,
+        splitStrings: true,
+        stringArrayThreshold: 1
+    }
+
     constructor(parameters) {
         this.parameters = parameters;
         this.destinationFile = this.parameters.destinationFile;
@@ -29,25 +42,10 @@ class Obfuscate {
         this.filesPath().forEach(
             filePath => {
                 const content = Files.Content(filePath);
-                const obfuscated = obfuscator.obfuscate(content, this.obfuscateConfiguration());
+                const obfuscated = obfuscator.obfuscate(content, Obfuscate.Soft);
                 Files.Append(this.destinationFolder + "/" + Files.FileName(filePath), obfuscated.getObfuscatedCode())
             }
         )
-    }
-
-    obfuscateConfiguration() {}
-
-    obfuscateConfigurationOld() {
-        return {
-            compact: false,
-            controlFlowFlattening: true,
-            controlFlowFlatteningThreshold: 1,
-            numbersToExpressions: true,
-            simplify: true,
-            stringArrayShuffle: true,
-            splitStrings: true,
-            stringArrayThreshold: 1
-        }
     }
 
     filesPath() {

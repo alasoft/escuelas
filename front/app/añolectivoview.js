@@ -1,4 +1,4 @@
-class AñoLectivoFilterView extends FilterView {
+class AñoLectivoView extends FilterView {
 
     defaultConfiguration() {
         return Utils.Merge(super.defaultConfiguration(), {
@@ -26,6 +26,7 @@ class AñoLectivoFilterView extends FilterView {
         return Item.Lookup({
             dataField: "añolectivo",
             dataSource: AñosLectivos.DataSource(),
+            readOnly: this.parameters().añoLectivoReadOnly == true,
             width: 130,
             label: "Año Lectivo",
             onValueChanged: e =>

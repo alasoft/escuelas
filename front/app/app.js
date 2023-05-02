@@ -27,7 +27,7 @@ class App extends AppBase {
     }
 
     static Version() {
-        return "0.0"
+        return "0.9.1"
     }
 
     static Host() {
