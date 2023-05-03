@@ -3,6 +3,9 @@ class SimpleListView extends ListView {
     extraConfiguration() {
         return {
             components: {
+                toolbar: {
+                    visible: false
+                },
                 list: {
                     toolbar: {
                         items: [this.itemInsert(), this.itemExportExcel(), "searchPanel"]

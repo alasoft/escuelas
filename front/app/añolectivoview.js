@@ -78,12 +78,17 @@ class AñoLectivoView extends FilterView {
         return { añolectivo: this.añoLectivo() }
     }
 
-    setState() {
-        super.setState();
-        if (Utils.IsDefined(this.state) && this.filter().isReady()) {
-            const añolectivo = (this.state.filter && this.state.filter.añolectivo) ? this.state.filter.añolectivo : Dates.ThisYear();
-            this.setFilterValue("añolectivo", añolectivo)
+    getState() {
+        return {
+            añoLectivo: this.getFilterValue("añolectivo"),
+            list: this.list().getState(),
         }
+    }
+
+    setState() {
+        this.settingState = true;
+        this.setFilterValue("añolectivo", this.state.añoLectivo || Dates.ThisYear());
+        this.list().setState(this.state.list || null)
     }
 
     itemAñoLectivoOnValueChanged(e) {
@@ -92,9 +97,7 @@ class AñoLectivoView extends FilterView {
 
     state() {
         return Utils.Merge(super.state(), {
-            filter: {
-                añolectivo: this.filter().getValue("añolectivo")
-            }
+            añoLectivo: this.filter().getValue("añolectivo")
         })
     }
 

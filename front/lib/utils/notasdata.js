@@ -165,9 +165,9 @@ class NotasData {
         if (cantidad < examenesCantidad) {
             const diferencia = (examenesCantidad - cantidad);
             if (1 < diferencia) {
-                return "Faltan " + (examenesCantidad - cantidad) + " notas";
+                return "Faltan cargar " + (examenesCantidad - cantidad) + " notas";
             } else {
-                return "Falta 1 nota";
+                return "Falta cargar 1 nota";
             }
         }
         if (periodoRow.temporalidad == Dates.PASADO) {

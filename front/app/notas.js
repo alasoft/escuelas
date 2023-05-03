@@ -1,5 +1,15 @@
 class Notas extends View {
 
+    static TemporalidadDescripcion(t) {
+        if (t == Dates.PASADO) {
+            return " / Cerrado"
+        } else if (t == Dates.PRESENTE) {
+            return " / Vigente"
+        } else {
+            return " / Futuro"
+        }
+    }
+
     extraConfiguration() {
         return {
             fullScreen: true,
@@ -16,9 +26,6 @@ class Notas extends View {
                     keyExpr: "id",
                     focusedRowEnabled: false,
                     dataSource: [],
-                    toolbar: {
-                        items: this.listToolbarItems()
-                    },
                     showBorders: true,
                     wordWrapEnabled: true,
                     hoverStateEnabled: true,
@@ -100,7 +107,9 @@ class Notas extends View {
                     verb: "list",
                     data: { añolectivo: this.añoLectivo() }
                 }).then(rows =>
-                    this.filter().setArrayDataSource("curso", rows))
+                    this.filter().setArrayDataSource(
+                        "curso", rows, this.settingState == true ? this.state.curso : undefined)
+                )
         } else {
             this.filter().clearEditorDataSource("curso");
         }
@@ -113,14 +122,17 @@ class Notas extends View {
                     verb: "list",
                     data: { curso: this.curso() }
                 }).then(rows => {
-                    this.filter().setArrayDataSource("materiacurso", rows);
-                })
+                    this.filter().setArrayDataSource(
+                        "materiacurso", rows, this.settingState == true ? this.state.materiaCurso : undefined);
+                }).then(() =>
+                    this.clearSettingState())
         } else {
             this.filter().clearEditorDataSource("materiacurso");
+            this.clearSettingState()
         }
     }
 
-    refreshContextMenuItems() {
+    refreshContextMenu() {
         if (this.contextMenu() != undefined && this.contextMenu().instance() != undefined) {
             this.contextMenu().setItems(this.contextMenuItems());
         }
@@ -140,11 +152,11 @@ class Notas extends View {
     refresh() {
         return this.notasData().refresh(this.materiaCurso())
             .then(() =>
+                this.refreshToolbar())
+            .then(() =>
                 this.list().resetColumns(this.columns()))
             .then(() =>
                 this.list().setArrayDataSource(this.rows()))
-            .then(() =>
-                this.loadState())
             .then(() =>
                 this.list().focus())
     }
@@ -180,7 +192,11 @@ class Notas extends View {
         return this.components().contextMenu;
     }
 
-    listToolbarItems() {
+    refreshToolbar() {
+        this.list().setToolbarItems(this.toolbarItems())
+    }
+
+    toolbarItems() {
         return [this.itemPeriodos(), this.itemAlumnos(), this.itemExamenes(), this.itemVisualiza(), this.itemExcel(), "searchPanel"]
     }
 
@@ -197,17 +213,75 @@ class Notas extends View {
         }
     }
 
-    itemVisualiza() {
-        return {
-            widget: "dxButton",
-            location: "before",
-            options: {
-                icon: "search",
-                text: "Visualiza",
-                hint: "Selecciona las columnas a visualizar de la Planilla",
-                onClick: e => this.visualiza()
-            }
+    toggleColumnVisibility(name) {
+        return this.list().toggleColumnVisibility(name);
+    }
+
+    columnaPeriodoVisible(id) {
+        return this.list().isColumnVisible("periodo_" + id);
+    }
+
+    columnaPreliminarVisible(id) {
+        return this.list().isColumnVisible("preliminar_" + id);
+    }
+
+    columnaStatusVisible(id) {
+        return this.list().isColumnVisible("status_" + id);
+    }
+
+    columnaAnualVisible() {
+        return this.list().isColumnVisible("anual");
+    }
+
+    itemsMuestra() {
+        const items = []
+        items.push({
+            text: " "
+        })
+        items.push({
+            text: " "
+        })
+        items.push({
+            text: " "
+        })
+        for (const row of this.notasData().periodosRows) {
+            items.push({
+                widget: "dxCheckBox",
+                location: "center",
+                options: {
+                    text: row.nombre,
+                    hint: "Muestra el " + row.nombre + "  ",
+                    onClicke: e => this.muestraOcultaPeriodo()
+                }
+            });
+            items.push({
+                text: "   "
+            })
+            items.push({
+                text: "   "
+            })
+            items.push({
+                text: "   "
+            })
         }
+        items.push({
+            widget: "dxCheckBox",
+            location: "center",
+            options: {
+                text: "Anual",
+                hint: "Muestra el proyectado Anual",
+                onClicke: e => this.muestraOcultaAnual()
+            }
+        })
+        return items;
+    }
+
+    muestraOcultaPeriodo(periodo) {
+
+    }
+
+    muestraOcultaAnual() {
+
     }
 
     itemPeriodos() {
@@ -224,16 +298,27 @@ class Notas extends View {
     }
 
     getState() {
-        return Utils.Merge(super.getState(), { list: this.list().getState() })
+        return {
+            añoLectivo: this.getFilterValue("añolectivo"),
+            curso: this.getFilterValue("curso"),
+            materiaCurso: this.getFilterValue("materiacurso"),
+            list: this.list().getState(),
+        }
     }
 
     setState() {
-        super.setState();
-        if (this.list().isReady()) {
-            this.list()
-                .setState(this.state.list || null)
-                .focusFirstRow()
+        this.settingState = true;
+        this.setFilterValue("añolectivo", this.state.añoLectivo || Dates.ThisYear())
+    }
+
+    clearSettingState() {
+        if (this.settingState == true) {
+            this.settingState = false;
         }
+    }
+
+    filterHasValue(dataField) {
+        return this.filter().editorHasValue(dataField)
     }
 
     itemExamenes() {
@@ -245,6 +330,19 @@ class Notas extends View {
                 text: "Examenes",
                 hint: "Consulta Examenes de la Materia",
                 onClick: e => this.examenes()
+            }
+        }
+    }
+
+    itemVisualiza() {
+        return {
+            widget: "dxButton",
+            location: "before",
+            options: {
+                icon: "search",
+                text: "Visualiza Columnas",
+                hind: "Selecciona columnas a visualizar",
+                onClick: e => this.visualiza()
             }
         }
     }
@@ -270,7 +368,7 @@ class Notas extends View {
                         fileName: this.excelFileName(),
                         title: "Notas de la Materia",
                         subTitle: this.materiCursoDescripcion(),
-                        before: () => this.beforeExport(),
+                        //                        before: () => this.beforeExport(),
                     })
                 }
             })
@@ -294,7 +392,7 @@ class Notas extends View {
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet(p.fileName);
 
-        Utils.Evaluate(p.before);
+        //        Utils.Evaluate(p.before);
 
         DevExpress.excelExporter.exportDataGrid({
                 component: this.list().instance(),
@@ -389,8 +487,16 @@ class Notas extends View {
         return this.filter().getValue(dataField);
     }
 
+    getFilterDataSource(dataField) {
+        return this.filter().getFilterDataSource(dataField);
+    }
+
     getFilterText(dataField) {
         return this.filter().getEditorText(dataField);
+    }
+
+    setFilterValue(dataField, value) {
+        this.filter().setEditorValue(dataField, value)
     }
 
     refreshFilterValue(dataField, value) {
@@ -407,13 +513,6 @@ class Notas extends View {
 
     materiaCurso() {
         return this.getFilterValue("materiacurso")
-    }
-
-    afterRender() {
-        if (this.isFullScreen()) {
-            App.HideItems();
-        }
-        this.refreshFilterValue("añolectivo", Dates.ThisYear());
     }
 
     notasAlumno() {
@@ -471,7 +570,9 @@ class Notas extends View {
         this.refresh()
     }
 
-    visualiza() {}
+    visualiza() {
+        new NotasVisualiza({ notas: this }).render()
+    }
 
     ocultaColumnasFuturas() {
         for (const row of this.notasData().periodosRows) {
@@ -509,7 +610,7 @@ class Notas extends View {
     }
 
     listOnContentReady(e) {
-        this.refreshContextMenuItems()
+        this.refreshContextMenu()
     }
 
     listOnRowDblClick(e) {
@@ -552,21 +653,11 @@ class NotasColumns {
 
     periodosColumns() {
 
-        function temporalidadDescripcion(t) {
-            if (t == Dates.PASADO) {
-                return " / Cerrado"
-            } else if (t == Dates.PRESENTE) {
-                return " / Vigente"
-            } else {
-                return " / Futuro"
-            }
-        }
-
         const columns = []
         for (const row of this.periodosRows) {
             columns.push({
                 name: "periodo_" + row.id,
-                headerCellTemplate: row.nombre + temporalidadDescripcion(row.temporalidad) + "<small><br>" + Dates.DesdeHasta(row.desde, row.hasta),
+                headerCellTemplate: row.nombre + Notas.TemporalidadDescripcion(row.temporalidad) + "<small><br>" + Dates.DesdeHasta(row.desde, row.hasta),
                 caption: row.nombre,
                 alignment: "center",
                 temporalidad: row.temporalidad,
@@ -582,7 +673,7 @@ class NotasColumns {
         return [this.grupoPromedioValoracion({
                 row: row,
                 name: "preliminar",
-                //                headerTemplate: "Informe Preliminar" + "<small><br>" + (Utils.IsDefined(row.preliminar) ? Dates.Format(row.preliminar) : "<i>(fecha no definida)"),
+                headerTemplate: "Informe Preliminar" + "<small><br>" + (Utils.IsDefined(row.preliminar) ? Dates.Format(row.preliminar) : "<i>(fecha no definida)"),
                 caption: "Informe Preliminar"
             }),
             this.grupoPromedioValoracion({
@@ -609,11 +700,13 @@ class NotasColumns {
                     alignment: "center",
                     width: p.width || NotasColumns.PROMEDIO_WIDTH,
                     temporalidad: p.row.temporalidad,
+                    allowSorting: true,
                     calculateCellValue: r => p.row.temporalidad != Dates.FUTURO ? r[p.name + "_" + p.row.id].promedio : ""
                 },
                 {
                     caption: "Valoración",
                     alignment: "center",
+                    allowSorting: true,
                     width: p.width || NotasColumns.VALORACION_WIDTH,
                     temporalidad: p.row.temporalidad,
                     calculateCellValue: r => p.row.temporalidad != Dates.FUTURO ? r[p.name + "_" + p.row.id].valoracion : ""
@@ -633,6 +726,7 @@ class NotasColumns {
                 caption: "",
                 temporalidad: p.row.temporalidad,
                 alignment: "center",
+                allowSorting: true,
                 width: 150,
                 calculateCellValue: r => p.row.temporalidad != Dates.FUTURO ? r["status_" + p.row.id].descripcion : ""
             }]

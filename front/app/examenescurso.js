@@ -10,14 +10,21 @@ class ExamenesCurso extends CursosMateriasDetalle {
             popup: {
                 title: "Examenes por Curso y Materia",
                 height: 600,
-                width: 1050
+                width: 1150
             },
             components: {
                 filter: {
                     width: 750,
                 },
                 list: {
-                    showBorders: true
+                    showBorders: true,
+                    headerFilter: {
+                        visible: true
+                    },
+                    filterPanel: {
+                        visible: true,
+                        labelLocation: "left"
+                    }
                 }
             }
         }

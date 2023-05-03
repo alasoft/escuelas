@@ -151,6 +151,17 @@ class View extends Component {
         return this.loadState()
     }
 
+    loadState() {
+        return Users.GetState({ module: this.className() })
+            .then(state => {
+                this.state = (state != null ? JSON.parse(state) : {});
+            })
+            .then(() =>
+                this.setState())
+    }
+
+    setState() {}
+
     endRender() {
         if (this.isPopup()) {
             return new Promise((resolve, reject) => {
@@ -218,15 +229,5 @@ class View extends Component {
     }
 
     getState() {}
-
-    loadState() {
-        return Users.GetState({ module: this.className() })
-            .then(s => {
-                this.state = (s != null ? JSON.parse(s) : {});
-                this.setState();
-            })
-    }
-
-    setState() {}
 
 }

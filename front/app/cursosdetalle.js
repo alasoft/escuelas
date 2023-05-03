@@ -58,30 +58,27 @@ class CursosDetalle extends FilterView {
             }, p))
     }
 
-    setCursoDataSource(añolectivo) {
-        if (añolectivo != undefined) {
-            this.filter().setEditorDataSource("curso",
-                Ds({
-                    path: "cursos",
-                    filter: { añolectivo: añolectivo },
-                    onLoaded: this.cursoLoadFirst() ? this.filter().onLoadedSetFirstValue("curso") : undefined
-                })
-            );
+    loadCursos() {
+        if (this.añoLectivo() != undefined) {
+            new Rest({ path: "cursos" })
+                .promise({
+                    verb: "list",
+                    data: { añolectivo: this.añoLectivo() }
+                }).then(rows =>
+                    this.filter().setArrayDataSource(
+                        "curso", rows, this.settingState == true ? this.state.curso : undefined)
+                )
         } else {
-            this.filter().setEditorDataSource("curso", null);
+            this.filter().clearEditorDataSource("curso");
         }
     }
 
-    cursoLoadFirst() {
-        return true;
-    }
-
-    setDataSource(curso) {
-        if (curso != undefined) {
+    setDataSource() {
+        if (this.curso()) {
             this.list().setDataSource(
                 Ds({
                     path: this.path(),
-                    filter: { curso: curso }
+                    filter: { curso: this.curso() }
                 })
             )
         } else {
@@ -89,9 +86,16 @@ class CursosDetalle extends FilterView {
         }
     }
 
-    afterRender() {
-        super.afterRender();
-        this.filter().setData(this.filterAfterRenderData());
+    setState() {
+        this.settingState = true;
+        this.setFilterValue("añolectivo", this.state.añoLectivo || Dates.ThisYear())
+        super.setState();
+    }
+
+    clearSettingState() {
+        if (this.settingState == true) {
+            this.settingState = false;
+        }
     }
 
     filterAfterRenderData() {
@@ -112,24 +116,24 @@ class CursosDetalle extends FilterView {
 
     añoLectivo() {
         if (this.filter().instance() != undefined) {
-            return this.filter().getEditorValue("añolectivo");
+            return this.getFilterValue("añolectivo");
         }
     }
 
     curso() {
-        return this.filter().getEditorValue("curso");
+        return this.getFilterValue("curso");
     }
 
     cursoDescripcion(withAñoLectivo = true) {
-        return this.filter().getEditorText("curso") + (withAñoLectivo ? " / " + this.filter().getEditorText("añolectivo") : "")
+        return this.getFilterText("curso") + (withAñoLectivo ? " / " + this.getFilterText("añolectivo") : "")
     }
 
     itemAñoLectivoOnValueChanged(e) {
-        this.setCursoDataSource(e.value);
+        this.loadCursos();
     }
 
     itemCursoOnValueChanged(e) {
-        this.setDataSource(e.value);
+        this.setDataSource();
     }
 
     popupOnHidden(e) {

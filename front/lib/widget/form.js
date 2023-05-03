@@ -80,6 +80,10 @@ class Form extends Widget {
         }
     }
 
+    editorHasValue(dataField) {
+        return this.getEditorValue(dataField) != undefined;
+    }
+
     setEditorProperty(dataField, propertyName, value) {
         this.getEditor(dataField).option(propertyName, value);
     }
@@ -108,15 +112,19 @@ class Form extends Widget {
         })
     }
 
+    getEditorDataSource(dataField) {
+        return this.getEditorProperty(dataField, "dataSource");
+    }
+
     setEditorDataSource(dataField, dataSource) {
         this.blankEditorValue(dataField)
         this.setEditorProperty(dataField, "dataSource", dataSource)
     }
 
-    setArrayDataSource(dataField, rows) {
+    setArrayDataSource(dataField, rows, firstId) {
         this.setEditorDataSource(dataField, DsArray({ rows: rows }));
         if (rows != undefined && 0 < rows.length) {
-            this.setEditorValue(dataField, rows[0].id)
+            this.setEditorValue(dataField, firstId || rows[0].id)
         }
     }
 

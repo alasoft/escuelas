@@ -45,25 +45,29 @@ class CursosMateriasDetalle extends CursosDetalle {
         }, p))
     }
 
-    setMateriaCursoDataSource(curso) {
-        if (curso != undefined) {
-            this.filter().setEditorDataSource("materiacurso",
-                Ds({
-                    path: "materias_cursos",
-                    filter: { curso: curso },
-                    onLoaded: this.materiaCursoOnLoaded()
-                }),
-            );
+    loadMateriasCursos() {
+        if (this.curso() != undefined) {
+            new Rest({ path: "materias_cursos" })
+                .promise({
+                    verb: "list",
+                    data: { curso: this.curso() }
+                }).then(rows => {
+                    this.filter().setArrayDataSource(
+                        "materiacurso", rows, this.settingState == true ? this.state.materiaCurso : undefined);
+                }).then(() =>
+                    this.clearSettingState())
         } else {
-            this.filter().setEditorDataSource("materiacurso", null);
+            this.filter().clearEditorDataSource("materiacurso");
+            this.clearSettingState()
         }
     }
 
-    materiaCursoOnLoaded() {
-        if (this.materiaCursoFirstValue == undefined) {
-            return this.filter().onLoadedSetFirstValue("materiacurso");
-        } else {
-            this.materiaCursoFirstValue = undefined;
+    getState() {
+        return {
+            añoLectivo: this.getFilterValue("añolectivo"),
+            curso: this.getFilterValue("curso"),
+            materiaCurso: this.getFilterValue("materiacurso"),
+            list: this.list().getState(),
         }
     }
 
@@ -81,7 +85,7 @@ class CursosMateriasDetalle extends CursosDetalle {
     }
 
     itemCursoOnValueChanged(e) {
-        this.setMateriaCursoDataSource(e.value);
+        this.loadMateriasCursos(e.value);
     }
 
     itemMateriaCursoOnValueChanged(e) {}

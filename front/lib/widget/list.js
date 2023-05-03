@@ -316,8 +316,22 @@ class List extends Widget {
         this.instance().columnOption(name, propertyName, value);
     }
 
+    getColumnProperty(name, propertyName) {
+        return this.instance().columnOption(name, propertyName);
+    }
+
     hideColumn(name) {
         this.setColumnProperty(name, "visible", false)
+    }
+
+    toggleColumnVisibility(name) {
+        const visible = this.getColumnProperty(name, "visible");
+        this.setColumnProperty(name, "visible", !visible);
+        return !visible;
+    }
+
+    isColumnVisible(name) {
+        return this.getColumnProperty(name, "visible");
     }
 
 }

@@ -5,8 +5,30 @@ class Periodos extends AñoLectivoView {
             popup: {
                 title: "Períodos",
                 width: 1100
+            },
+            components: {
+                toolbar: {
+                    visible: false
+                },
+                list: {
+                    headerFilter: {
+                        visible: false
+                    },
+                    filterPanel: {
+                        visible: false,
+                    },
+                    showBorders: true
+                }
             }
         }
+    }
+
+    refreshListToolbar() {
+        this.list().setToolbarItems(this.listToolbarItems());
+    }
+
+    listToolbarItems() {
+        return [this.itemInsert(), this.itemExportExcel(), "searchPanel"];
     }
 
     labelText() {
@@ -49,6 +71,11 @@ class Periodos extends AñoLectivoView {
 
     excelFileName() {
         return "Períodos " + this.getFilterText("añolectivo");
+    }
+
+    listOnContentReady(e) {
+        this.focusFirstRow();
+        this.refreshContextMenuItems()
     }
 
     static Descripcion(data) {

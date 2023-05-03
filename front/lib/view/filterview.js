@@ -26,7 +26,7 @@ class FilterView extends ListView {
 
     getFilterValue(dataField) {
         if (this.filter().isReady()) {
-            return this.filter().getEditorValue(dataField);
+            return this.filter().getValue(dataField);
         }
     }
 

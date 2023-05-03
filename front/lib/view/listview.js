@@ -87,7 +87,9 @@ class ListView extends View {
     formViewRender(formData) {
         this.formView(formData).render().then(closeData => {
             if (closeData != undefined) {
-                this.dataHasChanged = closeData.dataHasChanged;
+                if (closeData.dataHasChanged == true && !this.dataHasChanged) {
+                    this.dataHasChanged = true;
+                }
             }
         })
     }
@@ -354,16 +356,15 @@ class ListView extends View {
     }
 
     setState() {
-        super.setState();
-        if (this.list().isReady()) {
-            this.list()
-                .setState(Utils.IsDefined(this.state) ? (this.state.list || null) : null)
-                .focusFirstRow()
-        }
+        this.list()
+            .setState(this.state.list || null)
+            .focusFirstRow()
     }
 
     getState() {
-        return Utils.Merge(super.getState(), { list: this.list().getState() })
+        return {
+            list: this.list().getState()
+        }
     }
 
     listOnRowDblClick(e) {
