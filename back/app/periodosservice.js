@@ -19,7 +19,7 @@ class PeriodosServiceBase extends ServiceBase {
                 "per.nombre",
                 "per.desde",
                 "per.hasta",
-                "per.preliminar"
+                "per.preliminar",
             ],
             from: "periodos per"
         }
@@ -36,7 +36,7 @@ class PeriodosListService extends TableListService {
                 "per.nombre",
                 "per.desde",
                 "per.hasta",
-                "per.preliminar"
+                "per.preliminar",
             ],
             from: "periodos per",
             where: this.sqlAnd()
@@ -64,7 +64,7 @@ class PeriodosGetService extends TableGetService {
                 "per.nombre",
                 "per.desde",
                 "per.hasta",
-                "per.preliminar"
+                "per.preliminar",
             ],
             from: "periodos per",
             where: "id=@id",
@@ -79,7 +79,7 @@ class PeriodosInsertService extends TableInsertService {
     validate() {
         return super.validate()
             .then(() =>
-                PeriodosCommonService.ValidateDesdeHasta(this))
+                PeriodosCommonService.Validate(this))
     }
 
     requiredValues() {
@@ -97,7 +97,7 @@ class PeriodosUpdateService extends TableUpdateService {
     validate() {
         return super.validate()
             .then(() =>
-                PeriodosCommonService.ValidateDesdeHasta(this))
+                PeriodosCommonService.Validate(this))
     }
 
     sqlNotDuplicated() {
@@ -123,15 +123,23 @@ class PeriodosCommonService {
         })
     }
 
-    static ValidateDesdeHasta(service) {
-        this.ValidateDesdeLowerHasta(service);
-        this.ValidaDesdeInAñoLectivo(service)
-        this.ValidaHastaInAñoLectivo(service)
-        this.ValidateNoDateCollision(service);
-        this.ValidatePreliminar(service)
+    static Validate(service) {
+        return Promise.resolve()
+            .then(() =>
+                this.ValidateDesdeMenorHasta(service))
+            .then(() =>
+                this.ValidaDesdeInAñoLectivo(service))
+            .then(() =>
+                this.ValidaHastaInAñoLectivo(service))
+            .then(() =>
+                this.ValidateNoDateCollision(service))
+            .then(() =>
+                this.ValidatePreliminar(service))
+            .then(() =>
+                this.ValidateNoTpCollision(service))
     }
 
-    static ValidateDesdeLowerHasta(service) {
+    static ValidateDesdeMenorHasta(service) {
         if (service.date("hasta") <= service.date("desde")) {
             throw Exceptions.Validation({
                 code: Exceptions.FECHA_DESDE_DEBE_SER_MENOR_FECHA_HASTA
@@ -142,7 +150,7 @@ class PeriodosCommonService {
     static ValidaDesdeInAñoLectivo(service) {
         if (Dates.YearOf(service.date("desde")) != service.value("añolectivo")) {
             throw Exceptions.Validation({
-                message: Exceptions.FECHA_DESDE_DEBE_ESTAR_EN_AÑO_LECTIVO,
+                code: Exceptions.FECHA_DESDE_DEBE_ESTAR_EN_AÑO_LECTIVO,
             })
         }
     }
@@ -150,7 +158,7 @@ class PeriodosCommonService {
     static ValidaHastaInAñoLectivo(service) {
         if (Dates.YearOf(service.date("hasta")) != service.value("añolectivo")) {
             throw Exceptions.Validation({
-                message: Exceptions.FECHA_HASTA_DEBE_ESTAR_EN_AÑO_LECTIVO,
+                code: Exceptions.FECHA_HASTA_DEBE_ESTAR_EN_AÑO_LECTIVO,
             })
         }
     }
@@ -191,7 +199,7 @@ class PeriodosCommonService {
             })
         }
 
-        service.db.select(sql()).then(
+        return service.db.select(sql()).then(
             rows => validateRanges(rows)
         )
 
@@ -208,7 +216,39 @@ class PeriodosCommonService {
         }
     }
 
+    static ValidateNoTpCollision(service) {
 
+        function sql() {
+            return service.sqlSelect({
+                columns: [
+                    "ex.nombre",
+                    "ex.desde",
+                    "ex.hasta",
+                    "mat.nombre as materianombre"
+                ],
+                from: "examenes ex",
+                joins: [
+                    { tableName: "materias_cursos", alias: "mc", columnName: "ex.materiacurso" },
+                    { tableName: "materias", alias: "mat", columnName: "mc.materia" }
+                ],
+                where: service.sqlAnd()
+                    .add(service.sqlText("ex.periodo=@periodo", {
+                        periodo: service.id()
+                    }))
+                    .add(service.sqlText("not (ex.desde>=@desde and ex.hasta<=@hasta)", {
+                        desde: service.date("desde"),
+                        hasta: service.date("hasta")
+                    }))
+            })
+        }
+        if (service.isDefined(service.id())) {
+            return service.db.select(sql()).then(rows => {
+                if (0 < rows.length) {
+                    throw Exceptions.Validation()
+                }
+            })
+        }
+    }
 
 }
 

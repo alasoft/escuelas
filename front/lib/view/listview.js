@@ -68,6 +68,10 @@ class ListView extends View {
         return true;
     }
 
+    dataRows() {
+        return this.list().dataRows();
+    }
+
     insert() {
         if (this.allow("insert")) {
             this.formViewRender(this.formViewDefaultValues("insert"));
@@ -220,7 +224,6 @@ class ListView extends View {
     }
 
     itemExportExcel() {
-        //        if (this.allow("export")) {
         return {
             widget: "dxButton",
             location: "after",
@@ -230,7 +233,6 @@ class ListView extends View {
                 onClick: e => this.exportExcelDialog(e)
             }
         }
-        //        }
     }
 
     itemSearchPanel() {
@@ -353,9 +355,11 @@ class ListView extends View {
 
     setState() {
         super.setState();
-        this.list()
-            .setState(this.state.list || null)
-            .focusFirstRow()
+        if (this.list().isReady()) {
+            this.list()
+                .setState(Utils.IsDefined(this.state) ? (this.state.list || null) : null)
+                .focusFirstRow()
+        }
     }
 
     getState() {
@@ -393,9 +397,13 @@ class ListView extends View {
         new ExportExcelDialog({ fileName: this.excelFileName(), width: this.exportExcelDialogWidth() }).render()
             .then(data => {
                 if (data.okey) {
-                    this.exportExcel(e, this.excelFileName())
+                    this.exportExcel(this.exportExcelParameters(r))
                 }
             })
+    }
+
+    exportExcelParameters(e) {
+        return { e: e, fileName: this.excelFileName() }
     }
 
     exportExcelDialogWidth() {}
@@ -404,20 +412,33 @@ class ListView extends View {
         return Utils.Evaluate(this.configuration().excelFileName);
     }
 
-    exportExcel(e, fileName) {
+    exportExcel(p) {
         const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet(fileName);
+        const worksheet = workbook.addWorksheet(p.fileName);
+
+        Utils.Evaluate(p.before);
 
         DevExpress.excelExporter.exportDataGrid({
-            component: this.list().instance(),
-            worksheet,
-            autoFilterEnabled: true,
-        }).then(() => {
-            workbook.xlsx.writeBuffer().then((buffer) => {
-                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), fileName + '.xlsx');
+                component: this.list().instance(),
+                worksheet,
+                autoFilterEnabled: true,
+                topLeftCell: { row: 4, column: 1 }
+            })
+            .then(cellRange => {
+                const headerRow = worksheet.getRow(2);
+                headerRow.height = 30;
+                worksheet.mergeCells(2, 1, 2, 8);
+
+                headerRow.getCell(1).value = p.title || p.fileName;
+                headerRow.getCell(1).font = { name: 'Segoe UI Light', size: 12 };
+                headerRow.getCell(1).alignment = { horizontal: 'center' };
+            })
+            .then(() => {
+                workbook.xlsx.writeBuffer().then((buffer) => {
+                    saveAs(new Blob([buffer], { type: 'application/octet-stream' }), p.fileName + '.xlsx');
+                });
             });
-        });
-        e.cancel = true;
+        p.e.cancel = true;
     }
 
     masterView() {

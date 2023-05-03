@@ -28,6 +28,10 @@ class Periodos extends AñoLectivoView {
                 dataField: "preliminar",
                 catpion: "Informe Preliminar"
             }),
+            Column.Calculated({
+                caption: "Estado",
+                formula: row => PeriodosEstados.GetNombre(row.estado)
+            })
         ]
     }
 
@@ -49,6 +53,11 @@ class Periodos extends AñoLectivoView {
 
     excelFileName() {
         return "Períodos " + this.getFilterText("añolectivo");
+    }
+
+    periodoAbierto() {
+        return this.dataRows().find(row =>
+            row.estado == "A");
     }
 
     static Descripcion(data) {
@@ -78,10 +87,18 @@ class PeriodosFormView extends FormView {
     formItems() {
         return [
             Item.Group({
-                colCount: 1,
+                colCount: 2,
                 items: [
                     Item.ReadOnly({ dataField: "añolectivo", width: 100 }),
-                    Item.Text({ dataField: "nombre", required: true }),
+                    Item.Lookup({
+                        dataField: "estado",
+                        dataSource: PeriodosEstados.DataSource(),
+                        required: true,
+                        width: 150,
+                        onValueChanged: e =>
+                            this.estadoOnValueChanged(e)
+                    }),
+                    Item.Text({ dataField: "nombre", required: true, colSpan: 2 }),
                 ]
             }),
             Item.Group({
@@ -98,6 +115,18 @@ class PeriodosFormView extends FormView {
             })
 
         ]
+    }
+
+    afterRender() {
+        super.afterRender();
+        this.periodoAbierto = this.listView().periodoAbierto();
+        if (this.isInserting()) {
+            if (this.periodoAbierto == undefined) {
+                this.setEditorValue("estado", "A")
+            } else {
+                this.setEditorValue("estado", "C")
+            }
+        }
     }
 
     firstEditor() {
@@ -192,5 +221,22 @@ class PeriodosFormView extends FormView {
             detail: this.getValue("añolectivo")
         }])
     }
+
+    estadoOnValueChanged(e) {
+        if (this.isInserting() && this.getEditorValue("estado") == "A" && this.periodoAbierto != undefined) {
+            App.ShowMessage([{
+                message: "No es posible establecer este periodo como",
+                detail: "Abierto"
+            }, {
+                message: "Ya que el período",
+                detail: this.periodoAbierto.nombre + ": " + Dates.DesdeHasta(this.periodoAbierto.desde, this.periodoAbierto.hasta)
+            }, {
+                message: "tambien lo está",
+                quotes: false,
+                detail: "y solo puede haber un período abierto"
+            }])
+        }
+    }
+
 
 }

@@ -112,8 +112,16 @@ class EntryView extends DialogView {
         this.form().setEditorValue(dataField, value);
     }
 
+    setEditorReadOnly(dataField) {
+        this.form().setEditorReadOnly(dataField)
+    }
+
     setEditorProperty(dataField, propertyName, value) {
         this.form().setEditorProperty(dataField, propertyName, value);
+    }
+
+    setEditorProperties(dataField, properties) {
+        this.form().setEditorProperties(dataField, properties)
     }
 
     blankEditorValue(dataField) {

@@ -222,7 +222,7 @@ class View extends Component {
     loadState() {
         return Users.GetState({ module: this.className() })
             .then(s => {
-                this.state = s != null ? JSON.parse(s) : {};
+                this.state = (s != null ? JSON.parse(s) : {});
                 this.setState();
             })
     }

@@ -20,6 +20,9 @@ class App extends AppBase {
             .then(() =>
                 ExamenesTipos.Load()
             )
+            .then(() =>
+                PeriodosEstados.Load()
+            )
     }
 
     static Name() {

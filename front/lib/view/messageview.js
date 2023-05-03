@@ -82,6 +82,7 @@ class MessageViewTemplate extends Template {
 
     message() {
         return {
+            paddingLeft: 7,
             name: "message",
             fillContainer: true
         }

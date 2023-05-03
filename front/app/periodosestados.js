@@ -1,0 +1,1 @@
+class PeriodosEstados extends RestMemoryTable {}

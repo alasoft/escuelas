@@ -2,7 +2,7 @@ class Notas extends View {
 
     extraConfiguration() {
         return {
-            fullScreen: false,
+            fullScreen: true,
             components: {
                 label: {
                     text: "Notas por Curso y Materia"
@@ -30,7 +30,7 @@ class Notas extends View {
                     onKeyDown: e => this.listOnKeyDown(e),
                     onRowDblClick: e => this.listOnRowDblClick(e),
                     onContentReady: e => this.listOnContentReady(e),
-                    onDisposing: e => this.listOnDisposing(e)
+                    onDisposing: e => this.listOnDisposing(e),
                 },
                 contextMenu: {
                     target: this.findElementByClass("list")
@@ -94,7 +94,7 @@ class Notas extends View {
     }
 
     loadCursos() {
-        if (this.añoLectivo() != undefined) {
+        if (this.filter().isReady() && this.añoLectivo() != undefined) {
             new Rest({ path: "cursos" })
                 .promise({
                     verb: "list",
@@ -181,7 +181,7 @@ class Notas extends View {
     }
 
     listToolbarItems() {
-        return [this.itemAlumnos(), this.itemExamenes(), this.itemPeriodos(), this.itemVisualiza(), this.itemExcel(), "searchPanel"]
+        return [this.itemPeriodos(), this.itemAlumnos(), this.itemExamenes(), this.itemVisualiza(), this.itemExcel(), "searchPanel"]
     }
 
     itemAlumnos() {
@@ -205,7 +205,7 @@ class Notas extends View {
                 icon: "search",
                 text: "Visualiza",
                 hint: "Selecciona las columnas a visualizar de la Planilla",
-                onClick: e => this.alumnos()
+                onClick: e => this.visualiza()
             }
         }
     }
@@ -215,7 +215,7 @@ class Notas extends View {
             widget: "dxButton",
             location: "before",
             options: {
-                icon: "search",
+                icon: "event",
                 text: "Períodos",
                 hint: "Consulta los Períodos",
                 onClick: e => this.periodos()
@@ -229,9 +229,11 @@ class Notas extends View {
 
     setState() {
         super.setState();
-        this.list()
-            .setState(this.state.list || null)
-            .focusFirstRow()
+        if (this.list().isReady()) {
+            this.list()
+                .setState(this.state.list || null)
+                .focusFirstRow()
+        }
     }
 
     itemExamenes() {
@@ -263,33 +265,67 @@ class Notas extends View {
         new ExportExcelDialog({ fileName: this.excelFileName(), width: 700 }).render()
             .then(data => {
                 if (data.okey) {
-                    this.exportExcel(e, this.excelFileName())
+                    this.exportExcel({
+                        e: e,
+                        fileName: this.excelFileName(),
+                        title: "Notas de la Materia",
+                        subTitle: this.materiCursoDescripcion(),
+                        before: () => this.beforeExport(),
+                    })
                 }
             })
     }
 
-    excelFileName() {
-        return "Notas " + this.getFilterText("curso") +
-            " - " +
-            this.getFilterText("materiacurso") +
-            " / " +
-            this.getFilterText("añolectivo")
+    beforeExport() {
+        this.ocultaStatus();
+        this.ocultaColumnasFuturas();
     }
 
-    exportExcel(e, fileName) {
+    excelFileName() {
+        return "Notas de: " + this.materiCursoDescripcion()
+    }
+
+    materiCursoDescripcion() {
+        return this.getFilterText("curso") + ", " + this.getFilterText("materiacurso") +
+            " / " + this.getFilterText("añolectivo")
+    }
+
+    exportExcel(p) {
         const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet(fileName);
+        const worksheet = workbook.addWorksheet(p.fileName);
+
+        Utils.Evaluate(p.before);
 
         DevExpress.excelExporter.exportDataGrid({
-            component: this.list().instance(),
-            worksheet,
-            autoFilterEnabled: true,
-        }).then(() => {
+                component: this.list().instance(),
+                worksheet,
+                autoFilterEnabled: true,
+                topLeftCell: { row: 4, column: 1 }
+            })
+            .then(cellRange => {
+                const titleRow = worksheet.getRow(1);
+                const subTitleRow = worksheet.getRow(2);
+                titleRow.height = 30;
+                subTitleRow.height = 30;
+                worksheet.mergeCells(1, 1, 1, 6);
+                worksheet.mergeCells(2, 1, 2, 6);
+
+                titleRow.getCell(1).value = p.title;
+                titleRow.getCell(1).font = { name: 'Calibri bold', size: 12 };
+                titleRow.getCell(1).alignment = { horizontal: 'center' };
+
+                subTitleRow.getCell(2).value = p.subTitle;
+                subTitleRow.getCell(1).font = { name: 'Calibri bold', size: 12 };
+                subTitleRow.getCell(1).alignment = { horizontal: 'center' };
+
+            })
+
+        .then(() => {
             workbook.xlsx.writeBuffer().then((buffer) => {
-                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), fileName + '.xlsx');
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), p.fileName + '.xlsx');
             });
         });
-        e.cancel = true;
+        p.e.cancel = true;
     }
 
     alumnos() {
@@ -435,14 +471,35 @@ class Notas extends View {
         this.refresh()
     }
 
+    visualiza() {}
+
+    ocultaColumnasFuturas() {
+        for (const row of this.notasData().periodosRows) {
+            if (row.temporalidad == Dates.FUTURO) {
+                this.list().hideColumn("periodo_" + row.id)
+            }
+        }
+        this.list().hideColumn("anual")
+    }
+
+    ocultaStatus() {
+        for (const row of this.notasData().periodosRows) {
+            this.list().hideColumn("status_" + row.id)
+        }
+    }
+
     listOnCellPrepared(e) {
-        if (e.column.temporalidad == Dates.PASADO || e.column.temporalidad == Dates.FUTURO) {
+        if (e.column.temporalidad == Dates.PASADO) {
             e.cellElement.css({
                 "background-color": "rgb(229, 238, 235)"
             })
         } else if (e.column.temporalidad == Dates.PRESENTE) {
             e.cellElement.css({
-                "background-color": "rgb(196, 250, 233 )"
+                "background-color": "rgb(196, 250, 233)"
+            })
+        } else if (e.column.temporalidad == Dates.FUTURO) {
+            e.cellElement.css({
+                "background-color": "rgb(221, 247, 250)"
             })
         }
     }
@@ -501,14 +558,16 @@ class NotasColumns {
             } else if (t == Dates.PRESENTE) {
                 return " / Vigente"
             } else {
-                return ""
+                return " / Futuro"
             }
         }
 
         const columns = []
         for (const row of this.periodosRows) {
             columns.push({
+                name: "periodo_" + row.id,
                 headerCellTemplate: row.nombre + temporalidadDescripcion(row.temporalidad) + "<small><br>" + Dates.DesdeHasta(row.desde, row.hasta),
+                caption: row.nombre,
                 alignment: "center",
                 temporalidad: row.temporalidad,
                 columns: this.periodoColumns(row),
@@ -523,7 +582,8 @@ class NotasColumns {
         return [this.grupoPromedioValoracion({
                 row: row,
                 name: "preliminar",
-                headerTemplate: "Informe Preliminar" + "<small><br>" + (Utils.IsDefined(row.preliminar) ? Dates.Format(row.preliminar) : "<i>fecha no definida"),
+                //                headerTemplate: "Informe Preliminar" + "<small><br>" + (Utils.IsDefined(row.preliminar) ? Dates.Format(row.preliminar) : "<i>(fecha no definida)"),
+                caption: "Informe Preliminar"
             }),
             this.grupoPromedioValoracion({
                 row: row,
@@ -581,9 +641,10 @@ class NotasColumns {
 
     anualColumn() {
         return [{
+            name: "anual",
             caption: "Anual",
             alignment: "center",
-            visible: false,
+            visible: true,
             columns: this.anualColumns(),
         }]
     }

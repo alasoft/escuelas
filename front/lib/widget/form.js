@@ -88,6 +88,10 @@ class Form extends Widget {
         this.getEditor(dataField).option(properties);
     }
 
+    setEditorReadOnly(dataField) {
+        this.getEditor(dataField).option({ "inputAttr.class": App.FONT_READ_ONLY, focusStateEnabled: false, readOnly: true, })
+    }
+
     setEditorValue(dataField, value) {
         this.setEditorProperty(dataField, "value", value)
     }

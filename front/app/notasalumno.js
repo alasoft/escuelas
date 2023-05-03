@@ -328,9 +328,11 @@ class NotasAlumno extends View {
 
     setState() {
         super.setState();
-        this.list()
-            .setState(this.state.list || null)
-            .focusFirstRow()
+        if (this.list().isReady()) {
+            this.list()
+                .setState(this.state.list || null)
+                .focusFirstRow()
+        }
     }
 
     listOnEditingStart(e) {
@@ -343,7 +345,7 @@ class NotasAlumno extends View {
                 message: "ya que su fecha de inicio",
                 detail: Dates.Format(e.data.desde)
             }, {
-                message: "aún no aconteció"
+                message: "está en el futuro"
             }])
         }
     }

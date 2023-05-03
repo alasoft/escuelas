@@ -80,8 +80,10 @@ class AñoLectivoView extends FilterView {
 
     setState() {
         super.setState();
-        const añolectivo = (this.state.filter && this.state.filter.añolectivo) ? this.state.filter.añolectivo : Dates.ThisYear();
-        this.setFilterValue("añolectivo", añolectivo)
+        if (Utils.IsDefined(this.state) && this.filter().isReady()) {
+            const añolectivo = (this.state.filter && this.state.filter.añolectivo) ? this.state.filter.añolectivo : Dates.ThisYear();
+            this.setFilterValue("añolectivo", añolectivo)
+        }
     }
 
     itemAñoLectivoOnValueChanged(e) {

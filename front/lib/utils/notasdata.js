@@ -100,7 +100,10 @@ class NotasData {
         for (const row of this.notasRows) {
             if (row.alumno == alumno && row.periodo == periodo) {
                 const examenRow = this.getExamenRow(row.examen);
-                if (examenRow.hasta <= periodoRow.preliminar) {
+                if (examenRow.hasta <= periodoRow.preliminar ||
+                    (examenRow.desde <= periodoRow.preliminar &&
+                        new Date(row._created) < periodoRow.preliminar)
+                ) {
                     suma += row.nota;
                     ++cantidad;
                 }
@@ -162,12 +165,12 @@ class NotasData {
         if (cantidad < examenesCantidad) {
             const diferencia = (examenesCantidad - cantidad);
             if (1 < diferencia) {
-                return "Faltan cargar " + (examenesCantidad - cantidad) + " notas";
+                return "Faltan " + (examenesCantidad - cantidad) + " notas";
             } else {
-                return "Falta cargar " + diferencia + " nota";
+                return "Falta 1 nota";
             }
         }
-        if (periodoRow.temporalidad = Dates.PASADO) {
+        if (periodoRow.temporalidad == Dates.PASADO) {
             return "Completo"
         } {
             return "Notas al dia"

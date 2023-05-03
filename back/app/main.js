@@ -17,6 +17,7 @@ const { ExamenesTipos } = require("./examenestipos");
 const { NotasRest } = require("./notasrest");
 const { NotasDataRest } = require("./notasdatarest");
 const { ValoracionesRest } = require("./valoracionesrest");
+const { PeriodosEstados } = require("./periodosestados");
 
 new App({
     port: 9090,
@@ -45,6 +46,7 @@ function restItems(app) {
         new MemoryTableRest({ app: app, tableClass: Años }),
         new MemoryTableRest({ app: app, tableClass: Turnos }),
         new MemoryTableRest({ app: app, tableClass: ExamenesTipos }),
+        new MemoryTableRest({ app: app, tableClass: PeriodosEstados }),
         new SimpleTableRest({ app: app, tableName: "escuelas", }),
         new SimpleTableRest({ app: app, tableName: "modalidades", }),
         new SimpleTableRest({ app: app, tableName: "materias", }),

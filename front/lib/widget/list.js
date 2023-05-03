@@ -113,8 +113,12 @@ class List extends Widget {
         this.setDataSource(null);
     }
 
-    getDataSource() {
+    dataSource() {
         return this.getProperty("dataSource");
+    }
+
+    dataRows() {
+        return this.dataSource().items()
     }
 
     store() {
@@ -306,6 +310,14 @@ class List extends Widget {
 
     showSummary(show = true) {
         this.setProperty("summary.visible", false)
+    }
+
+    setColumnProperty(name, propertyName, value) {
+        this.instance().columnOption(name, propertyName, value);
+    }
+
+    hideColumn(name) {
+        this.setColumnProperty(name, "visible", false)
     }
 
 }

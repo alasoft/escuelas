@@ -55,7 +55,7 @@ class CreateTables extends CreateTablesBase {
                     nombre: SqlType.String(),
                     desde: SqlType.Date(),
                     hasta: SqlType.Date(),
-                    preliminar: SqlType.Date()
+                    preliminar: SqlType.Date({ required: false })
                 },
                 unique: "añolectivo,nombre"
             }),
@@ -90,6 +90,15 @@ class CreateTables extends CreateTablesBase {
                     nota: SqlType.Integer()
                 },
                 unique: "alumno,examen"
+            }),
+            Sql.Create({
+                tableName: "recuperatorios",
+                columns: {
+                    alumno: SqlType.Fk({ references: "alumnos" }),
+                    periodo: SqlType.Fk({ references: "periodos" }),
+                    nombre: SqlType.String(),
+                    nota: SqlType.Integer()
+                }
             })
         ]
     }

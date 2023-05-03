@@ -4,7 +4,6 @@ class DataSource {
         this.path = parameters.path;
         this.loadMode = parameters.cache == true ? "raw" : "processed";
         this.filter = parameters.filter;
-        this.transformData = parameters.transformData;
         this.onLoaded = parameters.onLoaded
     }
 
@@ -29,8 +28,10 @@ class DataSource {
                         verb: "list",
                         data: this.listData(searchData)
                     })
-                    .then(data =>
-                        this.transformData != undefined ? this.transformData(data) : data)
+                    .then(rows => {
+                        this.rows = rows
+                        return this.rows
+                    })
                     .catch(err =>
                         Errors.Handle(err).then(closeData => { throw err })
                     )
@@ -42,9 +43,9 @@ class DataSource {
                         [App.KEY_NAME]: key
                     }
                 }),
-            onLoaded: data => {
+            onLoaded: rows => {
                 if (this.onLoaded != undefined) {
-                    this.onLoaded(data)
+                    this.onLoaded(rows)
                 }
             }
         }
