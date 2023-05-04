@@ -23,6 +23,7 @@ class AppBase {
     static DATE_FORMAT = "dd MMM yyyy"
     static DATE_FORMAT_LONG = "dd MMM yyyy, EEE"
 
+    static DATE_COLUMN_WIDTH = 200;
     static DATE_WIDTH = 150;
     static DATE_WIDTH_LONG = 180;
 

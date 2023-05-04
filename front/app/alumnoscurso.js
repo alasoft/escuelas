@@ -26,6 +26,14 @@ class AlumnosCurso extends CursosDetalle {
         }
     }
 
+    setState() {
+        if (this.parameters().isDetail == true) {
+            this.state.añoLectivo = this.parameters().añoLectivo;
+            this.state.curso = this.parameters().curso;
+        }
+        super.setState()
+    }
+
     refreshListToolbar() {
         this.list().setToolbarItems(this.listToolbarItems())
     }

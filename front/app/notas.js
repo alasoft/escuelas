@@ -139,7 +139,7 @@ class Notas extends View {
     }
 
     contextMenuItems() {
-        return [this.contextItemNotasAlumno(), this.contextItemVisualiza(), this.contextItemExporta()]
+        return [this.contextItemNotasAlumno(), this.contextItemExporta(), this.contextItemVisualiza()]
     }
 
     contextItemExporta() {
@@ -158,7 +158,7 @@ class Notas extends View {
 
     contextItemVisualiza() {
         return {
-            text: "Visualiza",
+            text: "Visualiza Columnas",
             onClick: e => this.visualiza()
         }
     }
@@ -288,10 +288,12 @@ class Notas extends View {
 
         const state = {};
 
-        for (const row of this.notasData().periodosRows) {
-            addState(this, "periodo_" + row.id)
-            addState(this, "preliminar_" + row.id)
-            addState(this, "status_" + row.id)
+        if (this.notasData().periodosRows != undefined) {
+            for (const row of this.notasData().periodosRows) {
+                addState(this, "periodo_" + row.id)
+                addState(this, "preliminar_" + row.id)
+                addState(this, "status_" + row.id)
+            }
         }
 
         addState(this, "anual")
@@ -428,6 +430,8 @@ class Notas extends View {
     alumnos() {
         new AlumnosCurso({
                 mode: "popup",
+                isDetail: true,
+                añoLectivo: this.añoLectivo(),
                 curso: this.curso(),
                 añoLectivoReadOnly: true,
                 cursoReadOnly: true
@@ -465,12 +469,14 @@ class Notas extends View {
     examenes() {
         new ExamenesCurso({
                 mode: "popup",
-                showTodosButton: false,
+                isDetail: true,
+                añoLectivo: this.añoLectivo(),
                 curso: this.curso(),
+                materiaCurso: this.materiaCurso(),
                 añoLectivoReadOnly: true,
                 cursoReadOnly: true,
                 materiaCursoReadOnly: true,
-                materiacurso: this.materiaCurso()
+
             }).render()
             .then(closeData =>
                 this.afterExamenes(closeData))
@@ -575,8 +581,10 @@ class Notas extends View {
     }
 
     ocultaStatus() {
-        for (const row of this.notasData().periodosRows) {
-            this.list().hideColumn("status_" + row.id)
+        if (this.notasData().periodosRows != undefined) {
+            for (const row of this.notasData().periodosRows) {
+                this.list().hideColumn("status_" + row.id)
+            }
         }
     }
 
@@ -668,8 +676,8 @@ class NotasColumns {
         return [this.grupoPromedioValoracion({
                 row: row,
                 name: "preliminar",
-                headerTemplate: "Informe Preliminar" + "<small><br>" + (Utils.IsDefined(row.preliminar) ? Dates.Format(row.preliminar) : "<i>(fecha no definida)"),
-                caption: "Informe Preliminar"
+                caption: "Informe Preliminar",
+                //                headerTemplate: "Informe Preliminar" + "<small><br>" + (Utils.IsDefined(row.preliminar) ? Dates.Format(row.preliminar) : "<i>(fecha no definida)"),
             }),
             this.grupoPromedioValoracion({
                 row: row,
@@ -720,7 +728,6 @@ class NotasColumns {
             columns: [{
                 caption: "",
                 temporalidad: p.row.temporalidad,
-                alignment: "center",
                 allowSorting: true,
                 width: 150,
                 calculateCellValue: r => p.row.temporalidad != Dates.FUTURO ? r["status_" + p.row.id].descripcion : ""
@@ -744,6 +751,7 @@ class NotasColumns {
                 dataField: "promedio_anual",
                 caption: "Promedio",
                 esAnual: true,
+                alignment: "center",
                 width: 80,
                 calculateCellValue: r => r.total.promedio
             },
@@ -751,6 +759,7 @@ class NotasColumns {
                 dataField: "valoracion_anual",
                 caption: "Valoración",
                 esAnual: true,
+                alignment: "center",
                 width: 90,
                 calculateCellValue: r => r.total.valoracion
             }

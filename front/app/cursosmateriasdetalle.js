@@ -63,12 +63,14 @@ class CursosMateriasDetalle extends CursosDetalle {
     }
 
     getState() {
-        return {
-            añoLectivo: this.getFilterValue("añolectivo"),
-            curso: this.getFilterValue("curso"),
-            materiaCurso: this.getFilterValue("materiacurso"),
-            list: this.list().getState(),
-        }
+        return Utils.Merge({
+                añoLectivo: this.getFilterValue("añolectivo"),
+            },
+            this.parameters().isDetail != true ? {
+                curso: this.getFilterValue("curso"),
+                materiaCurso: this.getFilterValue("materiacurso"),
+                list: this.list().getState(),
+            } : undefined)
     }
 
     filterAfterRenderData() {

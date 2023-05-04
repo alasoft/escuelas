@@ -197,9 +197,15 @@ class Template extends ObjectBase {
         }
     }
 
-    _borderRight(attributes) {
+    _borderRight(borderRight) {
         return {
-            "border-right": attributes
+            "border-right": borderRight
+        }
+    }
+
+    _borderTop(borderTop) {
+        return {
+            "border-top": borderTop
         }
     }
 

@@ -17,7 +17,8 @@ class NotasVisualiza extends View {
             mode: "popup",
             popup: {
                 title: "Visualiza Columnas de Notas",
-                height: 400,
+                showCloseButton: false,
+                height: 450,
                 width: 400,
                 resizeEnabled: true
             },
@@ -28,11 +29,31 @@ class NotasVisualiza extends View {
                     selectionMode: "multiple",
                     selectNodesRecursive: false,
                     showCheckBoxesMode: "normal",
-                    displayExpr: item => item.nombre,
+                    showBorders: false,
                     showBorders: true,
                     selectByClick: true,
+                    displayExpr: "nombre",
                     onItemSelectionChanged: e => this.treeOnItemSelectionChanged(e)
+                },
+                toolbar: {
+                    items: this.toolbarItems()
                 }
+            }
+        }
+    }
+
+    toolbarItems() {
+        return [this.itemSalida()]
+    }
+
+    itemSalida() {
+        return {
+            widget: "dxButton",
+            location: "after",
+            options: {
+                icon: "close",
+                text: "Salida",
+                onClick: e => this.close()
             }
         }
     }
@@ -176,7 +197,8 @@ class NotasVisualizaTemplate extends Template {
             fillContainer: true,
             orientation: "vertical",
             items: [
-                this.tree()
+                this.tree(),
+                this.toolbar()
             ]
         }
     }
@@ -186,8 +208,16 @@ class NotasVisualizaTemplate extends Template {
             name: "tree",
             fillContainer: true,
             orientation: "vertical",
+            marginTop: 10,
             height: 1
         }
+    }
 
+    toolbar() {
+        return {
+            name: "toolbar",
+            marginTop: 15,
+            borderTop: "thin"
+        }
     }
 }

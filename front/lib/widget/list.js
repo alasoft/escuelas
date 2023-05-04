@@ -26,6 +26,11 @@ class List extends Widget {
             editing: {
                 confirmDelete: false,
             },
+            pager: {
+                visible: false,
+                showInfo: true,
+                showNavigationButtons: true,
+            },
         })
     }
 

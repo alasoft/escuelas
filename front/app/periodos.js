@@ -40,16 +40,15 @@ class Periodos extends AñoLectivoView {
             Column.Text({ dataField: "nombre", caption: "Nombre", width: 300 }),
             Column.Date({
                 dataField: "desde",
-                width: 200,
             }),
             Column.Date({
                 dataField: "hasta",
-                width: 200,
             }),
             Column.Date({
                 dataField: "preliminar",
-                catpion: "Informe Preliminar"
+                caption: "Informe Preliminar",
             }),
+            Column.Empty()
         ]
     }
 

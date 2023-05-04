@@ -49,7 +49,8 @@ class NotasData {
 
     setPeriodosData() {
         for (const row of this.periodosRows) {
-            row.examenesCantidad = this.examenesCantidadPorPeriodo(row.id);
+            row.examenesCantidad = this.examenesCantidadPeriodo(row.id);
+            row.examenesNoFuturosCantidad = this.examenesNoFuturosCantidadPeriodo(row.id);
             row.desde = new Date(row.desde);
             row.hasta = new Date(row.hasta);
             row.preliminar = Utils.IsDefined(row.preliminar) ? new Date(row.preliminar) : undefined;
@@ -57,10 +58,20 @@ class NotasData {
         }
     }
 
-    examenesCantidadPorPeriodo(periodo) {
+    examenesCantidadPeriodo(periodo) {
         let cantidad = 0
         for (const row of this.examenesRows) {
             if (row.periodo == periodo) {
+                ++cantidad;
+            }
+        }
+        return cantidad;
+    }
+
+    examenesNoFuturosCantidadPeriodo(periodo) {
+        let cantidad = 0
+        for (const row of this.examenesRows) {
+            if (row.periodo == periodo && row.temporalidad != Dates.FUTURO) {
                 ++cantidad;
             }
         }
@@ -155,6 +166,7 @@ class NotasData {
 
     alumnoStatusPeriodo(alumno, periodoRow, promedio) {
         const examenesCantidad = periodoRow.examenesCantidad;
+        const examenesNoFuturosCantidad = periodoRow.examenesNoFuturosCantidad;
         const cantidad = promedio.cantidad;
         if (periodoRow.temporalidad == Dates.FUTURO) {
             return ""
@@ -162,17 +174,19 @@ class NotasData {
         if (this.examenesRows.length == 0) {
             return "No hay exámenes cargados"
         }
-        if (cantidad < examenesCantidad) {
-            const diferencia = (examenesCantidad - cantidad);
+        if (cantidad < examenesNoFuturosCantidad) {
+            const diferencia = (examenesNoFuturosCantidad - cantidad);
             if (1 < diferencia) {
-                return "Faltan cargar " + (examenesCantidad - cantidad) + " notas";
+                return "Faltan cargar " + (examenesNoFuturosCantidad - cantidad) + " notas";
             } else {
                 return "Falta cargar 1 nota";
             }
         }
         if (periodoRow.temporalidad == Dates.PASADO) {
             return "Completo"
-        } {
+        } else if (examenesNoFuturosCantidad == 0) {
+            return "No es posible cargar notas aún"
+        } else {
             return "Notas al dia"
         }
     }
