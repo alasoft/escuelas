@@ -1,5 +1,32 @@
 class Valoraciones extends AñoLectivoView {
 
+    extraConfiguration() {
+        return {
+            components: {
+                toolbar: {
+                    visible: false
+                },
+                list: {
+                    headerFilter: {
+                        visible: false
+                    },
+                    filterPanel: {
+                        visible: false,
+                    },
+                    showBorders: true
+                }
+            }
+        }
+    }
+
+    refreshListToolbar() {
+        this.list().setToolbarItems(this.listToolbarItems());
+    }
+
+    listToolbarItems() {
+        return [this.itemInsert(), this.itemExportExcel(), "searchPanel"];
+    }
+
     labelText() {
         return "Valoraciones Pedagógicas";
     }
@@ -38,7 +65,12 @@ class Valoraciones extends AñoLectivoView {
     }
 
     excelFileName() {
-        return "Valoraciónes " + this.getFilterText("añolectivo");
+        return "Valoraciones Pedagógicas " + this.getFilterText("añolectivo");
+    }
+
+    listOnContentReady(e) {
+        this.focusFirstRow();
+        this.refreshContextMenuItems()
     }
 
     static Descripcion(data) {

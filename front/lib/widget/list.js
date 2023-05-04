@@ -320,8 +320,8 @@ class List extends Widget {
         return this.instance().columnOption(name, propertyName);
     }
 
-    hideColumn(name) {
-        this.setColumnProperty(name, "visible", false)
+    showColumn(name, visible = true) {
+        this.setColumnProperty(name, "visible", visible)
     }
 
     toggleColumnVisibility(name) {

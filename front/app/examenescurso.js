@@ -98,7 +98,7 @@ class ExamenesCurso extends CursosMateriasDetalle {
     }
 
     excelFileName() {
-        return "Examenes " + this.cursoDescripcion() + " / " + this.getFilterText("materiacurso");
+        return "Examenes del Curso: " + this.cursoDescripcion() + " / " + this.getFilterText("materiacurso");
     }
 
     exportExcelDialogWidth() {

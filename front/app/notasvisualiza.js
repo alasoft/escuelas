@@ -132,7 +132,7 @@ class NotasVisualiza extends View {
                 nombre: row.nombre + Notas.TemporalidadDescripcion(row.temporalidad),
                 tipo: NotasVisualiza.TIPO_PERIODO,
                 expanded: true,
-                selected: this.notas.columnaPeriodoVisible(row.id)
+                selected: this.notas.columnaPeriodoVisible(row.id),
             })
             this.addPeriodoRows(row.id)
         }
@@ -145,7 +145,7 @@ class NotasVisualiza extends View {
             nombre: "Preliminar",
             tipo: NotasVisualiza.TIPO_PRELIMINAR,
             selected: this.notas.columnaPreliminarVisible(periodo),
-            expanded: true
+            expanded: true,
         })
         this.ds.push({
             id: Strings.NewGuid(),

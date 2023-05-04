@@ -256,6 +256,7 @@ class ListView extends View {
             this.contextItemDelete(),
             this.contextItemCollapseAll(),
             this.contextItemExpandAll(),
+            this.contextItemExporta()
         ]
     }
 
@@ -308,6 +309,15 @@ class ListView extends View {
             return {
                 text: "Borra",
                 onClick: e => this.delete(),
+            }
+        }
+    }
+
+    contextItemExporta() {
+        if (this.allow("export")) {
+            return {
+                text: "Exporta Excel",
+                onClick: e => this.exportExcelDialog()
             }
         }
     }
@@ -398,7 +408,7 @@ class ListView extends View {
         new ExportExcelDialog({ fileName: this.excelFileName(), width: this.exportExcelDialogWidth() }).render()
             .then(data => {
                 if (data.okey) {
-                    this.exportExcel(this.exportExcelParameters(r))
+                    this.exportExcel(this.exportExcelParameters(e))
                 }
             })
     }
@@ -428,10 +438,10 @@ class ListView extends View {
             .then(cellRange => {
                 const headerRow = worksheet.getRow(2);
                 headerRow.height = 30;
-                worksheet.mergeCells(2, 1, 2, 8);
+                worksheet.mergeCells(2, 1, 2, this.list().columnCount());
 
                 headerRow.getCell(1).value = p.title || p.fileName;
-                headerRow.getCell(1).font = { name: 'Segoe UI Light', size: 12 };
+                headerRow.getCell(1).font = { name: 'Calibri bold', size: 12 };
                 headerRow.getCell(1).alignment = { horizontal: 'center' };
             })
             .then(() => {
