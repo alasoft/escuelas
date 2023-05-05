@@ -130,21 +130,11 @@ class NotasAlumno extends View {
             Column.Id(),
             Column.Calculated({ caption: "Tipo", formula: row => ExamenesTipos.GetNombre(row.tipo), width: 150 }),
             Column.Text({ dataField: "nombre", caption: "Nombre", editing: false, width: 270 }),
-            Column.Text({ dataField: "nota", caption: "Nota", dataType: "number", format: "##", width: 100, editor: this.notaEditor }),
+            Column.Text({ dataField: "nota", caption: "Nota", dataType: "number", format: "##", width: 100, editor: NotasBase.NotaEditor }),
             Column.Text({ dataField: "periodoNombre", caption: "Período", editing: false, width: 250 }),
             Column.Calculated({ caption: "Inicia", formula: row => Dates.Format(row.desde), width: 150 }),
             Column.Calculated({ caption: "Cierre", formula: row => Dates.Format(row.hasta) }),
         ]
-    }
-
-    notaEditor(cellElement, cellInfo) {
-        return $("<div>").dxNumberBox({
-            value: cellInfo.value,
-            min: 1,
-            max: 10,
-            showSpinButtons: true,
-            onValueChanged: e => cellInfo.setValue(e.value)
-        })
     }
 
     toolbarItems() {

@@ -337,6 +337,14 @@ class Arrays {
         )
     }
 
+    static IsEmpty(a) {
+        return a.length == 0;
+    }
+
+    static IsNotEmpty(a) {
+        return !this.IsEmpty(a)
+    }
+
 }
 
 class Html {

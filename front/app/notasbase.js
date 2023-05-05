@@ -1,5 +1,21 @@
 class NotasBase extends FilterViewBase {
 
+    static COLOR_PASADO = {
+        "background-color": "rgb(229, 238, 235)"
+    }
+
+    static COLOR_PRESENTE = {
+        "background-color": "rgb(196, 250, 233)"
+    }
+
+    static COLOR_FUTURO = {
+        "background-color": "rgb(221, 247, 250)"
+    }
+
+    static COLOR_ANUAL = {
+        "background-color": "rgb(242, 232, 248)"
+    }
+
     static TemporalidadDescripcion(t) {
         if (t == Dates.PASADO) {
             return " / Cerrado"
@@ -8,6 +24,16 @@ class NotasBase extends FilterViewBase {
         } else {
             return " / Futuro"
         }
+    }
+
+    static NotaEditor(cellElement, cellInfo) {
+        return $("<div>").dxNumberBox({
+            value: cellInfo.value,
+            min: 1,
+            max: 10,
+            showSpinButtons: true,
+            onValueChanged: e => cellInfo.setValue(e.value)
+        })
     }
 
     defaultConfiguration() {
@@ -24,26 +50,11 @@ class NotasBase extends FilterViewBase {
                     columnAutoWidth: true,
                     groupPanel: {
                         visible: false
-                    }
+                    },
+                    onCellPrepared: e => this.listOnCellPrepared(e)
                 }
             }
         })
-    }
-
-    static COLOR_PASADO = {
-        "background-color": "rgb(229, 238, 235)"
-    }
-
-    static COLOR_PRESENTE = {
-        "background-color": "rgb(196, 250, 233)"
-    }
-
-    static COLOR_FUTURO = {
-        "background-color": "rgb(221, 247, 250)"
-    }
-
-    static COLOR_ANUAL = {
-        "background-color": "rgb(242, 232, 248)"
     }
 
     filterItems() {
@@ -129,10 +140,12 @@ class NotasBase extends FilterViewBase {
                 .promise({
                     verb: "list",
                     data: { curso: this.curso() }
-                }).then(rows => {
+                })
+                .then(rows => {
                     this.filter().setArrayDataSource(
                         "materiacurso", rows, this.settingState == true ? this.state.filter.materiaCurso : undefined);
-                }).then(() =>
+                })
+                .then(() =>
                     this.clearSettingState())
         } else {
             this.filter().clearEditorDataSource("materiacurso");
@@ -177,9 +190,9 @@ class NotasBase extends FilterViewBase {
         }
     }
 
-    columns() { throw { message: "NotasBase.js, columns() no implementado" } }
+    columns() {}
 
-    rows() { throw {} }
+    rows() {}
 
     getState() {
         return {
@@ -197,7 +210,7 @@ class NotasBase extends FilterViewBase {
 
     setState() {
         this.settingState = true;
-        this.setFilterValue("añolectivo", (this.state.filter != undefined && this.state.filter.añoLectivo != undefined) ?
+        this.setFilterValue("añolectivo", Utils.IfDefined(this.state.filter.añoLectivo) ?
             this.state.filter.añoLectivo : Dates.ThisYear()
         )
     }
@@ -316,6 +329,157 @@ class NotasBase extends FilterViewBase {
 
     itemMateriaCursoOnValueChanged(e) {
         this.refresh()
+    }
+
+    listOnCellPrepared(e) {
+        if (e.column.temporalidad == Dates.PASADO) {
+            e.cellElement.css(this.class().COLOR_PASADO)
+        } else if (e.column.temporalidad == Dates.PRESENTE) {
+            e.cellElement.css(this.class().COLOR_PRESENTE)
+        } else if (e.column.temporalidad == Dates.FUTURO) {
+            e.cellElement.css(this.class().COLOR_FUTURO)
+        } else if (e.column.esAnual == true) {
+            e.cellElement.css(this.class().COLOR_ANUAL)
+        }
+    }
+
+}
+
+class NotasColumnsBase {
+
+    static PROMEDIO_WIDTH = 95;
+    static VALORACION_WIDTH = 95;
+
+    constructor(notas) {
+        this.notas = notas;
+        this.notasData = this.notas.notasData();
+        this.periodosRows = this.notasData.periodosRows;
+        this.examenesRows = this.notasData.examenesRows;
+    }
+
+    columns() {
+        const columns = this.alumnoColumns().concat(this.periodosColumns(), this.anualColumn(), this.emptyColumn());
+        return columns;
+    }
+
+    alumnoColumns() {
+        return [{
+                dataField: "id",
+                visible: false
+            },
+            { dataField: "apellido", width: 150, allowReordering: false, allowEditing: false },
+            { dataField: "nombre", width: (0 < this.periodosRows.length ? 150 : undefined), allowReordering: false, allowEditing: false }
+        ]
+    }
+
+    periodosColumns() {
+        const columns = []
+        for (const periodoRow of this.periodosRows) {
+            columns.push({
+                name: "periodo_" + periodoRow.id,
+                headerCellTemplate: periodoRow.nombre + NotasBase.TemporalidadDescripcion(periodoRow.temporalidad) + "<small><br>" + Dates.DesdeHasta(periodoRow.desde, periodoRow.hasta),
+                caption: periodoRow.nombre,
+                alignment: "center",
+                temporalidad: periodoRow.temporalidad,
+                columns: this.periodoColumns(periodoRow),
+                allowReordering: false,
+                allowResizing: true
+            })
+        }
+        return columns;
+    }
+
+    grupoPromedioValoracion(p) {
+        return {
+            name: p.name + "_" + p.periodoRow.id,
+            caption: p.headerTemplate == undefined ? (p.caption || Strings.Capitalize(p.name)) : undefined,
+            headerCellTemplate: p.headerTemplate,
+            alignment: "center",
+            temporalidad: p.periodoRow.temporalidad,
+            visible: Utils.IsDefined(p.visible) ? p.visible : true,
+            columns: [{
+                    caption: "Promedio",
+                    alignment: "center",
+                    width: p.width || NotasColumns.PROMEDIO_WIDTH,
+                    temporalidad: p.periodoRow.temporalidad,
+                    allowSorting: true,
+                    calculateCellValue: r => p.periodoRow.temporalidad != Dates.FUTURO ? r[p.name + "_" + p.periodoRow.id].promedio : ""
+                },
+                {
+                    caption: "Valoración",
+                    alignment: "center",
+                    allowSorting: true,
+                    width: p.width || NotasColumns.VALORACION_WIDTH,
+                    temporalidad: p.periodoRow.temporalidad,
+                    calculateCellValue: r => p.periodoRow.temporalidad != Dates.FUTURO ? r[p.name + "_" + p.periodoRow.id].valoracion : ""
+                }
+            ]
+        }
+    }
+
+    grupoStatus(p) {
+        return {
+            dataField: "status_" + p.periodoRow.id,
+            caption: "Status",
+            temporalidad: p.periodoRow.temporalidad,
+            alignment: "center",
+            visible: true,
+            columns: [{
+                caption: "",
+                temporalidad: p.periodoRow.temporalidad,
+                allowSorting: true,
+                width: 150,
+                calculateCellValue: r => p.periodoRow.temporalidad != Dates.FUTURO ? r["status_" + p.periodoRow.id].descripcion : ""
+            }]
+        }
+    }
+
+    anualColumn() {
+        return [{
+            name: "anual",
+            esAnual: true,
+            caption: "Anual",
+            alignment: "center",
+            visible: true,
+            columns: this.anualColumns(),
+        }]
+    }
+
+    anualColumns() {
+        return [{
+                dataField: "promedio_anual",
+                caption: "Promedio",
+                esAnual: true,
+                alignment: "center",
+                width: 80,
+                calculateCellValue: r => r.total.promedio
+            },
+            {
+                dataField: "valoracion_anual",
+                caption: "Valoración",
+                esAnual: true,
+                alignment: "center",
+                width: 90,
+                calculateCellValue: r => r.total.valoracion
+            }
+        ]
+
+    }
+
+    emptyColumn(periodoRow) {
+        return {
+            temporalidad: Utils.IsDefined(periodoRow) ? periodoRow.temporalidad : undefined
+        }
+    }
+
+}
+
+class NotasRowsBase {
+
+    constructor(notas) {
+        this.notas = notas;
+        this.notasData = this.notas.notasData();
+        this.alumnosRows = this.notasData.alumnosRows;
     }
 
 }

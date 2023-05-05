@@ -40,6 +40,11 @@ class FilterViewBase extends ListViewBase {
         this.filter().setEditorValue(dataField, value)
     }
 
+    emptyState() {
+        return { list: {}, filter: {} }
+    }
+
+
 }
 
 class FilterViewBaseTemplate extends Template {

@@ -47,6 +47,10 @@ class ListViewBase extends View {
         }
     }
 
+    contextMenuItems() {
+        return [this.contextItemExporta()]
+    }
+
     contextItemExporta() {
         return {
             text: "Exporta Excel",
@@ -111,6 +115,10 @@ class ListViewBase extends View {
 
     row(dataField) {
         return this.list().focusedRowValue(dataField)
+    }
+
+    emptyState() {
+        return { list: {} }
     }
 
     listOnContentReady(e) {

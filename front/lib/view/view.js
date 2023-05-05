@@ -154,10 +154,14 @@ class View extends Component {
     loadState() {
         return Users.GetState({ module: this.className() })
             .then(state => {
-                this.state = (state != null ? JSON.parse(state) : {});
+                this.state = (Utils.IsDefined(state) ? JSON.parse(state) : this.emptyState());
             })
             .then(() =>
                 this.setState())
+    }
+
+    emptyState() {
+        return {}
     }
 
     setState() {}

@@ -40,10 +40,10 @@ class NotasData {
     }
 
     setExamenesData() {
-        for (const row of this.examenesRows) {
-            row.desde = new Date(row.desde);
-            row.hasta = new Date(row.hasta);
-            row.temporalidad = Dates.Temporalidad(row.desde, row.hasta)
+        for (const examenRow of this.examenesRows) {
+            examenRow.desde = new Date(examenRow.desde);
+            examenRow.hasta = new Date(examenRow.hasta);
+            examenRow.temporalidad = Dates.Temporalidad(examenRow.desde, examenRow.hasta)
         }
     }
 
@@ -90,6 +90,16 @@ class NotasData {
 
     alumnoPromedioAnual(alumno) {
         return this.promedioTotal(this.alumnoPromedios(alumno))
+    }
+
+    alumnoNotas(alumno) {
+        const notas = {}
+        for (const notaRow of this.notasRows) {
+            if (notaRow.alumno == alumno) {
+                notas["examen_" + notaRow.examen] = notaRow.nota;
+            }
+        }
+        return notas;
     }
 
     alumnoPreliminares(alumno) {
