@@ -30,12 +30,12 @@ class App extends AppBase {
     }
 
     static Version() {
-        return "0.9.1"
+        return "0.9.2"
     }
 
     static Host() {
-        //return "http://alasoft.sytes.net:9090";
-        return "http://127.0.0.1:9090"
+        return "http://alasoft.sytes.net:9090";
+        //return "http://127.0.0.1:9090"
     }
 
     static TranslateTableName(name) {
