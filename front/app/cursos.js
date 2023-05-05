@@ -62,6 +62,7 @@ class Cursos extends AñoLectivoView {
     materiasCurso() {
         new MateriasCurso({
             masterView: this,
+            isDetail: true,
             añolectivo: this.añoLectivo(),
             curso: this.id()
         }).render()

@@ -55,6 +55,8 @@ class AppBase {
 
     static CLIENT_DESCRIPTION_HEADER = "client_description"
 
+    static EXCEL_DIALOG_WIDTH = 600;
+
     static USER_TEST_DATA = {
         email: "test@test.com",
         password: "test"

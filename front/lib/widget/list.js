@@ -339,4 +339,25 @@ class List extends Widget {
         return this.getColumnProperty(name, "visible");
     }
 
+    setColumnsVisibility(visibility) {
+        if (visibility != undefined) {
+            this.beginUpdate();
+            try {
+                Object.keys(visibility).forEach(
+                    key => this.showColumn(key, visibility[key])
+                )
+            } finally {
+                this.endUpdate()
+            }
+        }
+    }
+
+    getColumnsVisibility() {
+        const visibility = {}
+        this.getColumns().forEach(column =>
+            visibility[column.name] = this.isColumnVisible(column.name)
+        )
+        return visibility;
+    }
+
 }
