@@ -65,6 +65,15 @@ class ExamenesCurso extends CursosMateriasDetalle {
         }
     }
 
+    setState() {
+        if (this.parameters().isDetail == true) {
+            this.state.añoLectivo = this.parameters().añoLectivo;
+            this.state.curso = this.parameters().curso;
+            this.state.materiaCurso = this.parameters().materiaCurso;
+        }
+        super.setState()
+    }
+
     listColumns() {
         return [
             Column.Id(),

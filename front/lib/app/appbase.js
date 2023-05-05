@@ -23,6 +23,7 @@ class AppBase {
     static DATE_FORMAT = "dd MMM yyyy"
     static DATE_FORMAT_LONG = "dd MMM yyyy, EEE"
 
+    static DATE_COLUMN_WIDTH = 200;
     static DATE_WIDTH = 150;
     static DATE_WIDTH_LONG = 180;
 
@@ -53,6 +54,8 @@ class AppBase {
     static BASE_DATE = "1900 01 01";
 
     static CLIENT_DESCRIPTION_HEADER = "client_description"
+
+    static EXCEL_DIALOG_WIDTH = 600;
 
     static USER_TEST_DATA = {
         email: "test@test.com",

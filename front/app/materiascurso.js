@@ -40,6 +40,14 @@ class MateriasCurso extends CursosDetalle {
         return super.itemCurso({ deferRendering: false })
     }
 
+    setState() {
+        if (this.parameters().isDetail == true) {
+            this.state.añoLectivo = this.parameters().añoLectivo;
+            this.state.curso = this.parameters().curso;
+        }
+        super.setState()
+    }
+
     cursoLoadFirst() {
         return false;
     }

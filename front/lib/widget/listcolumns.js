@@ -14,6 +14,7 @@ class Column {
             allowSorting: p.sorting != false,
             allowEditing: p.editing != false,
             allowGrouping: true,
+            alignment: p.alignment,
             visible: p.visible != false,
             cellTemplate: p.template,
             editCellTemplate: p.editor,
@@ -38,7 +39,9 @@ class Column {
     static Date(p) {
         return this.BaseColumn(Utils.Merge({
             dataType: "date",
-            format: p.format || App.DATE_FORMAT,
+            format: App.DATE_FORMAT,
+            width: App.DATE_COLUMN_WIDTH,
+            alignment: p.alignment || "center"
         }, p))
     }
 
@@ -60,6 +63,10 @@ class Column {
     }
 
     static Space() {
+        return {}
+    }
+
+    static Empty() {
         return {}
     }
 

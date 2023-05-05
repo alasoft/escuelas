@@ -317,7 +317,7 @@ class ListView extends View {
         if (this.allow("export")) {
             return {
                 text: "Exporta Excel",
-                onClick: e => this.exportExcelDialog()
+                onClick: e => this.exportExcelDialog(e)
             }
         }
     }
@@ -439,6 +439,9 @@ class ListView extends View {
                 const headerRow = worksheet.getRow(2);
                 headerRow.height = 30;
                 worksheet.mergeCells(2, 1, 2, this.list().columnCount());
+                for (let i = 1; i <= this.list().columnCount(); i++) {
+                    worksheet.getColumn(i).width = p.columnWidth || 30;
+                }
 
                 headerRow.getCell(1).value = p.title || p.fileName;
                 headerRow.getCell(1).font = { name: 'Calibri bold', size: 12 };

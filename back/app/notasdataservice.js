@@ -97,7 +97,8 @@ class NotasDataListService extends ServiceBase {
             from: "periodos per",
             where: this.sqlAnd().addSql("añolectivo=@añolectivo", {
                 añolectivo: this.materiaCurso.añolectivo
-            })
+            }),
+            order: "per.desde"
         })
     }
 
