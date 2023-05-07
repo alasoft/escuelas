@@ -125,7 +125,7 @@ class NotasBase extends FilterViewBase {
 
     loadCursos(curso) {
         if (this.filter().isReady() && this.añoLectivo() != undefined) {
-            new Rest({ path: "cursos" })
+            return new Rest({ path: "cursos" })
                 .promise({
                     verb: "list",
                     data: { añoLectivo: this.añoLectivo() }
@@ -140,7 +140,7 @@ class NotasBase extends FilterViewBase {
 
     loadMateriasCursos(materiaCurso) {
         if (this.curso() != undefined) {
-            new Rest({ path: "materias_cursos" })
+            return new Rest({ path: "materias_cursos" })
                 .promise({
                     verb: "list",
                     data: { curso: this.curso() }
@@ -168,7 +168,7 @@ class NotasBase extends FilterViewBase {
             .then(() =>
                 this.list().resetColumns(this.columns()))
             .then(() =>
-                this.setColumnsVisibility())
+                this.setVisibleColumns())
             .then(() =>
                 this.list().setArrayDataSource(this.rows()))
             .then(() =>
@@ -185,9 +185,9 @@ class NotasBase extends FilterViewBase {
         this.list().setArrayDataSource(this.rows())
     }
 
-    setColumnsVisibility() {
+    setVisibleColumns() {
         if (this.state.list != undefined) {
-            this.list().setColumnsVisibility(this.state.list.columnsVisibility)
+            this.list().setColumnsVisibility(this.state.list.visibleColumns)
         }
     }
 
@@ -204,7 +204,7 @@ class NotasBase extends FilterViewBase {
             },
             list: {
                 state: this.list().getState(),
-                columnsVisibility: this.getColumnsVisibility()
+                visibleColumns: this.getVisibleColumns()
             }
         }
     }
@@ -213,13 +213,15 @@ class NotasBase extends FilterViewBase {
         return this.setFilter(this.state.filter)
     }
 
-    setFilter(values) {
+    setFilter(filter) {
         this.settingFilter = true;
-        return Promise.resolve(this.setFilterValue("añoLectivo", values.añoLectivo || Dates.ThisYear()))
+        return Promise.resolve(this.setFilterValue("añoLectivo", filter.añoLectivo || Dates.ThisYear()))
             .then(() =>
-                this.loadCursos(values.curso))
+                this.loadCursos(filter.curso))
             .then(() =>
-                this.loadMateriasCursos(values.materiaCurso))
+                this.loadMateriasCursos(filter.materiaCurso))
+            .then(() =>
+                this.refresh())
             .then(() =>
                 this.settingFilter = false)
     }
@@ -250,22 +252,8 @@ class NotasBase extends FilterViewBase {
         }
     }
 
-    itemMuestraOcultaNotas() {
-        return {
-            widget: "dxCheckBox",
-            location: "before",
-            options: {
-                text: "Muestra Notas",
-                hint: "Muestra las Notas de los Exámenes",
-                onValueChanged: e => this.muestraOcultaNotas(e.value)
-            }
-        }
-    }
+    isNotasVisible() {
 
-    muestraOcultaNotas(visible) {
-        for (const periodoRow of this.notasData().periodosRows) {
-            this.list().showColumn("examenes_" + periodoRow.id, visible)
-        }
     }
 
     alumnos() {
@@ -362,19 +350,19 @@ class NotasBase extends FilterViewBase {
     }
 
     itemAñoLectivoOnValueChanged(e) {
-        if (!this.settingFilter) {
+        if (this.settingFilter != true) {
             this.loadCursos();
         }
     }
 
     itemCursoOnValueChanged(e) {
-        if (!this.settingFilter) {
+        if (this.settingFilter != true) {
             this.loadMateriasCursos();
         }
     }
 
     itemMateriaCursoOnValueChanged(e) {
-        if (!this.settingFilter) {
+        if (this.settingFilter != true) {
             this.refresh()
         }
     }

@@ -61,26 +61,30 @@ class Notas extends NotasBase {
     }
 
     listToolbarItems() {
-        return [this.itemPeriodos(), this.itemAlumnos(), this.itemExamenes(), this.itemVisualiza(), this.itemMuestraOcultaNotas(), this.itemExcel(), "searchPanel"]
+        return [this.itemPeriodos(), this.itemAlumnos(), this.itemExamenes(), this.itemVisualiza(), this.itemExcel(), "searchPanel"]
     }
 
-    columnaPeriodoVisible(id) {
-        return this.isColumnVisible("periodo_" + id);
+    columnaPeriodoVisible(periodo) {
+        return this.isColumnVisible("periodo_" + periodo);
     }
 
-    columnaPreliminarVisible(id) {
-        return this.isColumnVisible("preliminar_" + id);
+    columnaNotasVisible(periodo) {
+        return this.isColumnVisible("examenes_" + periodo)
     }
 
-    columnaStatusVisible(id) {
-        return this.isColumnVisible("status_" + id);
+    columnaPreliminarVisible(periodo) {
+        return this.isColumnVisible("preliminar_" + periodo);
+    }
+
+    columnaStatusVisible(periodo) {
+        return this.isColumnVisible("status_" + periodo);
     }
 
     columnaAnualVisible() {
         return this.list().isColumnVisible("anual");
     }
 
-    getColumnsVisibility() {
+    getVisibleColumns() {
 
         function addState(notas, nombre) {
             state[nombre] = notas.isColumnVisible(nombre)
@@ -93,7 +97,7 @@ class Notas extends NotasBase {
                 addState(this, "periodo_" + periodoRow.id)
                 addState(this, "examenes_" + periodoRow.id)
                 addState(this, "preliminar_" + periodoRow.id)
-                addState(this, "status_" + periodoRow.id)
+                addState(this, "status_periodo_" + periodoRow.id)
             }
         }
 
@@ -199,7 +203,9 @@ class Notas extends NotasBase {
     }
 
     visualiza() {
-        new NotasVisualiza({ notas: this }).render()
+        new NotasVisualiza({ notas: this }).render().then(closeData => {
+            this.state.list.visibleColumns = this.getVisibleColumns()
+        })
     }
 
     updateNota(e) {

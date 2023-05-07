@@ -2,9 +2,10 @@ class NotasVisualiza extends View {
 
     static TIPO_RAIZ = 0;
     static TIPO_PERIODO = 1;
-    static TIPO_PRELIMINAR = 2;
-    static TIPO_STATUS = 3;
-    static TIPO_ANUAL = 4;
+    static TIPO_NOTA = 2;
+    static TIPO_PRELIMINAR = 3;
+    static TIPO_STATUS = 4;
+    static TIPO_ANUAL = 5;
 
     constructor(parameters) {
         super(parameters)
@@ -18,7 +19,7 @@ class NotasVisualiza extends View {
             popup: {
                 title: "Visualiza Columnas de Notas",
                 showCloseButton: false,
-                height: 450,
+                height: 550,
                 width: 400,
                 resizeEnabled: true
             },
@@ -100,11 +101,13 @@ class NotasVisualiza extends View {
                 } else {
                     this.unselectPeriodoItems(itemData.id)
                 }
+            } else if (itemData.tipo == NotasVisualiza.TIPO_NOTA) {
+                this.notas.toggleColumnVisibility("examenes_" + itemData.parent)
             } else if (itemData.tipo == NotasVisualiza.TIPO_PRELIMINAR) {
                 this.notas.toggleColumnVisibility("preliminar_" + itemData.parent);
             }
             if (itemData.tipo == NotasVisualiza.TIPO_STATUS) {
-                this.notas.toggleColumnVisibility("status_" + itemData.parent);
+                this.notas.toggleColumnVisibility("status_periodo_" + itemData.parent);
             }
             if (itemData.tipo == NotasVisualiza.TIPO_ANUAL) {
                 this.notas.toggleColumnVisibility("anual");
@@ -163,9 +166,17 @@ class NotasVisualiza extends View {
         this.ds.push({
             id: Strings.NewGuid(),
             parent: periodo,
+            nombre: "Notas",
+            tipo: NotasVisualiza.TIPO_NOTA,
+            selected: this.notas.columnaNotasVisible(periodo),
+            expaned: true
+        }, {
+            id: Strings.NewGuid(),
+            parent: periodo,
             nombre: "Preliminar",
             tipo: NotasVisualiza.TIPO_PRELIMINAR,
             selected: this.notas.columnaPreliminarVisible(periodo),
+            onClick: e => alert('Pepe'),
             expanded: true,
         })
         this.ds.push({
