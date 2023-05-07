@@ -1,5 +1,22 @@
 class NotasExamenes extends NotasBase {
 
+    constructor(parameters) {
+        super(parameters);
+        this.notasView = parameters.notasView;
+    }
+
+    static COLOR_NOTA_EDITABLE = {
+        "background-color": "rgb(200, 245, 220)"
+    }
+
+    static COLOR_PRESENTE = {
+        "background-color": "rgb(209, 249, 250)"
+    }
+
+    static COLOR_FUTURO = {
+        "background-color": "rgb(245, 248, 249)"
+    }
+
     extraConfiguration() {
         return {
             mode: "popup",
@@ -13,10 +30,19 @@ class NotasExamenes extends NotasBase {
                         mode: "cell",
                         allowUpdating: true,
                         startEditAction: "click",
-                        selectTextOnEditStart: true
-                    }
+                        selectTextOnEditStart: true,
+                    },
+                    onRowUpdating: e => this.listOnRowUpdating(e),
                 }
             }
+        }
+    }
+
+    notasData() {
+        if (this.notasView != undefined) {
+            return this.notasView.notasData()
+        } else {
+            return super.notasData()
         }
     }
 
@@ -28,8 +54,49 @@ class NotasExamenes extends NotasBase {
         return new NotasExamenesRows(this).rows()
     }
 
+    listOnRowUpdating(e) {
+        const parameters = this.saveNotaParameters(e)
+        this.notasData().saveNota(parameters.examen, this.alumno(), parameters.nota)
+        e.newData = this.notasData().alumnoTotalesRow(this.alumno(), true)
+        this.saveNota(parameters);
+    }
+
+    saveNotaParameters(e) {
+        const notaProperty = Object.keys(e.newData)[0];
+        const nota = e.newData[notaProperty];
+        const notaAnterior = e.oldData[notaProperty];
+        const examen = Strings.After(notaProperty, "_");
+        return { alumno: this.alumno(), examen, nota, notaAnterior };
+    }
+
+    saveNota(p) {
+        new Rest({ path: "notas" }).promise({
+                verb: "update",
+                data: {
+                    examen: p.examen,
+                    alumno: p.alumno,
+                    nota: p.nota
+                }
+            })
+            .then(() =>
+                this.dataHasChanged = true)
+            .catch(err =>
+                this.saveNotaHandleError(err, p))
+    }
+
+    setState(state) {
+        if (this.notasView != undefined) {
+            this.state.filter.añoLectivo = this.notasView.añoLectivo();
+            this.state.filter.curso = this.notasView.curso();
+            this.state.filter.materiaCurso = this.notasView.materiaCurso();
+        }
+        super.setState(state);
+    }
+
     listOnCellPrepared(e) {
-        if (e.column.isNota == true && [Dates.PASADO, Dates.PRESENTE].includes(e.column.temporalidad)) {
+        if (e.column.isNota == true && Dates.NoEsFuturo(e.column.subTemporalidad)) {
+            e.cellElement.css(this.class().COLOR_NOTA_EDITABLE)
+        } else if (e.column.temporalidad == Dates.PRESENTE) {
             e.cellElement.css(this.class().COLOR_PRESENTE)
         } else if (e.column.temporalidad == Dates.FUTURO) {
             e.cellElement.css(this.class().COLOR_FUTURO)
@@ -42,21 +109,26 @@ class NotasExamenes extends NotasBase {
 
 class NotasExamenesColumns extends NotasColumnsBase {
 
+    periodoVisible(periodoRow) {
+        const visible = Dates.NoEsFuturo(periodoRow.temporalidad) || 0 < periodoRow.examenesCantidad;
+        return visible;
+    }
+
     periodoColumns(periodoRow) {
         return [
             this.grupoExamenes(periodoRow),
             this.grupoPromedioValoracion({
                 periodoRow: periodoRow,
                 name: "preliminar",
-                width: 80,
                 headerTemplate: "Informe Preliminar" + "<small><br>" + (Utils.IsDefined(periodoRow.preliminar) ? Dates.Format(periodoRow.preliminar) : "<i>(fecha no definida)"),
-                caption: "Informe Preliminar"
+                caption: "Informe Preliminar",
+                visible: Dates.NoEsFuturo(periodoRow.temporalidad)
             }),
             this.grupoPromedioValoracion({
                 periodoRow: periodoRow,
                 name: "promedio",
-                width: 80,
                 caption: periodoRow.temporalidad == Dates.PASADO ? "Final" : "Proyectado",
+                visible: Dates.NoEsFuturo(periodoRow.temporalidad)
             })
         ]
     }
@@ -72,14 +144,17 @@ class NotasExamenesColumns extends NotasColumnsBase {
     }
 
     examenesColumns(periodoRow) {
-        const columns = [];
+        let columns = [];
         for (const examenRow of this.examenesRows) {
             if (examenRow.periodo == periodoRow.id) {
                 columns.push({
                     dataField: "examen_" + examenRow.id,
                     caption: examenRow.nombre,
-                    temporalidad: examenRow.temporalidad,
+                    alignment: "center",
                     isNota: true,
+                    allowEditing: Dates.NoEsFuturo(examenRow.temporalidad),
+                    temporalidad: periodoRow.temporalidad,
+                    subTemporalidad: examenRow.temporalidad,
                     editCellTemplate: NotasBase.NotaEditor,
                     width: 100,
                     allowReordering: false,
@@ -87,24 +162,19 @@ class NotasExamenesColumns extends NotasColumnsBase {
                 })
             }
         }
-        return columns.concat(this.emptyColumn(periodoRow));
+        if (periodoRow.examenesCantidad == 1 && periodoRow.temporalidad == Dates.FUTURO) {
+            columns = columns.concat(this.emptyColumn(periodoRow, 80));
+        }
+        return columns;
     }
 
 }
 
 class NotasExamenesRows extends NotasRowsBase {
 
-    rows() {
-        const rows = [];
-        for (const alumnoRow of this.alumnosRows) {
-            const alumno = { id: alumnoRow.id, apellido: alumnoRow.apellido, nombre: alumnoRow.nombre };
-            const notas = this.notasData.alumnoNotas(alumnoRow.id)
-            const preliminares = this.notasData.alumnoPreliminares(alumnoRow.id)
-            const promedios = this.notasData.alumnoPromedios(alumnoRow.id);
-            const anual = this.notasData.promedioTotal(promedios)
-            rows.push(Object.assign({}, alumno, notas, preliminares, promedios, anual))
-        }
-        return rows;
+    constructor(notas) {
+        super(notas);
+        this.includeNotas = true;
     }
 
 }

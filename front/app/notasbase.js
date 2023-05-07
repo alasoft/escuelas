@@ -382,11 +382,16 @@ class NotasColumnsBase {
                 alignment: "center",
                 temporalidad: periodoRow.temporalidad,
                 columns: this.periodoColumns(periodoRow),
+                visible: this.periodoVisible(periodoRow),
                 allowReordering: false,
                 allowResizing: true
             })
         }
         return columns;
+    }
+
+    periodoVisible(periodoRow) {
+        return true;
     }
 
     grupoPromedioValoracion(p) {
@@ -399,19 +404,21 @@ class NotasColumnsBase {
             visible: Utils.IsDefined(p.visible) ? p.visible : true,
             columns: [{
                     caption: "Promedio",
+                    dataField: p.name + "_promedio_" + p.periodoRow.id,
+                    temporalidad: p.periodoRow.temporalidad,
                     alignment: "center",
                     width: p.width || NotasColumns.PROMEDIO_WIDTH,
-                    temporalidad: p.periodoRow.temporalidad,
+                    allowEditing: false,
                     allowSorting: true,
-                    calculateCellValue: r => p.periodoRow.temporalidad != Dates.FUTURO ? r[p.name + "_" + p.periodoRow.id].promedio : ""
                 },
                 {
                     caption: "Valoración",
-                    alignment: "center",
-                    allowSorting: true,
-                    width: p.width || NotasColumns.VALORACION_WIDTH,
+                    dataField: p.name + "_valoracion_" + p.periodoRow.id,
                     temporalidad: p.periodoRow.temporalidad,
-                    calculateCellValue: r => p.periodoRow.temporalidad != Dates.FUTURO ? r[p.name + "_" + p.periodoRow.id].valoracion : ""
+                    alignment: "center",
+                    width: p.width || NotasColumns.VALORACION_WIDTH,
+                    allowEditing: false,
+                    allowSorting: true,
                 }
             ]
         }
@@ -419,17 +426,17 @@ class NotasColumnsBase {
 
     grupoStatus(p) {
         return {
-            dataField: "status_" + p.periodoRow.id,
+            name: "status_" + p.periodoRow.id,
             caption: "Status",
             temporalidad: p.periodoRow.temporalidad,
             alignment: "center",
             visible: true,
             columns: [{
+                dataField: "status_descripcion_" + p.periodoRow.id,
                 caption: "",
                 temporalidad: p.periodoRow.temporalidad,
                 allowSorting: true,
                 width: 150,
-                calculateCellValue: r => p.periodoRow.temporalidad != Dates.FUTURO ? r["status_" + p.periodoRow.id].descripcion : ""
             }]
         }
     }
@@ -447,28 +454,27 @@ class NotasColumnsBase {
 
     anualColumns() {
         return [{
-                dataField: "promedio_anual",
+                dataField: "anual_promedio",
                 caption: "Promedio",
                 esAnual: true,
                 alignment: "center",
                 width: 80,
-                calculateCellValue: r => r.total.promedio
             },
             {
-                dataField: "valoracion_anual",
+                dataField: "anual_valoracion",
                 caption: "Valoración",
                 esAnual: true,
                 alignment: "center",
                 width: 90,
-                calculateCellValue: r => r.total.valoracion
             }
         ]
 
     }
 
-    emptyColumn(periodoRow) {
+    emptyColumn(periodoRow, width) {
         return {
-            temporalidad: Utils.IsDefined(periodoRow) ? periodoRow.temporalidad : undefined
+            temporalidad: Utils.IsDefined(periodoRow) ? periodoRow.temporalidad : undefined,
+            width: width
         }
     }
 
@@ -480,6 +486,22 @@ class NotasRowsBase {
         this.notas = notas;
         this.notasData = this.notas.notasData();
         this.alumnosRows = this.notasData.alumnosRows;
+        this.includeNotas = false;
+    }
+
+    rows() {
+        const rows = [];
+        for (const alumnoRow of this.alumnosRows) {
+            const id = alumnoRow.id;
+            rows.push(Object.assign({},
+                this.alumnoRow(alumnoRow), this.notasData.alumnoTotalesRow(alumnoRow.id, this.includeNotas)
+            ))
+        }
+        return rows;
+    }
+
+    alumnoRow(alumnoRow) {
+        return { id: alumnoRow.id, apellido: alumnoRow.apellido, nombre: alumnoRow.nombre };
     }
 
 }

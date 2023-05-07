@@ -194,6 +194,10 @@ class Strings {
         return s;
     }
 
+    static After(s, after) {
+        return s.slice(s.indexOf(after) + 1);
+    }
+
     static SubstringAfter(s, after) {
         let a = s.split(after);
         if (1 < a.length) {
@@ -301,6 +305,10 @@ class Dates {
             newDate.setHours(-24 * (day - 1));
         }
         return newDate;
+    }
+
+    static NoEsFuturo(temporalidad) {
+        return [Dates.PASADO, Dates.PRESENTE].includes(temporalidad);
     }
 
     static Temporalidad(desde, hasta) {

@@ -121,6 +121,10 @@ class ListViewBase extends View {
         return { list: {} }
     }
 
+    closeDataDefault() {
+        return { dataHasChanged: this.dataHasChanged }
+    }
+
     listOnContentReady(e) {
         this.refreshContextMenu()
     }

@@ -88,59 +88,8 @@ class NotasData {
         }
     }
 
-    alumnoTotalesRow(alumno, includeNotas = false) {
-        const alumnoPromedios = this.alumnoPromedios(alumno);
-        let row = Object.assign({},
-            this.alumnoPreliminaresRow(alumno),
-            this.alumnoPromediosRow(alumnoPromedios),
-            this.alumnoStatusRow(alumno, alumnoPromedios),
-            this.alumnoAnualRow(alumnoPromedios)
-        )
-        if (includeNotas) {
-            row = Object.assign({}, row, this.alumnoNotasRow(alumno))
-        }
-        return row;
-    }
-
-    alumnoPreliminaresRow(alumno) {
-        const row = {}
-        for (const periodoRow of this.periodosRows) {
-            const preliminar = this.alumnoPreliminarPeriodo(alumno, periodoRow.id);
-            row["preliminar_promedio_" + periodoRow.id] = preliminar.promedio;
-            row["preliminar_valoracion_" + periodoRow.id] = preliminar.valoracion;
-        }
-        return row;
-    }
-
-    alumnoPromediosRow(alumnoPromedios) {
-        const row = {}
-        Object.keys(alumnoPromedios).forEach(
-            key => {
-                const periodo = Strings.After(key, "_");
-                row["promedio_promedio_" + periodo] = alumnoPromedios[key].promedio;
-                row["promedio_valoracion_" + periodo] = alumnoPromedios[key].valoracion;
-            }
-        )
-        return row;
-    }
-
-    alumnoStatusRow(alumno, alumnoPromedios) {
-        const row = this.alumnoStatus(alumno, alumnoPromedios);
-        return row;
-    }
-
-    alumnoAnualRow(alumnoPromedios) {
-        const promedioTotal = this.promedioTotal(alumnoPromedios);
-        const row = {
-            anual_promedio: promedioTotal.promedio,
-            anual_valoracion: promedioTotal.valoracion
-        }
-        return row;
-    }
-
-    alumnoNotasRow(alumno) {
-        const row = this.alumnoNotas(alumno);
-        return row;
+    alumnoPromedioAnual(alumno) {
+        return this.promedioTotal(this.alumnoPromedios(alumno))
     }
 
     alumnoNotas(alumno) {
@@ -250,10 +199,6 @@ class NotasData {
         } else {
             return "Notas al dia"
         }
-    }
-
-    alumnoPromedioAnual(alumno) {
-        return this.promedioTotal(this.alumnoPromedios(alumno))
     }
 
     promedioTotal(promedios) {

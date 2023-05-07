@@ -172,12 +172,18 @@ class Notas extends NotasBase {
     }
 
     notasExamenes() {
-        new NotasExamenes().render()
+        new NotasExamenes({
+                notasView: this
+            }).render()
+            .then(closeData => {
+                if (closeData.dataHasChanged) {
+                    this.refreshRows()
+                }
+            })
     }
 
     visualiza() {
-        new NotasVisualiza({ notas: this }).render().then(closeData =>
-            this.state.visibleColumns = this.getStateVisibleColumns())
+        new NotasVisualiza({ notas: this }).render()
     }
 
     listOnRowDblClick(e) {
@@ -214,19 +220,4 @@ class NotasColumns extends NotasColumnsBase {
 
 }
 
-class NotasRows extends NotasRowsBase {
-
-    rows() {
-        const rows = [];
-        for (const alumnoRow of this.alumnosRows) {
-            const alumno = { id: alumnoRow.id, apellido: alumnoRow.apellido, nombre: alumnoRow.nombre };
-            const preliminares = this.notasData.alumnoPreliminares(alumnoRow.id)
-            const promedios = this.notasData.alumnoPromedios(alumnoRow.id)
-            const status = this.notasData.alumnoStatus(alumnoRow.id, promedios);
-            const anual = this.notasData.promedioTotal(promedios)
-            rows.push(Object.assign({}, alumno, preliminares, promedios, status, anual))
-        }
-        return rows;
-    }
-
-}
+class NotasRows extends NotasRowsBase {}

@@ -71,7 +71,7 @@ class NotasAlumno extends View {
     calculateCustomSummary(options) {
         if (options.name == "total") {
             if (options.summaryProcess == "calculate") {
-                options.totalValue = this.alumnoPromedioAnual.total.promedio
+                options.totalValue = this.alumnoPromedioAnual.promedio
             }
         }
     }
