@@ -95,12 +95,6 @@ class ListViewBase extends View {
         return this.list().isColumnVisible(name);
     }
 
-    clearSettingState() {
-        if (this.settingState == true) {
-            this.settingState = false;
-        }
-    }
-
     getColumnsVisibility() {
         return this.list().getColumnsVisibility()
     }

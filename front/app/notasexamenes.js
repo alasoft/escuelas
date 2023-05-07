@@ -2,7 +2,7 @@ class NotasExamenes extends NotasBase {
 
     constructor(parameters) {
         super(parameters);
-        this.notasView = parameters.notasView;
+        this.masterView = parameters.masterView;
     }
 
     static COLOR_NOTA_EDITABLE = {
@@ -39,8 +39,8 @@ class NotasExamenes extends NotasBase {
     }
 
     notasData() {
-        if (this.notasView != undefined) {
-            return this.notasView.notasData()
+        if (this.masterView != undefined) {
+            return this.masterView.notasData()
         } else {
             return super.notasData()
         }
@@ -82,15 +82,6 @@ class NotasExamenes extends NotasBase {
                 this.dataHasChanged = true)
             .catch(err =>
                 this.saveNotaHandleError(err, p))
-    }
-
-    setState(state) {
-        if (this.notasView != undefined) {
-            this.state.filter.añoLectivo = this.notasView.añoLectivo();
-            this.state.filter.curso = this.notasView.curso();
-            this.state.filter.materiaCurso = this.notasView.materiaCurso();
-        }
-        super.setState(state);
     }
 
     listOnCellPrepared(e) {

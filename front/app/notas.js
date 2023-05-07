@@ -2,20 +2,33 @@ class Notas extends NotasBase {
 
     extraConfiguration() {
         return {
+            fullScreen: true,
             components: {
                 label: {
                     text: "Notas por Curso y Materia"
                 },
                 list: {
-                    onKeyDown: e => this.listOnKeyDown(e),
+                    pager: {
+                        visible: false
+                    },
+                    paging: {
+                        pageSize: 50
+                    },
+                    editing: {
+                        mode: "cell",
+                        allowUpdating: true,
+                        startEditAction: "click",
+                        selectTextOnEditStart: true,
+                    },
                     onRowDblClick: e => this.listOnRowDblClick(e),
+                    onRowUpdating: e => this.listOnRowUpdating(e)
                 }
             }
         }
     }
 
     contextMenuItems() {
-        return [this.contextItemNotasAlumno(), this.contextItemNotasExamenes(), this.contextItemExporta(), this.contextItemVisualiza()]
+        return [this.contextItemNotasAlumno(), this.contextItemVisualiza(), this.contextItemExporta()]
     }
 
     contextItemNotasAlumno() {
@@ -48,7 +61,7 @@ class Notas extends NotasBase {
     }
 
     listToolbarItems() {
-        return [this.itemPeriodos(), this.itemAlumnos(), this.itemExamenes(), this.itemVisualiza(), this.itemExcel(), "searchPanel"]
+        return [this.itemPeriodos(), this.itemAlumnos(), this.itemExamenes(), this.itemVisualiza(), this.itemMuestraOcultaNotas(), this.itemExcel(), "searchPanel"]
     }
 
     columnaPeriodoVisible(id) {
@@ -78,6 +91,7 @@ class Notas extends NotasBase {
         if (this.notasData().periodosRows != undefined) {
             for (const periodoRow of this.notasData().periodosRows) {
                 addState(this, "periodo_" + periodoRow.id)
+                addState(this, "examenes_" + periodoRow.id)
                 addState(this, "preliminar_" + periodoRow.id)
                 addState(this, "status_" + periodoRow.id)
             }
@@ -165,7 +179,9 @@ class Notas extends NotasBase {
                 listView: this
             }).render()
             .then(closeData => {
-                if (closeData.dataHasChanged) {
+                if (closeData.filter.dataHasChanged()) {
+                    this.setFilter(closeData.filter.getData())
+                } else if (this.notasData().dataHasChanged()) {
                     this.refreshRows()
                 }
             })
@@ -186,38 +202,50 @@ class Notas extends NotasBase {
         new NotasVisualiza({ notas: this }).render()
     }
 
-    listOnRowDblClick(e) {
-        this.notasAlumno();
+    updateNota(e) {
+        const parameters = this.saveNotaParameters(e)
+        this.notasData().saveNota(parameters.examen, parameters.alumno, parameters.nota)
+        e.newData = this.notasData().alumnoTotalesRow(parameters.alumno, true)
+        this.saveNota(parameters);
+
     }
 
-    listOnKeyDown(e) {
-        if (e.event.key == "Enter" && this.list().hasRows()) {
-            this.notasAlumno()
+    saveNotaParameters(e) {
+        const notaProperty = Object.keys(e.newData)[0];
+        const nota = e.newData[notaProperty];
+        const notaAnterior = e.oldData[notaProperty];
+        const examen = Strings.After(notaProperty, "_");
+        return { alumno: this.alumno(), examen, nota, notaAnterior };
+    }
+
+    saveNota(p) {
+        new Rest({ path: "notas" }).promise({
+                verb: "update",
+                data: {
+                    examen: p.examen,
+                    alumno: p.alumno,
+                    nota: p.nota
+                }
+            })
+            .then(() =>
+                this.dataHasChanged = true)
+            .catch(err =>
+                this.saveNotaHandleError(err, p))
+    }
+
+
+    listOnRowDblClick(e) {
+        if (this.list().hasRows()) {
+            this.notasAlumno();
         }
     }
 
-}
-
-class NotasColumns extends NotasColumnsBase {
-
-    periodoColumns(periodoRow) {
-        return [this.grupoPromedioValoracion({
-                periodoRow: periodoRow,
-                name: "preliminar",
-                caption: "Informe Preliminar",
-                headerTemplate: "Informe Preliminar" + "<small><br>" + (Utils.IsDefined(periodoRow.preliminar) ? Dates.Format(periodoRow.preliminar) : "<i>(fecha no definida)"),
-            }),
-            this.grupoPromedioValoracion({
-                periodoRow: periodoRow,
-                name: "promedio",
-                caption: periodoRow.temporalidad == Dates.PASADO ? "Final" : "Proyectado",
-            }),
-            this.grupoStatus({
-                periodoRow: periodoRow
-            })
-        ]
+    listOnRowUpdating(e) {
+        this.updateNota(e)
     }
 
 }
+
+class NotasColumns extends NotasColumnsBase {}
 
 class NotasRows extends NotasRowsBase {}
