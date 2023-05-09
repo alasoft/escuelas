@@ -1,120 +1,45 @@
 class NotasVisualiza extends View {
 
-    static TIPO_RAIZ = 0;
-    static TIPO_PERIODO = 1;
-    static TIPO_NOTA = 2;
-    static TIPO_PRELIMINAR = 3;
-    static TIPO_STATUS = 4;
-    static TIPO_ANUAL = 5;
-
     constructor(parameters) {
         super(parameters)
-        this.notas = this.parameters().notas;
+        this.notas = parameters.notas;
         this.notasData = this.notas.notasData()
+        this.rows = [];
     }
 
     extraConfiguration() {
         return {
             mode: "popup",
             popup: {
-                title: "Visualiza Columnas de Notas",
-                showCloseButton: false,
-                height: 550,
+                title: "Visualiza Columnas",
                 width: 400,
+                height: 650,
                 resizeEnabled: true
             },
             components: {
                 tree: {
                     componentClass: TreeView,
+                    dataStructure: "plain",
                     dataSource: this.dataSource(),
+                    displayExpr: "text",
+                    parentIdExpr: "parent",
                     selectionMode: "multiple",
                     selectNodesRecursive: false,
-                    showCheckBoxesMode: "normal",
-                    showBorders: false,
-                    showBorders: true,
                     selectByClick: true,
-                    displayExpr: "nombre",
-                    onItemSelectionChanged: e => this.treeOnItemSelectionChanged(e)
-                },
-                toolbar: {
-                    items: this.toolbarItems()
+                    showCheckBoxesMode: 'normal',
+                    onItemSelectionChanged: e => this.onItemSelectionChanged(e)
                 }
             }
+
         }
     }
 
-    toolbarItems() {
-        return [this.itemSalida()]
-    }
-
-    itemSalida() {
-        return {
-            widget: "dxButton",
-            location: "after",
-            options: {
-                icon: "close",
-                text: "Salida",
-                onClick: e => this.close()
-            }
-        }
+    list() {
+        return this.notas.list()
     }
 
     tree() {
-        return this.components().tree;
-    }
-
-    preliminarId(periodo) {
-        const item = this.dataSource().find(item => item.tipo == NotasVisualiza.TIPO_PRELIMINAR && item.parent == periodo)
-        if (item != undefined) {
-            return item.id;
-        }
-    }
-
-    statusId(periodo) {
-        const item = this.dataSource().find(item => item.tipo == NotasVisualiza.TIPO_STATUS && item.parent == periodo)
-        if (item != undefined) {
-            return item.id;
-        }
-    }
-
-    selectPeriodoItems(periodo) {
-        this.tree().selectItem(this.preliminarId(periodo))
-        this.tree().selectItem(this.statusId(periodo))
-    }
-
-    unselectPeriodoItems(periodo) {
-        this.tree().unselectItem(this.preliminarId(periodo))
-        this.tree().unselectItem(this.statusId(periodo))
-    }
-
-    treeOnItemSelectionChanged(e) {
-        this.selectItems(e.itemData)
-    }
-
-    selectItems(itemData) {
-        this.tree().beginUpdate();
-        try {
-            if (itemData.tipo == NotasVisualiza.TIPO_PERIODO) {
-                const visible = this.notas.toggleColumnVisibility("periodo_" + itemData.id);
-                if (visible) {
-                    this.selectPeriodoItems(itemData.id)
-                } else {
-                    this.unselectPeriodoItems(itemData.id)
-                }
-            } else if (itemData.tipo == NotasVisualiza.TIPO_NOTA) {
-                this.notas.toggleColumnVisibility("examenes_" + itemData.parent)
-            } else if (itemData.tipo == NotasVisualiza.TIPO_PRELIMINAR) {
-                this.notas.toggleColumnVisibility("preliminar_" + itemData.parent);
-            }
-            if (itemData.tipo == NotasVisualiza.TIPO_STATUS) {
-                this.notas.toggleColumnVisibility("status_periodo_" + itemData.parent);
-            }
-            if (itemData.tipo == NotasVisualiza.TIPO_ANUAL) {
-                this.notas.toggleColumnVisibility("anual");
-            }
-        } finally {
-            this.tree().endUpdate()
-        }
+        return this.components().tree
     }
 
     defineTemplate() {
@@ -123,80 +48,141 @@ class NotasVisualiza extends View {
 
     dataSource() {
         if (this._dataSource == undefined) {
-            this._dataSource = this.defineDataSource();
+            this._dataSource = this.defineDatasource();
         }
         return this._dataSource;
     }
 
-    defineDataSource() {
-        this.ds = [];
-        this.addRootNode();
+    defineDatasource() {
+        this.addRootRow();
         this.addPeriodosRows();
-        this.addAnualRow()
-        return this.ds;
+        this.addAnualRow();
+        return this.rows
     }
 
-    addRootNode() {
+    addRootRow() {
         this.rootId = Strings.NewGuid()
-        this.rootNode = {
+        this.addRow({
             id: this.rootId,
             parent: null,
-            nombre: "Todas",
-            tipo: NotasVisualiza.TIPO_RAIZ,
-            expanded: true
-        }
-        this.ds.push(this.rootNode)
+            text: "Todas",
+        })
     }
 
     addPeriodosRows() {
-        for (const row of this.notasData.periodosRows) {
-            this.ds.push({
-                id: row.id,
-                parent: this.rootId,
-                nombre: row.nombre + Notas.TemporalidadDescripcion(row.temporalidad),
-                tipo: NotasVisualiza.TIPO_PERIODO,
-                expanded: true,
-                selected: this.notas.columnaPeriodoVisible(row.id),
+        for (const periodoRow of this.notasData.periodosRows) {
+            const row = this.addRow({
+                text: periodoRow.nombre,
+                periodo: periodoRow.id,
+                columnName: "periodo_" + periodoRow.id
             })
-            this.addPeriodoRows(row.id)
+            this.addPeriodoRows(row);
         }
     }
 
-    addPeriodoRows(periodo) {
-        this.ds.push({
-            id: Strings.NewGuid(),
-            parent: periodo,
-            nombre: "Notas",
-            tipo: NotasVisualiza.TIPO_NOTA,
-            selected: this.notas.columnaNotasVisible(periodo),
-            expaned: true
-        }, {
-            id: Strings.NewGuid(),
-            parent: periodo,
-            nombre: "Preliminar",
-            tipo: NotasVisualiza.TIPO_PRELIMINAR,
-            selected: this.notas.columnaPreliminarVisible(periodo),
-            onClick: e => alert('Pepe'),
-            expanded: true,
+    addPeriodoRows(row) {
+        this.addRow({
+            parent: row.id,
+            text: "Notas",
+            columnName: "examenes_" + row.periodo
         })
-        this.ds.push({
-            id: Strings.NewGuid(),
-            parent: periodo,
-            nombre: "Status",
-            tipo: NotasVisualiza.TIPO_STATUS,
-            selected: this.notas.columnaStatusVisible(periodo),
-            expanded: true,
+        this.addRow({
+            parent: row.id,
+            text: "Preliminar",
+            columnName: "preliminar_" + row.periodo
+        })
+        this.addRow({
+            parent: row.id,
+            text: "Promedio",
+            columnName: "promedio_" + row.periodo
+        })
+        this.addRow({
+            parent: row.id,
+            text: "Status",
+            columnName: "status_" + row.periodo
         })
     }
 
-    addAnualRow(parent) {
-        this.ds.push({
-            id: Strings.NewGuid(),
-            nombre: "Anual",
-            tipo: NotasVisualiza.TIPO_ANUAL,
-            parent: this.rootId,
-            selected: this.notas.columnaAnualVisible(),
+    addAnualRow() {
+        this.addRow({
+            text: "Anual",
+            columnName: "anual"
         })
+    }
+
+    addRow(row) {
+        if (row.id === undefined) {
+            row.id = Strings.NewGuid()
+        }
+        if (row.parent === undefined) {
+            row.parent = this.rootId;
+        }
+        row.expanded = true;
+        row.selected = this.list().isColumnVisible(row.columnName);
+        this.rows.push(row)
+        return row;
+    }
+
+    findRow(id) {
+        return this.rows.find(row => row.id == id)
+    }
+
+    setRowSelected(row, selected) {
+        this.setSelected(row, selected)
+        this.tree().setProperty("dataSource", this.rows);
+        this.refreshColumns()
+    }
+
+    refreshColumns() {
+        this.list().beginUpdate();
+        try {
+            for (const row of this.rows) {
+                this.list().showColumn(row.columnName, row.selected)
+            }
+        } finally {
+            this.list().endUpdate()
+        }
+    }
+
+    setSelected(row, selected) {
+        row.selected = selected;
+        this.childRows(row.id).forEach(childRow =>
+            this.setSelected(childRow, selected)
+        )
+        this.setSelectedParentRows(row.id)
+
+    }
+
+    setSelectedParentRows(id) {
+        let parentRow = this.findParentRow(id);
+        while (parentRow != undefined) {
+            parentRow.selected = (0 < this.selectedChildsCount(parentRow.id));
+            parentRow = this.findRow(parentRow.parent);
+        }
+    }
+
+    findParentRow(id) {
+        const row = this.findRow(id);
+        if (row != undefined && row.parent != undefined) {
+            return this.findRow(row.parent)
+        }
+    }
+
+    selectedChildsCount(parent) {
+        let count = 0;
+        this.childRows(parent).forEach(childRow =>
+            childRow.selected == true ? ++count : undefined)
+        return count;
+    }
+
+    childRows(parent) {
+        const childs = [];
+        this.rows.forEach(row => row.parent == parent ? childs.push(row) : undefined)
+        return childs;
+    }
+
+    onItemSelectionChanged(e) {
+        this.setRowSelected(this.findRow(e.itemData.id), e.itemData.selected)
     }
 
 }

@@ -220,7 +220,7 @@ class NotasData {
         const status = {};
         for (const row of this.periodosRows) {
             const statusPeriodo = this.alumnoStatusPeriodo(alumno, row, promedios["promedio_" + row.id]);
-            status["status_" + row.id] = statusPeriodo;
+            status["status_descripcion_" + row.id] = statusPeriodo;
         }
         return status;
     }

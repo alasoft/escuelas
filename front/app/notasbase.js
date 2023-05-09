@@ -457,7 +457,7 @@ class NotasColumnsBase {
     grupoExamenes(periodoRow) {
         return {
             name: "examenes_" + periodoRow.id,
-            caption: "Examenes",
+            caption: "Notas",
             temporalidad: periodoRow.temporalidad,
             alignment: "center",
             columns: this.examenesColumns(periodoRow)
@@ -521,13 +521,13 @@ class NotasColumnsBase {
 
     grupoStatus(p) {
         return {
-            name: "status_periodo_" + p.periodoRow.id,
+            name: "status_" + p.periodoRow.id,
             caption: "Status",
             temporalidad: p.periodoRow.temporalidad,
             alignment: "center",
             visible: true,
             columns: [{
-                dataField: "status_" + p.periodoRow.id,
+                dataField: "status_descripcion_" + p.periodoRow.id,
                 caption: "",
                 temporalidad: p.periodoRow.temporalidad,
                 allowSorting: true,
@@ -549,20 +549,25 @@ class NotasColumnsBase {
 
     anualColumns() {
         return [{
-                dataField: "anual_promedio",
-                caption: "Promedio",
-                esAnual: true,
-                alignment: "center",
-                width: 80,
-            },
-            {
-                dataField: "anual_valoracion",
-                caption: "Valoración",
-                esAnual: true,
-                alignment: "center",
-                width: 90,
-            }
-        ]
+            caption: "Proyectado",
+            esAnual: true,
+            alignment: "center",
+            columns: [{
+                    dataField: "anual_promedio",
+                    caption: "Promedio",
+                    esAnual: true,
+                    alignment: "center",
+                    width: 80,
+                },
+                {
+                    dataField: "anual_valoracion",
+                    caption: "Valoración",
+                    esAnual: true,
+                    alignment: "center",
+                    width: 90,
+                }
+            ]
+        }]
 
     }
 

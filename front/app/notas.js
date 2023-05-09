@@ -95,7 +95,7 @@ class Notas extends NotasBase {
         if (this.notasData().periodosRows != undefined) {
             for (const periodoRow of this.notasData().periodosRows) {
                 addState(this, "periodo_" + periodoRow.id)
-                addState(this, "examenes_" + periodoRow.id)
+                addState(this, "notas_" + periodoRow.id)
                 addState(this, "preliminar_" + periodoRow.id)
                 addState(this, "status_periodo_" + periodoRow.id)
             }
@@ -210,8 +210,12 @@ class Notas extends NotasBase {
 
     updateNota(e) {
         const parameters = this.saveNotaParameters(e)
-        this.notasData().saveNota(parameters.examen, parameters.alumno, parameters.nota)
-        e.newData = this.notasData().alumnoTotalesRow(parameters.alumno, true)
+        this.notasData().saveNota(parameters.examen, parameters.alumno, parameters.nota);
+        const totalesRow = this.notasData().alumnoTotalesRow(parameters.alumno, true);
+        if (parameters.nota == null) {
+            totalesRow["examen_" + parameters.examen] = null;
+        }
+        e.newData = totalesRow;
         this.saveNota(parameters);
 
     }
