@@ -17,8 +17,12 @@ class TreeList extends Widget {
         )
     }
 
-    getSelectedRows(mode) {
+    getSelectedRows(mode = "all") {
         return this.instance().getSelectedRowsData(mode);
+    }
+
+    getSelectedKeys(mode = "all") {
+        return this.instance().getSelectedRowKeys(mode);
     }
 
     dataSource() {

@@ -3,6 +3,10 @@ class AñoLectivoView extends FilterView {
     defaultConfiguration() {
         return Utils.Merge(super.defaultConfiguration(), {
             components: {
+                filter: {
+                    labelLocation: "left",
+                    height: 50
+                },
                 list: {
                     headerFilter: {
                         visible: true
@@ -46,7 +50,7 @@ class AñoLectivoView extends FilterView {
             formula: row => Cursos.Descripcion(row),
             caption: "Curso",
             name: "curso",
-            width: 400,
+            width: 350,
             filterWidth: 600
         })
     }

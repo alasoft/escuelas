@@ -7,6 +7,7 @@ class ExamenesCurso extends CursosMateriasDetalle {
     extraConfiguration() {
         return {
             mode: "view",
+            showTodosButton: true,
             popup: {
                 title: "Examenes por Curso y Materia",
                 height: 600,
@@ -24,6 +25,12 @@ class ExamenesCurso extends CursosMateriasDetalle {
                     filterPanel: {
                         visible: true,
                         labelLocation: "left"
+                    },
+                    pager: {
+                        visible: false
+                    },
+                    paging: {
+                        pageSize: 50
                     }
                 }
             }
@@ -43,6 +50,11 @@ class ExamenesCurso extends CursosMateriasDetalle {
             }
         }
     }
+
+    toolbarItems() {
+        return [this.itemInsert(), this.itemTodos()]
+    }
+
 
     itemCurso() {
         return super.itemCurso({ deferRendering: this.parameters().materiacurso != undefined })
@@ -115,11 +127,10 @@ class ExamenesCurso extends CursosMateriasDetalle {
     }
 
     itemTodos() {
-        if (this.configuration().showTodosButton != false) {
+        if (this.configuration().showTodosButton == true) {
             return {
                 widget: "dxButton",
                 location: "before",
-                visible: false,
                 options: {
                     text: "Todos los Trabajos Prácticos",
                     icon: "folder",

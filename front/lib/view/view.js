@@ -105,8 +105,7 @@ class View extends Component {
             .set("form", Form)
             .set("button", Button)
             .set("label", Label)
-            .set("treeItems", TreeItems)
-            .set("treeView", TreeView)
+            .set("tree", TreeList)
             .set("filter", Form)
             .set("scheduler", Scheduler)
     }

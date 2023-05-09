@@ -457,7 +457,7 @@ class NotasColumnsBase {
     grupoExamenes(periodoRow) {
         return {
             name: "examenes_" + periodoRow.id,
-            caption: "Notas",
+            caption: "Examenes",
             temporalidad: periodoRow.temporalidad,
             alignment: "center",
             columns: this.examenesColumns(periodoRow)
@@ -473,7 +473,8 @@ class NotasColumnsBase {
                     caption: examenRow.nombre,
                     alignment: "center",
                     isNota: true,
-                    allowEditing: Dates.NoEsFuturo(examenRow.temporalidad),
+                    //                    allowEditing: Dates.NoEsFuturo(examenRow.temporalidad),
+                    allowEditing: false,
                     temporalidad: periodoRow.temporalidad,
                     subTemporalidad: examenRow.temporalidad,
                     editCellTemplate: NotasBase.NotaEditor,

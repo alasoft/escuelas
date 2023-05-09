@@ -21,6 +21,12 @@ class AlumnosCurso extends CursosDetalle {
                 },
                 list: {
                     showBorders: true,
+                    pager: {
+                        visible: false
+                    },
+                    paging: {
+                        pageSize: 50
+                    }
                 }
             }
         }

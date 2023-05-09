@@ -61,7 +61,10 @@ class Notas extends NotasBase {
     }
 
     listToolbarItems() {
-        return [this.itemPeriodos(), this.itemAlumnos(), this.itemExamenes(), this.itemVisualiza(), this.itemExcel(), "searchPanel"]
+        return [this.itemPeriodos(), this.itemAlumnos(), this.itemExamenes(), this.itemVisualiza(),
+            this.itemMuestraExamenes(),
+            this.itemExcel(), "searchPanel"
+        ]
     }
 
     columnaPeriodoVisible(periodo) {
@@ -127,8 +130,19 @@ class Notas extends NotasBase {
             options: {
                 icon: "search",
                 text: "Visualiza Columnas",
-                hind: "Selecciona columnas a visualizar",
+                hint: "Selecciona columnas a visualizar",
                 onClick: e => this.visualiza()
+            }
+        }
+    }
+
+    itemMuestraExamenes() {
+        return {
+            widget: "dxCheckBox",
+            location: "center",
+            options: {
+                text: "Muestra Examenes",
+                onValueChanged: e => this.muestraExamenes(e)
             }
         }
     }
@@ -206,6 +220,12 @@ class Notas extends NotasBase {
         new NotasVisualiza({ notas: this }).render().then(closeData => {
             this.state.list.visibleColumns = this.getVisibleColumns()
         })
+    }
+
+    muestraExamenes(e) {
+        for (const row of this.notasData().periodosRows) {
+            this.list().showColumn("examenes_" + row.id, e.value)
+        }
     }
 
     updateNota(e) {

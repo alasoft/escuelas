@@ -8,13 +8,20 @@ class Examenes extends AñoLectivoView {
         return {
             mode: "popup",
             popup: {
-                title: "Examenes de todas las Materias",
-                height: 650,
-                width: 1300
+                title: "Examenes de todas los Cursos y Materias",
+                height: 700,
+                width: 1400
             },
             components: {
                 list: {
-                    showBorders: true
+                    showBorders: true,
+                    pager: {
+                        visible: false
+                    },
+                    paging: {
+                        pageSize: 150
+                    }
+
                 }
             }
         }
@@ -32,7 +39,8 @@ class Examenes extends AñoLectivoView {
             Column.Date({ dataField: "desde", width: 180, caption: "Inicio", format: App.DATE_FORMAT_LONG }),
             Column.Date({ dataField: "hasta", caption: "Cierre", width: 180, format: App.DATE_FORMAT_LONG }),
             Column.Text({ dataField: "nombre", width: 250, caption: "Trabajo Práctico" }),
-            Column.Text({ dataField: "periodonombre", caption: "Período", filtering: true, width: 200 }),
+            Column.Text({ dataField: "periodonombre", caption: "Período", filtering: true }),
+            Column.Empty()
         ]
     }
 

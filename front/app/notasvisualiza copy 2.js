@@ -24,7 +24,6 @@ class NotasVisualiza extends View {
                     selectedExpr: "selected",
                     columns: ["text"],
                     showBorders: true,
-                    selectedRowKeys: this.selectedRowKeys(),
                     selection: {
                         mode: "multiple",
                         recursive: true,
@@ -85,7 +84,7 @@ class NotasVisualiza extends View {
     addPeriodoRows(row) {
         this.addRow({
             parent: row.id,
-            text: "Examenes",
+            text: "Notas",
             columnName: "examenes_" + row.periodo
         })
         this.addRow({
@@ -124,92 +123,66 @@ class NotasVisualiza extends View {
         return row;
     }
 
-    selectedRowKeys() {
-        const keys = []
-        for (const row of this.dataSource()) {
-            if (row.columnName != undefined) {
-                if (this.list().isColumnVisible(row.columnName)) {
-                    keys.push(row.id)
-                }
-            }
-        }
-        return keys;
-    }
-
-    getRowById(id) {
+    findRow(id) {
         return this.rows.find(row => row.id == id)
     }
 
-    getParentRow(row) {
-        if (row.parent != null) {
-            return this.getRowById(row.parent)
-        }
+    setRowSelected(row, selected) {
+        this.setSelected(row, selected)
+            //        this.tree().setProperty("dataSource", this.rows);
+            //        this.refreshColumns()
     }
 
     refreshColumns() {
         this.list().beginUpdate();
         try {
-            this.visibleColumnsMap().forEach(visibleColumn =>
-                this.list().showColumn(visibleColumn.columnName, visibleColumn.visible)
-            )
+            for (const row of this.rows) {
+                this.list().showColumn(row.columnName, row.selected)
+            }
         } finally {
             this.list().endUpdate()
         }
     }
 
-    visibleColumnsMap() {
-        if (this._visibleColumnsMap == undefined) {
-            this._visibleColumnsMap = this.defineVisibleColumnsMap()
-        }
-        return this._visibleColumnsMap;
+    setSelected(row, selected) {
+        row.selected = selected;
+        this.childRows(row.id).forEach(childRow =>
+            this.setSelected(childRow, selected)
+        )
+        this.setSelectedParentRows(row.id)
+
     }
 
-    defineVisibleColumnsMap() {
-        const map = new Map();
-        this.addVisibleColumnsToMap(map, this.tree().getSelectedKeys());
-        for (const id of this.tree().getSelectedKeys()) {
-            this.addVisibleColumnsToMap(map, this.parentKeys(this.getRowById(id)))
-        }
-        for (const row of this.dataSource()) {
-            if (row.columnName != undefined) {
-                if (map.get(row.id) == undefined) {
-                    map.set(row.id, { columnName: row.columnName, visible: false })
-                }
-            }
-        }
-        return map;
-    }
-
-    addVisibleColumnsToMap(map, ids) {
-        for (const id of ids) {
-            const row = this.getRowById(id);
-            if (row.columnName != undefined) {
-                if (map.get(id) == undefined) {
-                    map.set(id, { columnName: row.columnName, visible: true })
-                }
-            }
-        }
-    }
-
-    parentKeys(row) {
-        const keys = []
-        let parentRow = this.getParentRow(row);
+    setSelectedParentRows(id) {
+        let parentRow = this.findParentRow(id);
         while (parentRow != undefined) {
-            if (parentRow.columnName != undefined) {
-                keys.push(parentRow.id)
-            }
-            parentRow = this.getParentRow(parentRow);
+            parentRow.selected = (0 < this.selectedChildsCount(parentRow.id));
+            parentRow = this.findRow(parentRow.parent);
         }
-        return keys;
     }
 
-    clearVisibleColumnsMap() {
-        this._visibleColumnsMap = undefined;
+    findParentRow(id) {
+        const row = this.findRow(id);
+        if (row != undefined && row.parent != undefined) {
+            return this.findRow(row.parent)
+        }
+    }
+
+    selectedChildsCount(parent) {
+        let count = 0;
+        this.childRows(parent).forEach(childRow =>
+            childRow.selected == true ? ++count : undefined)
+        return count;
+    }
+
+    childRows(parent) {
+        const childs = [];
+        this.rows.forEach(row => row.parent == parent ? childs.push(row) : undefined)
+        return childs;
     }
 
     onSelectionChanged(e) {
-        this.clearVisibleColumnsMap();
-        this.refreshColumns()
+
     }
 
 }
