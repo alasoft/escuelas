@@ -53,6 +53,7 @@ class ListViewBase extends View {
 
     contextItemExporta() {
         return {
+            beginGroup: true,
             text: "Exporta Excel",
             onClick: e => this.exportExcelDialog()
         }
@@ -72,15 +73,15 @@ class ListViewBase extends View {
     }
 
     excelFileName() {
-        return this.configuration().excel.fileName || this.className();
+        return this.className()
     }
 
     excelDialogWidth() {
-        return this.configuration().excel.dialogWidth || App.EXCEL_DIALOG_WIDTH
+        return App.EXCEL_DIALOG_WIDTH
     }
 
     excelTitle() {
-        return this.configuration().excel.title || this.excelFileName()
+        return this.excelFileName()
     }
 
     showColumn(name, visible) {

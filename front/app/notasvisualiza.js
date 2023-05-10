@@ -30,6 +30,9 @@ class NotasVisualiza extends View {
                         recursive: true,
                     },
                     onSelectionChanged: e => this.onSelectionChanged(e)
+                },
+                toolbar: {
+                    items: this.toolbarItems()
                 }
             }
 
@@ -42,6 +45,22 @@ class NotasVisualiza extends View {
 
     tree() {
         return this.components().tree
+    }
+
+    toolbarItems() {
+        return [this.itemSalida()]
+    }
+
+    itemSalida() {
+        return {
+            widget: "dxButton",
+            location: "before",
+            options: {
+                icon: "close",
+                text: "Salida",
+                onClick: e => this.close()
+            }
+        }
     }
 
     defineTemplate() {
@@ -76,6 +95,7 @@ class NotasVisualiza extends View {
             const row = this.addRow({
                 text: periodoRow.nombre,
                 periodo: periodoRow.id,
+                temporalidad: periodoRow.temporalidad,
                 columnName: "periodo_" + periodoRow.id
             })
             this.addPeriodoRows(row);
@@ -88,28 +108,32 @@ class NotasVisualiza extends View {
             text: "Examenes",
             columnName: "examenes_" + row.periodo
         })
-        this.addRow({
-            parent: row.id,
-            text: "Preliminar",
-            columnName: "preliminar_" + row.periodo
-        })
-        this.addRow({
-            parent: row.id,
-            text: "Promedio",
-            columnName: "promedio_" + row.periodo
-        })
-        this.addRow({
-            parent: row.id,
-            text: "Status",
-            columnName: "status_" + row.periodo
-        })
+        if (Dates.NoEsFuturo(row.temporalidad)) {
+            this.addRow({
+                parent: row.id,
+                text: "Preliminar",
+                columnName: "preliminar_" + row.periodo
+            })
+            this.addRow({
+                parent: row.id,
+                text: "Promedio",
+                columnName: "promedio_" + row.periodo
+            })
+            this.addRow({
+                parent: row.id,
+                text: "Status",
+                columnName: "status_" + row.periodo
+            })
+        }
     }
 
     addAnualRow() {
-        this.addRow({
-            text: "Anual",
-            columnName: "anual"
-        })
+        if (this.notasData.hasPeriodos()) {
+            this.addRow({
+                text: "Anual",
+                columnName: "anual"
+            })
+        }
     }
 
     addRow(row) {
@@ -125,16 +149,18 @@ class NotasVisualiza extends View {
     }
 
     selectedRowKeys() {
-        const keys = []
+        const keys = [];
         for (const row of this.dataSource()) {
-            if (row.columnName != undefined) {
-                if (this.list().isColumnVisible(row.columnName)) {
+            if (!this.hasChilds(row)) {
+                if (row.columnName != undefined && this.list().isColumnVisible(row.columnName)) {
                     keys.push(row.id)
                 }
+
             }
         }
         return keys;
     }
+
 
     getRowById(id) {
         return this.rows.find(row => row.id == id)
@@ -144,6 +170,11 @@ class NotasVisualiza extends View {
         if (row.parent != null) {
             return this.getRowById(row.parent)
         }
+    }
+
+    hasChilds(parentRow) {
+        return this.dataSource().find(row =>
+            row.parent == parentRow.id) != undefined
     }
 
     refreshColumns() {

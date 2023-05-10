@@ -5,7 +5,8 @@ class NotasBase extends FilterViewBase {
     }
 
     static COLOR_NOTA_NO_EDITABLE = {
-        "background-color": "rgb(208, 249, 231  )"
+        //        "background-color": "rgb(208, 249, 231  )"
+        "background-color": "rgb(200, 245, 220)"
     }
 
     static COLOR_PRESENTE = {
@@ -128,7 +129,7 @@ class NotasBase extends FilterViewBase {
             return new Rest({ path: "cursos" })
                 .promise({
                     verb: "list",
-                    data: { añoLectivo: this.añoLectivo() }
+                    data: { añolectivo: this.añoLectivo() }
                 }).then(rows =>
                     this.filter().setArrayDataSource(
                         "curso", rows, curso)
@@ -421,7 +422,8 @@ class NotasColumnsBase {
                 caption: periodoRow.nombre,
                 alignment: "center",
                 temporalidad: periodoRow.temporalidad,
-                visible: this.periodoVisible(periodoRow),
+                width: Dates.EsFuturo(periodoRow.temporalidad) ? 200 : undefined,
+                visible: true,
                 columns: this.periodoColumns(periodoRow),
                 allowReordering: false,
                 allowResizing: true
@@ -430,28 +432,28 @@ class NotasColumnsBase {
         return columns;
     }
 
-    periodoVisible(periodoRow) {
-        return true;
-    }
-
     periodoColumns(periodoRow) {
-        return [
+        const columns = [
             this.grupoExamenes(periodoRow),
             this.grupoPromedioValoracion({
                 periodoRow: periodoRow,
                 name: "preliminar",
                 caption: "Informe Preliminar",
                 headerTemplate: "Informe Preliminar" + "<small><br>" + (Utils.IsDefined(periodoRow.preliminar) ? Dates.Format(periodoRow.preliminar) : "<i>(fecha no definida)"),
+                visible: Dates.NoEsFuturo(periodoRow.temporalidad)
             }),
             this.grupoPromedioValoracion({
                 periodoRow: periodoRow,
                 name: "promedio",
                 caption: periodoRow.temporalidad == Dates.PASADO ? "Final" : "Proyectado",
+                visible: Dates.NoEsFuturo(periodoRow.temporalidad)
             }),
             this.grupoStatus({
-                periodoRow: periodoRow
+                periodoRow: periodoRow,
+                visible: Dates.NoEsFuturo(periodoRow.temporalidad)
             })
         ]
+        return columns
     }
 
     grupoExamenes(periodoRow) {
@@ -460,7 +462,8 @@ class NotasColumnsBase {
             caption: "Examenes",
             temporalidad: periodoRow.temporalidad,
             alignment: "center",
-            columns: this.examenesColumns(periodoRow)
+            columns: this.examenesColumns(periodoRow),
+            width: this.examenesRows.length == 0 ? 200 : 500
         }
     }
 
@@ -473,7 +476,6 @@ class NotasColumnsBase {
                     caption: examenRow.nombre,
                     alignment: "center",
                     isNota: true,
-                    //                    allowEditing: Dates.NoEsFuturo(examenRow.temporalidad),
                     allowEditing: false,
                     temporalidad: periodoRow.temporalidad,
                     subTemporalidad: examenRow.temporalidad,
@@ -484,8 +486,8 @@ class NotasColumnsBase {
                 })
             }
         }
-        if (periodoRow.examenesCantidad == 1 && periodoRow.temporalidad == Dates.FUTURO) {
-            columns = columns.concat(this.emptyColumn(periodoRow, 80));
+        if (periodoRow.examenesCantidad <= 1 && periodoRow.temporalidad == Dates.FUTURO) {
+            columns = columns.concat(this.emptyColumn(periodoRow, 200));
         }
         return columns;
     }
@@ -526,7 +528,7 @@ class NotasColumnsBase {
             caption: "Status",
             temporalidad: p.periodoRow.temporalidad,
             alignment: "center",
-            visible: true,
+            visible: Utils.IsDefined(p.visible) ? p.visible : true,
             columns: [{
                 dataField: "status_descripcion_" + p.periodoRow.id,
                 caption: "",
@@ -538,14 +540,15 @@ class NotasColumnsBase {
     }
 
     anualColumn() {
-        return [{
-            name: "anual",
-            esAnual: true,
-            caption: "Anual",
-            alignment: "center",
-            visible: true,
-            columns: this.anualColumns(),
-        }]
+        if (this.notasData.hasPeriodos()) {
+            return [{
+                name: "anual",
+                esAnual: true,
+                caption: "Anual",
+                alignment: "center",
+                columns: this.anualColumns(),
+            }]
+        }
     }
 
     anualColumns() {

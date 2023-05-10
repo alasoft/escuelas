@@ -132,8 +132,8 @@ class ExamenesCurso extends CursosMateriasDetalle {
                 widget: "dxButton",
                 location: "before",
                 options: {
-                    text: "Todos los Trabajos Prácticos",
-                    icon: "folder",
+                    text: "Todos los Examenes",
+                    icon: "doc",
                     onClick: e => this.todos()
                 }
             }

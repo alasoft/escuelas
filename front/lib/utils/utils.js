@@ -311,6 +311,10 @@ class Dates {
         return [Dates.PASADO, Dates.PRESENTE].includes(temporalidad);
     }
 
+    static EsFuturo(temporalidad) {
+        return temporalidad == Dates.FUTURO;
+    }
+
     static Temporalidad(desde, hasta) {
         if (hasta < Dates.Today()) {
             return Dates.PASADO;

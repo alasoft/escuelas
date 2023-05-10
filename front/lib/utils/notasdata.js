@@ -371,4 +371,8 @@ class NotasData {
         return false
     }
 
+    hasPeriodos() {
+        return 0 < this.periodosRows.length
+    }
+
 }

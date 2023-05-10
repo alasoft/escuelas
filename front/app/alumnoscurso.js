@@ -13,8 +13,9 @@ class AlumnosCurso extends CursosDetalle {
             },
             components: {
                 filter: {
-                    width: 250,
-                    height: 70,
+                    labelLocation: "left",
+                    width: 400,
+                    height: 50,
                 },
                 toolbar: {
                     visible: false

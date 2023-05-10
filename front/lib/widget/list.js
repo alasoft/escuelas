@@ -7,7 +7,7 @@ class List extends Widget {
             hoverStateEnabled: true,
             allowColumnResizing: true,
             allowColumnReordering: true,
-            columnsAutoWidth: true,
+            //            columnsAutoWidth: true,
             showColumnLines: true,
             showBorders: false,
             sorting: {
@@ -18,7 +18,6 @@ class List extends Widget {
             },
             grouping: {
                 autoExpandAll: true,
-                contextMenuEnabled: true
             },
             searchPanel: {
                 visible: true

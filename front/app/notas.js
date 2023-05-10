@@ -22,13 +22,23 @@ class Notas extends NotasBase {
                     },
                     onRowDblClick: e => this.listOnRowDblClick(e),
                     onRowUpdating: e => this.listOnRowUpdating(e)
+                },
+                contextMenu: {
+                    target: this.findElementByClass("list"),
+                    selectByClick: true,
+                    selectionMode: "single",
+                    onPositioning: e => this.contextOnPositioning(e)
                 }
             }
         }
     }
 
     contextMenuItems() {
-        return [this.contextItemNotasAlumno(), this.contextItemVisualiza(), this.contextItemExporta()]
+        return [this.contextItemNotasAlumno(),
+            this.contextItemMuestraExamenes(),
+            this.contextItemVisualiza(),
+            this.contextItemExporta()
+        ]
     }
 
     contextItemNotasAlumno() {
@@ -38,10 +48,29 @@ class Notas extends NotasBase {
         }
     }
 
-    contextItemNotasExamenes() {
+    contextItemMuestraExamenes() {
+        const examenesVisibles = this.examenesVisibles();
         return {
-            text: "Notas por Examen",
-            onClick: e => this.notasExamenes(),
+            text: examenesVisibles ? "Oculta Examenes" : "Muestra Examenes",
+            closeMenuOnClick: true,
+            onClick: e => this.muestraExamenes(!examenesVisibles)
+        }
+    }
+
+    examenesVisibles() {
+        for (const periodoRow of this.notasData().periodosRows) {
+            if (this.list().isColumnVisible("examen_" + this.periodoRow.id)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    muestraExamenes(visible = true) {
+        for (const periodoRow of this.notasData().periodosRows) {
+            if (Dates.NoEsFuturo(periodoRow.temporalidad)) {
+                this.list().showColumn("examenes_" + periodoRow.id, visible)
+            }
         }
     }
 
@@ -62,7 +91,6 @@ class Notas extends NotasBase {
 
     listToolbarItems() {
         return [this.itemPeriodos(), this.itemAlumnos(), this.itemExamenes(), this.itemVisualiza(),
-            this.itemMuestraExamenes(),
             this.itemExcel(), "searchPanel"
         ]
     }
@@ -98,9 +126,10 @@ class Notas extends NotasBase {
         if (this.notasData().periodosRows != undefined) {
             for (const periodoRow of this.notasData().periodosRows) {
                 addState(this, "periodo_" + periodoRow.id)
-                addState(this, "notas_" + periodoRow.id)
+                addState(this, "examenes_" + periodoRow.id)
                 addState(this, "preliminar_" + periodoRow.id)
-                addState(this, "status_periodo_" + periodoRow.id)
+                addState(this, "promedio_" + periodoRow.id)
+                addState(this, "status_descripcion_" + periodoRow.id)
             }
         }
 
@@ -136,24 +165,17 @@ class Notas extends NotasBase {
         }
     }
 
-    itemMuestraExamenes() {
-        return {
-            widget: "dxCheckBox",
-            location: "center",
-            options: {
-                text: "Muestra Examenes",
-                onValueChanged: e => this.muestraExamenes(e)
-            }
-        }
-    }
-
     excelFileName() {
         return "Notas del Curso: " + this.materiaCursoDescripcion()
     }
 
+    excelDialogWidth() {
+        return 800
+    }
+
     materiaCursoDescripcion() {
-        return this.getFilterText("curso") + " / " + this.getFilterText("materiacurso") +
-            " / " + this.getFilterText("añolectivo")
+        return this.getFilterText("curso") + " / " + this.getFilterText("materiaCurso") +
+            " / " + this.getFilterText("añoLectivo")
     }
 
     exportExcel(p) {
@@ -169,6 +191,17 @@ class Notas extends NotasBase {
             .then(cellRange => {
                 const titleRow = worksheet.getRow(1);
                 const subTitleRow = worksheet.getRow(2);
+
+                /*                
+                                titleRow.fill = {
+                                    type: 'pattern',
+                                    pattern: 'solid',
+                                    fgColor: {
+                                        argb: 'D0F9E7'
+                                    }
+                                };
+                */
+
                 titleRow.height = 30;
                 subTitleRow.height = 30;
                 worksheet.mergeCells(1, 1, 1, this.list().columnCount() - 1);
@@ -197,19 +230,6 @@ class Notas extends NotasBase {
                 listView: this
             }).render()
             .then(closeData => {
-                if (closeData.filter.dataHasChanged()) {
-                    this.setFilter(closeData.filter.getData())
-                } else if (this.notasData().dataHasChanged()) {
-                    this.refreshRows()
-                }
-            })
-    }
-
-    notasExamenes() {
-        new NotasExamenes({
-                notasView: this
-            }).render()
-            .then(closeData => {
                 if (closeData.dataHasChanged) {
                     this.refreshRows()
                 }
@@ -220,12 +240,6 @@ class Notas extends NotasBase {
         new NotasVisualiza({ notas: this }).render().then(closeData => {
             this.state.list.visibleColumns = this.getVisibleColumns()
         })
-    }
-
-    muestraExamenes(e) {
-        for (const row of this.notasData().periodosRows) {
-            this.list().showColumn("examenes_" + row.id, e.value)
-        }
     }
 
     updateNota(e) {
@@ -272,6 +286,10 @@ class Notas extends NotasBase {
 
     listOnRowUpdating(e) {
         this.updateNota(e)
+    }
+
+    contextOnPositioning(e) {
+        this.contextMenu().setItems(this.contextMenuItems())
     }
 
 }
