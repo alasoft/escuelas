@@ -204,7 +204,7 @@ class NotasBase extends FilterViewBase {
                 materiaCurso: this.getFilterValue("materiaCurso"),
             },
             list: {
-                state: this.list().getState(),
+                //                state: this.list().getState(),
                 visibleColumns: this.getVisibleColumns()
             }
         }
