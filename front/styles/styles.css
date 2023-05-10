@@ -36,3 +36,8 @@ body {
 .font-small {
     font-size: x-small;
 }
+
+.dx-pager {
+    padding: 0px;
+    padding-top: 5px;
+}

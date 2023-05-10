@@ -36,7 +36,7 @@ class ListViewBase extends View {
             options: {
                 icon: "exportxlsx",
                 hint: "Exporta a Excel",
-                onClick: e => this.exportExcelDialog(e)
+                onClick: e => this.excelExportDialog(e)
             }
         }
     }
@@ -55,15 +55,15 @@ class ListViewBase extends View {
         return {
             beginGroup: true,
             text: "Exporta Excel",
-            onClick: e => this.exportExcelDialog()
+            onClick: e => this.excelExportDialog()
         }
     }
 
-    exportExcelDialog(e) {
-        new ExportExcelDialog({ fileName: this.excelFileName(), width: this.excelDialogWidth() }).render()
+    excelExportDialog(e) {
+        new ExcelExportDialog({ fileName: this.excelFileName(), width: this.excelDialogWidth() }).render()
             .then(data => {
                 if (data.okey) {
-                    this.exportExcel({
+                    this.excelExport({
                         e: e,
                         fileName: this.excelFileName(),
                         title: this.excelTitle()

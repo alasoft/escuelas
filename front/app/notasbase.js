@@ -210,6 +210,30 @@ class NotasBase extends FilterViewBase {
         }
     }
 
+    getVisibleColumns() {
+
+        function addState(notas, nombre) {
+            state[nombre] = notas.isColumnVisible(nombre)
+        }
+
+        const state = {};
+
+        if (this.notasData().periodosRows != undefined) {
+            for (const periodoRow of this.notasData().periodosRows) {
+                addState(this, "periodo_" + periodoRow.id)
+                addState(this, "examenes_" + periodoRow.id)
+                addState(this, "preliminar_" + periodoRow.id)
+                addState(this, "promedio_" + periodoRow.id)
+                addState(this, "status_descripcion_" + periodoRow.id)
+            }
+        }
+
+        addState(this, "anual")
+
+        return state;
+
+    }
+
     setState() {
         return this.setFilter(this.state.filter)
     }
@@ -439,7 +463,7 @@ class NotasColumnsBase {
                 periodoRow: periodoRow,
                 name: "preliminar",
                 caption: "Informe Preliminar",
-                headerTemplate: "Informe Preliminar" + "<small><br>" + (Utils.IsDefined(periodoRow.preliminar) ? Dates.Format(periodoRow.preliminar) : "<i>(fecha no definida)"),
+                //                headerTemplate: "Informe Preliminar" + "<small><br>" + (Utils.IsDefined(periodoRow.preliminar) ? Dates.Format(periodoRow.preliminar) : "<i>(fecha no definida)"),
                 visible: Dates.NoEsFuturo(periodoRow.temporalidad)
             }),
             this.grupoPromedioValoracion({

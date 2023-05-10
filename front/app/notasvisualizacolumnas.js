@@ -1,4 +1,4 @@
-class NotasVisualiza extends View {
+class NotasVisualizaColumnas extends View {
 
     constructor(parameters) {
         super(parameters)

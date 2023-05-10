@@ -46,7 +46,7 @@ class AlumnosCurso extends CursosDetalle {
     }
 
     listToolbarItems() {
-        return [this.itemInsert(), this.itemExportExcel(), "searchPanel"]
+        return [this.itemInsert(), this.itemExcelExport(), "searchPanel"]
     }
 
     itemInsert() {
@@ -128,7 +128,7 @@ class AlumnosCurso extends CursosDetalle {
         return "Alumnos de " + this.getFilterText("curso") + " / " + this.getFilterText("añolectivo");
     }
 
-    exportExcelDialogWidth() {
+    excelExportDialogWidth() {
         return 750
     }
 

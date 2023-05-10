@@ -30,7 +30,7 @@ class MateriasCurso extends CursosDetalle {
     }
 
     listToolbarItems() {
-        return [this.itemInsert(), this.itemHorarios(), this.itemExportExcel(), "searchPanel"]
+        return [this.itemInsert(), this.itemHorarios(), this.itemExcelExport(), "searchPanel"]
     }
 
     labelText() {

@@ -14,21 +14,9 @@ class Notas extends NotasBase {
                     paging: {
                         pageSize: 50
                     },
-                    editing: {
-                        mode: "cell",
-                        allowUpdating: true,
-                        startEditAction: "click",
-                        selectTextOnEditStart: true,
-                    },
                     onRowDblClick: e => this.listOnRowDblClick(e),
                     onRowUpdating: e => this.listOnRowUpdating(e)
                 },
-                contextMenu: {
-                    target: this.findElementByClass("list"),
-                    selectByClick: true,
-                    selectionMode: "single",
-                    onPositioning: e => this.contextOnPositioning(e)
-                }
             }
         }
     }
@@ -36,7 +24,7 @@ class Notas extends NotasBase {
     contextMenuItems() {
         return [this.contextItemNotasAlumno(),
             this.contextItemMuestraExamenes(),
-            this.contextItemVisualiza(),
+            this.contextItemVisualizaColumnas(),
             this.contextItemExporta()
         ]
     }
@@ -52,15 +40,16 @@ class Notas extends NotasBase {
         const examenesVisibles = this.examenesVisibles();
         return {
             text: examenesVisibles ? "Oculta Examenes" : "Muestra Examenes",
-            closeMenuOnClick: true,
             onClick: e => this.muestraExamenes(!examenesVisibles)
         }
     }
 
     examenesVisibles() {
-        for (const periodoRow of this.notasData().periodosRows) {
-            if (this.list().isColumnVisible("examen_" + this.periodoRow.id)) {
-                return true;
+        if (this.notasData().periodosRows != undefined) {
+            for (const periodoRow of this.notasData().periodosRows) {
+                if (this.list().isColumnVisible("examenes_" + periodoRow.id)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -68,16 +57,15 @@ class Notas extends NotasBase {
 
     muestraExamenes(visible = true) {
         for (const periodoRow of this.notasData().periodosRows) {
-            if (Dates.NoEsFuturo(periodoRow.temporalidad)) {
-                this.list().showColumn("examenes_" + periodoRow.id, visible)
-            }
+            this.list().showColumn("examenes_" + periodoRow.id, visible)
         }
+        this.state.list.visibleColumns = this.getVisibleColumns();
     }
 
-    contextItemVisualiza() {
+    contextItemVisualizaColumnas() {
         return {
             text: "Visualiza Columnas",
-            onClick: e => this.visualiza()
+            onClick: e => this.visualizaColumnas()
         }
     }
 
@@ -113,30 +101,6 @@ class Notas extends NotasBase {
 
     columnaAnualVisible() {
         return this.list().isColumnVisible("anual");
-    }
-
-    getVisibleColumns() {
-
-        function addState(notas, nombre) {
-            state[nombre] = notas.isColumnVisible(nombre)
-        }
-
-        const state = {};
-
-        if (this.notasData().periodosRows != undefined) {
-            for (const periodoRow of this.notasData().periodosRows) {
-                addState(this, "periodo_" + periodoRow.id)
-                addState(this, "examenes_" + periodoRow.id)
-                addState(this, "preliminar_" + periodoRow.id)
-                addState(this, "promedio_" + periodoRow.id)
-                addState(this, "status_descripcion_" + periodoRow.id)
-            }
-        }
-
-        addState(this, "anual")
-
-        return state;
-
     }
 
     itemExamenes() {
@@ -178,17 +142,22 @@ class Notas extends NotasBase {
             " / " + this.getFilterText("añoLectivo")
     }
 
-    exportExcel(p) {
+    excelExport(p) {
         const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet(p.fileName);
+        const worksheet = workbook.addWorksheet("Notas", {
+            pageSetup: { fitToWidth: 1, fitToHeight: 0, paperSize: 9, scale: 70 }
+        });
 
         DevExpress.excelExporter.exportDataGrid({
                 component: this.list().instance(),
-                worksheet,
-                autoFilterEnabled: true,
+                worksheet: worksheet,
+                autoFilterEnabled: false,
                 topLeftCell: { row: 4, column: 1 }
             })
             .then(cellRange => {
+
+                worksheet.properties.outlineProperties = null;
+
                 const titleRow = worksheet.getRow(1);
                 const subTitleRow = worksheet.getRow(2);
 
@@ -236,8 +205,8 @@ class Notas extends NotasBase {
             })
     }
 
-    visualiza() {
-        new NotasVisualiza({ notas: this }).render().then(closeData => {
+    visualizaColumnas() {
+        new NotasVisualizaColumnas({ notas: this }).render().then(closeData => {
             this.state.list.visibleColumns = this.getVisibleColumns()
         })
     }

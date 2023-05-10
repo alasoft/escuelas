@@ -18,7 +18,7 @@ class ListView extends View {
                     dataSource: this.class().DataSource(),
                     columns: this.listColumns(),
                     toolbar: {
-                        items: ["groupPanel", this.itemExportExcel(), "searchPanel"]
+                        items: ["groupPanel", this.itemExcelExport(), "searchPanel"]
                     },
                     errorRowEnabled: false,
                     groupPanel: {
@@ -225,14 +225,14 @@ class ListView extends View {
         }
     }
 
-    itemExportExcel() {
+    itemExcelExport() {
         return {
             widget: "dxButton",
             location: "after",
             options: {
                 icon: "exportxlsx",
                 hint: "Exporta a Excel",
-                onClick: e => this.exportExcelDialog(e)
+                onClick: e => this.excelExportDialog(e)
             }
         }
     }
@@ -313,11 +313,11 @@ class ListView extends View {
         }
     }
 
-    contextItemExporta() {
+    contextItemExcelExport() {
         if (this.allow("export")) {
             return {
                 text: "Exporta Excel",
-                onClick: e => this.exportExcelDialog(e)
+                onClick: e => this.excelExportDialog(e)
             }
         }
     }
@@ -404,26 +404,26 @@ class ListView extends View {
         }
     }
 
-    exportExcelDialog(e) {
-        new ExportExcelDialog({ fileName: this.excelFileName(), width: this.exportExcelDialogWidth() }).render()
+    excelExportDialog(e) {
+        new ExcelExportDialog({ fileName: this.excelFileName(), width: this.excelExportDialogWidth() }).render()
             .then(data => {
                 if (data.okey) {
-                    this.exportExcel(this.exportExcelParameters(e))
+                    this.excelExport(this.excelExportParameters(e))
                 }
             })
     }
 
-    exportExcelParameters(e) {
+    excelExportParameters(e) {
         return { e: e, fileName: this.excelFileName() }
     }
 
-    exportExcelDialogWidth() {}
+    excelExportDialogWidth() {}
 
     excelFileName() {
         return Utils.Evaluate(this.configuration().excelFileName);
     }
 
-    exportExcel(p) {
+    excelExport(p) {
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet(p.fileName);
 

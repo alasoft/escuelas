@@ -1,4 +1,4 @@
-class ExportExcelDialog extends EntryView {
+class ExcelExportDialog extends EntryView {
 
     popupConfiguration() {
         return {

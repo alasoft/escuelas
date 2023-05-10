@@ -122,7 +122,7 @@ class ExamenesCurso extends CursosMateriasDetalle {
         return "Examenes del Curso: " + this.cursoDescripcion() + " / " + this.getFilterText("materiacurso");
     }
 
-    exportExcelDialogWidth() {
+    excelExportDialogWidth() {
         return 800;
     }
 

@@ -8,7 +8,7 @@ class SimpleListView extends ListView {
                 },
                 list: {
                     toolbar: {
-                        items: [this.itemInsert(), this.itemExportExcel(), "searchPanel"]
+                        items: [this.itemInsert(), this.itemExcelExport(), "searchPanel"]
                     }
                 }
             }

@@ -28,7 +28,7 @@ class Periodos extends AñoLectivoView {
     }
 
     listToolbarItems() {
-        return [this.itemInsert(), this.itemExportExcel(), "searchPanel"];
+        return [this.itemInsert(), this.itemExcelExport(), "searchPanel"];
     }
 
     labelText() {
