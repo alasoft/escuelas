@@ -256,7 +256,7 @@ class ListView extends View {
             this.contextItemDelete(),
             this.contextItemCollapseAll(),
             this.contextItemExpandAll(),
-            this.contextItemExporta()
+            this.contextItemExcelExport()
         ]
     }
 

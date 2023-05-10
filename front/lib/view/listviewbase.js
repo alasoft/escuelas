@@ -48,10 +48,10 @@ class ListViewBase extends View {
     }
 
     contextMenuItems() {
-        return [this.contextItemExporta()]
+        return [this.contextItemExcelExport()]
     }
 
-    contextItemExporta() {
+    contextItemExcelExport() {
         return {
             beginGroup: true,
             text: "Exporta Excel",

@@ -25,7 +25,7 @@ class Notas extends NotasBase {
         return [this.contextItemNotasAlumno(),
             this.contextItemMuestraExamenes(),
             this.contextItemVisualizaColumnas(),
-            this.contextItemExporta()
+            this.contextItemExcelExport()
         ]
     }
 
