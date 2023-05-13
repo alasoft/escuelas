@@ -2,7 +2,8 @@ const { Exceptions } = require("../utils/exceptions");
 const { ServiceBase } = require("./servicebase");
 const { Sql } = require("../sql/sql");
 const { Users } = require("../users/users");
-const { Utils } = require("../utils/utils");
+const { Utils, Strings } = require("../utils/utils");
+const { DemoGenerate } = require("../utils/demogenerate");
 
 class UsersService extends ServiceBase {
 
@@ -23,6 +24,11 @@ class UsersRegisterService extends UsersService {
         this.validate()
             .then(() =>
                 this.prepareValues())
+            .then(() => {
+                if (this.isDemo()) {
+                    return this.generateDemoData()
+                }
+            })
             .then(() =>
                 this.dbExecute(this.sql()))
             .then(() =>
@@ -78,8 +84,8 @@ class UsersRegisterService extends UsersService {
     }
 
     prepareValues() {
-        this.setValue("tenant", Utils.NewGuid());
-        this.setValue("id", Utils.NewGuid());
+        this.setValue("tenant", Strings.NewGuid());
+        this.setValue("id", Strings.NewGuid());
         this.setValue("rol", Users.ROL_USER)
         this.setValue("password", Utils.Encrypt(this.value("password")))
     }
@@ -89,6 +95,10 @@ class UsersRegisterService extends UsersService {
             tableName: "users",
             values: this.values()
         })
+    }
+
+    generateDemoData() {
+        return new DemoGenerate({ db: this.db, tenant: this.value("tenant") }).generate()
     }
 
 }

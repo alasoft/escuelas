@@ -18,18 +18,20 @@ const { NotasRest } = require("./notasrest");
 const { NotasDataRest } = require("./notasdatarest");
 const { ValoracionesRest } = require("./valoracionesrest");
 const { PeriodosEstados } = require("./periodosestados");
+const { ServerRest } = require("../lib/rest/serverrest");
 
 new App({
-    port: 9090,
     root: "escuelas",
+    port: 9090,    
     dbConnection: dbConnection,
     createTables: CreateTables,
     restItems: restItems,
     tokenMinutes: 120,
-    version: "0.9.2",
+    version: "0.9.3",
     name: "Escuelas",
     logSql: false,
-    obfuscated: false
+    obfuscated: false,
+    demo: true,
 }).start()
 
 function dbConnection(app) {
@@ -43,6 +45,7 @@ function dbConnection(app) {
 
 function restItems(app) {
     return [
+        new ServerRest({ app: app }),
         new MemoryTableRest({ app: app, tableClass: Años }),
         new MemoryTableRest({ app: app, tableClass: Turnos }),
         new MemoryTableRest({ app: app, tableClass: ExamenesTipos }),

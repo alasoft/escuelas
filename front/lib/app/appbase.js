@@ -63,19 +63,15 @@ class AppBase {
     }
 
     static Init() {
-        return this.Localize()
+        return this.GetServerInfo()
             .then(() =>
                 this.Login())
     }
 
     static InitUser(user) {
-        return this.Localize()
+        return this.GetServerInfo()
             .then(() =>
                 this.LoginUser(user));
-    }
-
-    static InitUserTest() {
-        return this.InitUser(this.USER_TEST_DATA);
     }
 
     static InitTest() {
@@ -86,8 +82,27 @@ class AppBase {
                 this.LoginUser(this.USER_TEST_DATA))
     }
 
+    static InitUserTest() {
+        return this.InitUser(this.USER_TEST_DATA);
+    }
+
     static BeginTest() {
         return Promise.resolve(this._IsTesting = true);
+    }
+
+    static GetServerInfo() {
+        return new Rest({ path: "server" }).promise({
+            verb: "info"
+        })
+            .then(info =>
+                this.ServerInfo = info)
+            .then(() =>
+                this.Localize())
+            .then(() =>
+                this.ShowPresentation())
+    }
+
+    static ShowPresentation() {
     }
 
     static IsTesting() {
@@ -95,7 +110,7 @@ class AppBase {
     }
 
     static Localize(language = "es") {
-        return Promise.resolve(DevExpress.localization.locale(language));
+        DevExpress.localization.locale(language);
     }
 
     static Login() {
@@ -128,9 +143,9 @@ class AppBase {
 
     static LoginUserRest(data) {
         return new Rest({ path: "users" }).promise({
-                verb: "login",
-                data: data
-            })
+            verb: "login",
+            data: data
+        })
             .then(user =>
                 App.SetUser(user))
             .then(() => {
@@ -235,12 +250,24 @@ class AppBase {
         return encodeURI(Strings.Concatenate([this.Host(), this.Root(), path, verb], "/"));
     }
 
+    static LocalHost() {
+        return "http://127.0.0.1:" + this.Port();
+    }
+
+    static Port() {
+        return 9090;
+    }
+
     static Host() {
-        return "http://127.0.0.1:9090";
+        return this.LocalHost()
     }
 
     static Root() {
-        return "test"
+        return "";
+    }
+
+    static IsDemo() {
+        return this.ServerInfo.demo == true;
     }
 
     static GetUser() {
@@ -282,19 +309,23 @@ class AppBase {
     }
 
     static Name() {
-        return "Sistema de "
+        return "Sistema de " + this.ServerInfo.name;
     }
 
     static ShortName() {
-        return this.Name() + " " + this.Version()
+        return this.Name() + " " + this.Version() + this.DemoName()
+    }
+
+    static DemoName() {
+        return this.IsDemo() ? " / Demo" : ""
     }
 
     static FullName() {
-        return "Sistema de " + this.ShortName();
+        return this.ShortName();
     }
 
     static Version() {
-        return "0.0"
+        return this.ServerInfo.version
     }
 
     static UserNombreApellido() {

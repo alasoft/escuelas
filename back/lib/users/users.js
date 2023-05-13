@@ -1,7 +1,7 @@
 const { DbStates } = require("../data/dbstates");
 const { Sql } = require("../sql/sql");
 const { SqlType } = require("../sql/sqltype");
-const { Utils } = require("../utils/utils");
+const { Utils, Strings } = require("../utils/utils");
 
 class Users {
 
@@ -10,7 +10,7 @@ class Users {
 
     static UserTest = {
         tenant: "test",
-        id: Utils.NewGuid(),
+        id: Strings.NewGuid(),
         apellido: "",
         nombre: "TEST",
         email: "test@test.com",

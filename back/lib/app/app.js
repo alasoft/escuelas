@@ -31,8 +31,12 @@ class App {
 
     constructor(parameters) {
         this.parameters = parameters;
+        this.host = parameters.host;
         this.port = parameters.port;
         this.root = parameters.root;
+        this.name = parameters.name;
+        this.version = parameters.version;
+        this.demo = parameters.demo;
         this.tokenMinutes = parameters.tokenMinutes || App.TOKEN_MINUTES_DEFAULT;
         this.logSql = parameters.logSql;
         this.obfuscated = parameters.obfuscated;

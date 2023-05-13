@@ -128,7 +128,7 @@ class SqlInsert extends SqlBaseCrud {
     setValuesDefault() {
         super.setValuesDefault();
         if (Utils.IsNotDefined(this.values.id)) {
-            this.values.id = Utils.NewGuid();
+            this.values.id = Strings.NewGuid();
         }
         if (Utils.IsNotDefined(this.values._state)) {
             this.values._state = DbStates.Active;

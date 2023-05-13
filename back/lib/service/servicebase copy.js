@@ -1,6 +1,6 @@
 const { Exceptions, } = require("../utils/exceptions.js");
 const { Sql } = require("../sql/sql");
-const { Utils } = require("../utils/utils");
+const { Utils, Strings } = require("../utils/utils");
 const { ObjectBase } = require("../utils/objectbase.js");
 
 class ServiceBase extends ObjectBase {
@@ -92,7 +92,7 @@ class ServiceBase extends ObjectBase {
     valuesWithTenantAndId(parameters) {
         parameters = this.valuesWithTenant(parameters);
         if (parameters.values.id == undefined) {
-            parameters.values.id = Utils.NewGuid()
+            parameters.values.id = Strings.NewGuid()
         }
         return parameters;
     }

@@ -238,9 +238,12 @@ class Item {
                 mode: "email",
                 width: p.width || App.EMAIL_WIDTH,
                 inputAttr: {
+                    style: "text-transform: lowercase",
                     autocomplete: "on"
-                }
-            },
+                },
+                onValueChanged: e => e.value ? e.component.option("value", e.value.toLowerCase()) : undefined
+
+            }
         }
     }
 

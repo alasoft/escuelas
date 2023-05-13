@@ -20,6 +20,7 @@ class ServiceBase extends ObjectBase {
         this.res = this.parameters.res;
 
         this.db = this.app.db;
+        this.demo = this.app.demo;
 
     }
 
@@ -44,6 +45,10 @@ class ServiceBase extends ObjectBase {
 
     value(name) {
         return this.values()[name];
+    }
+
+    isDemo() {
+        return this.demo == true;
     }
 
     isDefined(name) {
@@ -108,7 +113,7 @@ class ServiceBase extends ObjectBase {
         })
     }
 
-    requiredValues() {}
+    requiredValues() { }
 
     sqlAnd(items) {
         return Sql.And({ items: items });
@@ -174,7 +179,7 @@ class ServiceBase extends ObjectBase {
     defineValuesToSendInsert(parameters) {
         this.defineValuesToSend(parameters);
         if (Utils.IsNotDefined(this.valuesToSend.id)) {
-            this.valuesToSend.id = Utils.NewGuid()
+            this.valuesToSend.id = Strings.NewGuid()
         }
     }
 

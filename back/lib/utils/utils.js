@@ -63,10 +63,6 @@ class Utils {
         }
     }
 
-    static NewGuid() {
-        return cuid();
-    }
-
     static BeginsWith(s1, s2) {
         return (s2.length <= s1.length && s1.substring(0, s2.length) == s2);
     }
@@ -76,7 +72,7 @@ class Utils {
     }
 
     static NewToken(minutes) {
-        return { value: this.NewGuid(), until: Dates.AddMinutes(Dates.Date(), minutes) };
+        return { value: Strings.NewGuid(), until: Dates.AddMinutes(Dates.Date(), minutes) };
     }
 
     static Contains(s1, s2, ignoreCase = true) {
@@ -133,6 +129,10 @@ class Utils {
 }
 
 class Strings {
+
+    static NewGuid() {
+        return cuid();
+    }
 
     static Concatenate(array, separator = " ") {
         return Utils.NoNulls(array).join(separator);
@@ -212,6 +212,10 @@ class Dates {
         return date.getFullYear();
     }
 
+    static ThisYear() {
+        return new Date().getFullYear();
+    }
+
     static Between(d1, d2, d3) {
         return d2 <= d1 && d1 <= d3;
     }
@@ -226,6 +230,10 @@ class Dates {
 
     static Intersect(d1, d2, d3, d4) {
         return (d1 >= d3 && d1 <= d4) || (d2 >= d3 && d2 <= d4);
+    }
+
+    static From(s){
+        return new Date(s);
     }
 
 }

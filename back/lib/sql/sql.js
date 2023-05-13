@@ -112,11 +112,14 @@ class SqlCommands extends TextBuilder {
         }
     }
 
-    transact(lines) {
+    transact() {
         return this.addFirst(Sql.BeginTransaction()).add(Sql.Commit()).text();
     }
 
 }
 
+class Sqls extends SqlCommands { }
+
 module.exports.Sql = Sql;
 module.exports.SqlCommands = SqlCommands;
+module.exports.Sqls = Sqls;

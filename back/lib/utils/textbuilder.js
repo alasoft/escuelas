@@ -11,6 +11,13 @@ class TextBuilder {
         return this;
     }
 
+    addArray(items) {
+        for (const item of items) {
+            this.add(item)
+        }
+        return this;
+    }
+
     addIf(condition, item) {
         if (condition) {
             this.add(item);

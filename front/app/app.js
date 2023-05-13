@@ -8,10 +8,6 @@ class App extends AppBase {
         return new AppView();
     }
 
-    static Root() {
-        return "escuelas"
-    }
-
     static LoadMemoryTables() {
         return Años.Load()
             .then(() =>
@@ -25,19 +21,6 @@ class App extends AppBase {
             )
     }
 
-    static Name() {
-        return "Sistema de Escuelas";
-    }
-
-    static Version() {
-        return "0.9.2"
-    }
-
-    static Host() {
-        //return "http://alasoft.sytes.net:9090";
-        return "http://127.0.0.1:9090"
-    }
-
     static TranslateTableName(name) {
         let translate = this.TableNames.get(name.trim().toLowerCase());
         if (translate != undefined) {
@@ -45,7 +28,28 @@ class App extends AppBase {
         } else {
             return Strings.Capitalize(name);
         }
-
     }
+
+    static Root() {
+        return "escuelas";
+    }
+
+    static ShowPresentation() {
+        if (this.IsDemo() == true) {
+            return this.ShowMessage([{
+                message: "Esta es la versión demostrativa del Sistema de Escuelas " + this.Version(),
+                skipSection: 0
+            },
+            {
+                message: Html.Tab(2) + "Ingrese con su Usuario o bien registrese.<br>",
+                lineFeed: 0
+            }, {
+                lineFeed: 0,
+                message: Html.Tab(2) + "Usted podrá probarlo inmediatamente con datos pre cargados,<br>"+
+                Html.Tab(2)+"que facilitan su uso"
+            }])
+        }
+    }
+
 
 }
