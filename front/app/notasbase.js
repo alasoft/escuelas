@@ -192,9 +192,9 @@ class NotasBase extends FilterViewBase {
         }
     }
 
-    columns() {}
+    columns() { }
 
-    rows() {}
+    rows() { }
 
     getState() {
         return {
@@ -283,13 +283,13 @@ class NotasBase extends FilterViewBase {
 
     alumnos() {
         new AlumnosCurso({
-                mode: "popup",
-                isDetail: true,
-                añoLectivo: this.añoLectivo(),
-                curso: this.curso(),
-                añoLectivoReadOnly: true,
-                cursoReadOnly: true
-            })
+            mode: "popup",
+            isDetail: true,
+            añoLectivo: this.añoLectivo(),
+            curso: this.curso(),
+            añoLectivoReadOnly: true,
+            cursoReadOnly: true
+        })
             .render().then(closeData =>
                 this.afterAlumnos(closeData))
     }
@@ -306,10 +306,10 @@ class NotasBase extends FilterViewBase {
 
     periodos() {
         new Periodos({
-                mode: "popup",
-                añoLectivoReadOnly: true,
-                cursoReadOnly: true
-            })
+            mode: "popup",
+            añoLectivoReadOnly: true,
+            cursoReadOnly: true
+        })
             .render().then(closeData =>
                 this.afterPeriodos(closeData))
     }
@@ -323,16 +323,16 @@ class NotasBase extends FilterViewBase {
 
     examenes() {
         new ExamenesCurso({
-                mode: "popup",
-                isDetail: true,
-                añoLectivo: this.añoLectivo(),
-                curso: this.curso(),
-                materiaCurso: this.materiaCurso(),
-                añoLectivoReadOnly: true,
-                cursoReadOnly: true,
-                materiaCursoReadOnly: true,
+            mode: "popup",
+            isDetail: true,
+            añoLectivo: this.añoLectivo(),
+            curso: this.curso(),
+            materiaCurso: this.materiaCurso(),
+            añoLectivoReadOnly: true,
+            cursoReadOnly: true,
+            materiaCursoReadOnly: true,
 
-            }).render()
+        }).render()
             .then(closeData =>
                 this.afterExamenes(closeData))
     }
@@ -361,13 +361,13 @@ class NotasBase extends FilterViewBase {
 
     saveNota(p) {
         new Rest({ path: "notas" }).promise({
-                verb: "update",
-                data: {
-                    examen: p.examen,
-                    alumno: p.alumno,
-                    nota: p.nota
-                }
-            })
+            verb: "update",
+            data: {
+                examen: p.examen,
+                alumno: p.alumno,
+                nota: p.nota
+            }
+        })
             .then(() =>
                 this.dataHasChanged = true)
             .catch(err =>
@@ -429,11 +429,11 @@ class NotasColumnsBase {
 
     alumnoColumns() {
         return [{
-                dataField: "id",
-                visible: false
-            },
-            { dataField: "apellido", width: 150, allowReordering: false, allowEditing: false },
-            { dataField: "nombre", width: (0 < this.periodosRows.length ? 150 : undefined), allowReordering: false, allowEditing: false }
+            dataField: "id",
+            visible: false
+        },
+        { dataField: "apellido", width: 150, allowReordering: false, allowEditing: false },
+        { dataField: "nombre", width: (0 < this.periodosRows.length ? 150 : undefined), allowReordering: false, allowEditing: false }
         ]
     }
 
@@ -463,7 +463,7 @@ class NotasColumnsBase {
                 periodoRow: periodoRow,
                 name: "preliminar",
                 caption: "Informe Preliminar",
-                //                headerTemplate: "Informe Preliminar" + "<small><br>" + (Utils.IsDefined(periodoRow.preliminar) ? Dates.Format(periodoRow.preliminar) : "<i>(fecha no definida)"),
+                headerTemplate: "Informe Preliminar" + "<small><br>" + (Utils.IsDefined(periodoRow.preliminar) ? Dates.Format(periodoRow.preliminar) : "<i>(fecha no definida)"),
                 visible: Dates.NoEsFuturo(periodoRow.temporalidad)
             }),
             this.grupoPromedioValoracion({
@@ -525,23 +525,23 @@ class NotasColumnsBase {
             temporalidad: p.periodoRow.temporalidad,
             visible: Utils.IsDefined(p.visible) ? p.visible : true,
             columns: [{
-                    caption: "Promedio",
-                    dataField: p.name + "_promedio_" + p.periodoRow.id,
-                    temporalidad: p.periodoRow.temporalidad,
-                    alignment: "center",
-                    width: p.width || NotasColumns.PROMEDIO_WIDTH,
-                    allowEditing: false,
-                    allowSorting: true,
-                },
-                {
-                    caption: "Valoración",
-                    dataField: p.name + "_valoracion_" + p.periodoRow.id,
-                    temporalidad: p.periodoRow.temporalidad,
-                    alignment: "center",
-                    width: p.width || NotasColumns.VALORACION_WIDTH,
-                    allowEditing: false,
-                    allowSorting: true,
-                }
+                caption: "Promedio",
+                dataField: p.name + "_promedio_" + p.periodoRow.id,
+                temporalidad: p.periodoRow.temporalidad,
+                alignment: "center",
+                width: p.width || NotasColumns.PROMEDIO_WIDTH,
+                allowEditing: false,
+                allowSorting: true,
+            },
+            {
+                caption: "Valoración",
+                dataField: p.name + "_valoracion_" + p.periodoRow.id,
+                temporalidad: p.periodoRow.temporalidad,
+                alignment: "center",
+                width: p.width || NotasColumns.VALORACION_WIDTH,
+                allowEditing: false,
+                allowSorting: true,
+            }
             ]
         }
     }
@@ -581,19 +581,19 @@ class NotasColumnsBase {
             esAnual: true,
             alignment: "center",
             columns: [{
-                    dataField: "anual_promedio",
-                    caption: "Promedio",
-                    esAnual: true,
-                    alignment: "center",
-                    width: 80,
-                },
-                {
-                    dataField: "anual_valoracion",
-                    caption: "Valoración",
-                    esAnual: true,
-                    alignment: "center",
-                    width: 90,
-                }
+                dataField: "anual_promedio",
+                caption: "Promedio",
+                esAnual: true,
+                alignment: "center",
+                width: 80,
+            },
+            {
+                dataField: "anual_valoracion",
+                caption: "Valoración",
+                esAnual: true,
+                alignment: "center",
+                width: 90,
+            }
             ]
         }]
 
