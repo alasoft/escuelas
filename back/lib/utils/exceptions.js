@@ -42,6 +42,8 @@ class Exceptions {
     static SIGLA_DUPLICATED = "siglaDuplicated"
     static FILE_NOT_FOUND = "fileNotFound"
 
+static MAX_ALUMNOS_ALLOWED_FOR_DEMO = "maxAlumnosAllowedForDemo"
+
     static FileNotFound() {
         return new Exception({
             type: this.TYPE_INTERNAL,

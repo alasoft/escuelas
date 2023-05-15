@@ -193,4 +193,12 @@ class AlumnosCursoForm extends FormView {
         }])
     }
 
+    handleError(err) {
+        if (err.code == Exceptions.MAX_ALUMNOS_ALLOWED_FOR_DEMO) {
+            App.ShowError({ message: "Esta es una versión de Prueba y permite manejar hasta<br>" + App.ServerInfo.demoMaxAlumnos + " alumnos" })
+                .then(() =>
+                    this.close())
+        }
+    }
+
 }

@@ -1,5 +1,5 @@
 const { RestBase } = require("../rest/restbase");
-const { UsersRegisterService, UsersLoginService, UsersSaveStateService } = require("../service/usersservice");
+const { UsersRegisterService, UsersLoginService, UsersRegisterTestService } = require("../service/usersservice");
 const { Utils } = require("../utils/utils");
 
 class UsersRest extends RestBase {
@@ -14,6 +14,7 @@ class UsersRest extends RestBase {
 
     build() {
         this.buildVerb("register", UsersRegisterService)
+        this.buildVerb("register_test", UsersRegisterTestService)
         this.buildVerb("login", UsersLoginService)
     }
 }

@@ -62,14 +62,21 @@ class AppBase {
         password: "test"
     }
 
+    static REGISTER_TEST_DATA = {
+        nombre: "Juan",
+        apellido: "Perez",
+        email: "juanperez@gmail.com",
+        password: "juanperez",
+    }
+
     static Init() {
-        return this.GetServerInfo()
+        return this.Start()
             .then(() =>
                 this.Login())
     }
 
     static InitUser(user) {
-        return this.GetServerInfo()
+        return this.Start()
             .then(() =>
                 this.LoginUser(user));
     }
@@ -86,20 +93,35 @@ class AppBase {
         return this.InitUser(this.USER_TEST_DATA);
     }
 
+    static InitRegisterTest(data = App.REGISTER_TEST_DATA) {
+        return this.Start()
+            .then(() =>
+                this.RegisterUserTest(data))
+            .then(() =>
+                this.LoginUser(data))
+    }
+
+    static RegisterUserTest(data) {
+        return new Rest({ path: "users" }).promise({ verb: "register_test", data: data })
+    }
+
     static BeginTest() {
         return Promise.resolve(this._IsTesting = true);
+    }
+
+    static Start() {
+        return this.GetServerInfo()
+            .then(() =>
+                this.Localize())
+            .then(() =>
+                this.ShowPresentation())
     }
 
     static GetServerInfo() {
         return new Rest({ path: "server" }).promise({
             verb: "info"
-        })
-            .then(info =>
-                this.ServerInfo = info)
-            .then(() =>
-                this.Localize())
-            .then(() =>
-                this.ShowPresentation())
+        }).then(info =>
+            this.ServerInfo = info)
     }
 
     static ShowPresentation() {

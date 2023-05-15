@@ -124,7 +124,7 @@ class Notas extends NotasBase {
                 icon: "search",
                 text: "Visualiza Columnas",
                 hint: "Selecciona columnas a visualizar",
-                onClick: e => this.visualiza()
+                onClick: e => this.visualizaColumnas()
             }
         }
     }

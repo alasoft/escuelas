@@ -110,7 +110,6 @@ class UserStateGet extends ServiceBase {
         })
     }
 
-
 }
 
 module.exports.UserStateSave = UserStateSave

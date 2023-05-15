@@ -1,7 +1,7 @@
 class Messages {
 
     static EMAIL_INGRESADO_NO_CORRESPONDE = "El email ingresado no corresponde a ningún Usuario previamente<br>registrado."
-    static POR_FAVOR_REGISTRESE = "Si Usted desea registrarse, presione 'ME QUIERO REGISTRAR'";
+    static POR_FAVOR_REGISTRESE = "Si Usted desea registrarse, presione el botón 'me quiero registrar'";
     static COMBINACION_EMAIL_PASSWORD_INCORRECTA = "La combinación de Email y Password, no es correcta."
     static POR_FAVOR_VERIFIQUE = "Por favor verifique sus datos.";
     static POR_FAVOR_VERIFIQUE_Y_VUELVA = "Por favor verifique sus datos y vuelva a ingresarlos.";

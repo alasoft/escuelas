@@ -78,10 +78,12 @@ class LoginView extends EntryView {
 
     register(e) {
         new RegisterView().render()
-            .then(closeData =>
-                this.form().clearData())
-            .then(() =>
-                this.form().focus());
+            .then(closeData => {
+                if (closeData.okey == true) {
+                    this.setEditorValue("email", closeData.email);
+                    this.focusEditor("password");
+                }
+            })
     }
 
     handleError(err) {
@@ -97,12 +99,12 @@ class LoginView extends EntryView {
     handleUserEmailNotFound(err) {
         ++this.count;
         App.ShowMessage({
-                message: "<i>" + Messages.EMAIL_INGRESADO_NO_CORRESPONDE,
-                lineFeed: 3,
-                tab: 0,
-                quotes: false,
-                detail: Messages.POR_FAVOR_REGISTRESE
-            })
+            message: "<i>" + Messages.EMAIL_INGRESADO_NO_CORRESPONDE,
+            lineFeed: 3,
+            tab: 0,
+            quotes: false,
+            detail: Messages.POR_FAVOR_REGISTRESE
+        })
             .then(closeData =>
                 this.count == this.maxAllowed ? this.closeAboveMaxAllowed() : undefined)
     }
@@ -110,12 +112,12 @@ class LoginView extends EntryView {
     handleInvalidPassword(err) {
         ++this.count;
         App.ShowMessage({
-                message: "<i>" + Messages.COMBINACION_EMAIL_PASSWORD_INCORRECTA,
-                detail: Messages.POR_FAVOR_VERIFIQUE,
-                lineFeed: 3,
-                tab: 0,
-                quotes: false
-            })
+            message: "<i>" + Messages.COMBINACION_EMAIL_PASSWORD_INCORRECTA,
+            detail: Messages.POR_FAVOR_VERIFIQUE,
+            lineFeed: 3,
+            tab: 0,
+            quotes: false
+        })
             .then(closeData =>
                 this.count == this.maxAllowed ? this.closeAboveMaxAllowed() : undefined)
     }

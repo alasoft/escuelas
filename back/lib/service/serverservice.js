@@ -10,7 +10,8 @@ class ServerInfoService extends ServiceBase {
         return {
             name: this.app.name,
             version: this.app.version,
-            demo: this.app.demo
+            demo: this.app.demo,
+            demoMaxAlumnos: this.app.demoMaxAlumnos
         }
     }
 

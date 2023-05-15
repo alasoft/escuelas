@@ -37,6 +37,7 @@ class App {
         this.name = parameters.name;
         this.version = parameters.version;
         this.demo = parameters.demo;
+        this.demoMaxAlumnos = parameters.demoMaxAlumnos;
         this.tokenMinutes = parameters.tokenMinutes || App.TOKEN_MINUTES_DEFAULT;
         this.logSql = parameters.logSql;
         this.obfuscated = parameters.obfuscated;

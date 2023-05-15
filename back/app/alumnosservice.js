@@ -8,6 +8,7 @@ const {
 } = require("../lib/service/tableservice");
 const { Sql } = require("../lib/sql/sql");
 const { SqlDelete, SqlInsert } = require("../lib/sql/sqloperations");
+const { Exceptions } = require("../lib/utils/exceptions");
 const { Strings } = require("../lib/utils/utils");
 
 class AlumnosListService extends TableListService {
@@ -57,8 +58,34 @@ class AlumnosGetService extends TableGetService {
 
 class AlumnosInsertService extends TableInsertService {
 
+    validate() {
+        return super.validate()
+            .then(() => {
+                if (this.isDemo()) {
+                    return this.validateMaxAlumnos()
+                }
+            })
+    }
+
     requiredValues() {
         return "curso,apellido,nombre"
+    }
+
+    validateMaxAlumnos() {
+        return this.dbCount(this.sqlMaxAlumnos()).then(
+            count => {
+                if (this.app.demoMaxAlumnos <= count) {
+                    throw Exceptions.Validation({ code: Exceptions.MAX_ALUMNOS_ALLOWED_FOR_DEMO })
+                }
+            }
+        )
+    }
+
+    sqlMaxAlumnos() {
+        return this.sqlCount({
+            columns: ["id"],
+            from: "alumnos"
+        })
     }
 
     sqlNotDuplicated() {

@@ -7,8 +7,10 @@ const {
     SqlUpdate,
     SqlDelete,
     SqlUpdateWhere,
-    SqlDeleteWhere
+    SqlDeleteWhere,
+    SqlDeleteAll
 } = require("../sql/sqloperations.js");
+const { SqlCount } = require("../sql/sqlselect.js");
 
 class ServiceBase extends ObjectBase {
 
@@ -161,6 +163,20 @@ class ServiceBase extends ObjectBase {
     sqlDeleteWhere(parameters) {
         this.defineValuesToSend(parameters, false);
         return new SqlDeleteWhere(parameters).text();
+    }
+
+    sqlDeleteAll(parameters) {
+        if (Utils.IsNotDefined(parameters.values.tenant)) {
+            parameters.values.tenant = this.tenant();
+        }
+        return new SqlDeleteAll(parameters).text()
+    }
+
+    sqlCount(parameters) {
+        if (Utils.IsNotDefined(parameters.tenant)) {
+            parameters.tenant = this.tenant();
+        }
+        return new SqlCount(parameters).text();
     }
 
     defineValuesToSend(parameters, checkId = true) {

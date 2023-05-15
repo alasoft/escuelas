@@ -60,6 +60,10 @@ class EntryView extends DialogView {
         }
     }
 
+    focusEditor(dataField){
+        return this.form().focusEditor(dataField)
+    }
+
     okey() {
         this.validate()
             .then(() =>

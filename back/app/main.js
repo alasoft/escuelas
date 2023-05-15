@@ -32,6 +32,7 @@ new App({
     logSql: false,
     obfuscated: false,
     demo: true,
+    demoMaxAlumnos: 50
 }).start()
 
 function dbConnection(app) {

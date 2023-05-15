@@ -39,6 +39,8 @@ class Exceptions {
     static RANGO_NOTAS_CONTIENE_OTRO_RANGO = "rangoNotasContieneOtroRango"
     static SIGLA_DUPLICATED = "siglaDuplicated"
 
+    static MAX_ALUMNOS_ALLOWED_FOR_DEMO = "maxAlumnosAllowedForDemo"
+
     // Client Side 
 
     static CLIENT_SIDE = "client";

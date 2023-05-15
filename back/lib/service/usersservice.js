@@ -1,6 +1,6 @@
 const { Exceptions } = require("../utils/exceptions");
 const { ServiceBase } = require("./servicebase");
-const { Sql } = require("../sql/sql");
+const { Sql, Sqls } = require("../sql/sql");
 const { Users } = require("../users/users");
 const { Utils, Strings } = require("../utils/utils");
 const { DemoGenerate } = require("../utils/demogenerate");
@@ -49,6 +49,13 @@ class UsersRegisterService extends UsersService {
         return "nombre,apellido,email,password";
     }
 
+    prepareValues() {
+        this.setValue("tenant", Strings.NewGuid());
+        this.setValue("id", Strings.NewGuid());
+        this.setValue("rol", Users.ROL_USER)
+        this.setValue("password", Utils.Encrypt(this.value("password")))
+    }
+
     checkApellidoNombre() {
         return this.dbCount(this.sqlCheckApellidoNombre()).then(count => {
             if (0 < count) {
@@ -83,11 +90,8 @@ class UsersRegisterService extends UsersService {
         return Sql.Count(this.sqlFindUserParameters())
     }
 
-    prepareValues() {
-        this.setValue("tenant", Strings.NewGuid());
-        this.setValue("id", Strings.NewGuid());
-        this.setValue("rol", Users.ROL_USER)
-        this.setValue("password", Utils.Encrypt(this.value("password")))
+    generateDemoData() {
+        return new DemoGenerate({ db: this.db, tenant: this.value("tenant") }).generate()
     }
 
     sql() {
@@ -97,10 +101,51 @@ class UsersRegisterService extends UsersService {
         })
     }
 
-    generateDemoData() {
-        return new DemoGenerate({ db: this.db, tenant: this.value("tenant") }).generate()
+}
+
+class UsersRegisterTestService extends UsersRegisterService {
+
+    execute() {
+        this.preValidate()
+            .then(() =>
+                super.execute())
+            .catch(err =>
+                this.sendError(err)
+            )
     }
 
+    preValidate() {
+        return this.dbSelectOne(this.sqlSelectUser())
+            .then(row => {
+                if (row != undefined) {
+                    return this.dbExecute(this.sqlDelete(row.tenant))
+                } else {
+                    return undefined;
+                }
+            })
+    }
+
+    sqlSelectUser() {
+        return this.sqlSelect({
+            columns: ["tenant"],
+            from: "users",
+            filterByTenant: false,
+            where: this.sqlAnd("email=@email"),
+            parameters: { email: this.value("email") }
+        })
+    }
+
+    sqlDelete(tenant) {
+        return new Sqls().addArray([
+            this.sqlDeleteAll({
+                tableName: "users_states", values: { tenant: tenant }
+            }),
+            this.sqlDeleteAll({
+                tableName: "users", values: { tenant: tenant }
+
+            })
+        ]).text()
+    }
 }
 
 class UsersLoginService extends UsersService {
@@ -149,4 +194,5 @@ class UsersLoginService extends UsersService {
 
 
 module.exports.UsersRegisterService = UsersRegisterService;
+module.exports.UsersRegisterTestService = UsersRegisterTestService;
 module.exports.UsersLoginService = UsersLoginService;
