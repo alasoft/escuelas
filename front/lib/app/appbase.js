@@ -229,7 +229,15 @@ class AppBase {
         this._View = undefined;
         this._ViewNormal = undefined;
         this._ViewTest = undefined;
-        this.View().render();
+        this.View().render().then(() => {
+            if (this.IsDemo()) {
+                this.ShowMessage(this.DemoWellcomeMessage(), { height: 250, width: 420 })
+            }
+        });
+    }
+
+    static DemoWellcomeMessage() {
+        return { message: "Bienvenido a la versión Demo del " + this.ShortName(false) }
     }
 
     static AppElement() {
@@ -334,8 +342,8 @@ class AppBase {
         return "Sistema de " + this.ServerInfo.name;
     }
 
-    static ShortName() {
-        return this.Name() + " " + this.Version() + this.DemoName()
+    static ShortName(demoName = true) {
+        return this.Name() + " " + this.Version() + (demoName == true ? this.DemoName() : "")
     }
 
     static DemoName() {

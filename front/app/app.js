@@ -74,5 +74,12 @@ class App extends AppBase {
         }
     }
 
+    static DemoWellcomeMessage() {
+        return [
+            { message: "Bienvenido a la versión Demo del " + this.ShortName(false), lineFeed: 1 },
+            { message: "<u>Recuerde:</u>", detail: "<i>Hay datos pre cargados para que Ud pueda probar<br>" + Html.Tab(2) + "rápidamente este Sistema</i>", quotes: false }
+        ]
+    }
+
 
 }
