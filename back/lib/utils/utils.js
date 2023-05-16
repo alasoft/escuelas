@@ -232,7 +232,7 @@ class Dates {
         return (d1 >= d3 && d1 <= d4) || (d2 >= d3 && d2 <= d4);
     }
 
-    static From(s){
+    static From(s) {
         return new Date(s);
     }
 
@@ -316,6 +316,10 @@ class Files {
 
     static DeleteFolder(folder, parameters) {
         fs.rmSync(folder, parameters);
+    }
+
+    static WriteFile(folder, content) {
+        fs.writeFile(folder, content)
     }
 
 }

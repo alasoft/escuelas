@@ -19,11 +19,17 @@ const { NotasDataRest } = require("./notasdatarest");
 const { ValoracionesRest } = require("./valoracionesrest");
 const { PeriodosEstados } = require("./periodosestados");
 const { ServerRest } = require("../lib/rest/serverrest");
+const minimist = require("minimist")
+
+const args = minimist(process.argv.slice(2));
+
+console.log(args);
 
 new App({
-    root: !isDemo() ? "escuelas" : "escuelas_demo",
+    host: hostOrDefault(),
+    port: isDemoElse(9091, 9090),
+    root: isDemoElse("escuelas_demo", "escuelas"),
     static: "escuelas",
-    port: !isDemo() ? 9090 : 9091,
     dbConnection: dbConnection,
     createTables: CreateTables,
     restItems: restItems,
@@ -31,13 +37,37 @@ new App({
     version: "0.9.3",
     name: "Escuelas",
     logSql: false,
-    obfuscated: false,
+    obfuscated: obfuscatedOrDefault(),
     demo: isDemo(),
     demoMaxAlumnos: 50
 }).start()
 
+function hostOrDefault(defaultHost = "http://127.0.0.1") {
+    if (args.host != undefined) {
+        return args.host
+    } else {
+        return defaultHost;
+    }
+}
+
 function isDemo() {
-    return true;
+    return args.demo == true;
+}
+
+function isDemoElse(x1, x2) {
+    if (isDemo()) {
+        return x1;
+    } else {
+        return x2;
+    }
+}
+
+function obfuscatedOrDefault() {
+    if (args.obfuscated != undefined) {
+        return args.obfuscated;
+    } else {
+        return true;
+    }
 }
 
 function dbConnection(app) {
@@ -45,7 +75,7 @@ function dbConnection(app) {
         app: app,
         user: "postgres",
         password: "postgres",
-        database: "alasoft_escuelas" + (isDemo() ? "_demo" : "")
+        database: isDemoElse("alasoft_escuelas_demo", "alasoft_escuelas")
     })
 }
 

@@ -280,20 +280,16 @@ class AppBase {
         return encodeURI(Strings.Concatenate([this.Host(), this.Root(), path, verb], "/"));
     }
 
-    static LocalHost() {
-        return "http://127.0.0.1:" + this.Port();
-    }
-
     static Host() {
-        return this.LocalHost()
+        return serverParameters.host + ":" + this.Port()
     }
 
     static Root() {
-        return "";
+        return serverParameters.root;
     }
 
     static Port() {
-        return 9090;
+        return serverParameters.port;
     }
 
     static IsDemo() {

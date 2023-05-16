@@ -3,29 +3,14 @@ const { UsersCreateTable } = require("../users/users");
 const { UsersLogged } = require("../users/userslogged");
 const { UsersRest } = require("../rest/usersrest");
 const { UserStateRest } = require("../rest/userstaterest");
-const { Utils, Dates } = require("../utils/utils");
+const { Utils, Dates, Files } = require("../utils/utils");
 const { Exception } = require("../utils/exceptions");
 const { Path } = require("../utils/path");
 const { Obfuscate } = require("../utils/obfuscate");
+const { TextBuilder } = require("../utils/textbuilder");
+const { Strings } = require("../utils/utils");
 
 class App {
-
-    static IndexRelativePath = "../../../front/app/index.htm";
-    static IndexObfRelativePath = "../../../obfuscated/index.htm";
-
-    static StaticAlias = "static";
-    static StaticRelativePath = "../../../front"
-    static StaticRelativeObfPath = "../../../obfuscated"
-    static StaticRelativePaths = [
-        "app",
-        "lib/app",
-        "lib/data",
-        "lib/template",
-        "lib/utils",
-        "lib/view",
-        "lib/widget",
-        "styles"
-    ]
 
     static TOKEN_MINUTES_DEFAULT = 30;
 
@@ -42,6 +27,37 @@ class App {
         this.tokenMinutes = parameters.tokenMinutes || App.TOKEN_MINUTES_DEFAULT;
         this.logSql = parameters.logSql;
         this.obfuscated = parameters.obfuscated;
+        this.setPaths()
+    }
+
+    setPaths() {
+
+        this.indexRelativePath = "../../../front/app/index.htm";
+        this.indexObfRelativePath = "../../../" + this.obfuscatedName() + "/index.htm";
+
+        this.frontRelativePath = "../../../front/app";
+
+        this.staticAlias = "static";
+        this.staticRelativePath = "../../../front"
+        this.staticRelativeObfPath = "../../../" + this.obfuscatedName()
+        this.staticRelativePaths = [
+            "app",
+            "lib/app",
+            "lib/data",
+            "lib/template",
+            "lib/utils",
+            "lib/view",
+            "lib/widget",
+            "styles"
+        ]
+    }
+
+    isDemo() {
+        return this.demo == true;
+    }
+
+    obfuscatedName() {
+        return "obfuscated" + (this.isDemo() ? "_demo" : "")
     }
 
     start() {
@@ -86,6 +102,8 @@ class App {
 
             this.usersLogged = new UsersLogged({ app: this });
 
+            this.writeServerParameters();
+
             if (this.obfuscated == true) {
                 this.obfuscate()
             }
@@ -96,13 +114,30 @@ class App {
 
     }
 
+    writeServerParameters() {
+        const destinationFolder = Path.Absolute(this.frontRelativePath)
+        const fileName = destinationFolder + "/serverParameters.js";
+        Files.DeleteFile(fileName)
+        Files.Append(fileName, this.serverParametersContent())
+    }
+
+    serverParametersContent() {
+        const textBuilder = new TextBuilder();
+        textBuilder.add("serverParameters = {")
+        textBuilder.add("root: " + Strings.DoubleQuotes(this.root) + ",")
+        textBuilder.add("port: " + this.port + ",")
+        textBuilder.add("host: " + Strings.DoubleQuotes(this.host))
+        textBuilder.add("}")
+        return textBuilder.text()
+    }
+
     obfuscate() {
         new Obfuscate({
             relativePaths: {
                 front: "../../../front",
                 index: "../../../front/app",
                 styles: "../../../front/styles",
-                destination: "../../../obfuscated"
+                destination: "../../../" + this.obfuscatedName()
             }
         }).execute()
     }
@@ -148,14 +183,14 @@ class App {
     }
 
     buildIndexObf() {
-        const indexPath = Path.Absolute(App.IndexObfRelativePath);
+        const indexPath = Path.Absolute(this.indexObfRelativePath);
         const root = Path.Normalize(this.root);
         this.express.get(root, (req, res) =>
             res.sendFile(indexPath))
     }
 
     buildIndexPlain() {
-        const indexPath = Path.Absolute(App.IndexRelativePath);
+        const indexPath = Path.Absolute(this.indexRelativePath);
         const root = Path.Normalize(this.root);
         this.express.get(root, (req, res) =>
             res.sendFile(indexPath))
@@ -170,16 +205,16 @@ class App {
     }
 
     useStaticObf() {
-        const staticAliasPath = Path.Concatenate(this.static, App.StaticAlias);
-        const staticPath = Path.Absolute(App.StaticRelativeObfPath)
+        const staticAliasPath = Path.Concatenate(this.static, this.staticAlias);
+        const staticPath = Path.Absolute(this.staticRelativeObfPath)
         this.express.use(staticAliasPath, this.expressFunction.static(staticPath));
     }
 
     useStaticPlain() {
-        var staticAliasPath = Path.Concatenate(this.static, App.StaticAlias);
-        App.StaticRelativePaths.forEach(
+        var staticAliasPath = Path.Concatenate(this.static, this.staticAlias);
+        this.staticRelativePaths.forEach(
             relativePath => {
-                const staticPath = Path.Absolute(App.StaticRelativePath, relativePath);
+                const staticPath = Path.Absolute(this.staticRelativePath, relativePath);
                 this.express.use(staticAliasPath, this.expressFunction.static(staticPath))
             }
         )
