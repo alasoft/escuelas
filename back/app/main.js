@@ -21,8 +21,9 @@ const { PeriodosEstados } = require("./periodosestados");
 const { ServerRest } = require("../lib/rest/serverrest");
 
 new App({
-    root: "escuelas",
-    port: 9090,    
+    root: !isDemo() ? "escuelas" : "escuelas_demo",
+    static: "escuelas",
+    port: !isDemo() ? 9090 : 9091,
     dbConnection: dbConnection,
     createTables: CreateTables,
     restItems: restItems,
@@ -31,16 +32,20 @@ new App({
     name: "Escuelas",
     logSql: false,
     obfuscated: false,
-    demo: true,
+    demo: isDemo(),
     demoMaxAlumnos: 50
 }).start()
+
+function isDemo() {
+    return true;
+}
 
 function dbConnection(app) {
     return new Postgres({
         app: app,
         user: "postgres",
         password: "postgres",
-        database: "alasoft_escuelas"
+        database: "alasoft_escuelas" + (isDemo() ? "_demo" : "")
     })
 }
 

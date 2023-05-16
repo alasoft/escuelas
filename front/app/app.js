@@ -31,7 +31,11 @@ class App extends AppBase {
     }
 
     static Root() {
-        return "escuelas";
+        return "escuelas_demo";
+    }
+
+    static Port() {
+        return 9091;
     }
 
     static ShowPresentation() {

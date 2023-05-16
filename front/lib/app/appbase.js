@@ -284,16 +284,16 @@ class AppBase {
         return "http://127.0.0.1:" + this.Port();
     }
 
-    static Port() {
-        return 9090;
-    }
-
     static Host() {
         return this.LocalHost()
     }
 
     static Root() {
         return "";
+    }
+
+    static Port() {
+        return 9090;
     }
 
     static IsDemo() {

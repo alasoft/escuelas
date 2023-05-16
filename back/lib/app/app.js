@@ -34,6 +34,7 @@ class App {
         this.host = parameters.host;
         this.port = parameters.port;
         this.root = parameters.root;
+        this.static = parameters.static;
         this.name = parameters.name;
         this.version = parameters.version;
         this.demo = parameters.demo;
@@ -169,13 +170,13 @@ class App {
     }
 
     useStaticObf() {
-        const staticAliasPath = Path.Concatenate(this.root, App.StaticAlias);
+        const staticAliasPath = Path.Concatenate(this.static, App.StaticAlias);
         const staticPath = Path.Absolute(App.StaticRelativeObfPath)
         this.express.use(staticAliasPath, this.expressFunction.static(staticPath));
     }
 
     useStaticPlain() {
-        var staticAliasPath = Path.Concatenate(this.root, App.StaticAlias);
+        var staticAliasPath = Path.Concatenate(this.static, App.StaticAlias);
         App.StaticRelativePaths.forEach(
             relativePath => {
                 const staticPath = Path.Absolute(App.StaticRelativePath, relativePath);
