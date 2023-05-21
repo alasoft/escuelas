@@ -5,7 +5,7 @@ class CursosMateriasRest extends RestBase {
 
     constructor(parameters) {
         super(parameters);
-        this.path = "materias_cursos";
+        this.path = "cursos_materias";
     }
 
 

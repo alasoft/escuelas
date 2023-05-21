@@ -2,6 +2,10 @@ const { TableListService } = require("../lib/service/tableservice");
 
 class CursosMateriasListService extends TableListService {
 
+    requiredValues() {
+        return "añolectivo";
+    }
+
     sql() {
         return this.sqlSelect({
             column: [

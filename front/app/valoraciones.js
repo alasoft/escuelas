@@ -70,6 +70,7 @@ class Valoraciones extends AñoLectivoView {
 
     listOnContentReady(e) {
         this.focusFirstRow();
+        this.refreshListToolbar();
         this.refreshContextMenuItems()
     }
 
@@ -110,23 +111,23 @@ class ValoracionesFormView extends FormView {
             Item.Group({
                 colCount: 3,
                 items: [Item.Number({
-                        dataField: "desde",
-                        required: true,
-                        spin: true,
-                        min: 1,
-                        max: 10,
-                        width: 70,
-                        value: undefined
-                    }),
-                    Item.Number({
-                        dataField: "hasta",
-                        required: true,
-                        spin: true,
-                        min: 1,
-                        max: 10,
-                        width: 70,
-                        value: undefined
-                    })
+                    dataField: "desde",
+                    required: true,
+                    spin: true,
+                    min: 1,
+                    max: 10,
+                    width: 70,
+                    value: undefined
+                }),
+                Item.Number({
+                    dataField: "hasta",
+                    required: true,
+                    spin: true,
+                    min: 1,
+                    max: 10,
+                    width: 70,
+                    value: undefined
+                })
                 ]
             })
         ]
@@ -145,8 +146,7 @@ class ValoracionesFormView extends FormView {
     handleError(err) {
         if (err.code == Exceptions.SIGLA_DUPLICATED) {
             this.handleSiglaDuplicatedMessage(err)
-        }
-        if (err.code == Exceptions.NOTA_DESDE_DEBE_SER_MENOR_IGUAL_NOTA_HASTA) {
+        } else if (err.code == Exceptions.NOTA_DESDE_DEBE_SER_MENOR_IGUAL_NOTA_HASTA) {
             this.handleNotaDesdeDebeSerMenorHasta(err)
         } else if (err.code == Exceptions.RANGO_NOTAS_INTERSECTA_OTRO_RANGO) {
             this.handleNotasIntersecta(err)
@@ -162,18 +162,21 @@ class ValoracionesFormView extends FormView {
     }
 
     handleSiglaDuplicatedMessage(err) {
-        return Messages.Build({ message: "Ya existe una Valoración con la sigla:", detail: this.getEditorValue("sigla") })
+        return App.ShowMessage({
+            message: "Ya existe una Valoración con la sigla:",
+            detail: this.getEditorValue("sigla")
+        })
     }
 
     handleNotaDesdeDebeSerMenorHasta(err) {
         App.ShowMessage([{
-                message: "La nota desde",
-                detail: this.getValue("desde")
-            },
-            {
-                message: "debe ser menor a la nota hasta",
-                detail: this.getValue("hasta")
-            }
+            message: "La nota desde",
+            detail: this.getValue("desde")
+        },
+        {
+            message: "debe ser menor a la nota hasta",
+            detail: this.getValue("hasta")
+        }
         ])
     }
 

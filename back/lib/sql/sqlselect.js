@@ -19,7 +19,8 @@ class SqlSelect extends ObjectBase {
         this.columns = new SqlColumns({ sqlSelect: this, items: parameters.columns });
         this.joins = new SqlJoins({ sqlSelect: this, joins: parameters.joins });
         this.from = new SqlFrom(parameters.from);
-        this.where = new SqlWhereSelect({ sqlSelect: this, items: parameters.where })
+        this.where = new SqlWhereSelect({ sqlSelect: this, items: parameters.where });
+        this.group = new SqlGroup({ sqlSelect: this, items: parameters.group })
         this.order = new SqlOrder({ sqlSelect: this, items: parameters.order })
         this.values = parameters.parameters;
     }
@@ -64,6 +65,7 @@ class SqlSelect extends ObjectBase {
             .add(this.from)
             .add(this.joins)
             .add(this.where)
+            .add(this.group)
             .add(this.order)
             .text();
         return rawText;
@@ -230,6 +232,18 @@ class SqlJoin {
             )
             .add(")")
             .text();
+    }
+
+}
+
+class SqlGroup extends TextBuilder {
+
+    beforeItem(item, i) {
+        if (i == 0) {
+            return "group by "
+        } else {
+            return ", ";
+        }
     }
 
 }

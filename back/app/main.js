@@ -38,7 +38,7 @@ new App({
     version: "0.9.3",
     name: "Escuelas",
     logSql: false,
-    obfuscated: obfuscatedOrDefault(),
+    obfuscated: obfuscatedOrDefault(false),
     demo: isDemo(),
     demoMaxAlumnos: 50
 }).start()
@@ -63,11 +63,11 @@ function isDemoElse(x1, x2) {
     }
 }
 
-function obfuscatedOrDefault() {
+function obfuscatedOrDefault(obfuscated = true) {
     if (args.obfuscated != undefined) {
         return args.obfuscated;
     } else {
-        return true;
+        return obfuscated;
     }
 }
 
