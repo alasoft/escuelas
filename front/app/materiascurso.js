@@ -7,7 +7,7 @@ class MateriasCurso extends CursosDetalle {
     extraConfiguration() {
         return {
             popup: {
-                title: "Materias dictadas en el Curso",
+                title: "Materias Asignadas en el Curso",
             },
             components: {
                 filter: {
@@ -134,7 +134,7 @@ class MateriasCurso extends CursosDetalle {
             message: "Borra la Materia ?",
             detail: this.focusedRowValue("materianombre")
         }, {
-            message: "dictada en el Curso",
+            message: "asignada en el Curso",
             detail: this.cursoDescripcion()
         }, this.focusedRowValue("horarios") != "" ? {
             message: "Importante:",

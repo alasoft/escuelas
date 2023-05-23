@@ -167,7 +167,7 @@ class NotasBase extends FilterViewBase {
             .then(() =>
                 this.refreshListToolbar())
             .then(() =>
-                this.list().resetColumns(this.columns()))
+                this.list().setColumns(this.columns()))
             .then(() =>
                 this.setVisibleColumns())
             .then(() =>
@@ -176,10 +176,6 @@ class NotasBase extends FilterViewBase {
                 this.list().focus())
             .catch(err =>
                 this.handleError(err))
-    }
-
-    handleError(err) {
-        throw err;
     }
 
     refreshRows() {

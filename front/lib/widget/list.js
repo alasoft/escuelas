@@ -182,11 +182,11 @@ class List extends Widget {
         return this.getProperty("searchPanel.text") != "";
     }
 
-    resetColumns(columns) {
+    setColumns(columns) {
         this.beginUpdate();
         try {
             this.deleteColumns();
-            this.setColumns(columns);
+            this.setProperty("columns", columns)
         } finally {
             this.endUpdate();
         }
@@ -194,10 +194,6 @@ class List extends Widget {
 
     deleteColumns() {
         this.setProperty("columns", [])
-    }
-
-    setColumns(columns) {
-        this.setProperty("columns", columns)
     }
 
     getEditColumnName() {

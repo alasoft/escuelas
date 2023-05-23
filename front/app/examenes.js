@@ -9,10 +9,12 @@ class Examenes extends AñoLectivoView {
             mode: "popup",
             popup: {
                 title: "Examenes de todas los Cursos y Materias",
-                height: 700,
-                width: 1400
+                fullScreen: true,
             },
             components: {
+                filter: {
+                    height: 50
+                },
                 list: {
                     showBorders: true,
                     pager: {
@@ -123,10 +125,10 @@ class TpsForm extends CursosMateriasForm {
 
     beforeRender() {
         return new Rest({ path: "periodos" }).promise({
-                verb: "list",
-                data: { añoLectivo: this.listView().añoLectivo().id }
-            }).then(rows =>
-                this.periodos = rows)
+            verb: "list",
+            data: { añoLectivo: this.listView().añoLectivo().id }
+        }).then(rows =>
+            this.periodos = rows)
             .then(() =>
                 Arrays.ToDate(this.periodos, ["desde", "hasta"]))
     }

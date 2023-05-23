@@ -1,5 +1,5 @@
 const { RestBase } = require("../lib/rest/restbase");
-const { CursosMateriasListService } = require("./cursosmateriasservice");
+const { CursosMateriasService } = require("./cursosmateriasservice");
 
 class CursosMateriasRest extends RestBase {
 
@@ -10,7 +10,7 @@ class CursosMateriasRest extends RestBase {
 
 
     build() {
-        this.buildVerb("list", CursosMateriasListService);
+        this.buildVerb("list", CursosMateriasService);
     }
 
 }

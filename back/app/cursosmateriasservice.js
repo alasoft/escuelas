@@ -1,14 +1,56 @@
-const { TableListService } = require("../lib/service/tableservice");
+const { ServiceBase } = require("../lib/service/servicebase");
 
-class CursosMateriasListService extends TableListService {
+class CursosMateriasService extends ServiceBase {
+
+    execute() {
+        this.dbSelect(this.sqlPeriodos())
+            .then(rows =>
+                this.periodosRows = rows)
+            .then(() =>
+                this.dbSelect(this.sqlCursosMaterias()))
+            .then(rows =>
+                this.cursosMateriasRows = rows)
+            .then(() =>
+                this.dbSelect(this.sqlAlumnosCantidad()))
+            .then(count =>
+                this.alumnosCantidadRows = count)
+            .then(() =>
+                this.dbSelect(this.sqlExamenesCantidad()))
+            .then(count =>
+                this.examenesCantidadRows = count)
+            .then(() =>
+                this.dbSelect(this.sqlNotasCantidad()))
+            .then(count =>
+                this.notasCantidadRows = count)
+            .then(() =>
+                this.sendOkey(this.dataToSend()))
+            .catch(err =>
+                this.sendError(err))
+    }
 
     requiredValues() {
         return "añolectivo";
     }
 
-    sql() {
+    sqlPeriodos() {
         return this.sqlSelect({
-            column: [
+            columns: [
+                "per.id",
+                "per.nombre",
+                "per.desde",
+                "per.hasta",
+                "per.preliminar"
+            ],
+            from: "periodos per",
+            where: this.sqlAnd().add("añolectivo=@añolectivo"),
+            order: "per.desde",
+            parameters: { añolectivo: this.value("añolectivo") }
+        })
+    }
+
+    sqlCursosMaterias() {
+        return this.sqlSelect({
+            columns: [
                 "cur.id",
                 "cur.añolectivo",
                 "cur.escuela",
@@ -18,7 +60,7 @@ class CursosMateriasListService extends TableListService {
                 "cur.turno",
                 "esc.nombre as escuelanombre",
                 "mdl.nombre as modalidadnombre",
-                "mc.id as materiacursoid",
+                "mc.id as materiacurso  ",
                 "mc.materia",
                 "mat.nombre as materianombre"
             ],
@@ -36,6 +78,86 @@ class CursosMateriasListService extends TableListService {
         })
     }
 
+    sqlAlumnosCantidad() {
+        return this.sqlSelect({
+            columns: [
+                "al.curso",
+                "count(*)"
+            ],
+            from: "alumnos al",
+            joins: [
+                { tableName: "cursos", alias: "cur", columnName: "al.curso", }],
+            where: this.sqlAnd([
+                "cur.añolectivo=@añolectivo"
+            ]),
+            group: [
+                "al.curso"
+            ],
+            parameters: { añolectivo: this.value("añolectivo") }
+        })
+    }
+
+    sqlExamenesCantidad() {
+        return this.sqlSelect(
+            {
+                columns: [
+                    "exa.materiacurso",
+                    "exa.periodo",
+                    "count(*)"
+                ],
+                from: "examenes exa",
+                joins: [
+                    { tableName: "materias_cursos", alias: "mc", columnName: "exa.materiacurso" },
+                    { tableName: "periodos", alias: "per", columnName: "exa.periodo" }],
+                where: this.sqlAnd([
+                    "per.añolectivo=@añolectivo",
+                    "exa.desde<=now()"
+                ]),
+                group: [
+                    "exa.materiacurso",
+                    "exa.periodo"
+                ],
+                parameters: { añolectivo: this.value("añolectivo") }
+            }
+        )
+    }
+
+    sqlNotasCantidad() {
+        return this.sqlSelect(
+            {
+                columns: [
+                    "exa.materiacurso",
+                    "exa.periodo",
+                    "count(*)"
+                ],
+                from: "notas nt",
+                joins: [
+                    { tableName: "examenes", alias: "exa", columnName: "nt.examen" },
+                    { tableName: "materias_cursos", alias: "mc", columnName: "exa.materiacurso" },
+                    { tableName: "periodos", alias: "per", columnName: "exa.periodo" }],
+                where: this.sqlAnd([
+                    "per.añolectivo=@añolectivo",
+                    "exa.desde<=now()"
+                ]),
+                group: [
+                    "exa.materiacurso",
+                    "exa.periodo"
+                ],
+                parameters: { añolectivo: this.value("añolectivo") }
+            }
+        )
+    }
+
+    dataToSend() {
+        return {
+            periodosRows: this.periodosRows,
+            cursosMateriasRows: this.cursosMateriasRows,
+            alumnosCantidadRows: this.alumnosCantidadRows,
+            examenesCantidadRows: this.examenesCantidadRows,
+            notasCantidadRows: this.notasCantidadRows
+        }
+    }
+
 }
 
-module.exports.CursosMateriasListService = CursosMateriasListService;
+module.exports.CursosMateriasService = CursosMateriasService;

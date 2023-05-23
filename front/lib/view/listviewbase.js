@@ -3,16 +3,23 @@ class ListViewBase extends View {
     defaultConfiguration() {
         return Utils.Merge(super.defaultConfiguration(), {
             components: {
-                contextMenu: {
-                    target: this.findElementByClass("list")
+                label: {
+                    text: this.labelText()
                 },
                 list: {
                     onContentReady: e => this.listOnContentReady(e),
                     onDisposing: e => this.listOnDisposing(e),
                 },
+                contextMenu: {
+                    target: this.findElementByClass("list")
+                },
                 excel: {}
             }
         })
+    }
+
+    labelText(){
+        
     }
 
     list() {
@@ -27,7 +34,7 @@ class ListViewBase extends View {
         this.list().setToolbarItems(this.listToolbarItems())
     }
 
-    listToolbarItems() {}
+    listToolbarItems() { }
 
     itemExcel() {
         return {

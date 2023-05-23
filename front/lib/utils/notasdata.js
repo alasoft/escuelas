@@ -238,7 +238,7 @@ class NotasData {
         if (cantidad < examenesNoFuturosCantidad) {
             const diferencia = (examenesNoFuturosCantidad - cantidad);
             if (1 < diferencia) {
-                return "Faltan cargar " + (examenesNoFuturosCantidad - cantidad) + " notas";
+                return "Faltan cargar " + diferencia + " notas";
             } else {
                 return "Falta cargar 1 nota";
             }
