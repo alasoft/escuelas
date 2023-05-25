@@ -18,6 +18,7 @@ const { NotasRest } = require("./notasrest");
 const { NotasDataRest } = require("./notasdatarest");
 const { ValoracionesRest } = require("./valoracionesrest");
 const { PeriodosEstados } = require("./periodosestados");
+const { CursosMateriasRest } = require("./cursosmateriasrest")
 const { ServerRest } = require("../lib/rest/serverrest");
 const minimist = require("minimist")
 
@@ -92,6 +93,7 @@ function restItems(app) {
         new PeriodosRest({ app: app }),
         new ValoracionesRest({ app: app }),
         new CursosRest({ app: app }),
+        new CursosMateriasRest({ app: app }),
         new MateriasCursosRest({ app: app }),
         new MateriasHorasRest({ app: app }),
         new MateriasHorasAllRest({ app: app, path: "materias_horas_all" }),

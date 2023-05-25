@@ -4,6 +4,7 @@ const { Exceptions } = require("../utils/exceptions.js");
 const { TextBuilder } = require("../utils/textbuilder");
 const { Utils, Strings } = require("../utils/utils");
 const { SqlAnd, SqlWhere } = require("./sqloperators");
+const { raw } = require("body-parser");
 
 class SqlSelect extends ObjectBase {
 
@@ -42,8 +43,12 @@ class SqlSelect extends ObjectBase {
     }
 
     defineFinalText() {
-        const finalText = this.Sql.Text({ items: this.rawText(), values: this.values });
-        return finalText;
+        const rawText = this.rawText();
+        if (Utils.IsDefined(this.values)) {
+            return this.Sql.Text({ items: rawText, values: this.values });
+        } else {
+            return rawText;
+        }
     }
 
     rawText() {
