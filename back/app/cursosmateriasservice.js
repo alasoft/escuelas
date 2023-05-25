@@ -3,7 +3,11 @@ const { ServiceBase } = require("../lib/service/servicebase");
 class CursosMateriasService extends ServiceBase {
 
     execute() {
-        this.dbSelect(this.sqlPeriodos())
+        this.dbSelect(this.sqlValoraciones())
+            .then(rows =>
+                this.valoracionesRows = rows)
+            .then(() =>
+                this.dbSelect(this.sqlPeriodos()))
             .then(rows =>
                 this.periodosRows = rows)
             .then(() =>
@@ -32,6 +36,19 @@ class CursosMateriasService extends ServiceBase {
         return "añolectivo";
     }
 
+    sqlValoraciones() {
+        return this.sqlSelect({
+            columns: [
+                "vlr.id",
+                "vlr.nombre",
+                "vlr.desde",
+                "vlr.hasta",
+                "vlr.sigla"
+            ],
+            from: "valoraciones vlr"
+        })
+    }
+
     sqlPeriodos() {
         return this.sqlSelect({
             columns: [
@@ -51,7 +68,8 @@ class CursosMateriasService extends ServiceBase {
     sqlCursosMaterias() {
         return this.sqlSelect({
             columns: [
-                "cur.id",
+                "cur.id || '_' || coalesce(mc.id,'') as id",
+                "cur.id as cursoid",
                 "cur.añolectivo",
                 "cur.escuela",
                 "cur.modalidad",
@@ -128,7 +146,8 @@ class CursosMateriasService extends ServiceBase {
                 columns: [
                     "exa.materiacurso",
                     "exa.periodo",
-                    "count(*)"
+                    "count(*)",
+                    "sum(nt.nota)"
                 ],
                 from: "notas nt",
                 joins: [
@@ -150,6 +169,7 @@ class CursosMateriasService extends ServiceBase {
 
     dataToSend() {
         return {
+            valoracionesRows: this.valoracionesRows,
             periodosRows: this.periodosRows,
             cursosMateriasRows: this.cursosMateriasRows,
             alumnosCantidadRows: this.alumnosCantidadRows,

@@ -21,16 +21,6 @@ class NotasBase extends FilterViewBase {
         "background-color": "rgb(242, 232, 248)"
     }
 
-    static TemporalidadDescripcion(t) {
-        if (t == Dates.PASADO) {
-            return " / Cerrado"
-        } else if (t == Dates.PRESENTE) {
-            return " / Vigente"
-        } else {
-            return " / Futuro"
-        }
-    }
-
     static NotaEditor(cellElement, cellInfo) {
         return $("<div>").dxNumberBox({
             value: cellInfo.value,
@@ -438,7 +428,7 @@ class NotasColumnsBase {
         for (const periodoRow of this.periodosRows) {
             columns.push({
                 name: "periodo_" + periodoRow.id,
-                headerCellTemplate: periodoRow.nombre + NotasBase.TemporalidadDescripcion(periodoRow.temporalidad) + "<small><br>" + Dates.DesdeHasta(periodoRow.desde, periodoRow.hasta),
+                headerCellTemplate: periodoRow.nombre + Periodos.TemporalidadDescripcion(periodoRow.temporalidad) + "<small><br>" + Dates.DesdeHasta(periodoRow.desde, periodoRow.hasta),
                 caption: periodoRow.nombre,
                 alignment: "center",
                 temporalidad: periodoRow.temporalidad,

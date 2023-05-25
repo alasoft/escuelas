@@ -18,6 +18,7 @@ class CursosMateriasData {
     }
 
     setData(data) {
+        this.valoracionesRows = data.valoracionesRows;
         this.periodosRows = data.periodosRows;
         this.cursosMateriasRows = data.cursosMateriasRows;
         this.alumnosCantidadRows = data.alumnosCantidadRows;
@@ -34,31 +35,52 @@ class CursosMateriasData {
         for (const row of this.periodosRows) {
             row.desde = new Date(row.desde);
             row.hasta = new Date(row.hasta);
-            row.temporalidad = Dates.Temporalidad(row.desde, row.hasta)
+            row.temporalidad = Dates.Temporalidad(row.desde, row.hasta);
         }
     }
 
     transformCursosMateriasRows() {
         for (const row of this.cursosMateriasRows) {
             row.cursoDescripcion = Cursos.Descripcion(row);
+            row.alumnosCantidad = this.alumnosCantidad(row.cursoid);
             this.setCursosMateriasRowCantidades(row);
-            this.setCursosMateriasRowStatus(row)
         }
     }
 
     setCursosMateriasRowCantidades(cursoMateriaRow) {
         for (const row of this.periodosRows) {
-            cursoMateriaRow["periodo_cantidades_" + row.id] = {
-                alumnos: this.alumnosCantidad(cursoMateriaRow.id),
-                examenes: this.examenesCantidad(cursoMateriaRow.materiaCurso, row.id),
-                notas: this.notasCantidad(cursoMateriaRow.materiaCurso, row.id)
+            const alumnosCantidad = cursoMateriaRow.alumnosCantidad;
+            const examenesCantidad = this.examenesCantidad(cursoMateriaRow.materiacurso, row.id);
+            const notasCantidad = this.notasCantidad(cursoMateriaRow.materiacurso, row.id);
+            const notasSuma = this.notasSuma(cursoMateriaRow.materiacurso, row.id);
+            const promedio = 0 < notasCantidad ? Math.round(notasSuma / notasCantidad) : undefined
+            const valoracion = this.valoracion(promedio);
+            const status = this.status({
+                alumnos: alumnosCantidad,
+                examenes: examenesCantidad,
+                notas: notasCantidad
+            }, row.temporalidad);
+            cursoMateriaRow["examenes_cantidad_" + row.id] = examenesCantidad;
+            cursoMateriaRow["notas_cantidad_" + row.id] = notasCantidad;
+            cursoMateriaRow["promedio_" + row.id] = promedio;
+            cursoMateriaRow["valoracion_" + row.id] = valoracion;
+            cursoMateriaRow["status_" + row.id] = status;
+        }
+    }
+
+    valoracion(promedio) {
+        if (promedio != undefined) {
+            for (const row of this.valoracionesRows) {
+                if (row.desde <= promedio && promedio <= row.hasta) {
+                    return row.sigla
+                }
             }
         }
     }
 
-    setCursosMateriasRowStatus(cursoMateriaRow) {
+    setPromedioValoracionRow(cursoMateriaRow) {
         for (const row of this.periodosRows) {
-            cursoMateriaRow["periodo_status_" + row.id] = this.status(cursoMateriaRow["periodo_cantidades_" + row.id], row)
+            const cantidades = cursoMateriaRow["periodo_cantidades_" + row.id];
         }
     }
 
@@ -72,36 +94,48 @@ class CursosMateriasData {
 
     examenesCantidad(materiaCurso, periodo) {
         for (const row of this.examenesCantidadRows) {
-            if (row.materiaCurso == materiaCurso && row.periodo == periodo) {
+            if (row.materiacurso == materiaCurso && row.periodo == periodo) {
                 return row.count
             }
         }
+        return 0;
     }
 
     notasCantidad(materiaCurso, periodo) {
         for (const row of this.notasCantidadRows) {
-            if (row.materiaCurso == materiaCurso && row.periodo == periodo) {
+            if (row.materiacurso == materiaCurso && row.periodo == periodo) {
                 return row.count
             }
         }
+        return 0;
     }
 
-    status(cantidades, periodoRow) {
+    notasSuma(materiaCurso, periodo) {
+        for (const row of this.notasCantidadRows) {
+            if (row.materiacurso == materiaCurso && row.periodo == periodo) {
+                return row.sum
+            }
+        }
+        return 0;
+    }
 
-        if (Dates.NoEsFuturo(periodoRow.temporalidad)) {
+    status(cantidades, temporalidad) {
+
+        if (Dates.EsFuturo(temporalidad)) {
             return ""
         }
 
-        const diferencia = cantidades.alumnos * cantidades.notas - cantidades.notas;
+        const diferencia = cantidades.alumnos * cantidades.examenes - cantidades.notas;
+
         if (0 < diferencia) {
             if (1 < diferencia) {
-                return "Falan cargar " + diferencia + " notas"
+                return "Faltan cargar " + diferencia + " notas"
             } else {
                 return "Falta cargar 1 nota"
             }
         }
         if (diferencia == 0) {
-            if (Dates.EsPasado(periodoRow.temporalidad)) {
+            if (Dates.EsPasado(temporalidad)) {
                 return "Completo"
             } else {
                 return "Notas al dia"

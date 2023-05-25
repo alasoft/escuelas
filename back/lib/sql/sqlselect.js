@@ -45,11 +45,13 @@ class SqlSelect extends ObjectBase {
 
     defineFinalText() {
         const rawText = this.rawText();
+        let finalText;
         if (Utils.IsDefined(this.values)) {
-            return this.Sql.Text({ items: rawText, values: this.values });
+            finalText = this.Sql.Text({ items: rawText, values: this.values });
         } else {
-            return rawText;
+            finalText = rawText;
         }
+        return finalText;
     }
 
     rawText() {

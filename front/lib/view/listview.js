@@ -24,6 +24,9 @@ class ListView extends View {
                     groupPanel: {
                         visible: true
                     },
+                    paging: {
+                        pageSize: 50
+                    },
                     onContentReady: e => this.listOnContentReady(e),
                     onRowDblClick: e => this.listOnRowDblClick(e),
                     onKeyDown: e => this.listOnKeyDown(e),
@@ -44,13 +47,13 @@ class ListView extends View {
         return new ListViewTemplate();
     }
 
-    labelText() {}
+    labelText() { }
 
     path() {
         return this.class().Path();
     }
 
-    listColumns() {}
+    listColumns() { }
 
     allow(operation) {
         if (!this.configuration().operations.includes(operation)) {
@@ -95,7 +98,7 @@ class ListView extends View {
     }
 
     formView(formData) {
-        return new(this.formViewClass())({
+        return new (this.formViewClass())({
             listView: this,
             components: {
                 form: {
@@ -105,9 +108,9 @@ class ListView extends View {
         });
     }
 
-    formViewClass() {}
+    formViewClass() { }
 
-    formViewDefaultValues(mode) {}
+    formViewDefaultValues(mode) { }
 
     delete() {
         if (this.allow("delete")) {
@@ -127,10 +130,10 @@ class ListView extends View {
 
     deleteRow(id) {
         this.list().deleteRow({
-                path: this.path(),
-                id: id
-            }).then(() =>
-                this.dataHasChanged = true)
+            path: this.path(),
+            id: id
+        }).then(() =>
+            this.dataHasChanged = true)
             .catch(err =>
                 this.deleteErrorMessage(err));
     }
@@ -385,12 +388,12 @@ class ListView extends View {
         if (e.event.key == "Insert" && this.allow("insert")) {
             this.insert();
         } else
-        if (e.event.key == "Enter" && this.allow("edit")) {
-            this.edit()
-        } else
-        if (e.event.key == "Delete" && this.allow("delete")) {
-            this.delete();
-        }
+            if (e.event.key == "Enter" && this.allow("edit")) {
+                this.edit()
+            } else
+                if (e.event.key == "Delete" && this.allow("delete")) {
+                    this.delete();
+                }
     }
 
     listOnDataErrorOccurred(e) {
@@ -417,7 +420,7 @@ class ListView extends View {
         return { e: e, fileName: this.excelFileName() }
     }
 
-    excelExportDialogWidth() {}
+    excelExportDialogWidth() { }
 
     excelFileName() {
         return Utils.Evaluate(this.configuration().excelFileName);
@@ -430,11 +433,11 @@ class ListView extends View {
         Utils.Evaluate(p.before);
 
         DevExpress.excelExporter.exportDataGrid({
-                component: this.list().instance(),
-                worksheet,
-                autoFilterEnabled: true,
-                topLeftCell: { row: 4, column: 1 }
-            })
+            component: this.list().instance(),
+            worksheet,
+            autoFilterEnabled: true,
+            topLeftCell: { row: 4, column: 1 }
+        })
             .then(cellRange => {
                 const headerRow = worksheet.getRow(2);
                 headerRow.height = 30;
@@ -480,7 +483,7 @@ class ListView extends View {
         return this._DataSource;
     }
 
-    static DefineDataSource() {}
+    static DefineDataSource() { }
 
     static ClearDataSource() {
         this._DataSource = undefined;
@@ -503,29 +506,29 @@ class ListViewTemplate extends Template {
             fillContainer: true,
             orientation: "vertical",
             items: [{
-                    name: "label",
-                    marginBottom: App.LABEL_BOTTOM_MARGIN
-                }, {
-                    orientation: "vertical",
-                    backgroundColor: App.BOX_BACKGROUND_COLOR,
-                    items: [{
-                        name: "filter",
-                        padding: App.BOX_PADDING,
-                        paddingTop: 5,
-                        orientation: "vertical"
-                    }]
-                },
-                {
-                    name: "toolbar",
-                    backgroundColor: App.BOX_BACKGROUND_COLOR,
-                }, {
-                    name: "list",
-                    fillContainer: true,
-                    orientation: "vertical",
-                    height: 1
-                }, {
-                    name: "contextMenu"
-                }
+                name: "label",
+                marginBottom: App.LABEL_BOTTOM_MARGIN
+            }, {
+                orientation: "vertical",
+                backgroundColor: App.BOX_BACKGROUND_COLOR,
+                items: [{
+                    name: "filter",
+                    padding: App.BOX_PADDING,
+                    paddingTop: 5,
+                    orientation: "vertical"
+                }]
+            },
+            {
+                name: "toolbar",
+                backgroundColor: App.BOX_BACKGROUND_COLOR,
+            }, {
+                name: "list",
+                fillContainer: true,
+                orientation: "vertical",
+                height: 1
+            }, {
+                name: "contextMenu"
+            }
             ]
         }
     }
