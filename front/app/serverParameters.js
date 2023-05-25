@@ -1,1 +1,1 @@
-serverParameters = { root: "escuelas", port: 9090, host: "http://127.0.0.1" }
+serverParameters = { root: "escuelas", port: 9090, host: "http://alasoft.sytes.net" }

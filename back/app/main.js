@@ -42,7 +42,7 @@ new App({
     demoMaxAlumnos: 50
 }).start()
 
-function hostOrDefault(defaultHost = "http://127.0.0.1") {
+function hostOrDefault(defaultHost = "http://alasoft.sytes.net") {
     if (args.host != undefined) {
         return args.host
     } else {
