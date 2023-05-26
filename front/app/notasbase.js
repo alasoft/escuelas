@@ -161,7 +161,7 @@ class NotasBase extends FilterViewBase {
             .then(() =>
                 this.setVisibleColumns())
             .then(() =>
-                this.list().setArrayDataSource(this.rows()))
+                this.refreshRows())
             .then(() =>
                 this.list().focus())
             .catch(err =>
@@ -169,7 +169,7 @@ class NotasBase extends FilterViewBase {
     }
 
     refreshRows() {
-        this.list().setArrayDataSource(this.rows())
+        this.list().setArrayDataSource(this.rows(true))
     }
 
     setVisibleColumns() {
@@ -178,9 +178,16 @@ class NotasBase extends FilterViewBase {
         }
     }
 
-    columns() { }
+    columns() {
+        return new NotasColumns(this).columns()
+    }
 
-    rows() { }
+    rows(forceRefresh = false) {
+        if (this._rows == undefined || forceRefresh == true) {
+            this._rows = new NotasRows(this).rows()
+        }
+        return this._rows;
+    }
 
     getState() {
         return {
@@ -396,7 +403,7 @@ class NotasBase extends FilterViewBase {
 
 }
 
-class NotasColumnsBase {
+class NotasColumns {
 
     static PROMEDIO_WIDTH = 95;
     static VALORACION_WIDTH = 95;
@@ -594,7 +601,7 @@ class NotasColumnsBase {
 
 }
 
-class NotasRowsBase {
+class NotasRows {
 
     constructor(notas) {
         this.notas = notas;

@@ -21,13 +21,15 @@ class AlumnosCurso extends CursosDetalle {
                     visible: false
                 },
                 list: {
+                    focusedRowEnabled: false,
                     showBorders: true,
-                    pager: {
-                        visible: false
+                    summary: {
+                        totalItems: [{
+                            summaryType: "count",
+                            alignment: "left",
+                            column: "apellido",
+                        }]
                     },
-                    paging: {
-                        pageSize: 50
-                    }
                 }
             }
         }

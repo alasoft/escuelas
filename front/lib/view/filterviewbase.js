@@ -1,5 +1,9 @@
 class FilterViewBase extends ListViewBase {
 
+    defineTemplate() {
+        return new FilterViewBaseTemplate()
+    }
+
     defaultConfiguration() {
         return Utils.Merge(super.defaultConfiguration(), {
             components: {
@@ -10,10 +14,6 @@ class FilterViewBase extends ListViewBase {
                 }
             }
         })
-    }
-
-    defineTemplate() {
-        return new FilterViewBaseTemplate()
     }
 
     filter() {

@@ -39,7 +39,7 @@ class View extends Component {
         return Utils.EmptyPromise();
     }
 
-    beforeRender() {}
+    beforeRender() { }
 
     renderComponents() {
         Object.keys(this.components()).forEach(
@@ -76,7 +76,7 @@ class View extends Component {
             }
             if (0 < configuration.element.length) {
                 configuration.parentView = this;
-                return new(componentClass)(configuration);
+                return new (componentClass)(configuration);
             }
         }
     }
@@ -118,10 +118,6 @@ class View extends Component {
     }
 
     defineTemplate() {
-        return this.configuration().template || this.templateDefault();
-    }
-
-    templateDefault() {
         return new Template()
     }
 
@@ -164,7 +160,7 @@ class View extends Component {
         return {}
     }
 
-    setState() {}
+    setState() { }
 
     endRender() {
         if (this.isPopup()) {
@@ -197,7 +193,7 @@ class View extends Component {
         return this.template().findElementByClass(className);
     }
 
-    focus() {}
+    focus() { }
 
     valueHasChanged(e) {
         return (e.previousValue == undefined || e.value == undefined || e.value.id != e.previousValue.id);
@@ -232,6 +228,6 @@ class View extends Component {
         return Users.SaveState({ module: this.className(), state: this.getState() })
     }
 
-    getState() {}
+    getState() { }
 
 }

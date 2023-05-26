@@ -35,7 +35,7 @@ new App({
     createTables: CreateTables,
     restItems: restItems,
     tokenMinutes: 120,
-    version: "0.9.3",
+    version: "0.9.4",
     name: "Escuelas",
     logSql: false,
     obfuscated: obfuscatedOrDefault(false),
@@ -63,7 +63,7 @@ function isDemoElse(x1, x2) {
     }
 }
 
-function obfuscatedOrDefault(obfuscated = true) {
+function obfuscatedOrDefault(obfuscated = false) {
     if (args.obfuscated != undefined) {
         return args.obfuscated;
     } else {
