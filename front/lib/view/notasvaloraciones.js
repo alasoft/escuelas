@@ -163,7 +163,7 @@ class NotasValoraciones extends FilterViewBase {
                 ++cantidad;
             }
         }
-        let porcentaje = Math.round((cantidad / this.alumnosRows.length) * 100)
+        let porcentaje = (cantidad / this.alumnosRows.length) * 100
         return { cantidad, porcentaje }
     }
 
