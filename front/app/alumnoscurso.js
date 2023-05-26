@@ -21,7 +21,6 @@ class AlumnosCurso extends CursosDetalle {
                     visible: false
                 },
                 list: {
-                    focusedRowEnabled: false,
                     showBorders: true,
                     summary: {
                         totalItems: [{
