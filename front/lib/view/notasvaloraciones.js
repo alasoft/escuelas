@@ -1,5 +1,13 @@
 class NotasValoraciones extends FilterViewBase {
 
+    static COLOR_PRESENTE = {
+        "background-color": "rgb(198, 238, 251)"        
+    }
+
+    static COLOR_TOTAL = {
+        "background-color": "rgb(238, 240, 236)"
+    }
+
     constructor(parameters) {
         super(parameters);
         this.notas = parameters.notas;
@@ -16,43 +24,58 @@ class NotasValoraciones extends FilterViewBase {
             popup: {
                 title: "Valoraciones Porcentuales",
                 width: 900,
-                height: 600
+                height: 500
             },
             components: {
                 filter: {
                     width: 750,
+                    height: 50
                 },
                 list: {
                     keyExpr: "id",
+                    focusedRowEnabled: false,
                     columns: this.columns(),
                     dataSource: this.rows(),
+                    showBorders: true,
+                    wordWrapEnabled: true,
+                    hoverStateEnabled: true,
                     toolbar: {
-                        items: [this.itemExcel(), "searchPanel"]
+                        items: [this.itemExcel()]
                     },
                     groupPanel: {
                         visible: false
                     },
                     summary: {
-                        totalItems: [
-                            {
-                                summaryType: "sum",
-                                alignment: "left",
-                                column: "porcentaje",
-                                displayFormat: "{0}",
-                                valueFormat: "percent",
-                                alignment: "center"
-                            },
-                            {
-                                summaryType: "sum",
-                                alignment: "left",
-                                column: "cantidad",
-                                customizeText: data => data.value,
-                                alignment: "center"
-                            }]
-                    }
+                        totalItems: this.totalItems()
+                    },
+                    onCellPrepared: e => this.listOnCellPrepared(e)
                 }
             }
         }
+    }
+
+    totalItems() {
+        const items = []
+        for (const periodoRow of this.periodosRows) {
+            if (Dates.NoEsFuturo(periodoRow.temporalidad)) {
+                items.push({
+                    summaryType: "sum",
+                    alignment: "left",
+                    column: "porcentaje_" + periodoRow.id,
+                    displayFormat: "{0}",
+                    valueFormat: "percent",
+                    alignment: "center"
+                })
+                items.push({
+                    summaryType: "sum",
+                    alignment: "left",
+                    column: "cantidad_" + periodoRow.id,
+                    customizeText: data => data.value,
+                    alignment: "center"
+                })
+            }
+        }
+        return items;
     }
 
     filterItems() {
@@ -104,56 +127,76 @@ class NotasValoraciones extends FilterViewBase {
                 visible: false
             },
             {
-                dataField: "periodo",
-                width: 250
-            },
-            {
                 dataField: "valoracion",
                 caption: "Valoración",
-                alignment: "center",
-                width: 100
+                width: 250
             },
+        ].concat(this.periodosColumns()).concat({})
+    }
+
+    periodosColumns() {
+        const columns = [];
+        for (const periodoRow of this.periodosRows) {
+            if (Dates.NoEsFuturo(periodoRow.temporalidad)) {
+                columns.push(this.periodoColumns(periodoRow))
+            }
+        }
+        return columns;
+    }
+
+    periodoColumns(periodoRow) {
+        return {
+            dataField: "periodo_" + periodoRow.id,
+            headerCellTemplate: periodoRow.nombre + Periodos.TemporalidadDescripcion(periodoRow.temporalidad) + "<small><br>" + Dates.DesdeHasta(periodoRow.desde, periodoRow.hasta),
+            caption: periodoRow.nombre,
+            alignment: "center",
+            temporalidad: periodoRow.temporalidad,
+            esValor: true,
+            columns: this.periodoSubColumns(periodoRow)
+        }
+    }
+
+    periodoSubColumns(periodoRow) {
+        return [
             {
-                dataField: "porcentaje",
+                dataField: "porcentaje_" + periodoRow.id,
                 caption: "Pct.",
                 alignment: "center",
                 width: 100,
-                format: "### %"
+                format: "### %",
+                esValor: true,
+                temporalidad: periodoRow.temporalidad
             },
             {
-                dataField: "cantidad",
+                dataField: "cantidad_" + periodoRow.id,
+                caption: "Cantidad",
                 alignment: "center",
-                width: 100
-            },
-            {
-
+                width: 100,
+                esValor: true,
+                temporalidad: periodoRow.temporalidad
             }
         ]
     }
 
     rows() {
         let rows = []
-        for (const periodoRow of this.periodosRows) {
-            if (Dates.NoEsFuturo(periodoRow.temporalidad)) {
-                rows = rows.concat(this.periodoRows(periodoRow))
-            }
+        for (const valoracionRow of this.valoracionesRows) {
+            rows.push(this.valoracionRow(valoracionRow))
         }
         return rows;
     }
 
-    periodoRows(periodoRow) {
-        const rows = []
-        for (const valoracionRow of this.valoracionesRows) {
-            const cantidadPorcentaje = this.siglaCantidadPorcentaje(periodoRow.id, valoracionRow.sigla)
-            rows.push({
-                id: periodoRow.id + "_" + valoracionRow.sigla,
-                periodo: periodoRow.nombre,
-                valoracion: valoracionRow.sigla,
-                cantidad: (0 < cantidadPorcentaje.cantidad ? cantidadPorcentaje.cantidad : ""),
-                porcentaje: (0 < cantidadPorcentaje.porcentaje ? cantidadPorcentaje.porcentaje / 100 : "")
-            })
+    valoracionRow(valoracionRow) {
+        const row = {
+            id: valoracionRow.id,
+            valoracion: valoracionRow.sigla + " / " + valoracionRow.nombre,
         }
-        return rows;
+        for (const periodoRow of this.periodosRows) {
+            const cantidadPorcentaje = this.siglaCantidadPorcentaje(periodoRow.id, valoracionRow.sigla)
+            row["cantidad_" + periodoRow.id] = (0 < cantidadPorcentaje.cantidad ? cantidadPorcentaje.cantidad : "");
+            row["porcentaje_" + periodoRow.id] = (0 < cantidadPorcentaje.porcentaje ? cantidadPorcentaje.porcentaje / 100 : "")
+        }
+        return row;
     }
 
     siglaCantidadPorcentaje(periodo, sigla) {
@@ -165,6 +208,16 @@ class NotasValoraciones extends FilterViewBase {
         }
         let porcentaje = (cantidad / this.alumnosRows.length) * 100
         return { cantidad, porcentaje }
+    }
+
+    listOnCellPrepared(e) {
+        if (Dates.NoEsFuturo(e.column.temporalidad) && e.column.esValor == true) {
+            if(e.rowType != "totalFooter"){
+                e.cellElement.css(this.class().COLOR_PRESENTE)
+            } else {
+                e.cellElement.css(this.class().COLOR_TOTAL)
+            }
+        }
     }
 
 }

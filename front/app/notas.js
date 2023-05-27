@@ -74,6 +74,7 @@ class Notas extends NotasBase {
             this.itemPeriodos(),
             this.itemAlumnos(),
             this.itemExamenes(),
+            this.itemCursosMaterias(),
             this.itemValoraciones(),
             this.itemVisualiza(),
             this.itemExcel(),
@@ -140,6 +141,18 @@ class Notas extends NotasBase {
         }
     }
 
+    itemCursosMaterias() {
+        return {
+            widget: "dxButton",
+            location: "before",
+            options: {
+                icon: "menu",
+                text: "Cursos y Materias",
+                hint: "Selecciona",
+                onClick: e => this.cursosMaterias()
+            }
+        }
+    }
 
     excelFileName() {
         return "Notas del Curso: " + this.descripcion()
@@ -233,6 +246,12 @@ class Notas extends NotasBase {
 
     valoraciones() {
         new NotasValoraciones({ notas: this }).render()
+    }
+
+    cursosMaterias() {
+        new CursosMaterias({ notas: this }).render()
+            .then(closeData =>
+                this.setFilter(closeData))
     }
 
     updateNota(e) {

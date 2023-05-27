@@ -1,5 +1,6 @@
 class CursosMaterias extends FilterViewBase {
 
+
     static COLOR_PRESENTE = {
         "background-color": "rgb(198, 238, 251)"
     }
@@ -12,41 +13,46 @@ class CursosMaterias extends FilterViewBase {
         "background-color": "rgb(242, 232, 248)"
     }
 
+    constructor(parameters) {
+        super(parameters);
+        this.notas = parameters.notas;
+    }
+
     extraConfiguration() {
         return {
+            mode: "popup",
+            popup: {
+                title: "Cursos y Materias"
+            },
             components: {
+                filter: {
+                    labelLocation: "left",
+                    height: 50
+                },
                 list: {
                     wordWrapEnabled: true,
                     headerFilter: {
                         visible: false
                     },
-                    filterPanel: {
-                        visible: false,
-                        labelLocation: "left"
-                    },
-//                   onCellPrepared: e => this.listOnCellPrepared(e)
+                    onRowDblClick: e => this.listOnRowDblClick(e),
+                    //                    onCellPrepared: e => this.listOnCellPrepared(e)
                 }
             }
         }
-    }
-
-    labelText() {
-        return "Cursos y Materias"
     }
 
     filterItems() {
         return [this.itemAñoLectivo()]
     }
 
-    itemAñoLectivo() {
-        return Item.Lookup({
-            dataField: "añoLectivo",
-            dataSource: AñosLectivos.DataSource(),
-            width: 100,
-            label: "Año Lectivo",
-            onValueChanged: e =>
-                this.itemAñoLectivoOnValueChanged(e)
-        })
+    itemAñoLectivo(p) {
+        return Item.ReadOnly(
+            {
+                dataField: "añoLectivo",
+                value: this.notas.añoLectivo(),
+                width: 100,
+                label: "Año Lectivo",
+            })
     }
 
     añoLectivo() {
@@ -114,18 +120,20 @@ class CursosMaterias extends FilterViewBase {
         const periodosRows = data.periodosRows;
         const columns = [];
         for (const periodoRow of periodosRows) {
-            columns.push({
-                headerCellTemplate: periodoRow.nombre + Periodos.TemporalidadDescripcion(periodoRow.temporalidad) + "<small><br>" + Dates.DesdeHasta(periodoRow.desde, periodoRow.hasta),
-                caption: periodoRow.nombre,
-//                alignment: "center",
-                temporalidad: periodoRow.temporalidad,
-                allowReordering: true,
-                allowResizing: true,
-                visible: Dates.NoEsFuturo(periodoRow.temporalidad),
-                dataField: "status_" + periodoRow.id,
-                allowSorting: true,
-                width: 350,    
-            })
+            if (Dates.NoEsFuturo(periodoRow.temporalidad)) {
+                columns.push({
+                    name: "periodo_" + periodoRow.id,
+                    headerCellTemplate: periodoRow.nombre + Periodos.TemporalidadDescripcion(periodoRow.temporalidad) + "<small><br>" + Dates.DesdeHasta(periodoRow.desde, periodoRow.hasta),
+                    caption: periodoRow.nombre,
+                    alignment: "center",
+                    temporalidad: periodoRow.temporalidad,
+                    allowReordering: true,
+                    allowResizing: true,
+                    allowSorting: true,
+                    width: 350,
+                    columns: this.periodoColumns(periodoRow)
+                })
+            }
         }
         return columns
     }
@@ -155,7 +163,7 @@ class CursosMaterias extends FilterViewBase {
             caption: "Status",
             temporalidad: periodoRow.temporalidad,
             allowSorting: true,
-            width: 150,
+            width: 200,
         }
     }
 
@@ -186,12 +194,7 @@ class CursosMaterias extends FilterViewBase {
     }
 
     setState() {
-        this.settingState = true;
-        Promise.resolve(this.setFilterValue("añoLectivo", this.state.filter.añoLectivo || Dates.ThisYear()))
-            .then(() =>
-                this.refresh())
-            .then(() =>
-                this.settingState = false)
+        return this.refresh()
     }
 
     itemAñoLectivoOnValueChanged(e) {
@@ -209,5 +212,18 @@ class CursosMaterias extends FilterViewBase {
             e.cellElement.css(this.class().COLOR_ANUAL)
         }
     }
+
+    listOnRowDblClick(e) {
+        this.close({ curso: this.curso(), materiaCurso: this.materiaCurso() })
+    }
+
+    curso() {
+        return this.rowValue("cursoid")
+    }
+
+    materiaCurso() {
+        return this.rowValue("materiacurso")
+    }
+
 
 }

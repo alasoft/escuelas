@@ -5,8 +5,10 @@ class NotasBase extends FilterViewBase {
     }
 
     static COLOR_NOTA_NO_EDITABLE = {
-        //        "background-color": "rgb(208, 249, 231  )"
-        "background-color": "rgb(200, 245, 220)"
+        //                "background-color": "rgb(208, 249, 231  )"
+        //        "background-color": "rgb(200, 245, 220)"
+        //                "background-color": "rgb(238, 247, 222 )"
+        "background-color": "rgb(225, 228, 228)"
     }
 
     static COLOR_PRESENTE = {
@@ -433,18 +435,20 @@ class NotasColumns {
     periodosColumns() {
         const columns = []
         for (const periodoRow of this.periodosRows) {
-            columns.push({
-                name: "periodo_" + periodoRow.id,
-                headerCellTemplate: periodoRow.nombre + Periodos.TemporalidadDescripcion(periodoRow.temporalidad) + "<small><br>" + Dates.DesdeHasta(periodoRow.desde, periodoRow.hasta),
-                caption: periodoRow.nombre,
-                alignment: "center",
-                temporalidad: periodoRow.temporalidad,
-                width: Dates.EsFuturo(periodoRow.temporalidad) ? 200 : undefined,
-                visible: true,
-                columns: this.periodoColumns(periodoRow),
-                allowReordering: false,
-                allowResizing: true
-            })
+            if (Dates.NoEsFuturo(periodoRow.temporalidad)) {
+                columns.push({
+                    name: "periodo_" + periodoRow.id,
+                    headerCellTemplate: periodoRow.nombre + Periodos.TemporalidadDescripcion(periodoRow.temporalidad) + "<small><br>" + Dates.DesdeHasta(periodoRow.desde, periodoRow.hasta),
+                    caption: periodoRow.nombre,
+                    alignment: "center",
+                    temporalidad: periodoRow.temporalidad,
+                    width: Dates.EsFuturo(periodoRow.temporalidad) ? 200 : undefined,
+                    visible: true,
+                    columns: this.periodoColumns(periodoRow),
+                    allowReordering: false,
+                    allowResizing: true
+                })
+            }
         }
         return columns;
     }

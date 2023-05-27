@@ -123,6 +123,10 @@ class ListViewBase extends View {
         return this.list().focusedRowValue(dataField)
     }
 
+    rowValue(dataField) {
+        return this.list().focusedRowValue(dataField)
+    }
+
     emptyState() {
         return { list: {} }
     }
