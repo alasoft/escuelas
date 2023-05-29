@@ -1,45 +1,99 @@
 class CursosMaterias extends FilterViewBase {
 
+    static STATUS_NO_HAY_MATERIAS = 0;
+    static STATUS_FALTAN_CARGA_NOTAS = 1;
+    static STATUS_AL_DIA = 2;
+    static STATUS_COMPLETO = 3;
 
-    static COLOR_PRESENTE = {
-        "background-color": "rgb(198, 238, 251)"
+    static COLOR_FALTAN_CARGAR_NOTAS = {
+        "background-color": "rgb(248, 249, 204)"
     }
 
-    static COLOR_FUTURO = {
-        "background-color": "rgb(245, 248, 249)"
+    static COLOR_AL_DIA = {
+        "background-color": "rgb(200, 245, 220)"
     }
 
-    static COLOR_ANUAL = {
-        "background-color": "rgb(242, 232, 248)"
+    static COLOR_NO_HAY_MATERIAS = {
+        "background-color": "rgb(230, 232, 227)"
     }
+
+    static COLOR_COMPLETO = {
+        "background-color": "rgb(220, 247, 198)"
+    }
+
+    static Colores = new Map()
+        .set(this.STATUS_FALTAN_CARGA_NOTAS, this.COLOR_FALTAN_CARGAR_NOTAS)
+        .set(this.STATUS_AL_DIA, this.COLOR_AL_DIA)
+        .set(this.STATUS_NO_HAY_MATERIAS, this.COLOR_NO_HAY_MATERIAS)
+        .set(this.STATUS_COMPLETO, this.COLOR_COMPLETO)
 
     constructor(parameters) {
         super(parameters);
         this.notas = parameters.notas;
     }
 
+    defineTemplate() {
+        return new CursosMateriasTemplate()
+    }
+
     extraConfiguration() {
         return {
             mode: "popup",
             popup: {
-                title: "Cursos y Materias"
+                title: "Situación de Cursos y Materias Dictadas"
             },
             components: {
                 filter: {
                     labelLocation: "left",
-                    height: 50
+                    height: 30
                 },
                 list: {
+                    keyExpr: "id",
+                    focusedRowEnabled: false,
                     wordWrapEnabled: true,
                     headerFilter: {
                         visible: false
                     },
+                    groupPanel: {
+                        visible: false
+                    },
+                    summary: {
+                        totalItems: [
+                            {
+                                name: "totalMaterias",
+                                summaryType: "custom",
+                                alignment: "left",
+                                column: "materianombre",
+                                displayFormat: "{0}",
+                                alignment: "center"
+                            }
+                        ],
+                        calculateCustomSummary: options =>
+                            this.calculateCustomSummary(options)
+                    },
+                    toolbar: {
+                        items: [this.itemExcel()]
+                    },
                     onRowDblClick: e => this.listOnRowDblClick(e),
-                    //                    onCellPrepared: e => this.listOnCellPrepared(e)
-                }
+                    onCellPrepared: e => this.listOnCellPrepared(e)
+                },
+                toolbar: {}
+            },
+            excelFileName: () => "Situación de Cursos y Materias Dictadas / " + this.añoLectivo()
+        }
+    }
+
+    calculateCustomSummary(options) {
+        if (options.name == "totalMaterias") {
+            if (options.summaryProcess == "start") {
+                options.totalValue = 0;
+            } else if (options.summaryProcess == "calculate") {
+                if (options.value != "")
+                    options.totalValue += 1;
             }
         }
     }
+
 
     filterItems() {
         return [this.itemAñoLectivo()]
@@ -59,6 +113,10 @@ class CursosMaterias extends FilterViewBase {
         return this.getFilterValue("añoLectivo");
     }
 
+    toolbar() {
+        return this.components().toolbar;
+    }
+
     refresh() {
         return this.cursosMateriasData().refresh(this.añoLectivo())
             .then(() =>
@@ -69,6 +127,22 @@ class CursosMaterias extends FilterViewBase {
                 this.list().setArrayDataSource(this.rows()))
             .catch(err =>
                 this.handleError(err))
+    }
+
+    refreshToolbar() {
+        if (this.toolbar().isReady()) {
+            this.toolbar().setItems(this.toolbarItems())
+        }
+    }
+
+    toolbarItems() {
+        return [{
+            widget: "dxButton",
+            location: "before",
+            options: {
+                template: "<div>Seleccione Curso/Materia con 'doble-click'<div>"
+            }
+        }]
     }
 
     cursosMateriasData() {
@@ -100,7 +174,7 @@ class CursosMaterias extends FilterViewBase {
             },
             {
                 dataField: "materianombre",
-                caption: "Materia",
+                caption: "Materia Dictada",
                 allowResizing: true,
                 width: 150
             },
@@ -141,7 +215,8 @@ class CursosMaterias extends FilterViewBase {
     periodoColumns(periodoRow) {
         return [
             this.promedioColumn(periodoRow),
-            this.statusColumn(periodoRow)
+            this.statusCodeColumn(periodoRow),
+            this.statusTextColumn(periodoRow)
         ]
     }
 
@@ -157,13 +232,23 @@ class CursosMaterias extends FilterViewBase {
         }
     }
 
-    statusColumn(periodoRow) {
+    statusCodeColumn(periodoRow) {
         return {
-            dataField: "status_" + periodoRow.id,
+            dataField: "status_code_" + periodoRow.id,
+            visible: false,
+        }
+    }
+
+    statusTextColumn(periodoRow) {
+        return {
+            dataField: "status_text_" + periodoRow.id,
             caption: "Status",
             temporalidad: periodoRow.temporalidad,
             allowSorting: true,
             width: 200,
+            esStatus: true,
+            periodo: periodoRow.id,
+            calculateSortValue: row => row["status_code_" + periodoRow.id]
         }
     }
 
@@ -203,13 +288,14 @@ class CursosMaterias extends FilterViewBase {
         }
     }
 
+    listOnContentReady(e) {
+        this.refreshContextMenu();
+        this.refreshToolbar()
+    }
+
     listOnCellPrepared(e) {
-        if (e.column.temporalidad == Dates.PRESENTE) {
-            e.cellElement.css(this.class().COLOR_PRESENTE)
-        } else if (e.column.temporalidad == Dates.FUTURO) {
-            e.cellElement.css(this.class().COLOR_FUTURO)
-        } else if (e.column.esAnual == true) {
-            e.cellElement.css(this.class().COLOR_ANUAL)
+        if (e.rowType == "data" && e.column.esStatus == true) {
+            e.cellElement.css(CursosMaterias.Colores.get(e.data["status_code_" + e.column.periodo]))
         }
     }
 
@@ -225,5 +311,14 @@ class CursosMaterias extends FilterViewBase {
         return this.rowValue("materiacurso")
     }
 
+}
+
+class CursosMateriasTemplate extends FilterViewBaseTemplate {
+
+    mainItems() {
+        return super.mainItems().concat([{
+            name: "toolbar"
+        }])
+    }
 
 }

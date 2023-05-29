@@ -65,6 +65,50 @@ class CursosMateriasService extends ServiceBase {
         })
     }
 
+    sqlCursosRows() {
+        return this.sqlSelect({
+            columns: [
+                "cur.id",
+                "cur.id as cursoid",
+                "cur.añolectivo",
+                "cur.escuela",
+                "cur.modalidad",
+                "cur.año",
+                "cur.division",
+                "cur.turno",
+                "esc.nombre as escuelanombre",
+                "mdl.nombre as modalidadnombre",
+            ],
+            from: "cusos cur",
+            joins: [
+                { tableName: "escuelas", alias: "esc", columnName: "cur.escuela" },
+                { tableName: "modalidades", alias: "mdl", columnName: "cur.modalidad" },
+            ],
+            where: "cur.añolectivo=@añolectivo",
+            order: "esc.nombre,mdl.nombre,cur.año,cur.division,cur.turno",
+            parameters: { añolectivo: this.value("añolectivo") }
+        })
+    }
+
+    sqlMateriasCursosRows() {
+        return this.sqlSelect({
+            columns: [
+                "mc.id",
+                "mc.curso",
+                "mc.materia",
+                "mat.nombre as materianombre",
+            ],
+            from: "materias_cursos mc",
+            joins: [
+                { tableName: "cursos", alias: "cur", columnName: "mc.curso" },
+                { tableName: "materias", alias: "mat", columnName: "mc.materia" }
+            ],
+            where: "cur.añolectivo=@añolectivo",
+            order: "mat.nombre",
+            parameters: { añolectivo: this.value("añolectivo") }
+        })
+    }
+
     sqlCursosMaterias() {
         return this.sqlSelect({
             columns: [

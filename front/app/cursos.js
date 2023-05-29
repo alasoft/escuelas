@@ -29,7 +29,7 @@ class Cursos extends AñoLectivoView {
                 location: "before",
                 options: {
                     icon: "copy",
-                    text: "Materias Asignadas",
+                    text: "Materias Dictadas",
                     onClick: e => this.materiasCurso()
                 }
             }

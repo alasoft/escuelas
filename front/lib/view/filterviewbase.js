@@ -47,38 +47,10 @@ class FilterViewBase extends ListViewBase {
 
 }
 
-class FilterViewBaseTemplate extends Template {
+class FilterViewBaseTemplate extends ListViewBaseTemplate {
 
-    extraConfiguration() {
-        return {
-            fillContainer: true,
-            orientation: "vertical",
-            items: [
-                this.label(),
-                this.body(),
-            ]
-        }
-    }
-
-    label() {
-        return {
-            name: "label",
-            marginBottom: App.LABEL_BOTTOM_MARGIN
-        }
-    }
-
-    body() {
-        return {
-            fillContainer: true,
-            orientation: "vertical",
-            padding: App.BOX_PADDING,
-            backgroundColor: App.BOX_BACKGROUND_COLOR,
-            items: [
-                this.filter(),
-                this.list(),
-                this.contextMenu()
-            ]
-        }
+    bodyItems(){
+        return [this.filter()].concat(super.bodyItems())
     }
 
     filter() {
@@ -86,21 +58,6 @@ class FilterViewBaseTemplate extends Template {
             name: "filter",
             orientation: "vertical",
             height: 80
-        }
-    }
-
-    list() {
-        return {
-            name: "list",
-            fillContainer: true,
-            orientation: "vertical",
-            height: 1
-        }
-    }
-
-    contextMenu() {
-        return {
-            name: "contextMenu"
         }
     }
 

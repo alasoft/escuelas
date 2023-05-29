@@ -24,7 +24,7 @@ const minimist = require("minimist")
 
 const args = minimist(process.argv.slice(2));
 
-console.log(args);
+//console.log(args);
 
 new App({
     host: hostOrDefault(),
@@ -36,9 +36,9 @@ new App({
     restItems: restItems,
     tokenMinutes: 120,
     version: "0.9.4",
-    name: "Escuelas",
+    name: "Solución Docente",
     logSql: false,
-    obfuscated: obfuscatedOrDefault(false),
+    obfuscated: obfuscatedOrDefault(true),
     demo: isDemo(),
     demoMaxAlumnos: 50
 }).start()

@@ -84,7 +84,7 @@ class ListViewBase extends View {
     }
 
     excelFileName() {
-        return this.className()
+        return Utils.Evaluate(this.configuration().excelFileName);        
     }
 
     excelDialogWidth() {
@@ -143,6 +143,12 @@ class ListViewBase extends View {
         this.saveState();
     }
 
+    popupOnHiding(e) {
+        this.saveState().then(() =>
+            super.popupOnHiding(e)
+        );
+    }
+
     excelExport(p) {
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet(p.fileName);
@@ -183,11 +189,15 @@ class ListViewBaseTemplate extends Template {
         return {
             fillContainer: true,
             orientation: "vertical",
-            items: [
-                this.label(),
-                this.body(),
-            ]
+            items: this.mainItems()
         }
+    }
+
+    mainItems(){
+        return [
+            this.label(),
+            this.body()
+        ]
     }
 
     label() {
@@ -203,11 +213,15 @@ class ListViewBaseTemplate extends Template {
             orientation: "vertical",
             padding: App.BOX_PADDING,
             backgroundColor: App.BOX_BACKGROUND_COLOR,
-            items: [
-                this.list(),
-                this.contextMenu()
-            ]
+            items: this.bodyItems()
         }
+    }
+
+    bodyItems(){
+        return [
+            this.list(),
+            this.contextMenu()
+        ]
     }
 
     list() {

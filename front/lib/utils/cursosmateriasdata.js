@@ -64,7 +64,8 @@ class CursosMateriasData {
             cursoMateriaRow["notas_cantidad_" + row.id] = notasCantidad;
             cursoMateriaRow["promedio_" + row.id] = promedio;
             cursoMateriaRow["valoracion_" + row.id] = valoracion;
-            cursoMateriaRow["status_" + row.id] = status;
+            cursoMateriaRow["status_code_" + row.id] = status.code;
+            cursoMateriaRow["status_text_" + row.id] = status.text;
         }
     }
 
@@ -125,20 +126,26 @@ class CursosMateriasData {
             return ""
         }
 
+        if (cantidades.examenes == 0) {
+            return { code: CursosMaterias.STATUS_NO_HAY_MATERIAS, text: "No hay Materias dictadas" }
+        }
+
         const diferencia = cantidades.alumnos * cantidades.examenes - cantidades.notas;
 
         if (0 < diferencia) {
+            let text;
             if (1 < diferencia) {
-                return "Faltan cargar " + diferencia + " notas"
+                text = "Faltan cargar " + diferencia + " notas"
             } else {
-                return "Falta cargar 1 nota"
+                text = "Falta cargar 1 nota"
             }
+            return { code: CursosMaterias.STATUS_FALTAN_CARGA_NOTAS, text: text }
         }
         if (diferencia == 0) {
             if (Dates.EsPasado(temporalidad)) {
-                return "Completo"
+                return { code: CursosMaterias.STATUS_COMPLETO }
             } else {
-                return "Notas al dia"
+                return { code: CursosMaterias.STATUS_AL_DIA, text: "Notas al dia" }
             }
         }
 

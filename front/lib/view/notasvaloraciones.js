@@ -1,7 +1,7 @@
 class NotasValoraciones extends FilterViewBase {
 
     static COLOR_PRESENTE = {
-        "background-color": "rgb(198, 238, 251)"        
+        "background-color": "rgb(198, 238, 251)"
     }
 
     static COLOR_TOTAL = {
@@ -50,8 +50,14 @@ class NotasValoraciones extends FilterViewBase {
                     },
                     onCellPrepared: e => this.listOnCellPrepared(e)
                 }
-            }
+            },
+            excelFileName: () => "Valoraciones Porcentuales / " + this.getFilterText("curso") + " / " +
+                this.getFilterText("materiaCurso") + " / " + this.añoLectivo(),
         }
+    }
+
+    excelDialogWidth() {
+        return 850
     }
 
     totalItems() {
@@ -94,6 +100,7 @@ class NotasValoraciones extends FilterViewBase {
     itemAñoLectivo(p) {
         return Item.ReadOnly(
             {
+                dataField: "añoLectivo",
                 value: this.notas.añoLectivo(),
                 width: 100,
                 label: "Año Lectivo",
@@ -103,6 +110,7 @@ class NotasValoraciones extends FilterViewBase {
     itemCurso(p) {
         return Item.ReadOnly(
             {
+                dataField: "curso",
                 value: this.notas.cursoDescripcion(),
                 width: 400,
                 label: "Curso",
@@ -112,12 +120,17 @@ class NotasValoraciones extends FilterViewBase {
 
     itemCursoMateria() {
         return Item.ReadOnly({
+            dataField: "materiaCurso",
             value: this.notas.materiaCursoDescripcion(),
             width: 200,
             label: "Materia",
             colSpan: 3,
         })
 
+    }
+
+    añoLectivo() {
+        return this.getFilterValue("añoLectivo")
     }
 
     columns() {
@@ -212,7 +225,7 @@ class NotasValoraciones extends FilterViewBase {
 
     listOnCellPrepared(e) {
         if (Dates.NoEsFuturo(e.column.temporalidad) && e.column.esValor == true) {
-            if(e.rowType != "totalFooter"){
+            if (e.rowType != "totalFooter") {
                 e.cellElement.css(this.class().COLOR_PRESENTE)
             } else {
                 e.cellElement.css(this.class().COLOR_TOTAL)
