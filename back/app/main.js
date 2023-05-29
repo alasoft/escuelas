@@ -35,7 +35,7 @@ new App({
     createTables: CreateTables,
     restItems: restItems,
     tokenMinutes: 120,
-    version: "0.9.4",
+    version: "0.9.5",
     name: "Solución Docente",
     logSql: false,
     obfuscated: obfuscatedOrDefault(true),
