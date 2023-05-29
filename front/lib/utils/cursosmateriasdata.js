@@ -55,7 +55,7 @@ class CursosMateriasData {
             const notasSuma = this.notasSuma(cursoMateriaRow.materiacurso, row.id);
             const promedio = 0 < notasCantidad ? Math.round(notasSuma / notasCantidad) : undefined
             const valoracion = this.valoracion(promedio);
-            const status = this.status({
+            const status = this.status(cursoMateriaRow, {
                 alumnos: alumnosCantidad,
                 examenes: examenesCantidad,
                 notas: notasCantidad
@@ -120,14 +120,18 @@ class CursosMateriasData {
         return 0;
     }
 
-    status(cantidades, temporalidad) {
+    status(cursoMateriaRow, cantidades, temporalidad) {
 
         if (Dates.EsFuturo(temporalidad)) {
             return ""
         }
 
-        if (cantidades.examenes == 0) {
+        if (cursoMateriaRow.materiacurso == null) {
             return { code: CursosMaterias.STATUS_NO_HAY_MATERIAS, text: "No hay Materias dictadas" }
+        }
+
+        if (cantidades.examenes == 0) {
+            return { code: CursosMaterias.STATUS_NO_HAY_EXAMENES, text: "No hay Exámenes cargados" }
         }
 
         const diferencia = cantidades.alumnos * cantidades.examenes - cantidades.notas;

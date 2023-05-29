@@ -1,9 +1,18 @@
 class CursosMaterias extends FilterViewBase {
 
     static STATUS_NO_HAY_MATERIAS = 0;
-    static STATUS_FALTAN_CARGA_NOTAS = 1;
-    static STATUS_AL_DIA = 2;
-    static STATUS_COMPLETO = 3;
+    static STATUS_NO_HAY_EXAMENES = 1;
+    static STATUS_FALTAN_CARGA_NOTAS = 2;
+    static STATUS_AL_DIA = 3;
+    static STATUS_COMPLETO = 4;
+
+    static COLOR_NO_HAY_MATERIAS = {
+        "background-color": "rgb(232, 233, 225)"
+    }
+
+    static COLOR_NO_HAY_EXAMENES = {
+        "background-color": "rgb(232, 240, 250 )"
+    }
 
     static COLOR_FALTAN_CARGAR_NOTAS = {
         "background-color": "rgb(248, 249, 204)"
@@ -13,18 +22,15 @@ class CursosMaterias extends FilterViewBase {
         "background-color": "rgb(200, 245, 220)"
     }
 
-    static COLOR_NO_HAY_MATERIAS = {
-        "background-color": "rgb(230, 232, 227)"
-    }
-
     static COLOR_COMPLETO = {
         "background-color": "rgb(220, 247, 198)"
     }
 
     static Colores = new Map()
+        .set(this.STATUS_NO_HAY_MATERIAS, this.COLOR_NO_HAY_MATERIAS)
+        .set(this.STATUS_NO_HAY_EXAMENES, this.COLOR_NO_HAY_EXAMENES)
         .set(this.STATUS_FALTAN_CARGA_NOTAS, this.COLOR_FALTAN_CARGAR_NOTAS)
         .set(this.STATUS_AL_DIA, this.COLOR_AL_DIA)
-        .set(this.STATUS_NO_HAY_MATERIAS, this.COLOR_NO_HAY_MATERIAS)
         .set(this.STATUS_COMPLETO, this.COLOR_COMPLETO)
 
     constructor(parameters) {
@@ -40,7 +46,8 @@ class CursosMaterias extends FilterViewBase {
         return {
             mode: "popup",
             popup: {
-                title: "Situación de Cursos y Materias Dictadas"
+                title: "Situación de Cursos y Materias Dictadas",
+                height: 700
             },
             components: {
                 filter: {
@@ -170,7 +177,7 @@ class CursosMaterias extends FilterViewBase {
             {
                 dataField: "cursoDescripcion",
                 caption: "Curso",
-                width: 350
+                width: 400
             },
             {
                 dataField: "materianombre",

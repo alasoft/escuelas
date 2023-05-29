@@ -250,8 +250,11 @@ class Notas extends NotasBase {
 
     cursosMaterias() {
         new CursosMaterias({ notas: this }).render()
-            .then(closeData =>
-                this.setFilter(closeData))
+            .then(closeData => {
+                if (closeData.curso != undefined) {
+                    this.setFilter(closeData)
+                }
+            })
     }
 
     updateNota(e) {
