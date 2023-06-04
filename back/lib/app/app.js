@@ -231,12 +231,14 @@ class App {
     sendError(req, res, err) {
         const errDto = this.errorToDto(err);
         this.log("Error: " + JSON.stringify(errDto));
+        this.log(err.stack)
         res.status(err.status || Http.Internal).send(errDto);
     }
 
     terminate(err) {
         const errDto = this.errorToDto(err);
         this.log("Error: " + JSON.stringify(errDto));
+        this.log(err.stack);
         process.exit();
     }
 

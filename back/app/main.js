@@ -24,7 +24,7 @@ const minimist = require("minimist")
 
 const args = minimist(process.argv.slice(2));
 
-console.log(args);
+//console.log(args);
 
 new App({
     host: hostOrDefault(),
@@ -35,10 +35,10 @@ new App({
     createTables: CreateTables,
     restItems: restItems,
     tokenMinutes: 120,
-    version: "0.9.3",
-    name: "Escuelas",
+    version: "0.9.5",
+    name: "Solución Docente",
     logSql: false,
-    obfuscated: obfuscatedOrDefault(),
+    obfuscated: obfuscatedOrDefault(true),
     demo: isDemo(),
     demoMaxAlumnos: 50
 }).start()
@@ -63,11 +63,11 @@ function isDemoElse(x1, x2) {
     }
 }
 
-function obfuscatedOrDefault() {
+function obfuscatedOrDefault(obfuscated = false) {
     if (args.obfuscated != undefined) {
         return args.obfuscated;
     } else {
-        return true;
+        return obfuscated;
     }
 }
 

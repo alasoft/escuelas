@@ -74,7 +74,8 @@ class Periodos extends AñoLectivoView {
 
     listOnContentReady(e) {
         this.focusFirstRow();
-        this.refreshContextMenuItems()
+        this.refreshListToolbar();
+        this.refreshContextMenuItems();
     }
 
     static Descripcion(data) {
@@ -89,6 +90,17 @@ class Periodos extends AñoLectivoView {
         }
     }
 
+
+    static TemporalidadDescripcion(t) {
+        if (t == Dates.PASADO) {
+            return " / Cerrado"
+        } else if (t == Dates.PRESENTE) {
+            return " / Vigente"
+        } else {
+            return " / Futuro"
+        }
+    }
+    
 }
 
 class PeriodosFormView extends FormView {
@@ -154,13 +166,13 @@ class PeriodosFormView extends FormView {
 
     handleFechaDesdeDebeSerMenor(err) {
         App.ShowMessage([{
-                message: "La fecha desde",
-                detail: this.getDate("desde")
-            },
-            {
-                message: "debe ser menor a la fecha hasta",
-                detail: this.getDate("hasta")
-            }
+            message: "La fecha desde",
+            detail: this.getDate("desde")
+        },
+        {
+            message: "debe ser menor a la fecha hasta",
+            detail: this.getDate("hasta")
+        }
         ])
     }
 

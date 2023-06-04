@@ -1,5 +1,5 @@
 const { Path } = require("./path")
-const { Files } = require("./utils");
+const { Files, Strings } = require("./utils");
 const obfuscator = require('javascript-obfuscator');
 
 class Obfuscate {
@@ -39,13 +39,22 @@ class Obfuscate {
     }
 
     copyFiles() {
-        this.filesPath().forEach(
-            filePath => {
-                const content = Files.Content(filePath);
-                const obfuscated = obfuscator.obfuscate(content, Obfuscate.Soft);
-                Files.Append(this.destinationFolder + "/" + Files.FileName(filePath), obfuscated.getObfuscatedCode())
-            }
-        )
+        let fileName;
+        let content;
+        let obfuscated;
+        try {
+            this.filesPath().forEach(
+                filePath => {
+                    fileName = filePath;
+                    content = Files.Content(filePath);
+                    obfuscated = obfuscator.obfuscate(content, Obfuscate.Soft);
+                    Files.Append(this.destinationFolder + "/" + Files.FileName(filePath), obfuscated.getObfuscatedCode())
+                }
+            )
+        } catch (e) {
+            console.log(fileName+Strings.LineFeed(2)+content)
+            throw e;
+        }
     }
 
     filesPath() {

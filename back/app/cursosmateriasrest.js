@@ -1,16 +1,16 @@
 const { RestBase } = require("../lib/rest/restbase");
-const { CursosMateriasListService } = require("./cursosmateriasservice");
+const { CursosMateriasService } = require("./cursosmateriasservice");
 
 class CursosMateriasRest extends RestBase {
 
     constructor(parameters) {
         super(parameters);
-        this.path = "materias_cursos";
+        this.path = "cursos_materias";
     }
 
 
     build() {
-        this.buildVerb("list", CursosMateriasListService);
+        this.buildVerb("list", CursosMateriasService);
     }
 
 }

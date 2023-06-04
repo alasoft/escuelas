@@ -1,5 +1,25 @@
 class Cursos extends AñoLectivoView {
 
+    extraConfiguration() {
+        return {
+            components: {
+                list: {
+                    summary: {
+                        totalItems: [
+                            {
+                                summaryType: "count",
+                                alignment: "left",
+                                column: "escuelanombre",
+                                displayFormat: "{0}",
+                                alignment: "center"
+                            },
+                        ]
+                    }
+                }
+            }
+        }
+    }
+
     labelText() {
         return "Cursos";
     }

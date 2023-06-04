@@ -22,8 +22,15 @@ class AlumnosCurso extends CursosDetalle {
                 },
                 list: {
                     showBorders: true,
+                    summary: {
+                        totalItems: [{
+                            summaryType: "count",
+                            alignment: "left",
+                            column: "apellido",
+                        }]
+                    },
                     pager: {
-                        visible: false
+                        visible: true,
                     },
                     paging: {
                         pageSize: 50
@@ -183,6 +190,16 @@ class AlumnosCursoForm extends FormView {
         return "apellido";
     }
 
+    handleError(err) {
+        if (err.code == Exceptions.MAX_ALUMNOS_ALLOWED_FOR_DEMO) {
+            App.ShowError({ message: "Esta es una versión de Prueba y permite manejar hasta<br>" + App.ServerInfo.demoMaxAlumnos + " alumnos" })
+                .then(() =>
+                    this.close())
+        } else {
+            super.handleError(err)
+        }
+    }
+
     duplicatedMessage() {
         return Messages.Build([{
             message: "Ya existe un Alumno con Apellido y Nombre:",
@@ -191,14 +208,6 @@ class AlumnosCursoForm extends FormView {
             message: "en el Curso:",
             detail: this.listView().cursoDescripcion()
         }])
-    }
-
-    handleError(err) {
-        if (err.code == Exceptions.MAX_ALUMNOS_ALLOWED_FOR_DEMO) {
-            App.ShowError({ message: "Esta es una versión de Prueba y permite manejar hasta<br>" + App.ServerInfo.demoMaxAlumnos + " alumnos" })
-                .then(() =>
-                    this.close())
-        }
     }
 
 }

@@ -23,9 +23,9 @@ class Notas extends NotasBase {
 
     contextMenuItems() {
         return [this.contextItemNotasAlumno(),
-            this.contextItemMuestraExamenes(),
-            this.contextItemVisualizaColumnas(),
-            this.contextItemExcelExport()
+        this.contextItemMuestraExamenes(),
+        this.contextItemVisualizaColumnas(),
+        this.contextItemExcelExport()
         ]
     }
 
@@ -69,17 +69,16 @@ class Notas extends NotasBase {
         }
     }
 
-    columns() {
-        return new NotasColumns(this).columns();
-    }
-
-    rows() {
-        return new NotasRows(this).rows()
-    }
-
     listToolbarItems() {
-        return [this.itemPeriodos(), this.itemAlumnos(), this.itemExamenes(), this.itemVisualiza(),
-            this.itemExcel(), "searchPanel"
+        return [
+            this.itemPeriodos(),
+            this.itemAlumnos(),
+            this.itemExamenes(),
+            this.itemCursosMaterias(),
+            this.itemValoraciones(),
+            this.itemVisualiza(),
+            this.itemExcel(),
+            "searchPanel"
         ]
     }
 
@@ -129,15 +128,49 @@ class Notas extends NotasBase {
         }
     }
 
+    itemValoraciones() {
+        return {
+            widget: "dxButton",
+            location: "before",
+            options: {
+                icon: "percent",
+                text: "Valoraciones",
+                hint: "Valoraciones Porcentuales por Período",
+                onClick: e => this.valoraciones()
+            }
+        }
+    }
+
+    itemCursosMaterias() {
+        return {
+            widget: "dxButton",
+            location: "before",
+            options: {
+                icon: "menu",
+                text: "Cursos y Materias",
+                hint: "Selecciona",
+                onClick: e => this.cursosMaterias()
+            }
+        }
+    }
+
     excelFileName() {
-        return "Notas del Curso: " + this.materiaCursoDescripcion()
+        return "Notas del Curso: " + this.descripcion()
     }
 
     excelDialogWidth() {
         return 800
     }
 
+    cursoDescripcion() {
+        return this.getFilterText("curso")
+    }
+
     materiaCursoDescripcion() {
+        return this.getFilterText("materiaCurso");
+    }
+
+    descripcion() {
         return this.getFilterText("curso") + " / " + this.getFilterText("materiaCurso") +
             " / " + this.getFilterText("añoLectivo")
     }
@@ -149,11 +182,11 @@ class Notas extends NotasBase {
         });
 
         DevExpress.excelExporter.exportDataGrid({
-                component: this.list().instance(),
-                worksheet: worksheet,
-                autoFilterEnabled: false,
-                topLeftCell: { row: 4, column: 1 }
-            })
+            component: this.list().instance(),
+            worksheet: worksheet,
+            autoFilterEnabled: false,
+            topLeftCell: { row: 4, column: 1 }
+        })
             .then(cellRange => {
 
                 worksheet.properties.outlineProperties = null;
@@ -186,18 +219,18 @@ class Notas extends NotasBase {
 
             })
 
-        .then(() => {
-            workbook.xlsx.writeBuffer().then((buffer) => {
-                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), p.fileName + '.xlsx');
+            .then(() => {
+                workbook.xlsx.writeBuffer().then((buffer) => {
+                    saveAs(new Blob([buffer], { type: 'application/octet-stream' }), p.fileName + '.xlsx');
+                });
             });
-        });
         p.e.cancel = true;
     }
 
     notasAlumno() {
         new NotasAlumno({
-                listView: this
-            }).render()
+            listView: this
+        }).render()
             .then(closeData => {
                 if (closeData.dataHasChanged) {
                     this.refreshRows()
@@ -209,6 +242,19 @@ class Notas extends NotasBase {
         new NotasVisualizaColumnas({ notas: this }).render().then(closeData => {
             this.state.list.visibleColumns = this.getVisibleColumns()
         })
+    }
+
+    valoraciones() {
+        new NotasValoraciones({ notas: this }).render()
+    }
+
+    cursosMaterias() {
+        new CursosMaterias({ notas: this }).render()
+            .then(closeData => {
+                if (closeData.curso != undefined) {
+                    this.setFilter(closeData)
+                }
+            })
     }
 
     updateNota(e) {
@@ -233,13 +279,13 @@ class Notas extends NotasBase {
 
     saveNota(p) {
         new Rest({ path: "notas" }).promise({
-                verb: "update",
-                data: {
-                    examen: p.examen,
-                    alumno: p.alumno,
-                    nota: p.nota
-                }
-            })
+            verb: "update",
+            data: {
+                examen: p.examen,
+                alumno: p.alumno,
+                nota: p.nota
+            }
+        })
             .then(() =>
                 this.dataHasChanged = true)
             .catch(err =>
@@ -262,7 +308,3 @@ class Notas extends NotasBase {
     }
 
 }
-
-class NotasColumns extends NotasColumnsBase {}
-
-class NotasRows extends NotasRowsBase {}

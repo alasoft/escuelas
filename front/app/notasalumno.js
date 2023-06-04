@@ -332,10 +332,8 @@ class NotasAlumno extends View {
                 message: "No es posible ingresar una nota para el Examen",
                 detail: e.data.nombre
             }, {
-                message: "ya que su fecha de inicio",
+                message: "ya que su fecha de inicio es futura",
                 detail: Dates.Format(e.data.desde)
-            }, {
-                message: "está en el futuro"
             }])
         }
     }

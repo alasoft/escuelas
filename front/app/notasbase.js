@@ -5,8 +5,10 @@ class NotasBase extends FilterViewBase {
     }
 
     static COLOR_NOTA_NO_EDITABLE = {
-        //        "background-color": "rgb(208, 249, 231  )"
-        "background-color": "rgb(200, 245, 220)"
+        //                "background-color": "rgb(208, 249, 231  )"
+        //        "background-color": "rgb(200, 245, 220)"
+        //                "background-color": "rgb(238, 247, 222 )"
+        "background-color": "rgb(225, 228, 228)"
     }
 
     static COLOR_PRESENTE = {
@@ -19,16 +21,6 @@ class NotasBase extends FilterViewBase {
 
     static COLOR_ANUAL = {
         "background-color": "rgb(242, 232, 248)"
-    }
-
-    static TemporalidadDescripcion(t) {
-        if (t == Dates.PASADO) {
-            return " / Cerrado"
-        } else if (t == Dates.PRESENTE) {
-            return " / Vigente"
-        } else {
-            return " / Futuro"
-        }
     }
 
     static NotaEditor(cellElement, cellInfo) {
@@ -167,23 +159,19 @@ class NotasBase extends FilterViewBase {
             .then(() =>
                 this.refreshListToolbar())
             .then(() =>
-                this.list().resetColumns(this.columns()))
+                this.list().setColumns(this.columns()))
             .then(() =>
                 this.setVisibleColumns())
             .then(() =>
-                this.list().setArrayDataSource(this.rows()))
+                this.refreshRows())
             .then(() =>
                 this.list().focus())
             .catch(err =>
                 this.handleError(err))
     }
 
-    handleError(err) {
-        throw err;
-    }
-
     refreshRows() {
-        this.list().setArrayDataSource(this.rows())
+        this.list().setArrayDataSource(this.rows(true))
     }
 
     setVisibleColumns() {
@@ -192,9 +180,16 @@ class NotasBase extends FilterViewBase {
         }
     }
 
-    columns() { }
+    columns() {
+        return new NotasColumns(this).columns()
+    }
 
-    rows() { }
+    rows(forceRefresh = false) {
+        if (this._rows == undefined || forceRefresh == true) {
+            this._rows = new NotasRows(this).rows()
+        }
+        return this._rows;
+    }
 
     getState() {
         return {
@@ -410,7 +405,7 @@ class NotasBase extends FilterViewBase {
 
 }
 
-class NotasColumnsBase {
+class NotasColumns {
 
     static PROMEDIO_WIDTH = 95;
     static VALORACION_WIDTH = 95;
@@ -440,18 +435,20 @@ class NotasColumnsBase {
     periodosColumns() {
         const columns = []
         for (const periodoRow of this.periodosRows) {
-            columns.push({
-                name: "periodo_" + periodoRow.id,
-                headerCellTemplate: periodoRow.nombre + NotasBase.TemporalidadDescripcion(periodoRow.temporalidad) + "<small><br>" + Dates.DesdeHasta(periodoRow.desde, periodoRow.hasta),
-                caption: periodoRow.nombre,
-                alignment: "center",
-                temporalidad: periodoRow.temporalidad,
-                width: Dates.EsFuturo(periodoRow.temporalidad) ? 200 : undefined,
-                visible: true,
-                columns: this.periodoColumns(periodoRow),
-                allowReordering: false,
-                allowResizing: true
-            })
+            if (Dates.NoEsFuturo(periodoRow.temporalidad)) {
+                columns.push({
+                    name: "periodo_" + periodoRow.id,
+                    headerCellTemplate: periodoRow.nombre + Periodos.TemporalidadDescripcion(periodoRow.temporalidad) + "<small><br>" + Dates.DesdeHasta(periodoRow.desde, periodoRow.hasta),
+                    caption: periodoRow.nombre,
+                    alignment: "center",
+                    temporalidad: periodoRow.temporalidad,
+                    width: Dates.EsFuturo(periodoRow.temporalidad) ? 200 : undefined,
+                    visible: true,
+                    columns: this.periodoColumns(periodoRow),
+                    allowReordering: false,
+                    allowResizing: true
+                })
+            }
         }
         return columns;
     }
@@ -608,7 +605,7 @@ class NotasColumnsBase {
 
 }
 
-class NotasRowsBase {
+class NotasRows {
 
     constructor(notas) {
         this.notas = notas;

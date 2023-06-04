@@ -105,6 +105,13 @@ class AppView extends AppViewBase {
             onClick: e => new Notas().render()
         })
 
+/*        
+        itemCalificaciones.addChild({
+            text: "Cursos y Materias",
+            onClick: e => new CursosMaterias().render()
+        })
+*/        
+
         return [itemDatos, itemDictado, itemCalificaciones, itemSalida];
 
     }

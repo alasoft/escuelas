@@ -1,0 +1,23 @@
+class CursosMaterias extends View {
+
+    cursosMateriasData() {
+        if (this._cursosMateriasData == undefined) {
+            this._cursosMateriasData = new CursosMateriasData();
+        }
+        return this._cursosMateriasData;
+    }
+
+    rows() {
+        if (this._rows == undefined) {
+            this._rows = this.defineRows()
+        }
+        return this._rows;
+    }
+
+    defineRows() {
+        const data = this.cursosMateriasData();
+        const 
+     }
+
+
+}

@@ -10,11 +10,9 @@ class CursosDetalle extends FilterView {
             components: {
                 filter: {
                     labelLocation: "left",
-                    height: 50
-                },
-                filter: {
+                    height: 50,
                     width: 350
-                }
+                },
             }
         })
     }

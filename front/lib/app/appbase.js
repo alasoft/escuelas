@@ -335,7 +335,7 @@ class AppBase {
     }
 
     static Name() {
-        return "Sistema de " + this.ServerInfo.name;
+        return this.ServerInfo.name;
     }
 
     static ShortName(demoName = true) {
