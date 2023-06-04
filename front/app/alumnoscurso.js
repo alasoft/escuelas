@@ -31,9 +31,9 @@ class AlumnosCurso extends CursosDetalle {
                     },
                     pager: {
                         visible: true,
-                    },        
+                    },
                     paging: {
-                        pageSize: 5
+                        pageSize: 50
                     }
                 }
             }

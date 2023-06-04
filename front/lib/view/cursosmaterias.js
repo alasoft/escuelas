@@ -62,10 +62,17 @@ class CursosMaterias extends FilterViewBase {
                         visible: false
                     },
                     groupPanel: {
-                        visible: false
+                        visible: true
                     },
                     summary: {
                         totalItems: [
+                            {
+                                summaryType: "sum",
+                                alignment: "left",
+                                column: "alumnosCantidad",
+                                displayFormat: "{0}",
+                                alignment: "center"
+                            },
                             {
                                 name: "totalMaterias",
                                 summaryType: "custom",
@@ -180,18 +187,18 @@ class CursosMaterias extends FilterViewBase {
                 width: 400
             },
             {
+                dataField: "alumnosCantidad",
+                caption: "Alumnos",
+                alignment: "center",
+                width: 100,
+                visible: true
+            },
+            {
                 dataField: "materianombre",
                 caption: "Materia Dictada",
                 allowResizing: true,
                 width: 150
             },
-            {
-                dataField: "alumnosCantidad",
-                caption: "Cantidad Alumnos",
-                alignment: "center",
-                width: 100,
-                visible: false
-            }
         ]
 
     }
