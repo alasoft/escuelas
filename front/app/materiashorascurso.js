@@ -4,7 +4,13 @@ class MateriasHorasCurso extends CursosMateriasDetalle {
         return {
             popup: {
                 title: "Horarios por Curso y Materia",
+            },
+            components: {
+                filter: {
+                    labelLocation: "top",
+                },
             }
+
         }
     }
 
@@ -43,23 +49,37 @@ class MateriasHorasCurso extends CursosMateriasDetalle {
 
     deleteMessage() {
         return Messages.Build([{
-                message: "Borra este horario ?",
-                detail: this.descripcion()
-            }, {
-                message: "de la Materia",
-                detail: this.getFilterText("materiacurso")
-            },
-            {
-                message: "perteneciente al Curso:",
-                detail: this.cursoDescripcion()
-            }
+            message: "Borra este horario ?",
+            detail: this.descripcion()
+        }, {
+            message: "de la Materia",
+            detail: this.getFilterText("materiacurso")
+        },
+        {
+            message: "perteneciente al Curso:",
+            detail: this.cursoDescripcion()
+        }
         ])
+    }
+
+    refreshListToolbar() {
+        this.list().setToolbarItems(this.listToolbarItems())
+    }
+
+    listToolbarItems() {
+        return [this.itemInsert(), this.itemExcelExport(), "searchPanel"]
     }
 
     descripcion() {
         const a = "a";
         const row = this.focusedRowData();
         return DiasSemana.GetNombre(row.dia) + ", " + row.desde.substring(0, 5) + " - " + row.hasta.substring(0, 5)
+    }
+
+    listOnContentReady(e) {
+        this.focusFirstRow();
+        this.refreshListToolbar();
+        this.refreshContextMenuItems()
     }
 
     static ListColumns() {
@@ -81,8 +101,8 @@ class MateriasHorasCurso extends CursosMateriasDetalle {
 
 class MateriasHorasCursoForm extends FormView {
 
-    transformInsertUpdate(data, verb) {
-        return Utils.ReduceIds({
+    transformData(data, verb) {
+        return Utils.NormalizeData({
             id: data.id,
             materiacurso: this.materiaCurso(),
             dia: data.dia,

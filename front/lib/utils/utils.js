@@ -26,6 +26,10 @@ class Utils {
         return (typeof x === "string");
     }
 
+    static IsDate(x) {
+        return (x instanceof Date)
+    }
+
     static IsObject(x) {
         return (x instanceof Object && !(x instanceof Date))
     }
@@ -285,7 +289,11 @@ class Dates {
     }
 
     static TimeAsString(d) {
-        return Strings.ZeroesLeft(d.getHours(), 2) + ":" + Strings.ZeroesLeft(d.getMinutes(), 2) + ":" + Strings.ZeroesLeft(d.getSeconds(), 2);
+        if (Utils.IsDate(d)) {
+            return Strings.ZeroesLeft(d.getHours(), 2) + ":" + Strings.ZeroesLeft(d.getMinutes(), 2) + ":" + Strings.ZeroesLeft(d.getSeconds(), 2);
+        } else {
+            return d;
+        }
     }
 
     static DateFromHour(h) {

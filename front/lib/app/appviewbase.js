@@ -33,7 +33,7 @@ class AppViewBase extends View {
     }
 
     toolbarItems() {
-        return [this.toggleItemsButton()]
+        return [this.toggleItemsButton(), this.userButton(), this.sistemaButton()]
     }
 
     toggleItemsButton() {
@@ -47,7 +47,29 @@ class AppViewBase extends View {
         }
     }
 
-    itemsDataSource() {}
+    userButton() {
+        return {
+            widget: "dxButton",
+            location: "before",
+            options: {
+                icon: "user",
+                text: "Docente: " + App.UserNombreApellido()
+            }
+        }
+    }
+
+    sistemaButton() {
+        return {
+            widget: "dxButton",
+            location: "after",
+            options: {
+                icon: "bell",
+                text: App.ShortName()
+            }
+        }
+    }
+
+    itemsDataSource() { }
 
     itemsOnFocusedRowChanged(e) {
         if (e.row.data.onClick) {

@@ -11,6 +11,10 @@ class NotasBase extends FilterViewBase {
         "background-color": "rgb(225, 228, 228)"
     }
 
+    static COLOR_PASADO = {
+        "background-color": "rgb(243, 247, 250)"
+    }
+
     static COLOR_PRESENTE = {
         "background-color": "rgb(198, 238, 251)"
     }
@@ -394,6 +398,8 @@ class NotasBase extends FilterViewBase {
             } else {
                 e.cellElement.css(this.class().COLOR_NOTA_NO_EDITABLE)
             }
+        } else if (e.column.temporalidad == Dates.PASADO) {
+            e.cellElement.css(this.class().COLOR_PASADO)
         } else if (e.column.temporalidad == Dates.PRESENTE) {
             e.cellElement.css(this.class().COLOR_PRESENTE)
         } else if (e.column.temporalidad == Dates.FUTURO) {

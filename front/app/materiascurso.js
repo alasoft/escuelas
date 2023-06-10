@@ -11,7 +11,6 @@ class MateriasCurso extends CursosDetalle {
             },
             components: {
                 filter: {
-                    labelLocation: "left",
                     width: 400,
                     height: 50,
                 },
@@ -171,7 +170,7 @@ class MateriasCursoForm extends FormView {
 
     popupConfiguration() {
         return {
-            title: "Materia del Curso",
+            title: "Materia Dictada",
             width: 600,
             height: 450
         }
@@ -192,9 +191,9 @@ class MateriasCursoForm extends FormView {
 
     duplicatedMessage() {
         return Messages.Build([{
-            message: "Ya esta asociada la Materia:",
+            message: "La Materia:",
             detail: this.getEditorText("materia")
-        }, { message: "para el Curso", detail: this.listView().cursoDescripcion() }])
+        }, { message: "ya esta asociada para el Curso", detail: this.listView().cursoDescripcion() }])
     }
 
     popupOnHidden(e) {

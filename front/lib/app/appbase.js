@@ -84,6 +84,8 @@ class AppBase {
     static InitTest() {
         return this.BeginTest()
             .then(() =>
+                this.Start())
+            .then(() =>
                 this.Localize())
             .then(() =>
                 this.LoginUser(this.USER_TEST_DATA))

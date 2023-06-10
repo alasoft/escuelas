@@ -93,7 +93,8 @@ class MateriasCursosListService extends TableListService {
             ],
             from: "materias_horas",
             where: this.sqlAnd().addIf(0 < materiasCursos.length, () =>
-                this.sqlIn("materiacurso", materiasCursos))
+                this.sqlIn("materiacurso", materiasCursos)),
+            order: "dia"
         })
     }
 

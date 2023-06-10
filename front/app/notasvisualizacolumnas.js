@@ -12,7 +12,7 @@ class NotasVisualizaColumnas extends View {
             mode: "popup",
             popup: {
                 title: "Visualiza Columnas",
-                width: 400,
+                width: 450,
                 height: 650,
                 resizeEnabled: true
             },

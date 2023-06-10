@@ -93,14 +93,14 @@ class Periodos extends AñoLectivoView {
 
     static TemporalidadDescripcion(t) {
         if (t == Dates.PASADO) {
-            return " / Cerrado"
+            return " / Anterior"
         } else if (t == Dates.PRESENTE) {
             return " / Vigente"
         } else {
             return " / Futuro"
         }
     }
-    
+
 }
 
 class PeriodosFormView extends FormView {

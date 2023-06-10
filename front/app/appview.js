@@ -1,31 +1,5 @@
 class AppView extends AppViewBase {
 
-    toolbarItems() {
-        return super.toolbarItems().concat([this.userButton(), this.sistemaButton()])
-    }
-
-    userButton() {
-        return {
-            widget: "dxButton",
-            location: "before",
-            options: {
-                icon: "user",
-                text: "Docente: " + App.UserNombreApellido()
-            }
-        }
-    }
-
-    sistemaButton() {
-        return {
-            widget: "dxButton",
-            location: "after",
-            options: {
-                icon: "bell",
-                text: App.ShortName()
-            }
-        }
-    }
-
     itemsDataSource() {
 
         const itemDatos = new TreeItem({
@@ -105,12 +79,12 @@ class AppView extends AppViewBase {
             onClick: e => new Notas().render()
         })
 
-/*        
-        itemCalificaciones.addChild({
-            text: "Cursos y Materias",
-            onClick: e => new CursosMaterias().render()
-        })
-*/        
+        /*        
+                itemCalificaciones.addChild({
+                    text: "Cursos y Materias",
+                    onClick: e => new CursosMaterias().render()
+                })
+        */
 
         return [itemDatos, itemDictado, itemCalificaciones, itemSalida];
 
