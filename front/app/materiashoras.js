@@ -8,6 +8,11 @@ class MateriasHoras extends AñoLectivoView {
         return {
             popup: {
                 title: "Horarios"
+            },
+            components: {
+                filter: {
+                    height: 50
+                }
             }
         }
     }
@@ -48,7 +53,8 @@ class MateriasHoras extends AñoLectivoView {
             Column.Time({ dataField: "hasta", caption: "Hora Hasta", width: 130, format: App.TIME_FORMAT_SHORT }),
             this.columnCurso(),
             Column.Text({ dataField: "materianombre", caption: "Materia", width: 150 }),
-            Column.Text({ dataField: "escuelanombre", caption: "Escuela", width: 200, filterWidth: 300 })
+            Column.Text({ dataField: "escuelanombre", caption: "Escuela", width: 200, filterWidth: 300 }),
+            Column.Empty()
         ]
     }
 
@@ -90,16 +96,16 @@ class MateriasHoras extends AñoLectivoView {
     deleteMessage() {
         const row = this.focusedRowData();
         return Messages.Build([{
-                message: "Borra el horario ?",
-                detail: DiasSemana.GetNombre(row.dia) + " " + row.desde.substring(0, 5) + " - " + row.hasta.substring(0, 5)
-            },
-            {
-                message: "de la Materia",
-                detail: this.focusedRowValue("materianombre")
-            }, {
-                message: "perteneciente al Curso:",
-                detail: this.cursoDescripcion()
-            }
+            message: "Borra el horario ?",
+            detail: DiasSemana.GetNombre(row.dia) + " " + row.desde.substring(0, 5) + " - " + row.hasta.substring(0, 5)
+        },
+        {
+            message: "de la Materia",
+            detail: this.focusedRowValue("materianombre")
+        }, {
+            message: "perteneciente al Curso:",
+            detail: this.cursoDescripcion()
+        }
         ]);
     }
 

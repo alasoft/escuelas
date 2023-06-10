@@ -64,8 +64,8 @@ class CursosMateriasDetalle extends CursosDetalle {
 
     getState() {
         return Utils.Merge({
-                añoLectivo: this.getFilterValue("añolectivo"),
-            },
+            añoLectivo: this.getFilterValue("añolectivo"),
+        },
             this.parameters().isDetail != true ? {
                 curso: this.getFilterValue("curso"),
                 materiaCurso: this.getFilterValue("materiacurso"),
@@ -90,7 +90,7 @@ class CursosMateriasDetalle extends CursosDetalle {
         this.loadMateriasCursos(e.value);
     }
 
-    itemMateriaCursoOnValueChanged(e) {}
+    itemMateriaCursoOnValueChanged(e) { }
 
     popupOnHidden(e) {
         if (this.masterView() != undefined) {

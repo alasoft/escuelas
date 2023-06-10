@@ -104,10 +104,11 @@ class CreateTables extends CreateTablesBase {
                 tableName: "asistencias",
                 columns: {
                     fecha: SqlType.Date(),
-                    hora: SqlType.Time(),
+                    horario: SqlType.Fk({ references: "materias_horas" }),
                     alumno: SqlType.Fk({ references: "alumnos" }),
                     asistio: SqlType.Boolean()
-                }
+                },
+                unique: "fecha,horario,alumno"
             })
         ]
     }

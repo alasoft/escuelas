@@ -235,6 +235,31 @@ class Strings {
 
 class Dates {
 
+    static MonthNames = [
+        'enero',
+        'febrero',
+        'marzo',
+        'abril',
+        'mayo',
+        'junio',
+        'julio',
+        'agosto',
+        'septiembre',
+        'octubre',
+        'noviembre',
+        'diciembre'
+    ];
+
+    static DayNames = ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"]
+
+    static DayName(day) {
+        return this.DayNames[day - 1];
+    }
+
+    static DayNameOfDate(date) {
+        return this.MonthNames[date.getDay()]
+    }
+
     static PASADO = 1;
     static PRESENTE = 2;
     static FUTURO = 3;
@@ -296,6 +321,10 @@ class Dates {
         }
     }
 
+    static DayMonth(date) {
+        return Strings.ZeroesLeft(d.getDat(), 2) + ":" + Strings.ZeroesLeft(d.getMonth(), 2);
+    }
+
     static DateFromHour(h) {
         return new Date(App.BASE_DATE + " " + h);
     }
@@ -313,6 +342,41 @@ class Dates {
             newDate.setHours(-24 * (day - 1));
         }
         return newDate;
+    }
+
+    static DatesForDayInMonth(dayOfWeek, month, year) {
+        const dates = [];
+        const date = new Date(year, month - 1, 1);
+
+        while (date.getMonth() === month - 1) {
+            if (date.getDay() === dayOfWeek) {
+                dates.push(new Date(date));
+            }
+            date.setDate(date.getDate() + 1);
+        }
+
+        return dates;
+    }
+
+    static MonthsInRange(startDate, endDate) {
+        const startMonth = startDate.getMonth();
+        const startYear = startDate.getFullYear();
+        const endMonth = endDate.getMonth();
+        const endYear = endDate.getFullYear();
+
+        const months = [];
+
+        let currDate = new Date(startYear, startMonth, 1);
+
+        while (
+            currDate.getFullYear() < endYear ||
+            (currDate.getFullYear() === endYear && currDate.getMonth() <= endMonth)
+        ) {
+            months.push(currDate.getMonth() + 1);
+            currDate.setMonth(currDate.getMonth() + 1);
+        }
+
+        return months;
     }
 
     static NoEsFuturo(temporalidad) {
@@ -341,6 +405,13 @@ class Dates {
 
     static DesdeHasta(desde, hasta) {
         return Dates.Format(desde) + " - " + Dates.Format(hasta)
+    }
+
+    static MonthName(monthIndex) {
+        monthIndex -= 1
+        if (monthIndex >= 0 && monthIndex < months.length) {
+            return this.MonthNames[monthIndex];
+        }
     }
 
 }

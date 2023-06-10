@@ -11,11 +11,13 @@ class ExamenesCurso extends CursosMateriasDetalle {
             popup: {
                 title: "Examenes por Curso y Materia",
                 height: 600,
-                width: 1150
+                width: 950
             },
             components: {
                 filter: {
                     width: 750,
+                    labelLocation: "top",
+                    height: 90
                 },
                 list: {
                     showBorders: true,
@@ -24,7 +26,6 @@ class ExamenesCurso extends CursosMateriasDetalle {
                     },
                     filterPanel: {
                         visible: true,
-                        labelLocation: "left"
                     },
                     pager: {
                         visible: false
@@ -35,6 +36,10 @@ class ExamenesCurso extends CursosMateriasDetalle {
                 }
             }
         }
+    }
+
+    itemCurso() {
+        return super.itemCurso({ deferRendering: this.parameters().materiacurso != undefined, colSpan: 4 })
     }
 
     itemInsert() {
@@ -55,10 +60,6 @@ class ExamenesCurso extends CursosMateriasDetalle {
         return [this.itemInsert(), this.itemTodos()]
     }
 
-
-    itemCurso() {
-        return super.itemCurso({ deferRendering: this.parameters().materiacurso != undefined })
-    }
 
     labelText() {
         return "Examenes por Curso y Materia"
@@ -236,10 +237,10 @@ class ExamenesCursoForm extends FormView {
 
     beforeRender() {
         return new Rest({ path: "periodos" }).promise({
-                verb: "list",
-                data: { añoLectivo: this.listView().añoLectivo().id }
-            }).then(rows =>
-                this.periodos = rows)
+            verb: "list",
+            data: { añoLectivo: this.listView().añoLectivo().id }
+        }).then(rows =>
+            this.periodos = rows)
             .then(() =>
                 Arrays.ToDate(this.periodos, ["desde", "hasta"]))
     }
