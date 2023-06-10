@@ -37,13 +37,14 @@ new App({
     tokenMinutes: 120,
     version: "0.9.5",
     name: "Solución Docente",
-    logSql: false,
-    obfuscated: obfuscatedOrDefault(true),
+    logSql: true,
+    obfuscated: obfuscatedOrDefault(false),
     demo: isDemo(),
     demoMaxAlumnos: 50
 }).start()
 
-function hostOrDefault(defaultHost = "http://alasoft.sytes.net") {
+//function hostOrDefault(defaultHost = "http://alasoft.sytes.net") {
+function hostOrDefault(defaultHost = "http://localhost") {
     if (args.host != undefined) {
         return args.host
     } else {

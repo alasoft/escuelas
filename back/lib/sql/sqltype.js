@@ -30,12 +30,20 @@ class SqlType {
         return "char(" + (parameters.size || SqlType.CHAR_SIZE_DEFAULT) + ")" + this.NotNull(parameters);
     }
 
-    static Date(parameters = {}) {
+    static Date(parameters) {
         return "date" + this.NotNull(parameters);
     }
 
-    static Time(parameters = {}) {
+    static Time(parameters) {
+        return "time" + this.NotNull(parameters)
+    }
+
+    static Time(parameters) {
         return "time" + this.NotNull(parameters);
+    }
+
+    static Boolean(parameters) {
+        return "boolean" + this.NotNull(parameters);
     }
 
     static Apellido(parameters) {

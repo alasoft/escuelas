@@ -99,6 +99,15 @@ class CreateTables extends CreateTablesBase {
                     nombre: SqlType.String(),
                     nota: SqlType.Integer()
                 }
+            }),
+            Sql.Create({
+                tableName: "asistencias",
+                columns: {
+                    fecha: SqlType.Date(),
+                    hora: SqlType.Time(),
+                    alumno: SqlType.Fk({ references: "alumnos" }),
+                    asistio: SqlType.Boolean()
+                }
             })
         ]
     }
