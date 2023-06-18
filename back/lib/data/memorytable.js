@@ -15,7 +15,7 @@ class MemoryTable extends ObjectBase {
         this.addItems();
     }
 
-    addItems() {}
+    addItems() { }
 
     addItem(item) {
         this._items.push(item);
@@ -23,8 +23,7 @@ class MemoryTable extends ObjectBase {
     }
 
     add(id, nombre) {
-        this._items.push({ id: id, nombre: nombre });
-        return this;
+        return this.addItem({ id, nombre })
     }
 
     list(name) {

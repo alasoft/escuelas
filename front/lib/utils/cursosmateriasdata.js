@@ -41,6 +41,7 @@ class CursosMateriasData {
 
     transformCursosMateriasRows() {
         for (const row of this.cursosMateriasRows) {
+            row.id = Utils.IfNotDefined(row.materiacurso, row.curso);
             row.cursoDescripcion = Cursos.Descripcion(row);
             row.alumnosCantidad = this.alumnosCantidad(row.cursoid);
             this.setCursosMateriasRowCantidades(row);

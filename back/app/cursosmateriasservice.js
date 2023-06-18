@@ -112,7 +112,7 @@ class CursosMateriasService extends ServiceBase {
     sqlCursosMaterias() {
         return this.sqlSelect({
             columns: [
-                "cur.id || '_' || coalesce(mc.id,'') as id",
+                //                "cur.id || '_' || coalesce(mc.id,'') as id",
                 "cur.id as cursoid",
                 "cur.añolectivo",
                 "cur.escuela",
@@ -122,7 +122,7 @@ class CursosMateriasService extends ServiceBase {
                 "cur.turno",
                 "esc.nombre as escuelanombre",
                 "mdl.nombre as modalidadnombre",
-                "mc.id as materiacurso  ",
+                "mc.id as materiacurso",
                 "mc.materia",
                 "mat.nombre as materianombre"
             ],
