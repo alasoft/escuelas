@@ -344,17 +344,15 @@ class Dates {
         return newDate;
     }
 
-    static DatesForDayInMonth(dayOfWeek, month, year) {
+    static DatesForDayOfWeek(dayOfWeek, from, to) {
         const dates = [];
-        const date = new Date(year, month - 1, 1);
-
-        while (date.getMonth() === month - 1) {
+        const date = new Date(from);
+        while (date <= to) {
             if (date.getDay() === dayOfWeek) {
-                dates.push(new Date(date));
+                dates.push(new Date(date))
             }
-            date.setDate(date.getDate() + 1);
+            dates.setDate(date.getDate() + 1)
         }
-
         return dates;
     }
 

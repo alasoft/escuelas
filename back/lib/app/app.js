@@ -238,7 +238,9 @@ class App {
     terminate(err) {
         const errDto = this.errorToDto(err);
         this.log("Error: " + JSON.stringify(errDto));
-        this.log(err.stack);
+        if (err.stack != undefined) {
+            this.log(err.stack);
+        }
         process.exit();
     }
 

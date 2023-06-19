@@ -236,6 +236,18 @@ class Dates {
         return new Date(s);
     }
 
+    static DatesForDayOfWeek(dayOfWeek, from, to) {
+        const dates = [];
+        const date = new Date(from);
+        while (date <= to) {
+            if (date.getDay() === dayOfWeek) {
+                dates.push(new Date(date))
+            }
+            dates.setDate(date.getDate() + 1)
+        }
+        return dates;
+    }
+
 }
 
 class Html {

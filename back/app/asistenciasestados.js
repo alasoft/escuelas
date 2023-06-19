@@ -1,9 +1,11 @@
 const { MemoryTable } = require("../lib/data/memorytable");
 
-class AsistenciasTipo extends MemoryTable {
+class AsistenciasEstados extends MemoryTable {
+
+    static ESTADO_NORMAL = 1;
 
     addItems() {
-        this.add(1, "Normal")
+        this.add(this.class().ESTADO_NORMAL, "Normal")
             .addItem({ id: -1, nombre: "Feriado", propaga: true })
             .add(-2, "Suspensión de Clases")
             .add(-3, "Enfermedad")
@@ -12,4 +14,4 @@ class AsistenciasTipo extends MemoryTable {
 
 }
 
-module.exports.AsistenciasTipo = AsistenciasTipo;
+module.exports.AsistenciasEstados = AsistenciasEstados;

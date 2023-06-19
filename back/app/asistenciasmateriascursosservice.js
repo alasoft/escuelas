@@ -1,6 +1,6 @@
 const { ServiceBase } = require("../lib/service/servicebase");
 
-class AsistenciasDiasService extends ServiceBase {
+class AsistenciaMateriasCursosService extends ServiceBase {
 
     execute() {
         this.dbSelect(this.sqlPeriodos())
@@ -15,9 +15,9 @@ class AsistenciasDiasService extends ServiceBase {
             .then(count =>
                 this.alumnosCantidadRows = count)
             .then(() =>
-                this.dbSelect(this.sqlAsistenciasDiasCantidad()))
+                this.dbSelect(this.sqlAsistenciasCantidad()))
             .then(count =>
-                this.asistenciasDiasCantidadRows = count)
+                this.asistenciasCantidadRows = count)
             .then(() =>
                 this.dbSelect(this.sqlAsistenciasAlumnosCantidad()))
             .then(count =>
@@ -93,26 +93,26 @@ class AsistenciasDiasService extends ServiceBase {
         })
     }
 
-    sqlAsistenciasDiasCantidad() {
+    sqlAsistenciasCantidad() {
         return this.sqlSelect(
             {
                 columns: [
                     "mh.materiacurso",
-                    "ad.periodo",
+                    "af.periodo",
                     "count(*)"
                 ],
-                from: "asistencias_dias ad",
+                from: "asistencias_fechas af",
                 joins: [
-                    { tableName: "materias_horas", alias: "mh", columnName: "ad.horario" },
-                    { tableName: "periodos", alias: "per", columnName: "ad.periodo" }],
+                    { tableName: "materias_horas", alias: "mh", columnName: "af.horario" },
+                    { tableName: "periodos", alias: "per", columnName: "af.periodo" }],
                 where: this.sqlAnd([
-                    "ad.fecha<=now()",
-                    "ad.status>0",
+                    "af.fecha<=now()",
+                    "af.estado>0",
                     "per.añolectivo=@añolectivo"
                 ]),
                 group: [
                     "mh.materiacurso",
-                    "ad.periodo"
+                    "af.periodo"
                 ],
                 parameters: { añolectivo: this.value("añolectivo") }
             }
@@ -129,17 +129,18 @@ class AsistenciasDiasService extends ServiceBase {
                 ],
                 from: "asistencias_alumnos aa",
                 joins: [
-                    { tableName: "asistencias_dias", alias: "ad", columnName: "aa.dia" },
-                    { tableName: "materias_horas", alias: "mh", columnName: "ad.horario" },
-                    { tableName: "periodos", alias: "per", columnName: "ad.periodo" }],
+                    { tableName: "asistencias_fechas", alias: "af", columnName: "aa.dia" },
+                    { tableName: "materias_horas", alias: "mh", columnName: "af.horario" },
+                    { tableName: "periodos", alias: "per", columnName: "af.periodo" }],
                 where: this.sqlAnd([
-                    "ad.fecha<=now()",
-                    "ad.status>0",
-                    "per.añolectivo=@añolectivo"
+                    "af.fecha<=now()",
+                    "af.estado>0",
+                    "per.añolectivo=@añolectivo",
+                    "aa.asistio="
                 ]),
                 group: [
                     "mh.materiacurso",
-                    "ad.periodo"
+                    "af.periodo"
                 ],
                 parameters: { añolectivo: this.value("añolectivo") }
             }
@@ -158,4 +159,4 @@ class AsistenciasDiasService extends ServiceBase {
 
 }
 
-module.exports.AsistenciasDiasService = AsistenciasDiasService;
+module.exports.AsistenciaMateriasCursosService = AsistenciaMateriasCursosService;
