@@ -58,29 +58,17 @@ class MateriasHorasGetService extends TableGetService {
 
 class MateriasHorasInsertService extends TableInsertService {
 
-    validate() {
-        return super.validate()
-            .then(() =>
-                MateriasHorasCommonService.ValidateDesdeHasta(this))
+    execute() {
+        new MateriasHorasInsert().execute()
     }
-
-    requiredValues() {
-        return "materiacurso,dia,desde,hasta"
-    }
-
-    validateNotDuplicated() { }
 
 }
 
 class MateriasHorasUpdateService extends TableUpdateService {
 
-    validate() {
-        return super.validate()
-            .then(() =>
-                MateriasHorasCommonService.ValidateDesdeHasta(this))
+    execute() {
+        new MateriasHorasUpdate().execute()
     }
-
-    validateNotDuplicated() { }
 
 }
 
@@ -102,15 +90,6 @@ class MateriasHorasCommonService {
         }
     }
 
-    static ValidateDesdeHasta(service) {
-        this.ValidateDesdeLowerHasta(service);
-        return this.ValidateNoDesdeHastaCollision(service);
-    }
-
-    static ValidateDesdeLowerHasta(service) { }
-
-    static ValidateNoDesdeHastaCollision(service) { }
-
 }
 
 class MateriasHorasInsert {
@@ -120,13 +99,21 @@ class MateriasHorasInsert {
     }
 
     execute() {
-        return this.service.dbSelect(this.sqlPeriodos())
+        return this.validate()
+            .then(() =>
+                this.service.dbSelect(this.sqlPeriodos()))
             .then(rows =>
                 this.periodosRows = rows)
             .then(() =>
                 this.sqlHorasAsistencias())
             .then(sql =>
                 this.service.dbExecute(sql))
+            .catch(err =>
+                this.sendError(err))
+    }
+
+    validate() {
+        return new MateriasHorasValidate().validate();
     }
 
     sqlPeriodos() {
@@ -218,6 +205,38 @@ class MateriasHorasUpdate extends MateriasHorasInsert {
             tableName: "asistencias_fechas",
             where: this.service.sqlText("horario=@horario", { horarios: this.service.id() })
         })
+    }
+
+}
+
+class MateriasHorasInsertValidate {
+
+    constructor(service) {
+        this.service = service;
+    }
+
+    validate() {
+        return this.service.validateRequiredValues(this.requiredValues())
+            .then(() =>
+                this.validateDesdeLowerHasta())
+            .then(() =>
+                this.validateNoDesdeHastaCollision(service));
+    }
+
+    requiredValues() {
+        return "materiacurso,dia,desde,hasta"
+    }
+
+    validateDesdeLowerHasta(service) { }
+
+    validateNoDesdeHastaCollision(service) { }
+
+}
+
+class MateriasHorasUpdateValidate extends MateriasHorasInsertValidate {
+
+    requiredValues() {
+        return super.requiredValues() + ",diaanterior"
     }
 
 }

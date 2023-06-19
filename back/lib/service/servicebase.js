@@ -98,12 +98,11 @@ class ServiceBase extends ObjectBase {
     }
 
     validate() {
-        return this.validateRequiredValues();
+        return this.validateRequired(this.requiredValues());
     }
 
-    validateRequiredValues() {
+    validateRequiredValues(requiredValues) {
         return new Promise((resolve, reject) => {
-            const requiredValues = this.requiredValues();
             if (requiredValues != undefined) {
                 for (const name of requiredValues.split(",")) {
                     if (this.value(name) == undefined) {
