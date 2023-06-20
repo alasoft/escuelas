@@ -49,8 +49,8 @@ class MateriasHoras extends AñoLectivoView {
                 formula: row => DiasSemana.GetNombre(row.dia),
                 sort: (s1, s2) => this.sortDia(s1, s2)
             }),
-            Column.Time({ dataField: "desde", width: 130, caption: "Hora Desde", format: App.TIME_FORMAT_SHORT }),
-            Column.Time({ dataField: "hasta", caption: "Hora Hasta", width: 130, format: App.TIME_FORMAT_SHORT }),
+            Column.Text({ dataField: "desde", width: 130, caption: "Hora Desde", format: App.TIME_FORMAT_SHORT }),
+            Column.Text({ dataField: "hasta", caption: "Hora Hasta", width: 130, format: App.TIME_FORMAT_SHORT }),
             this.columnCurso(),
             Column.Text({ dataField: "materianombre", caption: "Materia", width: 150 }),
             Column.Text({ dataField: "escuelanombre", caption: "Escuela", width: 200, filterWidth: 300 }),
@@ -126,8 +126,9 @@ class MateriasHorasForm extends CursosMateriasForm {
             id: data.id,
             materiacurso: data.materiacurso,
             dia: data.dia,
-            desde: Dates.TimeAsString(data.desde),
-            hasta: Dates.TimeAsString(data.hasta)
+            diaanterior: this.isUpdating() ? this.dataSaved().dia : undefined,
+            desde: Dates.FormatTime(data.desde),
+            hasta: Dates.FormatTime(data.hasta)
         }
     }
 
@@ -188,6 +189,26 @@ class MateriasHorasForm extends CursosMateriasForm {
         data.desde = Dates.DateFromHour(data.desde);
         data.hasta = Dates.DateFromHour(data.hasta);
         return super.afterGetData(data)
+    }
+
+    handleError(err) {
+        if (err.code == Exceptions.HORA_DESDE_DEBE_SER_MENOR_HORA_HASTA) {
+            this.handleHoraDesdeDebeSerMenor(err)
+        } else {
+            super.handleError(err)
+        }
+    }
+
+    handleHoraDesdeDebeSerMenor(err) {
+        App.ShowMessage([{
+            message: "La horas desde",
+            detail: this.getTime("desde")
+        },
+        {
+            message: "debe ser menor a la hora hasta",
+            detail: this.getTime("hasta")
+        }
+        ])
     }
 
     cursoOnValueChanged(e) {

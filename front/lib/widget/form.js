@@ -53,6 +53,10 @@ class Form extends Widget {
         return Dates.Format(this.getEditorValue(dataField))
     }
 
+    getTime(dataField, format) {
+        return Dates.FormatTime(this.getEditorValue(dataField), formatf)
+    }
+
     getSingleQuotes(dataField) {
         return Strings.SingleQuotes(this.getEditorValue(dataField))
     }
@@ -140,6 +144,10 @@ class Form extends Widget {
         this._dataSaved = Utils.Clone(this.getData());
     }
 
+    dataSaved() {
+        return this._dataSaved;
+    }
+
     dataHasChanged() {
 
         function equals(value, valueSaved) {
@@ -181,7 +189,7 @@ class Form extends Widget {
     }
 
     validate() {
-        return new Promise(async(resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             let validate = this.instance().validate();
             if (validate.status == "pending") {
                 validate = await validate.complete;

@@ -19,7 +19,7 @@ class EntryView extends DialogView {
         return this.components().form;
     }
 
-    formItems() {};
+    formItems() { };
 
     getData() {
         return this.form().getData();
@@ -37,6 +37,10 @@ class EntryView extends DialogView {
         this.form().saveData()
     }
 
+    dataSaved() {
+        return this.form().dataSaved();
+    }
+
     dataHasChanged() {
         return this.form().dataHasChanged()
     }
@@ -45,7 +49,7 @@ class EntryView extends DialogView {
         return this.form().getChangedData();
     }
 
-    firstEditor() {}
+    firstEditor() { }
 
     focus() {
         this.focusFirstEditor();
@@ -60,7 +64,7 @@ class EntryView extends DialogView {
         }
     }
 
-    focusEditor(dataField){
+    focusEditor(dataField) {
         return this.form().focusEditor(dataField)
     }
 
@@ -138,6 +142,10 @@ class EntryView extends DialogView {
 
     getDate(dataField) {
         return this.form().getDate(dataField);
+    }
+
+    getTime(dataField, format) {
+        return this.form().getTime(dataField, format)
     }
 
     getValue(dataField) {

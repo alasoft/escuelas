@@ -9,8 +9,8 @@ class MateriasHorasListAllService extends TableListService {
                 "mh.id",
                 "mh.materiacurso",
                 "mh.dia",
-                "mh.desde",
-                "mh.hasta",
+                "to_char(mh.desde,'hh24:mi') as desde",
+                "to_char(mh.hasta,'hh24:mi') as hasta",
                 "mat.nombre as materianombre",
                 "cur.id as cursoid"
             ].concat(CursosCommonService.ColumnsNoId()),

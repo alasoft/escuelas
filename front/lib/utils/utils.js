@@ -313,9 +313,9 @@ class Dates {
         return new Date(s);
     }
 
-    static TimeAsString(d) {
+    static FormatTime(d, format = "HH:mm") {
         if (Utils.IsDate(d)) {
-            return Strings.ZeroesLeft(d.getHours(), 2) + ":" + Strings.ZeroesLeft(d.getMinutes(), 2) + ":" + Strings.ZeroesLeft(d.getSeconds(), 2);
+            return $.format.date(d, format)
         } else {
             return d;
         }

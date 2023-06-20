@@ -42,7 +42,9 @@ class Exceptions {
     static SIGLA_DUPLICATED = "siglaDuplicated"
     static FILE_NOT_FOUND = "fileNotFound"
 
-static MAX_ALUMNOS_ALLOWED_FOR_DEMO = "maxAlumnosAllowedForDemo"
+    static HORA_DESDE_DEBE_SER_MENOR_HORA_HASTA = "horaDesdeDebeSerMenorHoraHasta"
+
+    static MAX_ALUMNOS_ALLOWED_FOR_DEMO = "maxAlumnosAllowedForDemo"
 
     static FileNotFound() {
         return new Exception({

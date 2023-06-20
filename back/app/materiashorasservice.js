@@ -7,7 +7,8 @@ const {
     TableDeleteService
 } = require("../lib/service/tableservice");
 const { AsistenciasEstados } = require("./asistenciasestados");
-const { Sql } = require("../lib/sql/sql");
+const { Sql, SqlCommands } = require("../lib/sql/sql");
+const { Exceptions } = require("../lib/utils/exceptions");
 
 class MateriasHorasListService extends TableListService {
 
@@ -38,7 +39,7 @@ class MateriasHorasGetService extends TableGetService {
                 "mh.id",
                 "mh.materiacurso",
                 "mh.dia",
-                "mh.desde",
+                "to_char(mh.desde,'hh24:mi') as desde",
                 "mh.hasta",
                 "mat.nombre as materianombre",
                 "cur.id as curso"
@@ -59,7 +60,7 @@ class MateriasHorasGetService extends TableGetService {
 class MateriasHorasInsertService extends TableInsertService {
 
     execute() {
-        new MateriasHorasInsert().execute()
+        new MateriasHorasInsert(this).execute()
     }
 
 }
@@ -67,12 +68,18 @@ class MateriasHorasInsertService extends TableInsertService {
 class MateriasHorasUpdateService extends TableUpdateService {
 
     execute() {
-        new MateriasHorasUpdate().execute()
+        new MateriasHorasUpdate(this).execute()
     }
 
 }
 
-class MateriasHorasDeleteService extends TableDeleteService { }
+class MateriasHorasDeleteService extends TableDeleteService {
+
+    execute() {
+        new MateriasHorasDelete(this).execute()
+    }
+
+}
 
 
 class MateriasHorasCommonService {
@@ -83,7 +90,7 @@ class MateriasHorasCommonService {
                 "mh.id",
                 "mh.materiacurso",
                 "mh.dia",
-                "mh.desde",
+                "to_char(mh.desde,'hh24:mi') as desde",
                 "mh.hasta",
             ],
             from: "materias_horas mh",
@@ -92,32 +99,14 @@ class MateriasHorasCommonService {
 
 }
 
-class MateriasHorasInsert {
+class MateriasHorasSqlBase {
 
     constructor(service) {
         this.service = service;
     }
 
-    execute() {
-        return this.validate()
-            .then(() =>
-                this.service.dbSelect(this.sqlPeriodos()))
-            .then(rows =>
-                this.periodosRows = rows)
-            .then(() =>
-                this.sqlHorasAsistencias())
-            .then(sql =>
-                this.service.dbExecute(sql))
-            .catch(err =>
-                this.sendError(err))
-    }
-
-    validate() {
-        return new MateriasHorasValidate().validate();
-    }
-
     sqlPeriodos() {
-        return this.sqlSelect({
+        return this.service.sqlSelect({
             columns: [
                 "id",
                 "desde",
@@ -127,92 +116,110 @@ class MateriasHorasInsert {
         })
     }
 
-    sqlHorasAsistencias() {
-        return new Sql.Transact([
-            this.sqlHoras(),
-            this.sqlAsistencias()
-        ])
+    sqlInsertAll() {
+        return new SqlCommands()
+            .add(this.sqlInsertHoras())
+            .add(this.sqlInsertAsistenciasFechas())
     }
 
-    sqlHoras() {
+    sqlInsertHoras() {
         return this.service.sqlInsert({
             tableName: "materias_horas",
-            values: Utils.Merge(this.service.jsonValues("materiacurso,dia,desde,hasta"))
+            values: this.materiasHorasValues()
         })
     }
 
-    sqlAsistencias() {
-        const sqls = []
+    sqlInsertAsistenciasFechas() {
+        const sqls = new SqlCommands()
         for (const periodoRow of this.periodosRows) {
             const dates = Dates.DatesForDayOfWeek(this.service.value("dia"), periodoRow.desde, periodoRow.hasta);
             for (const date of dates) {
-                sqls.push(this.sqlAsistencia(periodoRow, date))
+                sqls.add(this.sqlInsertAsistenciaFecha(periodoRow, date))
             }
         }
+        return sqls;
     }
 
-    sqlAsistencia(periodoRow, date) {
+    sqlInsertAsistenciaFecha(periodoRow, date) {
         return this.service.sqlInsert({
             tableName: "asistencias_fechas",
-            values: { horario: this.materiasHorasId(), periodo: periodoRow.id, fecha: date, estado: AsistenciasEstados.ESTADO_NORMAL }
+            values: { horario: this.service.id(), periodo: periodoRow.id, fecha: date, estado: AsistenciasEstados.ESTADO_NORMAL }
         })
     }
 
-    materiasHorasId() {
-        if (this._masteriasHorasId == undefined) {
-            this._masteriasHorasId = Strings.NewGuid()
-        }
-        return this._masteriasHorasId;
+    sqlUpdateHoras() {
+        return this.service.sqlUpdate({
+            tableName: "materias_horas",
+            values: this.materiasHorasValues()
+        })
     }
 
-}
+    sqlDeleteHoras() {
+        return this.service.sqlDeleteWhere({
+            tableName: "materias_horas",
+            where: this.service.sqlText("id=@id", { id: this.service.id() })
+        })
+    }
 
-class MateriasHorasUpdate extends MateriasHorasInsert {
-
-    sqlHorasAsistencias() {
-        return new Sql.Transact([
-            this.sqlHoras(),
-            this.sqlDeleteAsistencias(),
-            this.sqlAsistencias()
-        ])
+    sqlDeleteAll() {
+        return new SqlCommands()
+            .add(this.sqlDeleteAsistencias())
+            .add(this.sqlDeleteHoras())
     }
 
     sqlDeleteAsistencias() {
-        return [
-            this.sqlDeleteAsistenciasAlumnos(),
-            this.sqlDeleteAsistenciasFechas()
-        ]
+        return new SqlCommands()
+            .add(this.sqlDeleteAsistenciasAlumnos())
+            .add(this.sqlDeleteAsistenciasFechas())
     }
 
     sqlDeleteAsistenciasAlumnos() {
+
+        function sqlAsistenciasFechas(service) {
+            return service.sqlSelect({
+                columns: "id",
+                from: "asistencias_fechas",
+                where: "horario=@horario",
+                parameters: { horario: service.id() }
+            })
+        }
+
         return this.service.sqlDeleteWhere({
             tableName: "asistencias_alumnos",
-            where: "asistencia in " + this.sqlAsistenciasFechas()
+            where: "asistenciafecha in (" + sqlAsistenciasFechas(this.service) + ")"
         })
-    }
 
-    sqlAsistenciasFechas() {
-        return this.service.sqlSelect({
-            columns: "id",
-            from: "asistencias_fechas",
-            where: "horario=@horario",
-            parameters: { horario: this.service.id() }
-        }).text()
     }
 
     sqlDeleteAsistenciasFechas() {
         return this.service.sqlDeleteWhere({
             tableName: "asistencias_fechas",
-            where: this.service.sqlText("horario=@horario", { horarios: this.service.id() })
+            where: this.service.sqlText("horario=@horario", { horario: this.service.id() })
         })
+    }
+
+    materiasHorasValues() {
+        return this.service.jsonValues("materiacurso,dia,desde,hasta,fechahasta")
     }
 
 }
 
-class MateriasHorasInsertValidate {
+class MateriasHorasInsertUpdate extends MateriasHorasSqlBase {
 
-    constructor(service) {
-        this.service = service;
+    execute() {
+        return this.validate()
+            .then(() =>
+                this.service.dbSelect(this.sqlPeriodos()))
+            .then(rows =>
+                this.periodosRows = rows)
+            .then(() =>
+                this.defineSql())
+            .then(sql =>
+                this.service.dbExecute(sql))
+            .then(() =>
+                this.service.sendOkey({ id: this.service.id() }))
+            .catch(err =>
+                this.service.sendError(err))
     }
 
     validate() {
@@ -220,23 +227,83 @@ class MateriasHorasInsertValidate {
             .then(() =>
                 this.validateDesdeLowerHasta())
             .then(() =>
-                this.validateNoDesdeHastaCollision(service));
+                this.validateNoDesdeHastaCollision());
+    }
+
+    validateDesdeLowerHasta() {
+        if (this.service.value("hasta") < this.service.value("desde")) {
+            throw Exceptions.Validation({
+                code: Exceptions.HORA_DESDE_DEBE_SER_MENOR_HORA_HASTA
+            })
+        }
+    }
+
+    validateNoDesdeHastaCollision() { }
+
+}
+
+class MateriasHorasInsert extends MateriasHorasInsertUpdate {
+
+    execute() {
+        return Promise.resolve(this.service.checkId())
+            .then(() =>
+                super.execute())
     }
 
     requiredValues() {
         return "materiacurso,dia,desde,hasta"
     }
 
-    validateDesdeLowerHasta(service) { }
-
-    validateNoDesdeHastaCollision(service) { }
+    defineSql() {
+        return Sql.Transact(
+            this.sqlInsertAll()
+        )
+    }
 
 }
 
-class MateriasHorasUpdateValidate extends MateriasHorasInsertValidate {
+class MateriasHorasUpdate extends MateriasHorasInsert {
 
     requiredValues() {
-        return super.requiredValues() + ",diaanterior"
+        return "id,materiacurso,dia,diaanterior,desde,hasta"
+    }
+
+    defineSql() {
+        if (this.service.value("dia") != this.service.value("diaanterior")) {
+            return new SqlCommands()
+                .add(this.sqlDeleteAll())
+                .add(this.sqlInsertAll())
+                .transact()
+
+        } else {
+            return this.sqlUpdateHoras()
+        }
+    }
+
+}
+
+class MateriasHorasDelete extends MateriasHorasSqlBase {
+
+    execute() {
+        return this.validate()
+            .then(() =>
+                this.defineSql())
+            .then(sql =>
+                this.service.dbExecute(sql))
+            .then(() =>
+                this.service.sendOkey({ id: this.service.id() }))
+            .catch(err =>
+                this.sendError(err))
+    }
+
+    validate() {
+        return this.service.validateRequiredValues("id")
+    }
+
+    defineSql() {
+        return Sql.Transact(
+            this.sqlDeleteAll()
+        )
     }
 
 }

@@ -15,9 +15,9 @@ class AsistenciaMateriasCursosService extends ServiceBase {
             .then(count =>
                 this.alumnosCantidadRows = count)
             .then(() =>
-                this.dbSelect(this.sqlAsistenciasCantidad()))
+                this.dbSelect(this.sqlAsistenciasFechasCantidad()))
             .then(count =>
-                this.asistenciasCantidadRows = count)
+                this.asistenciasFechasCantidadRows = count)
             .then(() =>
                 this.dbSelect(this.sqlAsistenciasAlumnosCantidad()))
             .then(count =>
@@ -93,7 +93,7 @@ class AsistenciaMateriasCursosService extends ServiceBase {
         })
     }
 
-    sqlAsistenciasCantidad() {
+    sqlAsistenciasFechasCantidad() {
         return this.sqlSelect(
             {
                 columns: [
@@ -124,7 +124,7 @@ class AsistenciaMateriasCursosService extends ServiceBase {
             {
                 columns: [
                     "mh.materiacurso",
-                    "ad.periodo",
+                    "af.periodo",
                     "count(*)"
                 ],
                 from: "asistencias_alumnos aa",
@@ -136,7 +136,7 @@ class AsistenciaMateriasCursosService extends ServiceBase {
                     "af.fecha<=now()",
                     "af.estado>0",
                     "per.añolectivo=@añolectivo",
-                    "aa.asistio="
+                    "aa.asistio=true"
                 ]),
                 group: [
                     "mh.materiacurso",
@@ -152,8 +152,8 @@ class AsistenciaMateriasCursosService extends ServiceBase {
             periodosRows: this.periodosRows,
             cursosMateriasRows: this.cursosMateriasRows,
             alumnosCantidadRows: this.alumnosCantidadRows,
-            asistenciasDiasCantidadRows: this.asistenciasDiasCantidadRows,
-            asistenciasDiasCantidadRows: this.asistenciasDiasCantidadRows,
+            asistenciasFechasCantidadRows: this.asistenciasFechasCantidadRows,
+            asistenciasAlumnosCantidadRows: this.asistenciasAlumnosCantidadRows,
         }
     }
 

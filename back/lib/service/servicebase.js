@@ -45,6 +45,17 @@ class ServiceBase extends ObjectBase {
         return this.values().id;
     }
 
+    setId(id) {
+        this.values().id = id;
+        return id;
+    }
+
+    checkId() {
+        if (this.id() == undefined) {
+            this.setId(Strings.NewGuid())
+        }
+    }
+
     value(name) {
         return this.values()[name];
     }
@@ -98,7 +109,7 @@ class ServiceBase extends ObjectBase {
     }
 
     validate() {
-        return this.validateRequired(this.requiredValues());
+        return this.validateRequiredValues(this.requiredValues());
     }
 
     validateRequiredValues(requiredValues) {

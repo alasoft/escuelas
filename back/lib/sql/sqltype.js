@@ -35,11 +35,11 @@ class SqlType {
     }
 
     static Time(parameters) {
-        return "time" + this.NotNull(parameters)
+        return "time" + this.NotNull(parameters);
     }
 
-    static Time(parameters) {
-        return "time" + this.NotNull(parameters);
+    static TimeNoSeconds(parameters) {
+        return "time(0)" + this.NotNull(parameters)
     }
 
     static Boolean(parameters) {

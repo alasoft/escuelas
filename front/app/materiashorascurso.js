@@ -106,8 +106,8 @@ class MateriasHorasCursoForm extends FormView {
             id: data.id,
             materiacurso: this.materiaCurso(),
             dia: data.dia,
-            desde: Dates.TimeAsString(data.desde),
-            hasta: Dates.TimeAsString(data.hasta)
+            desde: Dates.FormatTime(data.desde),
+            hasta: Dates.FormatTime(data.hasta)
         })
     }
 

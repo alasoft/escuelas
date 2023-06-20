@@ -42,6 +42,10 @@ class FormView extends EntryView {
         return this.id() == undefined;
     }
 
+    isUpdating() {
+        return !this.isInserting();
+    }
+
     id() {
         return this.getData().id;
     }
@@ -165,11 +169,11 @@ class FormView extends EntryView {
         if (err.code == Exceptions.REQUIRED_VALUE) {
             App.ShowMessage({ message: "Ha ocurrido un error en el Servidor:", detail: "Campo requerido " + Strings.SingleQuotes(err.message), quotes: false })
         } else
-        if (err.code == Exceptions.DUPLICATED_ENTITY) {
-            App.ShowError({ message: this.duplicatedMessage() })
-        } else {
-            super.handleError(err)
-        }
+            if (err.code == Exceptions.DUPLICATED_ENTITY) {
+                App.ShowError({ message: this.duplicatedMessage() })
+            } else {
+                super.handleError(err)
+            }
     }
 
     duplicatedMessage() {

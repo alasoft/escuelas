@@ -44,8 +44,8 @@ class CreateTables extends CreateTablesBase {
                 columns: {
                     materiacurso: SqlType.Fk({ references: "materias_cursos" }),
                     dia: SqlType.Integer(),
-                    desde: SqlType.Time(),
-                    hasta: SqlType.Time(),
+                    desde: SqlType.TimeNoSeconds(),
+                    hasta: SqlType.TimeNoSeconds(),
                     fechahasta: SqlType.Date({ required: false })
                 }
             }),
@@ -57,7 +57,7 @@ class CreateTables extends CreateTablesBase {
                     desde: SqlType.Date(),
                     hasta: SqlType.Date(),
                     preliminar: SqlType.Date({ required: false }),
-                    estado: SqlType.Integer()
+                    estado: SqlType.Integer({ requirede: false })
                 },
                 unique: "añolectivo,nombre"
             }),
@@ -115,11 +115,11 @@ class CreateTables extends CreateTablesBase {
             Sql.Create({
                 tableName: "asistencias_alumnos",
                 columns: {
-                    asistencia: SqlType.Fk({ references: "asistencias_fechas" }),
+                    asistenciafecha: SqlType.Fk({ references: "asistencias_fechas" }),
                     alumno: SqlType.Fk({ references: "alumnos" }),
-                    asistio: SqlType.Boolean({ required: false })
+                    asistio: SqlType.Boolean()
                 },
-                unique: "asistencia,alumno"
+                unique: "asistenciafecha,alumno"
             })
         ]
     }
