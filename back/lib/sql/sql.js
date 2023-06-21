@@ -39,8 +39,6 @@ class Sql {
             return null
         } else if (Utils.IsString(value)) {
             return value.trimEnd()
-        } else if (Utils.IsDate(value)) {
-            return this.Date(value)
         } else {
             return value;
         }

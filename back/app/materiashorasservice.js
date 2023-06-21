@@ -116,22 +116,25 @@ class MateriasHorasSqlBase {
         })
     }
 
-    sqlInsertAll() {
+    sqlInsertAll(newId) {
         return new SqlCommands()
-            .add(this.sqlInsertHoras())
-            .add(this.sqlInsertAsistenciasFechas())
+            .add(this.sqlInsertHoras(newId))
+            .add(this.sqlInsertAsistenciasFechas(this.periodoRows))
     }
 
-    sqlInsertHoras() {
+    sqlInsertHoras(newId = false) {
+        if (newId == true) {
+            this.service.newId()
+        }
         return this.service.sqlInsert({
             tableName: "materias_horas",
             values: this.materiasHorasValues()
         })
     }
 
-    sqlInsertAsistenciasFechas() {
+    sqlInsertAsistenciasFechas(periodoRows) {
         const sqls = new SqlCommands()
-        for (const periodoRow of this.periodosRows) {
+        for (const periodoRow of periodoRows) {
             const dates = Dates.DatesForDayOfWeek(this.service.value("dia"), periodoRow.desde, periodoRow.hasta);
             for (const date of dates) {
                 sqls.add(this.sqlInsertAsistenciaFecha(periodoRow, date))
@@ -143,7 +146,7 @@ class MateriasHorasSqlBase {
     sqlInsertAsistenciaFecha(periodoRow, date) {
         return this.service.sqlInsert({
             tableName: "asistencias_fechas",
-            values: { horario: this.service.id(), periodo: periodoRow.id, fecha: date, estado: AsistenciasEstados.ESTADO_NORMAL }
+            values: { id: Strings.NewGuid(), horario: this.service.id(), periodo: periodoRow.id, fecha: date, estado: AsistenciasEstados.ESTADO_NORMAL }
         })
     }
 
@@ -272,7 +275,7 @@ class MateriasHorasUpdate extends MateriasHorasInsert {
         if (this.service.value("dia") != this.service.value("diaanterior")) {
             return new SqlCommands()
                 .add(this.sqlDeleteAll())
-                .add(this.sqlInsertAll())
+                .add(this.sqlInsertAll(true))
                 .transact()
 
         } else {

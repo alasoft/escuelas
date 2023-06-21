@@ -50,6 +50,10 @@ class ServiceBase extends ObjectBase {
         return id;
     }
 
+    newId() {
+        return this.setId(Strings.NewGuid());
+    }
+
     checkId() {
         if (this.id() == undefined) {
             this.setId(Strings.NewGuid())
