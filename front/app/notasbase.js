@@ -1,4 +1,4 @@
-class NotasBase extends FilterViewBase {
+class NotasBase extends CursoMateriaViewBase {
 
     static COLOR_NOTA_EDITABLE = {
         "background-color": "rgb(200, 245, 220)"
@@ -37,125 +37,12 @@ class NotasBase extends FilterViewBase {
         })
     }
 
-    defaultConfiguration() {
-        return Utils.Merge(super.defaultConfiguration(), {
-            fullScreen: false,
-            components: {
-                list: {
-                    keyExpr: "id",
-                    focusedRowEnabled: false,
-                    dataSource: [],
-                    showBorders: true,
-                    wordWrapEnabled: true,
-                    hoverStateEnabled: true,
-                    columnAutoWidth: true,
-                    groupPanel: {
-                        visible: false
-                    },
-                    onCellPrepared: e => this.listOnCellPrepared(e)
-                }
-            }
-        })
-    }
-
-    filterItems() {
-        return [
-            Item.Group({
-                colCount: 6,
-                items: [
-                    this.itemAñoLectivo(),
-                    this.itemCurso(),
-                    this.itemMateriaCurso()
-                ]
-            })
-        ]
-    }
-
-    itemAñoLectivo() {
-        return Item.Lookup({
-            dataField: "añoLectivo",
-            dataSource: AñosLectivos.DataSource(),
-            width: 100,
-            label: "Año Lectivo",
-            onValueChanged: e =>
-                this.itemAñoLectivoOnValueChanged(e)
-        })
-    }
-
-    itemCurso(p) {
-        return Item.Lookup({
-            dataField: "curso",
-            deferRendering: false,
-            width: 450,
-            colSpan: 4,
-            displayExpr: item =>
-                Cursos.Descripcion(item),
-            onValueChanged: e =>
-                this.itemCursoOnValueChanged(e)
-        })
-    }
-
-    itemMateriaCurso(p) {
-        return Item.Lookup({
-            dataField: "materiaCurso",
-            deferRendering: false,
-            width: 250,
-            label: "Materia",
-            displayExpr: item =>
-                item != null ? item.materianombre : "",
-            onValueChanged: e =>
-                this.itemMateriaCursoOnValueChanged(e)
-        })
-    }
-
-    añoLectivo() {
-        return this.getFilterValue("añoLectivo");
-    }
-
-    curso() {
-        return this.getFilterValue("curso")
-    }
-
-    materiaCurso() {
-        return this.getFilterValue("materiaCurso")
-    }
-
-    loadCursos(curso) {
-        if (this.filter().isReady() && this.añoLectivo() != undefined) {
-            return new Rest({ path: "cursos" })
-                .promise({
-                    verb: "list",
-                    data: { añolectivo: this.añoLectivo() }
-                }).then(rows =>
-                    this.filter().setArrayDataSource(
-                        "curso", rows, curso)
-                )
-        } else {
-            this.filter().clearEditorDataSource("curso");
-        }
-    }
-
-    loadMateriasCursos(materiaCurso) {
-        if (this.curso() != undefined) {
-            return new Rest({ path: "materias_cursos" })
-                .promise({
-                    verb: "list",
-                    data: { curso: this.curso() }
-                })
-                .then(rows => {
-                    this.filter().setArrayDataSource(
-                        "materiaCurso", rows, materiaCurso);
-                })
-        } else {
-            this.filter().clearEditorDataSource("materiaCurso");
-        }
-    }
-
     notasData() {
-        if (this._notasData == undefined) {
-            this._notasData = new NotasData()
-        }
-        return this._notasData;
+        return this.data()
+    }
+
+    defineData() {
+        return new NotasData()
     }
 
     refresh() {
@@ -163,7 +50,7 @@ class NotasBase extends FilterViewBase {
             .then(() =>
                 this.refreshListToolbar())
             .then(() =>
-                this.list().setColumns(this.columns()))
+                this.refreshColumns())
             .then(() =>
                 this.setVisibleColumns())
             .then(() =>
@@ -174,39 +61,18 @@ class NotasBase extends FilterViewBase {
                 this.handleError(err))
     }
 
-    refreshRows() {
-        this.list().setArrayDataSource(this.rows(true))
-    }
-
     setVisibleColumns() {
         if (this.state.list != undefined) {
             this.list().setColumnsVisibility(this.state.list.visibleColumns)
         }
     }
 
-    columns() {
+    defineColumns() {
         return new NotasColumns(this).columns()
     }
 
-    rows(forceRefresh = false) {
-        if (this._rows == undefined || forceRefresh == true) {
-            this._rows = new NotasRows(this).rows()
-        }
-        return this._rows;
-    }
-
-    getState() {
-        return {
-            filter: {
-                añoLectivo: this.getFilterValue("añoLectivo"),
-                curso: this.getFilterValue("curso"),
-                materiaCurso: this.getFilterValue("materiaCurso"),
-            },
-            list: {
-                //                state: this.list().getState(),
-                visibleColumns: this.getVisibleColumns()
-            }
-        }
+    defineRows() {
+        return new NotasRows(this).rows()
     }
 
     getVisibleColumns() {
@@ -231,23 +97,6 @@ class NotasBase extends FilterViewBase {
 
         return state;
 
-    }
-
-    setState() {
-        return this.setFilter(this.state.filter)
-    }
-
-    setFilter(filter) {
-        this.settingFilter = true;
-        return Promise.resolve(this.setFilterValue("añoLectivo", filter.añoLectivo || Dates.ThisYear()))
-            .then(() =>
-                this.loadCursos(filter.curso))
-            .then(() =>
-                this.loadMateriasCursos(filter.materiaCurso))
-            .then(() =>
-                this.refresh())
-            .then(() =>
-                this.settingFilter = false)
     }
 
     itemAlumnos() {
@@ -276,10 +125,6 @@ class NotasBase extends FilterViewBase {
         }
     }
 
-    isNotasVisible() {
-
-    }
-
     alumnos() {
         new AlumnosCurso({
             mode: "popup",
@@ -288,8 +133,8 @@ class NotasBase extends FilterViewBase {
             curso: this.curso(),
             añoLectivoReadOnly: true,
             cursoReadOnly: true
-        })
-            .render().then(closeData =>
+        }).render()
+            .then(closeData =>
                 this.afterAlumnos(closeData))
     }
 
@@ -312,7 +157,6 @@ class NotasBase extends FilterViewBase {
             .render().then(closeData =>
                 this.afterPeriodos(closeData))
     }
-
 
     afterPeriodos(closeData) {
         if (closeData.dataHasChanged == true) {
@@ -371,24 +215,6 @@ class NotasBase extends FilterViewBase {
                 this.dataHasChanged = true)
             .catch(err =>
                 this.saveNotaHandleError(err, p))
-    }
-
-    itemAñoLectivoOnValueChanged(e) {
-        if (this.settingFilter != true) {
-            this.loadCursos();
-        }
-    }
-
-    itemCursoOnValueChanged(e) {
-        if (this.settingFilter != true) {
-            this.loadMateriasCursos();
-        }
-    }
-
-    itemMateriaCursoOnValueChanged(e) {
-        if (this.settingFilter != true) {
-            this.refresh()
-        }
     }
 
     listOnCellPrepared(e) {

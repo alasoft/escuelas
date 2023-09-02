@@ -344,6 +344,7 @@ class Dates {
         return newDate;
     }
 
+
     static DatesForDayOfWeek(dayOfWeek, from, to) {
         const dates = [];
         const date = new Date(from);
@@ -351,7 +352,7 @@ class Dates {
             if (date.getDay() === dayOfWeek) {
                 dates.push(new Date(date))
             }
-            dates.setDate(date.getDate() + 1)
+            date.setDate(date.getDate() + 1)
         }
         return dates;
     }

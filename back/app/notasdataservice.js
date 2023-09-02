@@ -1,29 +1,15 @@
 const { ServiceBase } = require("../lib/service/servicebase");
 const { Exceptions } = require("../lib/utils/exceptions");
+const { CursoMateriaServiceBase } = require("./cursomateriaservicebase");
 
-class NotasDataListService extends ServiceBase {
+class NotasDataListService extends CursoMateriaServiceBase {
 
     execute() {
-        this.validate()
-            .then(() =>
-                this.dbSelectOne(this.sqlMateriaCurso()))
-            .then(row => {
-                if (row != undefined) {
-                    this.materiaCurso = row
-                } else {
-                    throw Exceptions.Validation({
-                        code: Exceptions.MATERIA_CURSO_NOT_FOUND
-                    })
-                }
-            })
+        super.execute()
             .then(() =>
                 this.dbSelect(this.sqlValoraciones()))
             .then(rows =>
                 this.valoracionesRows = rows)
-            .then(() =>
-                this.dbSelect(this.sqlPeriodos()))
-            .then(rows =>
-                this.periodosRows = rows)
             .then(() =>
                 this.dbSelect(this.sqlAlumnos()))
             .then(rows =>
@@ -43,10 +29,6 @@ class NotasDataListService extends ServiceBase {
 
     }
 
-    requiredValues() {
-        return "materiacurso";
-    }
-
     dataToSend() {
         return {
             valoracionesRows: this.valoracionesRows,
@@ -55,21 +37,6 @@ class NotasDataListService extends ServiceBase {
             notasRows: this.notasRows,
             examenesRows: this.examenesRows
         }
-    }
-
-    sqlMateriaCurso() {
-        return this.sqlSelect({
-            columns: [
-                "mcr.id",
-                "mcr.curso",
-                "cur.añolectivo"
-            ],
-            from: "materias_cursos mcr",
-            joins: [
-                { tableName: "cursos", alias: "cur", columnName: "mcr.curso" },
-            ],
-            where: this.sqlAnd().addSql("mcr.id=@id", { id: this.value("materiacurso") })
-        })
     }
 
     sqlValoraciones() {
@@ -82,23 +49,6 @@ class NotasDataListService extends ServiceBase {
                 "vlr.sigla"
             ],
             from: "valoraciones vlr"
-        })
-    }
-
-    sqlPeriodos() {
-        return this.sqlSelect({
-            columns: [
-                "per.id",
-                "per.nombre",
-                "per.desde",
-                "per.hasta",
-                "per.preliminar"
-            ],
-            from: "periodos per",
-            where: this.sqlAnd().addSql("añolectivo=@añolectivo", {
-                añolectivo: this.materiaCurso.añolectivo
-            }),
-            order: "per.desde"
         })
     }
 
