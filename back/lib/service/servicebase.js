@@ -58,6 +58,7 @@ class ServiceBase extends ObjectBase {
         if (this.id() == undefined) {
             this.setId(Strings.NewGuid())
         }
+        return this.id();
     }
 
     value(name) {
@@ -148,42 +149,32 @@ class ServiceBase extends ObjectBase {
     }
 
     sqlSelect(parameters) {
-        if (Utils.IsNotDefined(parameters.tenant)) {
-            parameters.tenant = this.tenant();
-        }
+        parameters.tenant = this.tenant();
         return Sql.Select(parameters);
     }
 
     sqlInsert(parameters) {
-        this.defineValuesToSendInsert(parameters);
-        return new SqlInsert(parameters).text()
+        return new SqlInsert(this.transformParametersWithId(parameters)).text()
     }
 
     sqlUpdate(parameters) {
-        this.defineValuesToSend(parameters);
-        return new SqlUpdate(parameters).text()
+        return new SqlUpdate(this.transformParameters(parameters)).text()
     }
 
     sqlUpdateWhere(parameters) {
-        this.defineValuesToSend(parameters);
-        return new SqlUpdateWhere(parameters).text();
+        return new SqlUpdateWhere(this.transformParameters(parameters)).text();
     }
 
     sqlDelete(parameters) {
-        this.defineValuesToSend(parameters);
-        return new SqlDelete(parameters).text()
+        return new SqlDelete(this.transformParameters(parameters)).text()
     }
 
     sqlDeleteWhere(parameters) {
-        this.defineValuesToSend(parameters, false);
-        return new SqlDeleteWhere(parameters).text();
+        return new SqlDeleteWhere(this.transformParameters(parameters)).text();
     }
 
     sqlDeleteAll(parameters) {
-        if (Utils.IsNotDefined(parameters.values.tenant)) {
-            parameters.values.tenant = this.tenant();
-        }
-        return new SqlDeleteAll(parameters).text()
+        return new SqlDeleteAll(this.transformParameters(parameters)).text()
     }
 
     sqlCount(parameters) {
@@ -191,6 +182,20 @@ class ServiceBase extends ObjectBase {
             parameters.tenant = this.tenant();
         }
         return new SqlCount(parameters).text();
+    }
+
+    transformParameters(parameters) {
+        if (Utils.IsNotDefined(parameters.values)) {
+            parameters.values = {}
+        }
+        parameters.values.tenant = this.tenant();
+        return parameters;
+    }
+
+    transformParametersWithId(parameters) {
+        this.transformParameters(parameters);
+        this.parameters.id = this.checkId();
+        return parameters;
     }
 
     defineValuesToSend(parameters, checkId = true) {
@@ -222,7 +227,7 @@ class ServiceBase extends ObjectBase {
     }
 
     idDto() {
-        return { id: this.valuesToSend.id };
+        return { id: this.id() };
     }
 
     sendError(err) {

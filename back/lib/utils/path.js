@@ -3,6 +3,15 @@ const normalize = require("normalize-path");
 
 class Path {
 
+    static CurrentDir() {
+        return process.cwd()
+    }
+
+    static SubDir(path) {
+        const subDir = normalize(this.CurrentDir() + "/" + path);
+        return subDir;
+    }
+
     static Absolute(...relative) {
         return path.join(__dirname, Path.Concatenate(...relative));
     }

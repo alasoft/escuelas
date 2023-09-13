@@ -3,6 +3,7 @@ const { Utils } = require("./utils");
 class TextBuilder {
 
     constructor(parameters = {}) {
+        this.parameters = parameters;
         this.items = Utils.ToArray(parameters.items);
     }
 

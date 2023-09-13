@@ -6,7 +6,7 @@ const {
     MateriasHorasInsertService,
     MateriasHorasUpdateService,
     MateriasHorasDeleteService
-} = require("./MateriasHorasService");
+} = require("./materiashorasservice");
 
 class MateriasHorasRest extends TableRest {
 

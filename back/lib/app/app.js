@@ -3,12 +3,13 @@ const { UsersCreateTable } = require("../users/users");
 const { UsersLogged } = require("../users/userslogged");
 const { UsersRest } = require("../rest/usersrest");
 const { UserStateRest } = require("../rest/userstaterest");
-const { Utils, Dates, Files } = require("../utils/utils");
+const { Utils, Dates, Files, Properties } = require("../utils/utils");
 const { Exception } = require("../utils/exceptions");
 const { Path } = require("../utils/path");
 const { Obfuscate } = require("../utils/obfuscate");
 const { TextBuilder } = require("../utils/textbuilder");
 const { Strings } = require("../utils/utils");
+const { Postgres } = require("../data/postgres");
 
 class App {
 
@@ -16,18 +17,17 @@ class App {
 
     constructor(parameters) {
         this.parameters = parameters;
-        this.host = parameters.host;
-        this.port = parameters.port;
-        this.root = parameters.root;
-        this.static = parameters.static;
-        this.name = parameters.name;
-        this.version = parameters.version;
-        this.demo = parameters.demo;
-        this.demoMaxAlumnos = parameters.demoMaxAlumnos;
-        this.tokenMinutes = parameters.tokenMinutes || App.TOKEN_MINUTES_DEFAULT;
-        this.logSql = parameters.logSql;
-        this.obfuscated = parameters.obfuscated;
+        this.createTablesFunc = parameters.createTables;
+        this.restItems = parameters.restItems;
+        Properties.SetProperties(this, "back/app/app.json");
+        this.db = new Postgres(this.dbProperties())
         this.setPaths()
+    }
+
+    dbProperties() {
+        const properties = Properties.Load("back/app/db.json");
+        properties.app = this;
+        return properties;
     }
 
     setPaths() {
@@ -62,8 +62,6 @@ class App {
 
     start() {
         this.init()
-            .then(() =>
-                this.dbConnect())
             .then(() =>
                 this.createUsers())
             .then(() =>
@@ -142,19 +140,13 @@ class App {
         }).execute()
     }
 
-    dbConnect() {
-        if (this.parameters.dbConnection != undefined) {
-            this.db = this.parameters.dbConnection(this)
-        }
-    }
-
     createUsers() {
         return new UsersCreateTable({ app: this }).execute();
     }
 
     createTables() {
-        if (this.parameters.createTables != undefined) {
-            return new this.parameters.createTables({ app: this }).execute();
+        if (this.createTablesFunc != undefined) {
+            return new this.createTablesFunc({ app: this }).execute();
         }
     }
 

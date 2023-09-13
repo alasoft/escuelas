@@ -4,6 +4,11 @@ const { ExamenesGetService, ExamenesDeleteService } = require("./examenesservice
 
 class ExamenesAllRest extends TableRest {
 
+    constructor(parameters) {
+        super(parameters);
+        this.path = "examenes_all";
+    }
+
     getTableName() {
         return "examenes";
     }

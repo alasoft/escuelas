@@ -10,8 +10,6 @@ class Cursos extends AñoLectivoView {
                                 summaryType: "count",
                                 alignment: "left",
                                 column: "escuelanombre",
-                                displayFormat: "{0}",
-                                alignment: "center"
                             },
                         ]
                     }

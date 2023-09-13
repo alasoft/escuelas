@@ -1,0 +1,13 @@
+{
+    "host": "http://localhost",
+    "port": 9090,
+    "root": "escuelas",
+    "static": "escuelas",
+    "tokenMinutes": 120,
+    "version": "0.9.7",
+    "name": "Solución Docente",
+    "logSql": true,
+    "obfuscated": false,
+    "demo": false,
+    "demoMaxAlumnos": 50
+}

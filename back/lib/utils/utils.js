@@ -3,10 +3,10 @@ const cuid = require("cuid");
 const simpleEncryptor = require("simple-encryptor");
 const fs = require("fs");
 const path = require('path');
-
+const readConfig = require("read-config-ng");
 const format = require('date-fns/format');
 const es = require('date-fns/locale/es');
-
+const { Path } = require("./path");
 
 class Utils {
 
@@ -336,9 +336,26 @@ class Files {
 
 }
 
+class Properties {
+
+    static Load(path) {
+        const properties = readConfig(Path.SubDir(path));
+        return properties;
+    }
+
+    static SetProperties(object, path) {
+        const properties = this.Load(path);
+        Object.keys(properties).forEach(key =>
+            object[key] = properties[key]
+        )
+    }
+
+}
+
 module.exports.Strings = Strings;
 module.exports.Utils = Utils;
 module.exports.Dates = Dates;
 module.exports.Numbers = Numbers;
 module.exports.Html = Html;
 module.exports.Files = Files;
+module.exports.Properties = Properties;

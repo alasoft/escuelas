@@ -4,6 +4,11 @@ const { MateriasHorasGetService, MateriasHorasDeleteService } = require("./mater
 
 class MateriasHorasAllRest extends TableRest {
 
+    constructor(parameters) {
+        super(parameters);
+        this.path = "materias_horas_all";
+    }
+
     getTableName() {
         return "materias_horas";
     }
