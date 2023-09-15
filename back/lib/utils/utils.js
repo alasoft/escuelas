@@ -1,6 +1,8 @@
 const { _ } = require("lodash");
 const cuid = require("cuid");
 const simpleEncryptor = require("simple-encryptor");
+const EncryptorKey = "123456789022232425606162";
+const Encryptor = simpleEncryptor(EncryptorKey);
 const fs = require("fs");
 const path = require('path');
 const readConfig = require("read-config-ng");
@@ -9,9 +11,6 @@ const es = require('date-fns/locale/es');
 const { Path } = require("./path");
 
 class Utils {
-
-    static EncryptorKey = process.env.ENCRYPTOR_KEY;
-    static Encryptor = simpleEncryptor(this.EncryptorKey);
 
     static IsDefined(x) {
         return (x != undefined && x != null);
@@ -107,11 +106,13 @@ class Utils {
     }
 
     static Encrypt(s) {
-        return this.Encryptor.encrypt(s);
+        const encrypt = Encryptor.encrypt(s);
+        return encrypt;
     }
 
     static Decrypt(s) {
-        return this.Encryptor.decrypt(s);
+        const decrypt = Encryptor.decrypt(s);
+        return decrypt;
     }
 
     static HtmlTab(n = 1) {

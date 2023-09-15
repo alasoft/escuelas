@@ -7,7 +7,7 @@ class ExamenesCurso extends CursosMateriasDetalle {
     extraConfiguration() {
         return {
             mode: "view",
-            showTodosButton: true,
+            showTodosButton: false,
             popup: {
                 title: "Examenes por Curso y Materia",
                 height: 600,
@@ -16,8 +16,8 @@ class ExamenesCurso extends CursosMateriasDetalle {
             components: {
                 filter: {
                     width: 750,
+                    height: 70,
                     labelLocation: "top",
-                    height: 90
                 },
                 list: {
                     showBorders: true,

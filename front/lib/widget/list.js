@@ -98,9 +98,9 @@ class List extends Widget {
 
     deleteRow(parameters) {
         return new Rest({ path: parameters.path }).promise({
-                verb: "delete",
-                data: { id: parameters.id }
-            })
+            verb: "delete",
+            data: { id: parameters.id }
+        })
             .then(() =>
                 this.instance().refresh())
     }
@@ -132,7 +132,7 @@ class List extends Widget {
     refresh(id) {
         this.instance().refresh().then(
             () =>
-            id ? this.focusRowById(id) : undefined
+                id ? this.focusRowById(id) : undefined
         )
     }
 
@@ -221,7 +221,9 @@ class List extends Widget {
     }
 
     setState(state) {
-        this.instance().state(state);
+        if (this.isReady()) {
+            this.instance().state(state);
+        }
         return this;
     }
 

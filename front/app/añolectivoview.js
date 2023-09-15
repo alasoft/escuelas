@@ -5,7 +5,7 @@ class AñoLectivoView extends FilterView {
             components: {
                 filter: {
                     labelLocation: "left",
-                    height: 70
+                    height: 50
                 },
                 list: {
                     headerFilter: {

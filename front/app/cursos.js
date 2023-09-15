@@ -3,6 +3,9 @@ class Cursos extends AñoLectivoView {
     extraConfiguration() {
         return {
             components: {
+                fiter: {
+                    height: 60
+                },
                 list: {
                     summary: {
                         totalItems: [
@@ -23,7 +26,7 @@ class Cursos extends AñoLectivoView {
     }
 
     toolbarItems() {
-        return [this.itemInsert(), this.itemAlumnosCurso(), this.itemMateriasCurso()]
+        return [this.itemInsert(), this.itemMateriasCurso(), this.itemAlumnosCurso()]
     }
 
     itemAlumnosCurso() {

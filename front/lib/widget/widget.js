@@ -20,7 +20,9 @@ class Widget extends Component {
     }
 
     setProperty(propertyName, value) {
-        this.instance().option(propertyName, value);
+        if (this.isReady()) {
+            this.instance().option(propertyName, value);
+        }
     }
 
     setProperties(properties) {

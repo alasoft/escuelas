@@ -4,6 +4,10 @@ class MateriasCurso extends CursosDetalle {
         return "materias_cursos";
     }
 
+    defineTemplate() {
+        return new MateriasCursoTemplate()
+    }
+
     extraConfiguration() {
         return {
             popup: {
@@ -19,17 +23,28 @@ class MateriasCurso extends CursosDetalle {
                 },
                 list: {
                     showBorders: true
+                },
+                bottomToolbar: {
+                    componentClass: Toolbar,
                 }
             }
         }
+    }
+
+    bottomToolbar() {
+        return this.components().bottomToolbar;
     }
 
     refreshListToolbar() {
         this.list().setToolbarItems(this.listToolbarItems())
     }
 
+    refreshBottomToolbar() {
+        return this.bottomToolbar().setItems([this.itemHorarios()])
+    }
+
     listToolbarItems() {
-        return [this.itemInsert(), this.itemHorarios(), this.itemExcelExport(), "searchPanel"]
+        return [this.itemInsert(), this.itemExcelExport(), "searchPanel"]
     }
 
     labelText() {
@@ -153,7 +168,9 @@ class MateriasCurso extends CursosDetalle {
     listOnContentReady(e) {
         this.focusFirstRow();
         this.refreshListToolbar();
-        this.refreshContextMenuItems()
+        this.refreshContextMenuItems();
+        this.refreshBottomToolbar();
+
     }
 
 }
@@ -200,6 +217,17 @@ class MateriasCursoForm extends FormView {
         if (this.masterView() != undefined) {
             this.masterView().focusRowById(this.curso().id);
         }
+    }
+
+}
+
+class MateriasCursoTemplate extends ListViewTemplate {
+
+    topItems() {
+        return super.topItems().concat({
+            name: "bottomToolbar",
+            backgroundColor: App.BOX_BACKGROUND_COLOR,
+        })
     }
 
 }

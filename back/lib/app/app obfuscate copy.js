@@ -154,7 +154,6 @@ class App {
                 "alumnoscurso",
                 "importalumnos",
                 "materiascurso",
-                "materiascursotemplate",
                 "cursosbaseview",
                 "notasdata",
                 "notas",

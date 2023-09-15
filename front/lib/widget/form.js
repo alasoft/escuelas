@@ -46,7 +46,9 @@ class Form extends Widget {
     }
 
     getEditor(dataField) {
-        return this.instance().getEditor(dataField);
+        if (this.isReady()) {
+            return this.instance().getEditor(dataField);
+        }
     }
 
     getDate(dataField) {
@@ -89,7 +91,10 @@ class Form extends Widget {
     }
 
     setEditorProperty(dataField, propertyName, value) {
-        this.getEditor(dataField).option(propertyName, value);
+        const editor = this.getEditor(dataField);
+        if (editor != undefined) {
+            editor.option(propertyName, value);
+        }
     }
 
     setEditorProperties(dataField, properties) {
@@ -97,7 +102,10 @@ class Form extends Widget {
     }
 
     setEditorReadOnly(dataField) {
-        this.getEditor(dataField).option({ "inputAttr.class": App.FONT_READ_ONLY, focusStateEnabled: false, readOnly: true, })
+        const editor = this.getEditor(dataField);
+        if (editor != undefined) {
+            editor.option({ "inputAttr.class": App.FONT_READ_ONLY, focusStateEnabled: false, readOnly: true, })
+        }
     }
 
     setEditorValue(dataField, value) {

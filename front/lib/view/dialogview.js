@@ -10,13 +10,14 @@ class DialogView extends View {
                 }
             }
         })
+
     }
 
     defineTemplate() {
         return new DialogViewTemplate();
     }
 
-    popupConfiguration() {}
+    popupConfiguration() { }
 
     toolbar() {
         return this.components().toolbar;

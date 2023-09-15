@@ -110,7 +110,7 @@ class CreateTables extends CreateTablesBase {
                     fecha: SqlType.Date(),
                     estado: SqlType.Integer()
                 },
-                unique: "horario,fecha"
+                unique: "materiahora,fecha"
             }),
             Sql.Create({
                 tableName: "inasistencias",

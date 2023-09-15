@@ -22,9 +22,7 @@ class ListViewBase extends View {
         })
     }
 
-    labelText() {
-
-    }
+    labelText() { }
 
     list() {
         return this.components().list;
@@ -84,7 +82,7 @@ class ListViewBase extends View {
     }
 
     excelFileName() {
-        return Utils.Evaluate(this.configuration().excelFileName);        
+        return Utils.Evaluate(this.configuration().excelFileName);
     }
 
     excelDialogWidth() {
@@ -193,7 +191,7 @@ class ListViewBaseTemplate extends Template {
         }
     }
 
-    mainItems(){
+    mainItems() {
         return [
             this.label(),
             this.body()
@@ -217,7 +215,7 @@ class ListViewBaseTemplate extends Template {
         }
     }
 
-    bodyItems(){
+    bodyItems() {
         return [
             this.list(),
             this.contextMenu()
