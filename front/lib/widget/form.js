@@ -56,7 +56,7 @@ class Form extends Widget {
     }
 
     getTime(dataField, format) {
-        return Dates.FormatTime(this.getEditorValue(dataField), formatf)
+        return Dates.FormatTime(this.getEditorValue(dataField), format)
     }
 
     getSingleQuotes(dataField) {

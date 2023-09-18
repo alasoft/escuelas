@@ -99,7 +99,9 @@ class CursoMateriaViewBase extends FilterViewBase {
     getVisibleColumns() { }
 
     setState() {
-        return this.setFilterValues(this.state.filter)
+        if (this.filter().isReady()) {
+            return this.setFilterValues(this.state.filter)
+        }
     }
 
     setFilterValues(values) {
@@ -117,33 +119,37 @@ class CursoMateriaViewBase extends FilterViewBase {
     }
 
     loadCursos(curso) {
-        if (this.filter().isReady() && this.añoLectivo() != undefined) {
-            return new Rest({ path: "cursos" })
-                .promise({
-                    verb: "list",
-                    data: { añolectivo: this.añoLectivo() }
-                }).then(rows =>
-                    this.filter().setArrayDataSource(
-                        "curso", rows, curso)
-                )
-        } else {
-            this.filter().clearEditorDataSource("curso");
+        if (this.filter().isReady()) {
+            if (this.añoLectivo() != undefined) {
+                return new Rest({ path: "cursos" })
+                    .promise({
+                        verb: "list",
+                        data: { añolectivo: this.añoLectivo() }
+                    }).then(rows =>
+                        this.filter().setArrayDataSource(
+                            "curso", rows, curso)
+                    )
+            } else {
+                this.filter().clearEditorDataSource("curso");
+            }
         }
     }
 
     loadMateriasCursos(materiaCurso) {
-        if (this.curso() != undefined) {
-            return new Rest({ path: "materias_cursos" })
-                .promise({
-                    verb: "list",
-                    data: { curso: this.curso() }
-                })
-                .then(rows => {
-                    this.filter().setArrayDataSource(
-                        "materiaCurso", rows, materiaCurso);
-                })
-        } else {
-            this.filter().clearEditorDataSource("materiaCurso");
+        if (this.filter().isReady()) {
+            if (this.curso() != undefined) {
+                return new Rest({ path: "materias_cursos" })
+                    .promise({
+                        verb: "list",
+                        data: { curso: this.curso() }
+                    })
+                    .then(rows => {
+                        this.filter().setArrayDataSource(
+                            "materiaCurso", rows, materiaCurso);
+                    })
+            } else {
+                this.filter().clearEditorDataSource("materiaCurso");
+            }
         }
     }
 

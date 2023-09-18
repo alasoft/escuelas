@@ -42,6 +42,7 @@ class Exceptions {
     static MAX_ALUMNOS_ALLOWED_FOR_DEMO = "maxAlumnosAllowedForDemo"
 
     static HORA_DESDE_DEBE_SER_MENOR_HORA_HASTA = "horaDesdeDebeSerMenorHoraHasta"
+    static HORARIO_COLISION = "horarioColision"
 
     // Client Side 
 

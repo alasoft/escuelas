@@ -194,20 +194,39 @@ class MateriasHorasForm extends CursosMateriasForm {
     handleError(err) {
         if (err.code == Exceptions.HORA_DESDE_DEBE_SER_MENOR_HORA_HASTA) {
             this.handleHoraDesdeDebeSerMenor(err)
-        } else {
+        } else if (err.code == Exceptions.HORARIO_COLISION) {
+            this.handleHorarioColision(err)
+        }
+        else {
             super.handleError(err)
         }
     }
 
     handleHoraDesdeDebeSerMenor(err) {
         App.ShowMessage([{
-            message: "La horas desde",
+            message: "La hora desde",
             detail: this.getTime("desde")
         },
         {
             message: "debe ser menor a la hora hasta",
             detail: this.getTime("hasta")
         }
+        ])
+    }
+
+    handleHorarioColision(err) {
+        App.ShowMessage([
+            {
+                message: "El horario del",
+                detail: this.getEditorText("dia") + ", " + this.getTime("desde") + " - " +
+                    this.getTime("hasta") + "<br><br>" + this.getEditorText("curso"),
+                quotes: false
+            },
+            {
+                message: "colisiona con el del ",
+                detail: Cursos.Descripcion(err.detail),
+                quotes: false
+            }
         ])
     }
 

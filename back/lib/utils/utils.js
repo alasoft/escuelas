@@ -127,6 +127,10 @@ class Utils {
         return Utils.ZeroesLeft(d.getHours(), 2) + ":" + Utils.ZeroesLeft(d.getMinutes(), 2) + ":" + Utils.ZeroesLeft(d.getSeconds(), 2);
     }
 
+    static Intersect(x1, x2, x3, x4) {
+        return (x1 >= x3 && x1 <= x4) || (x2 >= x3 && x2 <= x4);
+    }
+
 }
 
 class Strings {
@@ -169,6 +173,14 @@ class Strings {
 
     static Contains(s1, s2) {
         return s1.includes(s2);
+    }
+
+    static Left(s, n) {
+        return s.substring(0, n)
+    }
+
+    static AsHour(s) {
+        return this.Left(s, 5)
     }
 
 }

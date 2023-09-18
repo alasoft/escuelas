@@ -88,6 +88,10 @@ class ServiceBase extends ObjectBase {
         }
     }
 
+    hour(name) {
+        return Strings.AsHour(this.value(name))
+    }
+
     oneSpace(name) {
         const value = this.value(name);
         if (value != undefined) {
@@ -278,6 +282,16 @@ class ServiceBase extends ObjectBase {
 
     clientDescription() {
         return this.req.headers.client_description;
+    }
+
+    compare(a, b) {
+        if (this.value(a) < this.value(b)) {
+            return -1;
+        } else if (this.value(a) == this.value(b)) {
+            return 0
+        } else {
+            return 1;
+        }
     }
 
 }

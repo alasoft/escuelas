@@ -43,6 +43,7 @@ class Exceptions {
     static FILE_NOT_FOUND = "fileNotFound"
 
     static HORA_DESDE_DEBE_SER_MENOR_HORA_HASTA = "horaDesdeDebeSerMenorHoraHasta"
+    static HORARIO_COLISION = "horarioColision"
 
     static MAX_ALUMNOS_ALLOWED_FOR_DEMO = "maxAlumnosAllowedForDemo"
 
@@ -163,6 +164,20 @@ class Exceptions {
         return new Exception({
             type: this.TYPE_INTERNAL,
             code: FOREIGN_KEY_REFERENCE_NOT_DEFINED
+        }, p)
+    }
+
+    static HoraDesdeDebeSerMenorHoraHasta(p) {
+        return new Exception({
+            type: this.TYPE_VALIDATION,
+            code: this.HORA_DESDE_DEBE_SER_MENOR_HORA_HASTA
+        }, p)
+    }
+
+    static HorarioColision(p) {
+        return new Exception({
+            type: this.TYPE_VALIDATION,
+            code: this.HORARIO_COLISION
         }, p)
     }
 

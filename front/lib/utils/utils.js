@@ -167,18 +167,6 @@ class Strings {
         }
     }
 
-    /*    
-        static StringIs(string, strings) {
-
-            for (const s of this.ToArray(strings)) {
-                if (this.EqualsIgnoreCase(string, s)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-    */
-
     static ToArray(s) {
         if (Utils.IsArray(s)) {
             return s
@@ -229,6 +217,14 @@ class Strings {
 
     static TrimOnSpace(s) {
         return this.OneSpace(s).trim();
+    }
+
+    static Left(s, n) {
+        return s.substring(0, n)
+    }
+
+    static AsHour(s) {
+        return this.Left(s, 5)
     }
 
 }
@@ -316,7 +312,10 @@ class Dates {
     static FormatTime(d, format = "HH:mm") {
         if (Utils.IsDate(d)) {
             return $.format.date(d, format)
-        } else {
+        } else if (Utils.IsString(d)) {
+            return Strings.AsHour(d)
+        }
+        else {
             return d;
         }
     }

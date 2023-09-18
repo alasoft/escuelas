@@ -32,17 +32,17 @@ class Errors {
         if (err instanceof TypeError) {
             return App.ShowMessage([{ message: "Ha ocurrido un error inesperado:", detail: err.message }, { message: "Detalle:", detail: err.stack }])
         } else
-        if (err.code == Exceptions.INVALID_TOKEN) {
-            this.HandleInvalidToken()
-        } else if (err.side == Exceptions.SERVER_SIDE && err.type == Exceptions.TYPE_INTERNAL) {
-            this.HandleInternalServer(err)
-        } else if (err.code == Exceptions.FORM_VALIDATION) {
+            if (err.code == Exceptions.INVALID_TOKEN) {
+                this.HandleInvalidToken()
+            } else if (err.side == Exceptions.SERVER_SIDE && err.type == Exceptions.TYPE_INTERNAL) {
+                this.HandleInternalServer(err)
+            } else if (err.code == Exceptions.FORM_VALIDATION) {
 
-        } else {
-            return App.ShowError({ message: err.message || App.UNIDENTIFIED_ERROR_MESSAGE }).then(closeData => {
-                console.log(err.stack)
-            })
-        }
+            } else {
+                return App.ShowError({ message: err.message || App.UNIDENTIFIED_ERROR_MESSAGE }).then(closeData => {
+                    console.log(err.stack)
+                })
+            }
     }
 
     static HandleInvalidToken() {
@@ -52,7 +52,7 @@ class Errors {
                 detail: App.UserNombreApellido(),
                 skipSection: 2
             }, {
-                message: "ha terminado por tiempo",
+                message: "ha terminado.",
                 quotes: false,
                 detail: "Para continuar operando Ud. debe reingresar al Sistema"
             }]
@@ -63,7 +63,7 @@ class Errors {
     static HandleInternalServer(err) {
         return App.ShowError({
             message: Messages.Build([{
-                message: "Ha ocurrido un Error en el Servidor:",
+                message: "Ha ocurrido un error en el Servidor:",
                 detail: err.message
             }, {
                 message: "datos del error:",
