@@ -53,4 +53,8 @@ class Widget extends Component {
         this.setProperty("width", width)
     }
 
+    repaint() {
+        this.instance().repaint()
+    }
+
 }

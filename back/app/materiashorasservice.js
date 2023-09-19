@@ -115,21 +115,28 @@ class MateriasHorasCommonService {
             return service.sqlSelect({
                 columns: [
                     "id",
+                    "dia",
                     "desde",
                     "hasta",
                 ],
                 from: "materias_horas",
-                where: "dia=@dia",
-                parameters: {
-                    dia: service.value("dia")
-                }
+                where: service.sqlAnd()
+                    .addIf(service.isDefined("id"), () =>
+                        service.sqlText("id!=@id", { id: service.id() }))
+                    .addSql("dia=@dia", { dia: service.value("dia") })
             })
         }
 
         function validateRange(rows) {
+            const desde = service.value("desde");
+            const hasta = service.value("hasta");
             rows.forEach(row => {
-                if (Utils.Intersect(service.value("desde"), service.value("hasta"),
-                    Strings.AsHour(row.desde), Strings.AsHour(row.hasta))) {
+                if (
+                    Utils.Intersect(desde, hasta,
+                        Strings.AsHour(row.desde), Strings.AsHour(row.hasta)) &&
+                    !Utils.Adjacent(desde, hasta,
+                        Strings.AsHour(row.desde), Strings.AsHour(row.hasta))
+                ) {
                     throw row
                 }
             })
@@ -144,6 +151,7 @@ class MateriasHorasCommonService {
                     "esc.nombre as escuelanombre",
                     "mod.nombre as modalidadnombre",
                     "mat.nombre as materianombre",
+                    row.dia + " as dia",
                     Sql.Value(Strings.Left(row.desde, 5)) + " as desde",
                     Sql.Value(Strings.Left(row.hasta, 5)) + " as hasta"
                 ],
@@ -164,10 +172,10 @@ class MateriasHorasCommonService {
             .then(rows =>
                 validateRange(rows))
             .catch(row =>
-                service.db.selectOne(sqlCursoMateria(row)))
-            .then(row => {
-                throw Exceptions.HorarioColision({ detail: row })
-            })
+                service.db.selectOne(sqlCursoMateria(row))
+                    .then(row => {
+                        throw Exceptions.HorarioColision({ detail: row })
+                    }))
     }
 
 }

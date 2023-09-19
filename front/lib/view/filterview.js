@@ -39,4 +39,3 @@ class FilterView extends ListView {
     }
 
 }
-

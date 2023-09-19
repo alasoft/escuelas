@@ -114,10 +114,6 @@ class AlumnosCurso extends CursosDetalle {
         return super.itemCurso({ deferRendering: false })
     }
 
-    cursoLoadFirst() {
-        return false;
-    }
-
     listColumns() {
         return [
             Column.Id(),

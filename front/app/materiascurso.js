@@ -63,8 +63,7 @@ class MateriasCurso extends CursosDetalle {
         super.setState()
     }
 
-    cursoLoadFirst() {
-        return false;
+    afterSetState() {
     }
 
     listColumns() {
@@ -124,7 +123,10 @@ class MateriasCurso extends CursosDetalle {
     }
 
     horarios() {
-        new MateriasHorasCurso(this.detailData()).render()
+        new MateriasHoras({
+            mode: "popup",
+            popup: { width: 1200, height: 600 }
+        }).render()
             .then(closeData =>
                 closeData.dataHasChanged ? this.refresh(this.id()) : undefined)
     }
@@ -170,7 +172,6 @@ class MateriasCurso extends CursosDetalle {
         this.refreshListToolbar();
         this.refreshContextMenuItems();
         this.refreshBottomToolbar();
-
     }
 
 }

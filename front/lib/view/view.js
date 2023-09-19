@@ -154,6 +154,8 @@ class View extends Component {
             })
             .then(() =>
                 this.setState())
+            .then(() =>
+                this.afterSetState())
     }
 
     emptyState() {
@@ -161,6 +163,8 @@ class View extends Component {
     }
 
     setState() { }
+
+    afterSetState() { }
 
     endRender() {
         if (this.isPopup()) {

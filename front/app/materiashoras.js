@@ -126,7 +126,6 @@ class MateriasHorasForm extends CursosMateriasForm {
             id: data.id,
             materiacurso: data.materiacurso,
             dia: data.dia,
-            diaanterior: this.isUpdating() ? this.dataSaved().dia : undefined,
             desde: Dates.FormatTime(data.desde),
             hasta: Dates.FormatTime(data.hasta)
         }
@@ -217,14 +216,15 @@ class MateriasHorasForm extends CursosMateriasForm {
     handleHorarioColision(err) {
         App.ShowMessage([
             {
-                message: "El horario del",
-                detail: this.getEditorText("dia") + ", " + this.getTime("desde") + " - " +
-                    this.getTime("hasta") + "<br><br>" + this.getEditorText("curso"),
+                message: "El horario",
+                detail: this.getEditorText("dia") + ", " + this.getTime("desde") + " - " + this.getTime("hasta") +
+                    "<br><br>" + Html.Tab(2) + this.getEditorText("curso"),
                 quotes: false
             },
             {
-                message: "colisiona con el del ",
-                detail: Cursos.Descripcion(err.detail),
+                message: "choca con el horario",
+                detail: DiasSemana.GetNombre(err.detail.dia) + ", " + err.detail.desde + " - " + err.detail.hasta +
+                    "<br><br>" + Html.Tab(2) + Cursos.Descripcion(err.detail),
                 quotes: false
             }
         ])
