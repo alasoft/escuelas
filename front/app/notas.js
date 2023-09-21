@@ -71,7 +71,7 @@ class Notas extends NotasBase {
 
     listToolbarItems() {
         return [
-            this.itemPeriodos(),
+            //            this.itemPeriodos(),
             this.itemAlumnos(),
             this.itemExamenes(),
             this.itemCursosMaterias(),

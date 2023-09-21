@@ -527,10 +527,14 @@ class ListViewTemplate extends Template {
             name: "toolbar",
             backgroundColor: App.BOX_BACKGROUND_COLOR,
         }, {
-            name: "list",
             fillContainer: true,
             orientation: "vertical",
-            height: 1
+            items: [{
+                name: "list",
+                fillContainer: true,
+                orientation: "vertical",
+                height: 0
+            },]
         }, {
             name: "contextMenu"
         }]

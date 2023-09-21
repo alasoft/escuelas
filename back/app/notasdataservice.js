@@ -60,9 +60,8 @@ class NotasDataListService extends CursoMateriaServiceBase {
                 "alu.nombre"
             ],
             from: "alumnos alu",
-            where: this.sqlAnd().addSql("alu.curso=@curso", {
-                curso: this.materiaCurso.curso
-            }),
+            where: "alu.curso=@curso",
+            parameters: { curso: this.materiaCurso.curso },
             order: "alu.apellido,alu.nombre"
         })
     }

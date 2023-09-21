@@ -125,7 +125,8 @@ class MateriasCurso extends CursosDetalle {
     horarios() {
         new MateriasHoras({
             mode: "popup",
-            popup: { width: 1200, height: 600 }
+            popup: { width: 1200, height: 600 },
+            añoLectivoReadOnly: true
         }).render()
             .then(closeData =>
                 closeData.dataHasChanged ? this.refresh(this.id()) : undefined)

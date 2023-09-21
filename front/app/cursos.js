@@ -76,7 +76,11 @@ class Cursos extends AñoLectivoView {
             masterView: this,
             isDetail: true,
             añolectivo: this.añoLectivo(),
-            curso: this.id()
+            añoLectivoReadOnly: true,
+            curso: this.id(),
+            popup: {
+                height: 600
+            }
         }).render()
     }
 
@@ -85,6 +89,7 @@ class Cursos extends AñoLectivoView {
             masterView: this,
             isDetail: true,
             añolectivo: this.añoLectivo(),
+            añoLectivoReadOnly: true,
             curso: this.id()
         }).render()
     }
@@ -220,7 +225,21 @@ class CursosForm extends FormView {
     }
 
     duplicatedMessage() {
-        return Messages.Build({ message: "Ya existe un Curso con los datos:", detail: this.listView().cursoDescripcion() })
+        return Messages.Build({
+            message: "Ya existe un Curso con estos datos:", detail: this.descripcion() + " / "
+                + this.getEditorValue("añolectivo")
+        })
+    }
+
+    descripcion() {
+        return Cursos.Descripcion(
+            {
+                escuelanombre: this.getEditorText("escuela"),
+                modalidadnombre: this.getEditorText("modalidad"),
+                año: this.getEditorValue("año"),
+                division: this.getEditorText("division"),
+                turno: this.getEditorValue("turno")
+            })
     }
 
 }

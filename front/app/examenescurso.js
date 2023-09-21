@@ -11,7 +11,7 @@ class ExamenesCurso extends CursosMateriasDetalle {
             popup: {
                 title: "Examenes por Curso y Materia",
                 height: 600,
-                width: 950
+                width: 1150
             },
             components: {
                 filter: {
@@ -43,7 +43,7 @@ class ExamenesCurso extends CursosMateriasDetalle {
     }
 
     itemInsert() {
-        if (this.getFilterValue("curso") != undefined) {
+        if (this.getFilterValue("materiacurso") != undefined) {
             return {
                 widget: "dxButton",
                 location: "before",
@@ -90,8 +90,8 @@ class ExamenesCurso extends CursosMateriasDetalle {
     listColumns() {
         return [
             Column.Id(),
-            Column.Text({ dataField: "periodonombre", caption: "Período", filtering: true }),
-            Column.Calculated({ caption: "Tipo", formula: row => ExamenesTipos.GetNombre(row.tipo) }),
+            Column.Text({ dataField: "periodonombre", caption: "Período", filtering: true, width: 220 }),
+            Column.Calculated({ caption: "Tipo", formula: row => ExamenesTipos.GetNombre(row.tipo), width: 180 }),
             Column.Text({ dataField: "nombre" }),
             Column.Date({ dataField: "desde", width: 200, caption: "Fecha de Inicio", format: App.DATE_FORMAT_LONG }),
             Column.Date({ dataField: "hasta", caption: "Fecha de Cierre", width: 200, format: App.DATE_FORMAT_LONG })
@@ -271,7 +271,7 @@ class ExamenesCursoForm extends FormView {
     definePeriodoDefault() {
         let periodo;
         if (0 < this.periodos.length) {
-            this.periodos.find(per =>
+            periodo = this.periodos.find(per =>
                 Dates.Between(Dates.Today(), per.desde, per.hasta));
             if (periodo == undefined) {
                 periodo = this.periodos[0];
@@ -281,7 +281,7 @@ class ExamenesCursoForm extends FormView {
     }
 
     defineDesdeDefault() {
-        let desde = Dates.Today;
+        let desde = Dates.Today();
         if (!Dates.Between(desde, this.periodoDefault().desde, this.periodoDefault().hasta)) {
             desde = this.periodoDefault().desde;
         }

@@ -109,7 +109,7 @@ class MateriasCursosListService extends TableListService {
                 if (horarios != "") {
                     horarios += "<br><br>"
                 }
-                horarios += Dates.DayName(row.dia) + "  " + row.desde.substring(0, 5) + " - " + row.hasta.substring(0, 5)
+                horarios += Dates.DayName(row.dia) + ", " + row.desde.substring(0, 5) + " - " + row.hasta.substring(0, 5)
             }
         }
         return horarios;
