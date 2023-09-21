@@ -12,7 +12,7 @@ class NotasBase extends CursoMateriaViewBase {
     }
 
     static COLOR_PASADO = {
-        "background-color": "rgb(243, 247, 250)"
+        "background-color": "rgb(239, 241, 243)"
     }
 
     static COLOR_PRESENTE = {

@@ -246,7 +246,7 @@ class NotasData {
         if (periodoRow.temporalidad == Dates.PASADO) {
             return "Completo"
         } else if (examenesNoFuturosCantidad == 0) {
-            return "No es posible cargar notas aún"
+            return "No hay exámenes"
         } else {
             return "Notas al dia"
         }

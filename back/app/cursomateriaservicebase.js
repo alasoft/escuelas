@@ -3,10 +3,6 @@ const { Exceptions } = require("../lib/utils/exceptions");
 
 class CursoMateriaServiceBase extends ServiceBase {
 
-    get materiaCurso() {
-        return this.value("materiacurso");
-    }
-
     execute() {
         return this.validate()
             .then(() =>
@@ -35,7 +31,7 @@ class CursoMateriaServiceBase extends ServiceBase {
                 { tableName: "cursos", alias: "cur", columnName: "mc.curso" },
             ],
             where: "mc.id=@id",
-            parameters: { id: this.materiaCurso }
+            parameters: { id: this.value("materiacurso") }
         })
     }
 
