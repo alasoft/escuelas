@@ -192,13 +192,15 @@ class ServiceBase extends ObjectBase {
         if (Utils.IsNotDefined(parameters.values)) {
             parameters.values = {}
         }
-        parameters.values.tenant = this.tenant();
+        if (Utils.IsDefined(this.user())) {
+            parameters.values.tenant = this.tenant();
+        }
         return parameters;
     }
 
     transformParametersWithId(parameters) {
         this.transformParameters(parameters);
-        this.parameters.id = this.checkId();
+        parameters.values.id = this.checkId();
         return parameters;
     }
 

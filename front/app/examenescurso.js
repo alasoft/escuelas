@@ -341,11 +341,11 @@ class ExamenesCursoForm extends FormView {
 
     handleDebeEstarDentroPeriodo(err) {
         App.ShowMessage([{
-            message: "Las fechas",
-            detail: this.form().getDate("desde") + " / " + this.form().getDate("hasta"),
+            message: "El intervalo que va",
+            detail: "del " + this.form().getDate("desde") + " al " + this.form().getDate("hasta"),
             quotes: false,
         }, {
-            message: "deben estar dentro del Periodo",
+            message: "debe estar dentro del Periodo",
             detail: this.getEditorText("periodo"),
             quotes: false
         }])

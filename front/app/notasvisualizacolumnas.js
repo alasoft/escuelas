@@ -48,16 +48,16 @@ class NotasVisualizaColumnas extends View {
     }
 
     toolbarItems() {
-        return [this.itemSalida()]
+        return [this.itemOkey()]
     }
 
-    itemSalida() {
+    itemOkey() {
         return {
             widget: "dxButton",
             location: "before",
             options: {
                 icon: "close",
-                text: "Salida",
+                text: "Okey",
                 onClick: e => this.close()
             }
         }

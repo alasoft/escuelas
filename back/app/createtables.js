@@ -57,7 +57,7 @@ class CreateTables extends CreateTablesBase {
                     desde: SqlType.Date(),
                     hasta: SqlType.Date(),
                     preliminar: SqlType.Date({ required: false }),
-                    estado: SqlType.Integer({ requirede: false })
+                    estado: SqlType.Integer({ required: false })
                 },
                 unique: "añolectivo,nombre"
             }),

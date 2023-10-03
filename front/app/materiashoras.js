@@ -7,7 +7,7 @@ class MateriasHoras extends AñoLectivoView {
     extraConfiguration() {
         return {
             popup: {
-                title: "Horarios"
+                title: "Horarios de Materias"
             },
             components: {
                 filter: {
@@ -222,7 +222,7 @@ class MateriasHorasForm extends CursosMateriasForm {
                 quotes: false
             },
             {
-                message: "choca con el horario",
+                message: "colisiona con el horario",
                 detail: DiasSemana.GetNombre(err.detail.dia) + ", " + err.detail.desde + " - " + err.detail.hasta +
                     "<br><br>" + Html.Tab(2) + Cursos.Descripcion(err.detail),
                 quotes: false

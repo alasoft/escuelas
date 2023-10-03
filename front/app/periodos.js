@@ -93,7 +93,7 @@ class Periodos extends AñoLectivoView {
 
     static TemporalidadDescripcion(t) {
         if (t == Dates.PASADO) {
-            return " / Anterior"
+            return " / Pasado"
         } else if (t == Dates.PRESENTE) {
             return " / Vigente"
         } else {
@@ -193,7 +193,7 @@ class PeriodosFormView extends FormView {
             quotes: false,
             detail: "Del " + this.getDate("desde") + " al " + this.getDate("hasta")
         }, {
-            message: "intersecta al " + err.detail.nombre,
+            message: "colisiona con el " + err.detail.nombre,
             quotes: false,
             detail: "Del " + Dates.Format(err.detail.desde) + " al " + Dates.Format(err.detail.hasta)
         }])

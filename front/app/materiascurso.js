@@ -191,7 +191,7 @@ class MateriasCursoForm extends FormView {
         return {
             title: "Materia Dictada",
             width: 600,
-            height: 450
+            height: 350
         }
     }
 
@@ -212,7 +212,7 @@ class MateriasCursoForm extends FormView {
         return Messages.Build([{
             message: "La Materia:",
             detail: this.getEditorText("materia")
-        }, { message: "ya esta asociada para el Curso", detail: this.listView().cursoDescripcion() }])
+        }, { message: "ya esta asociada con el Curso", detail: this.listView().cursoDescripcion() }])
     }
 
     popupOnHidden(e) {
