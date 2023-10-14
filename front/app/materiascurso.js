@@ -12,6 +12,8 @@ class MateriasCurso extends CursosDetalle {
         return {
             popup: {
                 title: "Materias Dictadas en el Curso",
+                width: 950,
+                height: 500
             },
             components: {
                 filter: {

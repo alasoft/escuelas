@@ -59,7 +59,7 @@ class SimpleTableUpdateService extends TableUpdateService {
     }
 
     sqlValues() {
-        return { nombre: this.value("nombre") }
+        return { id: this.id(), nombre: this.value("nombre") }
     }
 
 }

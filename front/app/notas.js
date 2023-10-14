@@ -103,55 +103,59 @@ class Notas extends NotasBase {
     }
 
     itemExamenes() {
-        return {
-            widget: "dxButton",
-            location: "before",
-            options: {
-                icon: "background",
-                text: "Examenes",
-                hint: "Consulta Examenes de la Materia",
-                onClick: e => this.examenes()
+        if (this.filterValueDefined("materiaCurso"))
+            return {
+                widget: "dxButton",
+                location: "before",
+                options: {
+                    icon: "background",
+                    text: "Examenes",
+                    hint: "Consulta Examenes de la Materia",
+                    onClick: e => this.examenes()
+                }
             }
-        }
     }
 
     itemVisualiza() {
-        return {
-            widget: "dxButton",
-            location: "before",
-            options: {
-                icon: "search",
-                text: "Visualiza Columnas",
-                hint: "Selecciona columnas a visualizar",
-                onClick: e => this.visualizaColumnas()
+        if (this.filterValueDefined("materiaCurso"))
+            return {
+                widget: "dxButton",
+                location: "before",
+                options: {
+                    icon: "search",
+                    text: "Visualiza Columnas",
+                    hint: "Selecciona columnas a visualizar",
+                    onClick: e => this.visualizaColumnas()
+                }
             }
-        }
     }
 
     itemValoraciones() {
-        return {
-            widget: "dxButton",
-            location: "before",
-            options: {
-                icon: "percent",
-                text: "Valoraciones",
-                hint: "Valoraciones Porcentuales por Período",
-                onClick: e => this.valoraciones()
+        if (this.filterValueDefined("materiaCurso"))
+            return {
+                widget: "dxButton",
+                location: "before",
+                options: {
+                    icon: "percent",
+                    text: "Valoraciones",
+                    hint: "Valoraciones Porcentuales por Período",
+                    onClick: e => this.valoraciones()
+                }
             }
-        }
     }
 
     itemCursosMaterias() {
-        return {
-            widget: "dxButton",
-            location: "before",
-            options: {
-                icon: "menu",
-                text: "Cursos y Materias",
-                hint: "Selecciona",
-                onClick: e => this.cursosMaterias()
+        if (this.filterValueDefined("materiaCurso"))
+            return {
+                widget: "dxButton",
+                location: "before",
+                options: {
+                    icon: "menu",
+                    text: "Cursos y Materias",
+                    hint: "Selecciona",
+                    onClick: e => this.cursosMaterias()
+                }
             }
-        }
     }
 
     excelFileName() {
