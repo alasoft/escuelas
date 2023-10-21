@@ -27,7 +27,7 @@ class List extends Widget {
             },
             pager: {
                 visible: false,
-                showInfo: false,
+                showInfo: true,
                 showNavigationButtons: true,
             },
         })

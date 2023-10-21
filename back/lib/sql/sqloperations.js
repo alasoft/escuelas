@@ -87,7 +87,7 @@ class SqlBaseCrud {
         this.tenantRequired();
     }
 
-    setValuesDefault() { }
+    setValuesDefault() {}
 
     tenantRequired() {
         if (Utils.IsNotDefined(this.values.tenant)) {

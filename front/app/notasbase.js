@@ -46,7 +46,7 @@ class NotasBase extends CursoMateriaViewBase {
     }
 
     refresh() {
-        return this.notasData().refresh({ curso: this.curso(), materiaCurso: this.materiaCurso() })
+        return this.notasData().refresh(this.materiaCurso())
             .then(() =>
                 this.refreshListToolbar())
             .then(() =>
@@ -59,26 +59,6 @@ class NotasBase extends CursoMateriaViewBase {
                 this.list().focus())
             .catch(err =>
                 this.handleError(err))
-    }
-
-    checkPeriodos() {
-        if (!this.notasData().hayPeriodos()) {
-            return App.ShowMessage([{
-                message: "No hay períodos definidos para el año lectivo",
-                detail: "<i>Por favor, primero cargue los períodos ..",
-                quotes: false,
-            }])
-        }
-    }
-
-    checkValoraciones() {
-        if (!this.notasData().hayValoraciones()) {
-            return App.ShowMessage([{
-                message: "No hay valoraciones pedagógicas",
-                detail: "<i>Es necesario tener las valoraciones, para poder cargar las notas.<br>" + Html.Tab(2) + "Por favor, primero agregue las valoraciones ..",
-                quotes: false,
-            }])
-        }
     }
 
     setVisibleColumns() {
@@ -120,36 +100,29 @@ class NotasBase extends CursoMateriaViewBase {
     }
 
     itemAlumnos() {
-        if (this.filterValueDefined("curso"))
-            return {
-                widget: "dxButton",
-                location: "before",
-                options: {
-                    icon: "group",
-                    text: "Alumnos",
-                    hint: "Consulta Alumnos del Curso",
-                    onClick: e => this.alumnos()
-                }
+        return {
+            widget: "dxButton",
+            location: "before",
+            options: {
+                icon: "group",
+                text: "Alumnos",
+                hint: "Consulta Alumnos del Curso",
+                onClick: e => this.alumnos()
             }
+        }
     }
 
     itemPeriodos() {
-        if (this.filterValueDefined("curso"))
-            return {
-                widget: "dxButton",
-                location: "before",
-                options: {
-                    icon: "event",
-                    text: "Períodos",
-                    hint: "Consulta los Períodos",
-                    onClick: e => this.periodos()
-                }
+        return {
+            widget: "dxButton",
+            location: "before",
+            options: {
+                icon: "event",
+                text: "Períodos",
+                hint: "Consulta los Períodos",
+                onClick: e => this.periodos()
             }
-    }
-
-    itemExcel() {
-        if (this.filterValueDefined("curso"))
-            return super.itemExcel()
+        }
     }
 
     alumnos() {
@@ -282,15 +255,13 @@ class NotasColumns {
     }
 
     alumnoColumns() {
-        if (this.notas.filterValueDefined("curso"))
-            return [{
-                dataField: "id",
-                visible: false
-            },
-            { dataField: "apellido", width: 150, allowReordering: false, allowEditing: false },
-            { dataField: "nombre", width: 150, allowReordering: false, allowEditing: false }]
-        else
-            return []
+        return [{
+            dataField: "id",
+            visible: false
+        },
+        { dataField: "apellido", width: 150, allowReordering: false, allowEditing: false },
+        { dataField: "nombre", width: (0 < this.periodosRows.length ? 150 : undefined), allowReordering: false, allowEditing: false }
+        ]
     }
 
     periodosColumns() {

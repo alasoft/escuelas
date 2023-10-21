@@ -40,10 +40,6 @@ class FilterViewBase extends ListViewBase {
         this.filter().setEditorValue(dataField, value)
     }
 
-    filterValueDefined(dataField) {
-        return Utils.IsDefined(this.getFilterValue(dataField));
-    }
-
     emptyState() {
         return { list: {}, filter: {} }
     }
@@ -53,7 +49,7 @@ class FilterViewBase extends ListViewBase {
 
 class FilterViewBaseTemplate extends ListViewBaseTemplate {
 
-    bodyItems() {
+    bodyItems(){
         return [this.filter()].concat(super.bodyItems())
     }
 

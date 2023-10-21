@@ -61,7 +61,7 @@ class NotasDataListService extends CursoMateriaServiceBase {
             ],
             from: "alumnos alu",
             where: "alu.curso=@curso",
-            parameters: { curso: this.value("curso") },
+            parameters: { curso: this.materiaCursoRow.curso },
             order: "alu.apellido,alu.nombre"
         })
     }
@@ -82,7 +82,7 @@ class NotasDataListService extends CursoMateriaServiceBase {
                 { tableName: "examenes", alias: "exa", columnName: "nt.examen" },
             ],
             where: "exa.materiacurso=@materiacurso",
-            parameters: { materiacurso: this.value("materiacurso") }
+            parameters: { materiacurso: this.materiaCursoRow.id }
         })
     }
 
@@ -102,7 +102,7 @@ class NotasDataListService extends CursoMateriaServiceBase {
                 { tableName: "periodos", alias: "per", columnName: "exa.periodo" }
             ],
             where: this.sqlAnd().addSql("exa.materiacurso=@materiacurso", {
-                materiacurso: this.value("materiacurso")
+                materiacurso: this.materiaCursoRow.id
             }),
             order: "per.desde,exa.desde"
         })

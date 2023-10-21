@@ -6,9 +6,9 @@ class CursoMateriaServiceBase extends ServiceBase {
     execute() {
         return this.validate()
             .then(() =>
-                this.dbSelectOne(this.sqlCurso()))
+                this.dbSelectOne(this.sqlMateriaCurso()))
             .then(row =>
-                this.cursoRow = row)
+                this.materiaCursoRow = row)
             .then(() =>
                 this.dbSelect(this.sqlPeriodos()))
             .then(rows =>
@@ -16,18 +16,22 @@ class CursoMateriaServiceBase extends ServiceBase {
     }
 
     requiredValues() {
-        return "curso";
+        return "materiacurso";
     }
 
-    sqlCurso() {
+    sqlMateriaCurso() {
         return this.sqlSelect({
             columns: [
-                "cur.id",
+                "mc.id",
+                "mc.curso",
                 "cur.añolectivo"
             ],
-            from: "cursos cur",
-            where: "cur.id=@id",
-            parameters: { id: this.value("curso") }
+            from: "materias_cursos mc",
+            joins: [
+                { tableName: "cursos", alias: "cur", columnName: "mc.curso" },
+            ],
+            where: "mc.id=@id",
+            parameters: { id: this.value("materiacurso") }
         })
     }
 
@@ -42,7 +46,7 @@ class CursoMateriaServiceBase extends ServiceBase {
             ],
             from: "periodos per",
             where: this.sqlAnd().addSql("añolectivo=@añolectivo", {
-                añolectivo: this.cursoRow.añolectivo
+                añolectivo: this.materiaCursoRow.añolectivo
             }),
             order: "per.desde"
         })

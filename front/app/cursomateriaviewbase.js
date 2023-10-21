@@ -137,20 +137,19 @@ class CursoMateriaViewBase extends FilterViewBase {
 
     loadMateriasCursos(materiaCurso) {
         if (this.filter().isReady()) {
-            return new Rest({ path: "materias_cursos" })
-                .promise({
-                    verb: "list",
-                    data: { curso: this.curso() }
-                })
-                .then(rows => {
-                    this.filter().setArrayDataSource(
-                        "materiaCurso", rows, materiaCurso);
-                })
-                .then(() => {
-                    if (this.settingFilterValues != true) {
-                        this.refresh()
-                    }
-                })
+            if (this.curso() != undefined) {
+                return new Rest({ path: "materias_cursos" })
+                    .promise({
+                        verb: "list",
+                        data: { curso: this.curso() }
+                    })
+                    .then(rows => {
+                        this.filter().setArrayDataSource(
+                            "materiaCurso", rows, materiaCurso);
+                    })
+            } else {
+                this.filter().clearEditorDataSource("materiaCurso");
+            }
         }
     }
 
@@ -212,7 +211,7 @@ class CursoMateriaViewBase extends FilterViewBase {
 
     itemMateriaCursoOnValueChanged(e) {
         if (this.settingFilterValues != true) {
-            //            this.refresh()
+            this.refresh()
         }
     }
 

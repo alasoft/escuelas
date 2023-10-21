@@ -101,8 +101,7 @@ class Exceptions {
         return new Exception({
             type: this.TYPE_INTERNAL,
             code: this.ID_NOT_DEFINED,
-            message: "Id not defined"
-        }, p);
+        });
     }
 
     static WhereNotDefined(p) {

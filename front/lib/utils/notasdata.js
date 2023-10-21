@@ -1,13 +1,11 @@
 class NotasData {
 
-    refresh(parameters = {}) {
-        const { curso, materiaCurso } = parameters;
-        if (Utils.IsDefined(curso)) {
+    refresh(materiaCurso) {
+        if (Utils.IsDefined(materiaCurso)) {
             return new Rest({ path: "notas_data" })
                 .promise({
                     verb: "list",
                     data: {
-                        curso: curso,
                         materiacurso: materiaCurso
                     }
                 })
@@ -82,10 +80,6 @@ class NotasData {
 
     hayPeriodos() {
         return 0 < this.periodosRows.length
-    }
-
-    hayValoraciones() {
-        return 0 < this.valoracionesRows.length;
     }
 
     getLastPeriodo() {

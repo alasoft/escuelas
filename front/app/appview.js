@@ -7,15 +7,15 @@ class AppView extends AppViewBase {
             text: "Datos Generales"
         });
 
-        const itemAñoLectivo = new TreeItem({
-            id: "2",
-            text: "Año Lectivo",
-        })
-
         const itemCalificaciones = new TreeItem({
-            id: "3",
+            id: "2",
             text: "Calificaciones"
         });
+
+        const itemDictado = new TreeItem({
+            id: "3",
+            text: "Clases",
+        })
 
         const itemSalida = new TreeItem({
             id: "4",
@@ -47,24 +47,24 @@ class AppView extends AppViewBase {
             onClick: e => new Materias().render()
         })
 
-        itemAñoLectivo.addChild({
-            text: "Períodos",
-            onClick: e => new Periodos().render()
-        })
-
-        itemAñoLectivo.addChild({
-            text: "Valoraciones Pedagógicas",
-            onClick: e => new Valoraciones().render()
-        })
-
-        itemAñoLectivo.addChild({
+        itemDictado.addChild({
             text: "Cursos",
             onClick: e => new Cursos().render()
         })
 
-        itemAñoLectivo.addChild({
+        itemDictado.addChild({
             text: "Horarios",
             onClick: e => new MateriasHoras().render()
+        })
+
+        itemCalificaciones.addChild({
+            text: "Períodos",
+            onClick: e => new Periodos().render()
+        })
+
+        itemCalificaciones.addChild({
+            text: "Valoraciones Pedagógicas",
+            onClick: e => new Valoraciones().render()
         })
 
         itemCalificaciones.addChild({
@@ -84,7 +84,7 @@ class AppView extends AppViewBase {
                 })
         */
 
-        return [itemDatos, itemAñoLectivo, itemCalificaciones, itemSalida];
+        return [itemDatos, itemDictado, itemCalificaciones, itemSalida];
 
     }
 
