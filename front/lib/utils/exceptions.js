@@ -13,7 +13,7 @@ class Exceptions {
     static DATABASE = "database";
     static REQUIRED_VALUE = "requiredValues"
     static SQL_PARAMETER_VALUE_NOT_FOUND = "sqlParameterValueNotFound"
-    static TENANT_NOT_DEFINED = "Tenant no definido"
+    static TENANT_NOT_DEFINED = "tenantNotDefined"
     static ID_NOT_DEFINED = "idNotDefined"
     static SQL_WHERE_NOT_DEFINED = "sqlWhereNotDefined"
     static USER_NOT_EXISTS = "userNotExists"
@@ -55,8 +55,15 @@ class Exceptions {
 
     static Validation(p) {
         return Utils.Merge({
-            side: "client",
+            side: Exceptions.CLIENT_SIDE,
             type: this.TYPE_VALIDATION,
+        }, p)
+    }
+
+    static NotImplemented(p) {
+        return Utils.Merge({
+            side: Exceptions.CLIENT_SIDE,
+            type: Exceptions.TYPE_INTERNAL
         }, p)
     }
 

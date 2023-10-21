@@ -1,6 +1,6 @@
 const { CursoMateriaServiceBase } = require("./cursomateriaservicebase");
 
-class AsistenciasCursoMateriaService extends CursoMateriaServiceBase {
+class AsistenciasService extends CursoMateriaServiceBase {
 
     execute() {
         super.execute()
@@ -32,4 +32,4 @@ class AsistenciasCursoMateriaService extends CursoMateriaServiceBase {
 
 }
 
-module.exports.AsistenciasCursoMateriaService = AsistenciasCursoMateriaService; 
+module.exports.AsistenciasService = AsistenciasService; 

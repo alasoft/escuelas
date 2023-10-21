@@ -161,6 +161,13 @@ class CursoMateriaViewBase extends FilterViewBase {
         return this._data;
     }
 
+    defineData() {
+        throw Exceptions.NotImplemented({
+            message:
+                "CursoMateriaViewBase defineData() not implementeds"
+        })
+    }
+
     refreshColumns() {
         this.list().setColumns(this.columns(true));
     }

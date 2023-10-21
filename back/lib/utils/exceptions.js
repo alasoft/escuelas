@@ -14,7 +14,7 @@ class Exceptions {
     static DATABASE = "database";
     static REQUIRED_VALUE = "requiredValues"
     static SQL_PARAMETER_VALUE_NOT_FOUND = "sqlParameterValueNotFound"
-    static TENANT_NOT_DEFINED = "Tenant no definido"
+    static TENANT_NOT_DEFINED = "tenantNotDefined"
     static ID_NOT_DEFINED = "idNotDefined"
     static SQL_WHERE_NOT_DEFINED = "sqlWhereNotDefined"
     static USER_NOT_EXISTS = "userNotExists"
