@@ -3,6 +3,7 @@ class Template {
     configuration(){
 
     }
+    
 
     element(){
         if(this._element==undefined){
@@ -57,9 +58,62 @@ class TemplateItem{
 
 class TemplateStyles{
 
+
+    static _FillContainer(fillContainer) {
+        if (fillContainer == true) {
+            return {
+                "flex": 1
+            }
+        }
+    }
+
+    static _Orientation(orientation) {
+        if (Strings.EqualsIgnoreCase(orientation, "vertical")) {
+            return {
+                "display": "flex",
+                "flex-direction": "column"
+            }
+        } else if (Strings.EqualsIgnoreCase(orientation, "horizontal")) {
+            return {
+                "display": "flex",
+                "flex-direction": "row"
+            }
+        }
+    }
+
     static _Margin(margin) {
         return {
             "margin": margin
+        }
+    }
+
+    static _Padding(padding) {
+        return {
+            "padding": padding
+        }
+    }
+
+    static _PaddingLeft(padding) {
+        return {
+            "padding-left": padding
+        }
+    }
+
+    static _PaddingRight(padding) {
+        return {
+            "padding-right": padding
+        }
+    }
+
+    static _PaddingTop(padding) {
+        return {
+            "padding-top": padding
+        }
+    }
+
+    static _PaddingBottom(padding) {
+        return {
+            "padding-bottom": padding
         }
     }
 
